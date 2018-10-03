@@ -23,6 +23,7 @@ import {
     FormikTextField,
     FormMultilineTextField,
     FormTimestampField,
+    getFormikError,
 } from "../util/FormField";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
@@ -99,13 +100,14 @@ class MetadataTemplateAttributeView extends Component {
     }
 
     render() {
-        const { classes, intl, field, errors, attributes, avus, presenter, writable } = this.props;
+        const { classes, intl, field, touched, errors, attributes, avus, presenter, writable } = this.props;
         return (
             <FieldArray name={`${field}.avus`}
                         render={(arrayHelpers) => {
                             return attributes.map((attribute) => {
                                 const attrFieldId = build(ids.METADATA_TEMPLATE_VIEW, field, attribute.name);
 
+                                let attrErrors = false;
                                 let canRemove = !attribute.required,
                                     FieldComponent,
                                     fieldProps = {
@@ -178,6 +180,9 @@ class MetadataTemplateAttributeView extends Component {
                                     }
 
                                     let avuFieldName = `${field}.avus[${index}]`;
+                                    const avuError = getFormikError(avuFieldName, touched, errors);
+                                    attrErrors = attrErrors || avuError;
+
                                     const rowID = build(ids.METADATA_TEMPLATE_VIEW, avuFieldName);
 
                                     let avuField = (
@@ -210,7 +215,8 @@ class MetadataTemplateAttributeView extends Component {
                                             {attribute.attributes && attribute.attributes.length > 0 &&
                                             <Grid item>
                                                 <MetadataTemplateAttributeForm field={avuFieldName}
-                                                                               errors={errors && errors.avus}
+                                                                               errors={errors}
+                                                                               touched={touched}
                                                                                presenter={this.props.presenter}
                                                                                attributes={attribute.attributes}
                                                                                avus={avu.avus}
@@ -227,6 +233,7 @@ class MetadataTemplateAttributeView extends Component {
 
 
                                 const hasAVUs = avuFields && avuFields.filter(avuField => avuField).length > 0;
+
                                 return ((writable || hasAVUs) &&
                                     <ExpansionPanel key={attribute.name} defaultExpanded={hasAVUs}>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
@@ -247,6 +254,9 @@ class MetadataTemplateAttributeView extends Component {
                                             <div className={classes.title}>
                                                 <Typography variant="title" color="inherit" >
                                                     {attribute.name}
+                                                </Typography>
+                                                <Typography variant="subheading" className={classes.errorSubTitle}>
+                                                    {attrErrors && attrErrors.error && getMessage("errAttrHasErrors")}
                                                 </Typography>
                                             </div>
                                         </ExpansionPanelSummary>
@@ -304,7 +314,7 @@ class MetadataTemplateView extends Component {
             open,
             writable,
             // from formik
-            values, handleSubmit, dirty, isSubmitting, errors,
+            values, handleSubmit, dirty, isSubmitting, errors, touched,
         } = this.props;
 
         const dialogTitleID = build(ids.METADATA_TEMPLATE_VIEW, ids.TITLE);
@@ -346,7 +356,8 @@ class MetadataTemplateView extends Component {
 
                 <DialogContent>
                     <MetadataTemplateAttributeForm field="metadata"
-                                                   errors={errors && errors.metadata && errors.metadata.avus}
+                                                   errors={errors}
+                                                   touched={touched}
                                                    presenter={this.props.presenter}
                                                    attributes={values.template.attributes}
                                                    avus={values.metadata.avus}
@@ -436,6 +447,7 @@ const validateAVUs = (avus, attributeMap) => {
 
         if (attrTemplate.required && value === "") {
             avuErrors.value = getMessage("required");
+            avuErrors.error = true;
             avuArrayErrors[avuIndex] = avuErrors;
         } else if (value) {
             switch (attrTemplate.type) {
@@ -444,6 +456,7 @@ const validateAVUs = (avus, attributeMap) => {
                     let numVal = Number(value);
                     if (isNaN(numVal)) {
                         avuErrors.value = getMessage("templateValidationErrMsgNumber");
+                        avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
 
@@ -455,6 +468,7 @@ const validateAVUs = (avus, attributeMap) => {
                 case "Timestamp":
                     if (!Date.parse(value)) {
                         avuErrors.value = getMessage("templateValidationErrMsgTimestamp");
+                        avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
 
@@ -463,6 +477,7 @@ const validateAVUs = (avus, attributeMap) => {
                 case "URL/URI":
                     if (!constants.URL_REGEX.test(value)) {
                         avuErrors.value = getMessage("templateValidationErrMsgURL");
+                        avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
 
@@ -477,6 +492,7 @@ const validateAVUs = (avus, attributeMap) => {
             const subAttrErros = validateAVUs(avu.avus, attrTemplate.attributes);
             if (subAttrErros.length > 0) {
                 avuErrors.avus = subAttrErros;
+                avuErrors.error = true;
                 avuArrayErrors[avuIndex] = avuErrors;
             }
         }

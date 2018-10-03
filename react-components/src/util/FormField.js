@@ -18,7 +18,7 @@ import Select from "@material-ui/core/Select";
 import TableCell from "@material-ui/core/TableCell";
 import TextField from "@material-ui/core/TextField";
 
-const getFormikErrorMessage = (name, touched, errors) => {
+const getFormikError = (name, touched, errors) => {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
 
@@ -29,10 +29,10 @@ const FormikTextField = ({
     field,
     label,
     required,
-    form: {touched, errors},
+    form: { touched, errors },
     ...custom
 }) => {
-    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const errorMsg = getFormikError(field.name, touched, errors);
     return (
         <TextField
             label={label}
@@ -47,13 +47,13 @@ const FormikTextField = ({
 };
 
 const FormikSearchField = ({
-    field: {value, onBlur, onChange, ...field},
+    field: { value, onBlur, onChange, ...field },
     label,
     required,
-    form: {touched, errors, setFieldTouched, setFieldValue},
+    form: { touched, errors, setFieldTouched, setFieldValue },
     ...props
 }) => {
-    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const errorMsg = getFormikError(field.name, touched, errors);
     const onOptionSelected = option => {
         setFieldValue(field.name, option ? option[props.valueKey] : "");
     };
@@ -118,7 +118,7 @@ const onIntegerChange = onChange => (event) => {
 };
 
 const FormikNumberField = ({
-    field: {onChange, ...field},
+    field: { onChange, ...field },
     ...props
 }) => (
     <FormikTextField type="number"
@@ -130,7 +130,7 @@ const FormikNumberField = ({
 );
 
 const FormikIntegerField = ({
-    field: {onChange, ...field},
+    field: { onChange, ...field },
     ...props
 }) => (
     <FormikTextField type="number"
@@ -168,11 +168,11 @@ const FormTimestampField = ({
     id,
     label,
     required,
-    field: {value, onChange, ...field},
-    form: {touched, errors, setFieldValue},
+    field: { value, onChange, ...field },
+    form: { touched, errors, setFieldValue },
     ...custom
 }) => {
-    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const errorMsg = getFormikError(field.name, touched, errors);
     const date = value && Date.parse(value);
 
     return (
@@ -203,14 +203,14 @@ const FormTimestampField = ({
 
 const FormikSelectField = ({
     id,
-    field: {value, ...field},
+    field: { value, ...field },
     label,
     required,
-    form: {touched, errors},
+    form: { touched, errors },
     children,
     ...custom,
 }) => {
-    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const errorMsg = getFormikError(field.name, touched, errors);
     return (
         <FormControl fullWidth error={!!errorMsg}>
             <InputLabel htmlFor={id}
@@ -234,7 +234,7 @@ const FormTextField = ({
     input,
     label,
     required,
-    meta: {touched, error},
+    meta: { touched, error },
     ...custom
 }) => (
     <TextField
@@ -303,4 +303,5 @@ export {
     FormikSelectField,
     FormikTextField,
     FormTimestampField,
+    getFormikError,
 };
