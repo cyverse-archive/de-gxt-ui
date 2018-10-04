@@ -19,7 +19,9 @@ public class ReactAnalyses {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class AnalysesProps extends BaseProps {
         public AnalysesView.Presenter presenter;
-        public String username;
+        public String user;
+        public String email;
+        public String name;
     }
 }
 

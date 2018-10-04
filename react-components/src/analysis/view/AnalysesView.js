@@ -30,6 +30,7 @@ import appType from "../model/appType";
 import permission from "../model/permission";
 import DEPromptDialog from "../../util/dialog/DEPromptDialog";
 import { injectIntl } from "react-intl";
+import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 
 function AnalysisName(props) {
     let name = props.analysis.name;
@@ -76,6 +77,17 @@ function AppName(props) {
         );
     }
 
+}
+
+function Status(props) {
+    const {analysis, onClick, user} = props;
+    if (user === analysis.username && analysis.status !== analysisStatus.CANCELED) {
+        return (<DEHyperLink
+            onClick={(analysis) => onClick(analysis)}
+            text={analysis.status}/>);
+    } else {
+        return (<span>{analysis.status}</span>);
+    }
 }
 
 function Prompt(props) {
@@ -148,7 +160,9 @@ class AnalysesView extends Component {
         this.state = {
             data: this.props.analysesList ? this.props.analysesList.analyses : [],
             loading: true,
-            total: this.props.analysesList ? this.props.analysesList.total : 0,
+            total: this.props.analysesList && this.props.analysesList.total ?
+                this.props.analysesList.total :
+                0,
             offset: 0,
             page: 0,
             rowsPerPage: 100,
@@ -160,6 +174,7 @@ class AnalysesView extends Component {
             parentId: "",
             renameDialogOpen: false,
             commentsDialogOpen: false,
+            shareWithSupportDialogOpen: false,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -184,6 +199,8 @@ class AnalysesView extends Component {
         this.doRename = this.doRename.bind(this);
         this.doComments = this.doComments.bind(this);
         this.update = this.update.bind(this);
+        this.onShareWithSupport = this.onShareWithSupport.bind(this);
+        this.statusClick = this.statusClick.bind(this);
     }
 
     componentDidMount() {
@@ -294,10 +311,31 @@ class AnalysesView extends Component {
     }
 
     statusClick(analysis) {
-
+        this.setState((prevState, props) => {
+            this.handleRowClick(analysis.id)
+            return {shareWithSupportDialogOpen: true}
+        });
     }
 
-    handleRowClick(event, id) {
+    onShareWithSupport(analysis, comment, supportRequested) {
+        if (supportRequested) {
+            this.setState({loading: true, shareWithSupportDialogOpen: false});
+            this.props.presenter.onUserSupportRequested(analysis, comment, () => {
+                    this.setState({
+                        loading: false,
+                    });
+                },
+                (errorCode, errorMessage) => {
+                    this.setState({
+                        loading: false,
+                    });
+                });
+        } else {
+            this.setState({shareWithSupportDialogOpen: false});
+        }
+    }
+
+    handleRowClick(id) {
         this.setState((prevState, props) => {
             const {selected} = prevState;
             const selectedIndex = selected.indexOf(id);
@@ -509,7 +547,7 @@ class AnalysesView extends Component {
     }
 
     render() {
-        const {classes, intl, presenter} = this.props;
+        const {classes, intl, presenter, name, email, user} = this.props;
         const {
             rowsPerPage,
             page,
@@ -518,6 +556,7 @@ class AnalysesView extends Component {
             selected,
             total,
             data,
+            shareWithSupportDialogOpen
         } = this.state;
             return (
                 <React.Fragment>
@@ -564,7 +603,7 @@ class AnalysesView extends Component {
                                             n.username.split('@')[0] :
                                             n.username;
                                         return (
-                                            <TableRow onClick={event => this.handleRowClick(event, id)}
+                                            <TableRow onClick={() => this.handleRowClick(id)}
                                                       role="checkbox"
                                                       aria-checked={isSelected}
                                                       tabIndex={-1}
@@ -604,9 +643,11 @@ class AnalysesView extends Component {
                                                             constants.LONG_DATE_FORMAT) :
                                                         getMessage("emptyValue")}
                                                 </TableCell>
-                                                <TableCell padding="none"><DEHyperLink
-                                                    onClick={(n) => this.statusClick(n)}
-                                                    text={n.status}/></TableCell>
+                                                <TableCell padding="none">
+                                                    <Status analysis={n}
+                                                            onClick={() => this.statusClick(n)}
+                                                            user={user}/>
+                                                </TableCell>
                                                 <TableCell padding="none">
                                                     <DotMenu
                                                         handleGoToOutputFolder={this.handleGoToOutputFolder}
@@ -654,6 +695,13 @@ class AnalysesView extends Component {
                             onCommentsOkClicked={this.doComments}
                             onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
                     />
+                    {selected[0] &&
+                    <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}
+                                            analysis={this.findAnalysis(selected[0])}
+                                            name={name}
+                                            email={email}
+                                            onShareWithSupport={this.onShareWithSupport}/>
+                    }
                 </React.Fragment>
         );
     }

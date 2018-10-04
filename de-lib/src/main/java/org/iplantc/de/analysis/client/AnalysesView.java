@@ -261,6 +261,11 @@ public interface AnalysesView extends IsWidget/*,
                             ReactSuccessCallback callback,
                             ReactErrorCallback errorCallback);
 
+        void onUserSupportRequested(Splittable analysis,
+                                    String comment,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback);
+
     }
 
 //    void filterByAnalysisId(String id, String name);

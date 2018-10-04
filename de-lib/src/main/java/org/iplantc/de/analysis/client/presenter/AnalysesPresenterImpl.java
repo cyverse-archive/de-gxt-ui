@@ -6,7 +6,6 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
-import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
@@ -50,7 +49,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -64,12 +62,9 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.LoadEvent;
-import com.sencha.gxt.data.shared.loader.LoadHandler;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
+
+import org.apache.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +78,6 @@ import java.util.List;
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
-                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
                                               CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
@@ -128,33 +122,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     }
 
-    /**
-     * A LoadHandler needed to set selected analyses after the initial view load, since settings like
-     * page size are only set in the reused config by the loader after an initial grid load, which may be
-     * by-passed by the {@link org.iplantc.de.analysis.client.views.widget.AnalysisSearchField#filterByAnalysisId}
-     * call in {@link AnalysesPresenterImpl#setSelectedAnalyses}.
-     *
-     * A benefit of selecting analyses with this LoadHandler is if the analysis to select has already
-     * loaded when this handler is called, then it can be selected immediately without filtering.
-     *
-     * @author psarando
-     */
-    private class FirstLoadHandler
-            implements LoadHandler<FilterPagingLoadConfig, PagingLoadResult<Analysis>> {
-
-        private final List<Analysis> selectedAnalyses;
-
-        public FirstLoadHandler(List<Analysis> selectedAnalyses) {
-            this.selectedAnalyses = selectedAnalyses;
-        }
-
-        @Override
-        public void onLoad(LoadEvent<FilterPagingLoadConfig, PagingLoadResult<Analysis>> event) {
-            handlerFirstLoad.removeHandler();
-            setSelectedAnalyses(selectedAnalyses);
-        }
-    }
-
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
@@ -190,7 +157,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     FilterAutoBeanFactory filterAutoBeanFactory;
 
     private final HasHandlers eventBus;
-    private HandlerRegistration handlerFirstLoad;
     AnalysisPermissionFilter currentPermFilter;
     AppTypeFilter currentTypeFilter;
 
@@ -201,37 +167,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
-
-/*      AnalysisToolBarView toolBarView = view.getToolBarView();
-
-       this.view.addAnalysisNameSelectedEventHandler(this);
-        this.view.addAnalysisAppSelectedEventHandler(this);
-        this.view.addHTAnalysisExpandEventHandler(this);
-        this.view.addAnalysisUserSupportRequestedEventHandler(this);
-        this.view.addRelaunchAnalysisSelectedHandler(this);
-        this.view.addShareAnalysisSelectedHandler(this);
-        this.view.addAnalysisCommentUpdateHandler(this);
-        this.view.addAnalysisJobInfoSelectedHandler(this);
-        this.view.addRenameAnalysisSelectedHandler(this);
-        this.view.addGoToAnalysisFolderSelectedHandler(this);
-        this.view.addDeleteAnalysisSelectedHandler(this);
-        this.view.addCancelAnalysisSelectedHandler(this);
-        this.view.addCompleteAnalysisSelectedHandler(this);
-        this.view.addViewAnalysisParamsSelectedHandler(this);
-        this.view.addInteractiveIconClickedHandler(this);
-        toolBarView.addAnalysisJobInfoSelectedHandler(this);
-        toolBarView.addAnalysisCommentUpdateHandler(this);
-        toolBarView.addShareAnalysisSelectedHandler(this);
-        toolBarView.addAnalysisFilterChangedHandler(this);
-        toolBarView.addRefreshAnalysesSelectedHandler(this);
-        toolBarView.addRenameAnalysisSelectedHandler(this);
-        toolBarView.addRelaunchAnalysisSelectedHandler(this);
-        toolBarView.addGoToAnalysisFolderSelectedHandler(this);
-        toolBarView.addDeleteAnalysisSelectedHandler(this);
-        toolBarView.addCancelAnalysisSelectedHandler(this);
-        toolBarView.addCompleteAnalysisSelectedHandler(this);
-        toolBarView.addViewAnalysisParamsSelectedHandler(this);
-        toolBarView.addViewAnalysisParamsSelectedHandler(this);*/
 
         //Set default filter to ALL
         currentPermFilter = AnalysisPermissionFilter.ALL;
@@ -457,19 +392,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         //  view.setPermFilterInView(permFilter, typeFilter);
     }
 
-/*    @Override
-    public void onGoToAnalysisFolderSelected(GoToAnalysisFolderSelected event) {
-        Analysis selectedAnalysis = event.getAnalysis();
-        // Request disk resource window
-        eventBus.fireEvent(new OpenFolderEvent(selectedAnalysis.getResultFolderId(), true));
-
-    }
-
-    @Override
-    public void onRefreshAnalysesSelected(RefreshAnalysesSelected event) {
-        loadAnalyses(currentPermFilter, currentTypeFilter);
-    }*/
-
     @Override
     public void onShowAllSelected() {
         loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);
@@ -558,15 +480,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         // Request disk resource window
         eventBus.fireEvent(new OpenFolderEvent(resultFolderId, true));
     }
-/*
-    @Override
-    public void onRelaunchAnalysisSelected(RelaunchAnalysisSelected event) {
-        Analysis selectedAnalysis = event.getAnalysis();
-        if (selectedAnalysis.isAppDisabled()) {
-            return;
-        }
-        eventBus.fireEvent(new OpenAppForRelaunchEvent(selectedAnalysis));
-    }*/
 
     @Override
     public void renameAnalysis(String analysisId,
@@ -670,8 +583,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
 
-
-    private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent, final AnalysisUserSupportDialog ausd) {
+    private void shareWithSupport(Analysis selectedAnalysis,
+                                  final Splittable parent,
+                                  ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
         AnalysisPermission ap = shareFactory.analysisPermission().as();
         ap.setId(selectedAnalysis.getId());
         ap.setPermission(PermissionValue.read.toString());
@@ -687,43 +602,27 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
-                ausd.unmask();
+                errorCallback.onError(statusCode, exception.getMessage());
             }
 
             @Override
             public void onSuccess(String result) {
-                emailSupport(parent, ausd);
+                emailSupport(parent, callback, errorCallback);
             }
         });
     }
 
     @Override
-    public void onUserSupportRequested(AnalysisUserSupportRequestedEvent event) {
-        final Analysis value = event.getValue();
-        aSupportDialogProvider.get(new AsyncCallback<AnalysisUserSupportDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-
-            }
-
-            @Override
-            public void onSuccess(final AnalysisUserSupportDialog ausd) {
-                ausd.setHeading(value.getName());
-                ausd.setSize("800px", "500px");
-                ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        ausd.mask(appearance.requestProcessing());
-                        AnalysisSupportRequest req = getAnalysisSupportRequest(value, ausd.getComment());
-                        shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)), ausd);
-                    }
-                });
-                ausd.renderHelp(value);
-                ausd.show();
-            }
-        });
-
-
+    public void onUserSupportRequested(Splittable analysis,
+                                       String comment,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback) {
+        Analysis selectedAnalysis = AutoBeanCodex.decode(factory, Analysis.class, analysis).as();
+        AnalysisSupportRequest req = getAnalysisSupportRequest(selectedAnalysis, comment);
+        shareWithSupport(selectedAnalysis,
+                         AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)),
+                         callback,
+                         errorCallback);
     }
 
     protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {
@@ -755,7 +654,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         return req;
     }
 
-    protected void emailSupport(final Splittable parent, final AnalysisUserSupportDialog ausd) {
+    protected void emailSupport(final Splittable parent,
+                                ReactSuccessCallback callback,
+                                ReactErrorCallback errorCallback) {
         supportServiceProvider.get(new AsyncCallback<DEUserSupportServiceFacade>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -768,14 +669,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                     @Override
                     public void onFailure(Throwable caught) {
                         announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
-                        ausd.unmask();
+                        errorCallback.onError(HttpStatus.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                     }
 
                     @Override
                     public void onSuccess(Void result) {
                         announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
-                        ausd.unmask();
-                        ausd.hide();
+                        callback.onSuccess(null);
                     }
                 });
             }

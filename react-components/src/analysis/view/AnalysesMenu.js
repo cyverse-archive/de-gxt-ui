@@ -41,7 +41,7 @@ class AnalysesMenu extends Component {
                           }}
                           className={classes.menuItem}>
                     <FolderIcon style={{color: Color.darkBlue}}/>
-                    {getMessage("outputFolder")}
+                    {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || multiSelect()}
                           onClick={onClick}

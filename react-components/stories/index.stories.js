@@ -6,6 +6,7 @@ import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
 import AnalysisCommentsDialogTest from "./analysis/view/dialogs/AnalysisCommentsDialog.stories";
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
+import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
 
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
@@ -50,6 +51,7 @@ import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
+
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
     <AnalysisInfoDialogTest/>);
@@ -57,6 +59,8 @@ storiesOf('analysis/view/dialogs', module).add('with test analysis comments', ()
     <AnalysisCommentsDialogTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis parameters', () =>
     <AnalysisParametersDialogTest/>);
+storiesOf('analysis/view/dialogs', module)
+    .add('with test analysis support', () => <ShareWithSupportDialogTest/>);
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

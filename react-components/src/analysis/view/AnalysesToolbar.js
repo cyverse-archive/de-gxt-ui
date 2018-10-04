@@ -8,7 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import exStyles from "../style";
 import ids from "../ids";
 import { withStyles } from "@material-ui/core/styles";
@@ -22,6 +22,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import appType from "../model/appType";
 import TextField from '@material-ui/core/TextField';
 import AnalysesMenu from "./AnalysesMenu";
+import { injectIntl } from "react-intl";
 
 class AnalysesToolbar extends Component {
     constructor(props) {
@@ -42,7 +43,7 @@ class AnalysesToolbar extends Component {
 
 
     render() {
-        const {classes, baseDebugId} = this.props;
+        const {classes, baseDebugId, intl} = this.props;
         const baseId = baseDebugId + ids.TOOLBAR;
 
         const {anchorEl} = this.state;
@@ -82,6 +83,7 @@ class AnalysesToolbar extends Component {
                                 native
                                 value={this.props.permFilter}
                                 onChange={this.props.onPermissionsFilterChange}
+                                variant="outlined"
                                 inputProps={{
                                     name: 'perm-filter',
                                     id: "sharingFilter",
@@ -100,6 +102,7 @@ class AnalysesToolbar extends Component {
                                 native
                                 value={this.props.appsFilter}
                                 onChange={this.props.onAppsFilterChange}
+                                variant="outlined"
                                 inputProps={{
                                     name: 'apps-filter',
                                     id: "appsFilter",
@@ -116,13 +119,12 @@ class AnalysesToolbar extends Component {
                                     value={appType.osg}>{appType.osg}</option>
                             </Select>
                         </FormControl>
-                        <FormControl>
+                        <FormControl className={classes.toolbarMargins}>
                             <TextField
                                 id="search"
-                                label={getMessage("search")}
-                                type="search"
-                                className={classes.textField}
-                                margin="normal"
+                                placeholder={formatMessage(intl,"search")}
+                                variant="outlined"
+                                style={{fontSize: 10}}
                             />
                         </FormControl>
                     </form>
@@ -135,4 +137,4 @@ class AnalysesToolbar extends Component {
 
 AnalysesToolbar.propTypes = {};
 
-export default withStyles(exStyles)(withI18N(AnalysesToolbar, intlData));
+export default withStyles(exStyles)(withI18N(injectIntl(AnalysesToolbar), intlData));

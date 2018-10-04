@@ -79,7 +79,10 @@ public class AnalysesViewImpl implements AnalysesView/*,
     public void load() {
         ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
         props.presenter = this.presenter;
-        props.username = UserInfo.getInstance().getFullUsername();
+        final UserInfo instance = UserInfo.getInstance();
+        props.user = instance.getFullUsername();
+        props.email = instance.getEmail();
+        props.name = instance.getFirstName() + " " + instance.getLastName();
         CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
     }
 

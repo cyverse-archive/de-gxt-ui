@@ -223,8 +223,11 @@ class AnalysesViewTest extends Component {
 
         return (
             <AnalysesView analysesList={analysesList}
-                          username="sriram@iplantcollaborative.org"
-                          presenter={presenter}/>
+                          user="sriram@iplantcollaborative.org"
+                          presenter={presenter}
+                          email="abc@cyverse.org"
+                          name="sriram srinivasan"
+                          />
         );
     }
 }
