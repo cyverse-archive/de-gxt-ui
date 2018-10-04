@@ -12,6 +12,7 @@ import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
 import org.iplantc.de.apps.client.gin.AppCategoryTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
@@ -29,7 +30,6 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -54,7 +54,6 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
-import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import java.util.Arrays;
@@ -108,7 +107,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     List<AppCategory> workspaceCategories = Lists.newArrayList();
     List<AppCategory> hpcCategories = Lists.newArrayList();
     List<Tree<AppCategory, String>> trees = Lists.newArrayList();
-    DETabPanel viewTabPanel;
+    AppNavigationView appNavigationView;
     AppCategoriesViewFactory viewFactory;
     HandlerManager handlerManager;
     AppCategoriesView workspaceView;
@@ -167,11 +166,11 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     }
 
     @Override
-    public void go(final HasId selectedAppCategory, final boolean selectDefaultCategory, final DETabPanel tabPanel) {
-        this.viewTabPanel = tabPanel;
+    public void go(final HasId selectedAppCategory, final boolean selectDefaultCategory, final AppNavigationView appNavigationView) {
+        this.appNavigationView = appNavigationView;
 
-        viewTabPanel.add(workspaceView.getTree(), new TabItemConfig(appearance.workspaceTab()), baseId + AppsModule.Ids.WORKSPACE_TAB);
-        viewTabPanel.add(hpcView.getTree(), new TabItemConfig(appearance.hpcTab()), baseId + AppsModule.Ids.HPC_TAB);
+        this.appNavigationView.add(workspaceView.getTree(), appearance.workspaceTab());
+        this.appNavigationView.add(hpcView.getTree(), appearance.hpcTab());
 
         workspaceView.getTree().mask(appearance.getAppCategoriesLoadingMask());
         hpcView.getTree().mask(appearance.getAppCategoriesLoadingMask());
@@ -180,7 +179,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
-                viewTabPanel.unmask();
+                appNavigationView.unmask();
             }
 
             @Override
@@ -247,7 +246,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     boolean doSelectCategory(Tree<AppCategory, String> tree, AppCategory category) {
         Tree.TreeNode<AppCategory> node = tree.findNode(category);
         if (node != null) {
-            viewTabPanel.setActiveWidget(tree);
+            appNavigationView.setActiveWidget(tree);
             tree.getSelectionModel().select(node.getModel(), true);
             return true;
         }
@@ -256,7 +255,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
 
     void selectDefaultCategory() {
         Tree<AppCategory, String> tree = workspaceView.getTree();
-        viewTabPanel.setActiveWidget(tree);
+        appNavigationView.setActiveWidget(tree);
         tree.getSelectionModel().select(tree.getStore().getRootItems().get(0), true);
     }
 
@@ -266,7 +265,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     }
 
     void addHPCTabSelectionHandler() {
-        viewTabPanel.addSelectionHandler(new SelectionHandler<Widget>() {
+        appNavigationView.addSelectionHandler(new SelectionHandler<Widget>() {
             @Override
             public void onSelection(SelectionEvent<Widget> event) {
                 if (event.getSelectedItem() == hpcView.getTree() && hpcCategories.size() == 1) {

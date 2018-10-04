@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client.gin;
 
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.AppDetailsView;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
@@ -33,6 +34,7 @@ import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
+import org.iplantc.de.apps.client.views.navigation.AppNavigationViewImpl;
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
 import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
@@ -115,6 +117,9 @@ public class AppsGinModule extends AbstractGinModule {
 
         install(new GinFactoryModuleBuilder().implement(AppDocEditView.class, AppDocEditViewImpl.class)
                                              .build(AppDocEditViewFactory.class));
+
+        // Navigation
+        bind(AppNavigationView.class).to(AppNavigationViewImpl.class);
 
         bind(AppDetailsView.Presenter.class).to(AppDetailsViewPresenterImpl.class);
         bind(AppDetailsDialog.class);

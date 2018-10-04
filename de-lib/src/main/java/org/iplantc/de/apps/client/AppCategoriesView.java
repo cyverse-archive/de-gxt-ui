@@ -7,11 +7,11 @@ import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEv
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -75,7 +75,7 @@ public interface AppCategoriesView extends IsWidget,
 
         AppCategoriesView getWorkspaceView();
 
-        void go(HasId selectedAppCategory, boolean selectDefaultCategory, DETabPanel tabPanel);
+        void go(HasId selectedAppCategory, boolean selectDefaultCategory, AppNavigationView appNavigationView);
 
         void setViewDebugId(String baseID);
 

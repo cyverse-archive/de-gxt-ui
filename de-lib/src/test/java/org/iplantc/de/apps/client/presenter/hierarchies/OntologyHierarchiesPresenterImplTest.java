@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -42,7 +43,6 @@ import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -78,7 +78,7 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock OntologyUtil ontologyUtilMock;
     @Mock AsyncProvider<AppDetailsDialog> appDetailsDialogProviderMock;
     @Mock AppUserServiceFacade appUserServiceMock;
-    @Mock DETabPanel tabPanelMock;
+    @Mock AppNavigationView appNavigationViewMock;
     @Mock OntologyServiceFacade ontologyServiceMock;
     @Mock OntologyHierarchiesView.OntologyHierarchiesAppearance appearanceMock;
     @Mock EventBus eventBusMock;
@@ -100,6 +100,7 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock OntologyHierarchiesView viewMock;
     @Mock Tree<OntologyHierarchy, String> hierarchyTreeMock;
     @Mock Tree<AppCategory, String> categoryTreeMock;
+    @Mock List<Widget> widgetsMock;
     @Mock Iterator<Widget> tabPanelIteratorMock;
     @Mock Widget randomWidgetMock;
     @Mock TreeSelectionModel<OntologyHierarchy> treeSelectionModelMock;
@@ -149,9 +150,10 @@ public class OntologyHierarchiesPresenterImplTest {
         when(hierarchyTreeMock.getSelectionModel()).thenReturn(treeSelectionModelMock);
         when(hierarchyTreeMock.getStore()).thenReturn(hierarchyTreeStoreMock);
         when(hierarchyTreeStoreMock.findModelWithKey(anyString())).thenReturn(hierarchyMock);
-        when(tabPanelMock.getWidgetCount()).thenReturn(2);
-        when(tabPanelMock.iterator()).thenReturn(tabPanelIteratorMock);
-        when(tabPanelMock.getWidget(anyInt())).thenReturn(hierarchyTreeMock);
+        when(appNavigationViewMock.getWidgetCount()).thenReturn(2);
+        when(appNavigationViewMock.getWidgets()).thenReturn(widgetsMock);
+        when(widgetsMock.iterator()).thenReturn(tabPanelIteratorMock);
+        when(appNavigationViewMock.getWidget(anyInt())).thenReturn(hierarchyTreeMock);
         when(tabPanelIteratorMock.hasNext()).thenReturn(true, true, false);
         when(tabPanelIteratorMock.next()).thenReturn(hierarchyTreeMock).thenReturn(randomWidgetMock);
         when(appMock.getHierarchies()).thenReturn(hierarchyListMock);
@@ -195,7 +197,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.handlerManager = handlerManagerMock;
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
         uut.searchRegexPattern = "test";
-        uut.viewTabPanel = tabPanelMock;
+        uut.appNavigationView = appNavigationViewMock;
         uut.unclassifiedHierarchies = unclassifiedHierarchiesMock;
         uut.views = viewsMock;
     }
@@ -223,7 +225,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(hierarchyMock, tabPanelMock);
+        uut.go(hierarchyMock, appNavigationViewMock);
         verify(ontologyServiceMock).getRootHierarchies(hierarchyListCallback.capture());
 
         hierarchyListCallback.getValue().onSuccess(hierarchyListMock);
@@ -251,7 +253,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(hierarchyMock, tabPanelMock);
+        uut.go(hierarchyMock, appNavigationViewMock);
         verify(ontologyServiceMock).getRootHierarchies(hierarchyListCallback.capture());
 
         hierarchyListCallback.getValue().onSuccess(hierarchyListMock);
@@ -373,10 +375,9 @@ public class OntologyHierarchiesPresenterImplTest {
         verify(viewMock).setRoot(hierarchyMock);
         verify(viewsMock).add(viewMock);
         verify(viewMock).addOntologyHierarchySelectionChangedEventHandler(spy);
-        verify(tabPanelMock).insert(eq(hierarchyTreeMock),
-                                    anyInt(),
-                                    isA(TabItemConfig.class),
-                                    anyString());
+        verify(appNavigationViewMock).insert(eq(hierarchyTreeMock),
+                                             anyInt(),
+                                             anyString());
         verify(spy).populateViewTabs(selectedHierarchy);
     }
 
@@ -484,9 +485,9 @@ public class OntologyHierarchiesPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onDetailsHierarchyClicked(eventMock);
 
-        verify(tabPanelMock).getWidget(anyInt());
+        verify(appNavigationViewMock).getWidget(anyInt());
         verify(hierarchyTreeStoreMock).findModelWithKey(anyString());
-        verify(tabPanelMock).setActiveWidget(eq(hierarchyTreeMock));
+        verify(appNavigationViewMock).setActiveWidget(eq(hierarchyTreeMock));
         verify(treeSelectionModelMock).select(eq(hierarchyMock), anyBoolean());
     }
 
@@ -494,14 +495,14 @@ public class OntologyHierarchiesPresenterImplTest {
     public void testOnDetailsCategoryClicked() {
         DetailsCategoryClicked eventMock = mock(DetailsCategoryClicked.class);
         when(eventMock.getCategory()).thenReturn(appCategoryMock);
-        when(tabPanelMock.getWidget(anyInt())).thenReturn(categoryTreeMock);
+        when(appNavigationViewMock.getWidget(anyInt())).thenReturn(categoryTreeMock);
 
         /*** CALL METHOD UNDER TEST ***/
         uut.onDetailsCategoryClicked(eventMock);
 
-        verify(tabPanelMock).getWidget(anyInt());
+        verify(appNavigationViewMock).getWidget(anyInt());
         verify(categoryTreeStoreMock).findModelWithKey(anyString());
-        verify(tabPanelMock).setActiveWidget(eq(categoryTreeMock));
+        verify(appNavigationViewMock).setActiveWidget(eq(categoryTreeMock));
         verify(categoryTreeSelectionModelMock).select(eq(appCategoryMock), anyBoolean());
     }
 

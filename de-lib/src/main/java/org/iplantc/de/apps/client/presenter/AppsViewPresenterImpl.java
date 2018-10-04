@@ -7,13 +7,13 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.util.OntologyUtil;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -97,10 +97,10 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     public void go(final HasOneWidget container,
                    final HasId selectedAppCategory,
                    final HasId selectedApp, final String activeView, final boolean catPanelCollapsed) {
-        DETabPanel tabPanel = view.getCategoryTabPanel();
-        if (isEmpty(tabPanel)) {
-            categoriesPresenter.go(selectedAppCategory, true, tabPanel);
-            hierarchiesPresenter.go(null, tabPanel);
+        AppNavigationView appNavigationView = view.getAppNavigationView();
+        if (appNavigationView.isEmpty()) {
+            categoriesPresenter.go(selectedAppCategory, true, appNavigationView);
+            hierarchiesPresenter.go(null, appNavigationView);
         }
         if (!Strings.isNullOrEmpty(activeView)) {
             appsListPresenter.setActiveView(activeView);
@@ -163,11 +163,11 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         boolean hasSearchPhrase = toolbarPresenter.getView().hasSearchPhrase();
         boolean useDefaultSelection = !hasSearchPhrase && selectedHierarchy == null;
 
-        view.clearTabPanel();
-        DETabPanel categoryTabPanel = view.getCategoryTabPanel();
+        view.resetAppNavigationView();
+        AppNavigationView appNavigationView = view.getAppNavigationView();
 
-        categoriesPresenter.go(selectedAppCategory, useDefaultSelection, categoryTabPanel);
-        hierarchiesPresenter.go(selectedHierarchy, categoryTabPanel);
+        categoriesPresenter.go(selectedAppCategory, useDefaultSelection, appNavigationView);
+        hierarchiesPresenter.go(selectedHierarchy, appNavigationView);
         if (hasSearchPhrase) {
             toolbarPresenter.reloadSearchResults();
         }

@@ -20,6 +20,7 @@ import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.ParentFilteredHierarchyCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
@@ -31,7 +32,6 @@ import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
@@ -47,7 +47,6 @@ import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
-import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import java.util.List;
@@ -155,7 +154,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     OntologyUtil ontologyUtil;
     @Inject AsyncProvider<AppDetailsDialog> appDetailsDlgAsyncProvider;
     @Inject AppUserServiceFacade appUserService;
-    DETabPanel viewTabPanel;
+    AppNavigationView appNavigationView;
     private OntologyServiceFacade serviceFacade;
     private OntologyHierarchiesView.OntologyHierarchiesAppearance appearance;
     protected String searchRegexPattern;
@@ -184,11 +183,11 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     }
 
     @Override
-    public void go(final OntologyHierarchy selectedHierarchy, final DETabPanel tabPanel) {
+    public void go(final OntologyHierarchy selectedHierarchy, final AppNavigationView appNavigationView) {
         desiredHierarchyFound = false;
         unclassifiedHierarchies = Lists.newArrayList();
         views = Lists.newArrayList();
-        viewTabPanel = tabPanel;
+        this.appNavigationView = appNavigationView;
         serviceFacade.getRootHierarchies(new AppsCallback<List<OntologyHierarchy>>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -258,7 +257,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
             view.asWidget().ensureDebugId(hierarchyDebugId);
             view.addOntologyHierarchySelectionChangedEventHandler(this);
             //As a preference, insert the hierarchy tabs before the HPC tab which is last
-            viewTabPanel.insert(tree, viewTabPanel.getWidgetCount() - 1, new TabItemConfig(appearance.hierarchyLabelName(hierarchy)), hierarchyDebugId);
+            appNavigationView.insert(tree, appNavigationView.getWidgetCount() - 1, appearance.hierarchyLabelName(hierarchy));
         }
 
         populateViewTabs(selectedHierarchy);
@@ -295,7 +294,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
         searchRegexPattern = event.getSearchPattern();
-        for (Widget widget : viewTabPanel) {
+        for (Widget widget : appNavigationView.getWidgets()) {
             if (widget instanceof Tree) {
                 ((Tree)widget).getSelectionModel().deselectAll();
             }
@@ -324,7 +323,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                               OntologyHierarchy selectedHierarchy) {
         Tree.TreeNode<OntologyHierarchy> node = tree.findNode(selectedHierarchy);
         if (node != null) {
-            viewTabPanel.setActiveWidget(tree);
+            appNavigationView.setActiveWidget(tree);
             tree.getSelectionModel().select(node.getModel(), true);
             return true;
         }
@@ -408,11 +407,11 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         checkNotNull(hierarchy);
 
         String id = ontologyUtil.getOrCreateHierarchyPathTag(hierarchy);
-        for (int i = 0; i < viewTabPanel.getWidgetCount(); i++) {
-            Tree<OntologyHierarchy, String> tree = ((Tree)viewTabPanel.getWidget(i));
+        for (int i = 0; i < appNavigationView.getWidgetCount(); i++) {
+            Tree<OntologyHierarchy, String> tree = ((Tree)appNavigationView.getWidget(i));
             OntologyHierarchy selectedHierarchy = tree.getStore().findModelWithKey(id);
             if (selectedHierarchy != null) {
-                viewTabPanel.setActiveWidget(tree);
+                appNavigationView.setActiveWidget(tree);
                 tree.scrollIntoView(selectedHierarchy);
                 tree.getSelectionModel().select(selectedHierarchy, true);
                 break;
@@ -425,11 +424,11 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         AppCategory category = event.getCategory();
         checkNotNull(category);
 
-        for (int i = 0 ; i < viewTabPanel.getWidgetCount() ; i++) {
-            Tree<AppCategory, String> tree = ((Tree)viewTabPanel.getWidget(i));
+        for (int i = 0; i < appNavigationView.getWidgetCount() ; i++) {
+            Tree<AppCategory, String> tree = ((Tree)appNavigationView.getWidget(i));
             AppCategory selectedCategory = tree.getStore().findModelWithKey(category.getId());
             if (selectedCategory != null) {
-                viewTabPanel.setActiveWidget(tree);
+                appNavigationView.setActiveWidget(tree);
                 tree.scrollIntoView(selectedCategory);
                 tree.getSelectionModel().select(selectedCategory, true);
                 break;

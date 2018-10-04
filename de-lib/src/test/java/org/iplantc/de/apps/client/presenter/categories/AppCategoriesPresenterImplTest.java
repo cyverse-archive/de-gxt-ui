@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.apps.client.AppCategoriesView;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.events.AppSavedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
@@ -27,7 +28,6 @@ import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -75,7 +75,7 @@ public class AppCategoriesPresenterImplTest {
     @Mock AppCategoriesView.AppCategoriesAppearance appearanceMock;
     @Mock Tree<AppCategory, String> treeMock;
     @Mock TreeSelectionModel<AppCategory> selectionModelMock;
-    @Mock DETabPanel tabPanelMock;
+    @Mock AppNavigationView appNavigationViewMock;
     @Mock List<Tree<AppCategory, String>> treesMock;
     @Mock Iterator<Tree<AppCategory, String>> treesIteratorMock;
     @Mock AppCategory categoryMock;
@@ -129,7 +129,7 @@ public class AppCategoriesPresenterImplTest {
         uut.workspaceView = workspaceViewMock;
         uut.hpcView = hpcViewMock;
         uut.trees = treesMock;
-        uut.viewTabPanel = tabPanelMock;
+        uut.appNavigationView = appNavigationViewMock;
     }
 
     @Test public void testConstructorEventHandlerWiring() {
@@ -152,7 +152,7 @@ public class AppCategoriesPresenterImplTest {
         when(appearanceMock.hpcTab()).thenReturn("hpc");
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.go(null, false, tabPanelMock);
+        uut.go(null, false, appNavigationViewMock);
 
         verify(treeMock, times(2)).mask(anyString());
         verify(appServiceMock).getAppCategories(anyBoolean(), appCategoriesCaptor.capture());
@@ -267,7 +267,7 @@ public class AppCategoriesPresenterImplTest {
 
         /*** CALL METHOD UNDER TEST ***/
         uut.selectDefaultCategory();
-        verify(tabPanelMock).setActiveWidget(treeMock);
+        verify(appNavigationViewMock).setActiveWidget(treeMock);
         verify(selectionModelMock).select(isA(AppCategory.class), eq(true));
     }
 

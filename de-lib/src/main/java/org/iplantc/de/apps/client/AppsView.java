@@ -1,10 +1,10 @@
 package org.iplantc.de.apps.client;
 
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -84,13 +84,13 @@ public interface AppsView extends IsWidget,
         public boolean isDetailsCollapsed();
     }
 
-    DETabPanel getCategoryTabPanel();
+    AppNavigationView getAppNavigationView();
 
     void hideAppMenu();
 
     void hideWorkflowMenu();
 
-    void clearTabPanel();
+    void resetAppNavigationView();
 
     boolean isNavPanelCollapsed();
 

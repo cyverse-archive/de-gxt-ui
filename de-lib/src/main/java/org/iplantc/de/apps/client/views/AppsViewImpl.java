@@ -1,19 +1,19 @@
 package org.iplantc.de.apps.client.views;
 
 import org.iplantc.de.apps.client.AppCategoriesView;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.shared.AppsModule.Ids;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,7 +37,7 @@ public class AppsViewImpl extends Composite implements AppsView {
     }
 
     @UiField(provided = true) final AppsToolbarView toolBar;
-    @UiField DETabPanel categoryTabs;
+    @UiField(provided = true) AppNavigationView appNavigationView;
     @UiField
     ContentPanel westPanel;
     AppCategoriesView.Presenter categoriesPresenter;
@@ -55,27 +55,26 @@ public class AppsViewImpl extends Composite implements AppsView {
     protected AppsViewImpl(@Assisted final AppCategoriesView.Presenter categoriesPresenter,
                            @Assisted final OntologyHierarchiesView.Presenter hierarchiesPresenter,
                            @Assisted final AppsListView.Presenter gridPresenter,
-                           @Assisted final AppsToolbarView.Presenter toolbarPresenter) {
+                           @Assisted final AppsToolbarView.Presenter toolbarPresenter,
+                           AppNavigationView appNavigationView) {
         this.categoriesPresenter = categoriesPresenter;
         this.hierarchiesPresenter = hierarchiesPresenter;
         this.gridPresenter = gridPresenter;
         this.toolBar = toolbarPresenter.getView();
+        this.appNavigationView = appNavigationView;
 
         initWidget(uiBinder.createAndBindUi(this));
 
-        categoryTabs.addSelectionHandler(new SelectionHandler<Widget>() {
-            @Override
-            public void onSelection(SelectionEvent<Widget> event) {
-                Widget selectedItem = event.getSelectedItem();
-                for (Widget currentItem : categoryTabs) {
-                    if (currentItem != selectedItem) {
-                        ((Tree)currentItem).getSelectionModel().deselectAll();
-                    }
+        appNavigationView.addSelectionHandler(event -> {
+            Widget selectedItem = event.getSelectedItem();
+            for (Widget currentItem : appNavigationView.getWidgets()) {
+                if (currentItem != selectedItem) {
+                    ((Tree)currentItem).getSelectionModel().deselectAll();
                 }
-                List<AppCategory> items = ((Tree)selectedItem).getStore().getRootItems();
-                if (items != null && items.size() > 0) {
-                    ((Tree)selectedItem).getSelectionModel().select(items.get(0), false);
-                }
+            }
+            List<AppCategory> items = ((Tree)selectedItem).getStore().getRootItems();
+            if (items != null && items.size() > 0) {
+                ((Tree)selectedItem).getSelectionModel().select(items.get(0), false);
             }
         });
 
@@ -93,8 +92,8 @@ public class AppsViewImpl extends Composite implements AppsView {
     }
 
     @Override
-    public DETabPanel getCategoryTabPanel() {
-        return categoryTabs;
+    public AppNavigationView getAppNavigationView() {
+        return appNavigationView;
     }
 
     @Override
@@ -107,13 +106,8 @@ public class AppsViewImpl extends Composite implements AppsView {
         toolBar.hideWorkflowMenu();
     }
 
-    public void clearTabPanel() {
-        categoryTabs.disableEvents();
-        int tabCount = categoryTabs.getWidgetCount();
-        for (int i = 0 ; i < tabCount ; i++) {
-            categoryTabs.close(categoryTabs.getWidget(0));
-        }
-        categoryTabs.enableEvents();
+    public void resetAppNavigationView() {
+        appNavigationView.clear();
     }
 
     @Override

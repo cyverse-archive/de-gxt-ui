@@ -4,9 +4,9 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -31,7 +31,7 @@ public interface OntologyHierarchiesView extends IsWidget,
                                 OntologyHierarchySelectionChangedEvent.HasOntologyHierarchySelectionChangedEventHandlers,
                                 SelectedHierarchyNotFound.HasSelectedHierarchyNotFoundHandlers {
 
-        void go(OntologyHierarchy selectedHierarchy, DETabPanel tabPanel);
+        void go(OntologyHierarchy selectedHierarchy, AppNavigationView appNavigationView);
 
         void setViewDebugId(String baseID);
 

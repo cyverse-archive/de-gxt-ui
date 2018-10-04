@@ -1,0 +1,23 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
+
+    <ui:with field="comboBox"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+    <ui:with field="containerData"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes width="1" height="1"/>
+    </ui:with>
+    <container:VerticalLayoutContainer ui:field="vlc">
+        <container:child layoutData="{comboBox}">
+            <form:SimpleComboBox ui:field="combo"
+                                 editable="false"
+                                 triggerAction="ALL"/>
+        </container:child>
+        <container:child layoutData="{containerData}">
+            <container:CardLayoutContainer ui:field="container"/>
+        </container:child>
+    </container:VerticalLayoutContainer>
+</ui:UiBinder>
