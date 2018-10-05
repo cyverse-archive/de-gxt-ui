@@ -33,17 +33,20 @@ import { injectIntl } from "react-intl";
 import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 
 function AnalysisName(props) {
-    let name = props.analysis.name;
-    let isBatch = props.analysis.batch;
-    let className = props.classes.analysisName;
-    let presenter = props.presenter;
-    let resultFolderId = props.analysis.resultfolderid;
-    let handleGoToOutputFolder = props.handleGoToOutputFolder;
+    const name = props.analysis.name;
+    const isBatch = props.analysis.batch;
+    const className = props.classes.analysisName;
+    const presenter = props.presenter;
+    const resultFolderId = props.analysis.resultfolderid;
+    const handleGoToOutputFolder = props.handleGoToOutputFolder;
+    const handleBatchIconClick = props.handleBatchIconClick;
 
     if (isBatch) {
         return (
             <span className={className} onClick={handleGoToOutputFolder}>
-                <ListAltIcon style={{color: Color.darkGreen}}/><sup>{name}</sup>
+                <ListAltIcon onClick={handleBatchIconClick}
+                             style={{color: Color.darkGreen}}/>
+                <sup>{name}</sup>
             </span>
         );
     } else {
@@ -201,6 +204,7 @@ class AnalysesView extends Component {
         this.update = this.update.bind(this);
         this.onShareWithSupport = this.onShareWithSupport.bind(this);
         this.statusClick = this.statusClick.bind(this);
+        this.handleBatchIconClick = this.handleBatchIconClick.bind(this);
     }
 
     componentDidMount() {
@@ -238,11 +242,16 @@ class AnalysesView extends Component {
         );
     }
 
+    handleBatchIconClick(event, id) {
+        event.stopPropagation();
+        this.handleRowClick(id);
+        this.fetchAnalyses();
+    }
 
     getParentIdFilter() {
         const idParentFilter = Object.create(filter);
         idParentFilter.field = "parent_id";
-        idParentFilter.value = this.state.parentId;
+        idParentFilter.value = this.state.selected[0];
         return idParentFilter;
     }
 
@@ -311,8 +320,8 @@ class AnalysesView extends Component {
     }
 
     statusClick(analysis) {
+        this.handleRowClick(analysis.id);
         this.setState((prevState, props) => {
-            this.handleRowClick(analysis.id)
             return {shareWithSupportDialogOpen: true}
         });
     }
@@ -621,7 +630,10 @@ class AnalysesView extends Component {
                                                 <TableCell padding="none">
                                                     <AnalysisName classes={classes}
                                                                   analysis={n}
-                                                                  handleGoToOutputFolder={this.handleGoToOutputFolder}/>
+                                                                  handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                                  handleBatchIconClick={(event) => this.handleBatchIconClick(
+                                                                      event,
+                                                                      id)}/>
                                                 </TableCell>
                                                 <TableCell className={classes.cellText}
                                                            padding="none">{username}</TableCell>

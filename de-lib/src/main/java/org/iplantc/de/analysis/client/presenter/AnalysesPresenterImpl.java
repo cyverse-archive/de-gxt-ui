@@ -61,7 +61,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 
 import org.apache.http.HttpStatus;
@@ -381,10 +380,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         config.setOffset(0);
         loader.load(config);
         */
-    }
-
-    FilterConfigBean getFilterConfigBean() {
-        return new FilterConfigBean();
     }
 
     @Override
