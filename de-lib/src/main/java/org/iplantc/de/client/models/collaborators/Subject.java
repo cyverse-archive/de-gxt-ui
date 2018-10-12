@@ -22,6 +22,7 @@ public interface Subject extends HasSettableId, HasName {
     String GROUP_NAME_DELIMITER = ":";
     String LIST_LONG_NAME_REGEX = ".*collaborator-lists:(.+)";
     String TEAM_LONG_NAME_REGEX = ".*teams:.+:(.+)";
+    String COMMUNITY_LONG_NAME_REGEX = ".*communities:.+:(.+)";
 
     @AutoBean.PropertyName("first_name")
     String getFirstName();
@@ -126,6 +127,11 @@ public interface Subject extends HasSettableId, HasName {
 
     default boolean isTeam() {
         RegExp regex = RegExp.compile(TEAM_LONG_NAME_REGEX);
+        return regex.test(getDisplayName());
+    }
+
+    default boolean isCommunity() {
+        RegExp regex = RegExp.compile(COMMUNITY_LONG_NAME_REGEX);
         return regex.test(getDisplayName());
     }
 }

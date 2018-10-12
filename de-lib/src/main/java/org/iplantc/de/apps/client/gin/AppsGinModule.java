@@ -5,6 +5,7 @@ import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
+import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
@@ -14,9 +15,11 @@ import org.iplantc.de.apps.client.gin.factory.AppSharingPresenterFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
+import org.iplantc.de.apps.client.gin.factory.CommunitiesViewFactory;
 import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.AppsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.categories.AppCategoriesPresenterImpl;
+import org.iplantc.de.apps.client.presenter.communities.CommunitiesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.details.AppDetailsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.hierarchies.OntologyHierarchiesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
@@ -25,6 +28,7 @@ import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
 import org.iplantc.de.apps.client.views.AppsViewImpl;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
+import org.iplantc.de.apps.client.views.communities.CommunitiesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.client.views.details.doc.AppDocEditView;
@@ -92,6 +96,11 @@ public class AppsGinModule extends AbstractGinModule {
                                                         OntologyHierarchiesViewImpl.class)
                                              .build(OntologyHierarchiesViewFactory.class));
         bind(OntologyHierarchiesView.Presenter.class).to(OntologyHierarchiesPresenterImpl.class);
+
+        // Communities View
+        install(new GinFactoryModuleBuilder().implement(CommunitiesView.class, CommunitiesViewImpl.class)
+                                             .build(CommunitiesViewFactory.class));
+        bind(CommunitiesView.Presenter.class).to(CommunitiesPresenterImpl.class);
 
         // List View
         bind(AppsListView.Presenter.class).to(AppsListPresenterImpl.class);
