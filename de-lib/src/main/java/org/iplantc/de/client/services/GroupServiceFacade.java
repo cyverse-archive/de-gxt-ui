@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -35,6 +36,11 @@ public interface GroupServiceFacade {
      */
     void getMyTeams(AsyncCallback<List<Group>> teamListCallback);
 
+    /**
+     * Get the list of all Communities for which the user has View permissions
+     * @param communitiesCallback
+     */
+    void getCommunities(AsyncCallback<List<Group>> communitiesCallback);
 
     /**
      * Create a Collaborator List
