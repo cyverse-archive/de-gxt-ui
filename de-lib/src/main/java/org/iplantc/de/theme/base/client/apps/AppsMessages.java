@@ -157,4 +157,6 @@ public interface AppsMessages extends Messages {
     String cannotPublish();
 
     String system();
+
+    String communities();
 }
