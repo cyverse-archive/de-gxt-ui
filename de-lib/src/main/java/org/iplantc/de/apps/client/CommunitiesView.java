@@ -29,7 +29,8 @@ public interface CommunitiesView extends IsWidget,
     }
 
 
-    interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+    interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler,
+                                CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers {
 
         Group getSelectedCommunity();
 

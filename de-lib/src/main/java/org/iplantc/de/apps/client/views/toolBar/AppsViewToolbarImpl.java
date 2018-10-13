@@ -9,6 +9,7 @@ import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
@@ -53,6 +54,8 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
+
+import org.springframework.security.access.method.P;
 
 import java.util.Arrays;
 import java.util.List;
@@ -233,6 +236,13 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @Override
     public void onOntologyHierarchySelectionChanged(OntologyHierarchySelectionChangedEvent event) {
         if (event.getSelectedHierarchy() != null) {
+            appSearch.clear();
+        }
+    }
+
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
+        if (event.getCommunitySelection() != null) {
             appSearch.clear();
         }
     }

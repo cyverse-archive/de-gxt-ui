@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
+import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
@@ -12,6 +13,7 @@ import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.util.OntologyUtil;
 
@@ -36,6 +38,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     private final AppCategoriesView.Presenter categoriesPresenter;
     private final AppsListView.Presenter appsListPresenter;
     private final OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    private final CommunitiesView.Presenter communitiesPresenter;
     private final AppsToolbarView.Presenter toolbarPresenter;
     @Inject UserInfo userInfo;
     OntologyUtil ontologyUtil;
@@ -45,11 +48,13 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
                                     final AppCategoriesView.Presenter categoriesPresenter,
                                     final AppsListView.Presenter appsListPresenter,
                                     final AppsToolbarView.Presenter toolbarPresenter,
-                                    final OntologyHierarchiesView.Presenter hierarchiesPresenter) {
+                                    final OntologyHierarchiesView.Presenter hierarchiesPresenter,
+                                    final CommunitiesView.Presenter communitiesPresenter) {
         this.categoriesPresenter = categoriesPresenter;
         this.appsListPresenter = appsListPresenter;
         this.hierarchiesPresenter = hierarchiesPresenter;
         this.toolbarPresenter = toolbarPresenter;
+        this.communitiesPresenter = communitiesPresenter;
         this.view = viewFactory.create(categoriesPresenter,
                                        hierarchiesPresenter, appsListPresenter,
                                        toolbarPresenter);
@@ -61,6 +66,9 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(appsListPresenter);
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(toolbarPresenter.getView());
         hierarchiesPresenter.addSelectedHierarchyNotFoundHandler(categoriesPresenter);
+
+        communitiesPresenter.addCommunitySelectedEventHandler(appsListPresenter);
+        communitiesPresenter.addCommunitySelectedEventHandler(toolbarPresenter.getView());
 
         appsListPresenter.addAppSelectionChangedEventHandler(toolbarPresenter.getView());
         appsListPresenter.addAppInfoSelectedEventHandler(hierarchiesPresenter);
@@ -96,11 +104,14 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void go(final HasOneWidget container,
                    final HasId selectedAppCategory,
-                   final HasId selectedApp, final String activeView, final boolean catPanelCollapsed) {
+                   final HasId selectedApp,
+                   final String activeView,
+                   final boolean catPanelCollapsed) {
         AppNavigationView appNavigationView = view.getAppNavigationView();
         if (appNavigationView.isEmpty()) {
             categoriesPresenter.go(selectedAppCategory, true, appNavigationView);
             hierarchiesPresenter.go(null, appNavigationView);
+            communitiesPresenter.go(null, appNavigationView);
         }
         if (!Strings.isNullOrEmpty(activeView)) {
             appsListPresenter.setActiveView(activeView);
@@ -160,14 +171,16 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     public void onRefreshAppsSelected(RefreshAppsSelectedEvent event) {
         AppCategory selectedAppCategory = categoriesPresenter.getSelectedAppCategory();
         OntologyHierarchy selectedHierarchy = hierarchiesPresenter.getSelectedHierarchy();
+        Group selectedCommunity = communitiesPresenter.getSelectedCommunity();
         boolean hasSearchPhrase = toolbarPresenter.getView().hasSearchPhrase();
-        boolean useDefaultSelection = !hasSearchPhrase && selectedHierarchy == null;
+        boolean useDefaultSelection = !hasSearchPhrase && selectedHierarchy == null && selectedCommunity == null;
 
         view.resetAppNavigationView();
         AppNavigationView appNavigationView = view.getAppNavigationView();
 
         categoriesPresenter.go(selectedAppCategory, useDefaultSelection, appNavigationView);
         hierarchiesPresenter.go(selectedHierarchy, appNavigationView);
+        communitiesPresenter.go(selectedCommunity, appNavigationView);
         if (hasSearchPhrase) {
             toolbarPresenter.reloadSearchResults();
         }
