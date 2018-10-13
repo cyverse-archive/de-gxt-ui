@@ -1,6 +1,5 @@
 package org.iplantc.de.apps.client.presenter.communities;
 
-import org.iplantc.de.apps.client.AppNavigationView;
 import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
@@ -16,8 +15,12 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -50,17 +53,15 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
     @Inject OauthServiceFacade oauthServiceFacade;
     @Inject CommunitiesView.Appearance appearance;
     @Inject UserInfo userInfo;
-    AppNavigationView appNavigationView;
+    DETabPanel deTabPanel;
     CommunitiesViewFactory viewFactory;
     CommunitiesView view;
+    HandlerManager handlerManager;
     String baseId;
 
     @Inject
     CommunitiesPresenterImpl(final CommunitiesViewFactory viewFactory) {
         this.viewFactory = viewFactory;
-        this.view = viewFactory.create(new CommunityTreeStoreProvider().get());
-
-        view.addCommunitySelectedEventHandler(this);
     }
 
     @Override
@@ -74,22 +75,20 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
     }
 
     @Override
-    public void go(final HasId selectedCommunity, final AppNavigationView appNavigationView) {
-        this.appNavigationView = appNavigationView;
-
-        this.appNavigationView.add(view.getTree(), appearance.communities());
-
-        view.getTree().mask(appearance.loadingMask());
+    public void go(final HasId selectedCommunity, final DETabPanel deTabPanel) {
+        this.deTabPanel = deTabPanel;
 
         groupServiceFacade.getCommunities(new AsyncCallback<List<Group>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
-                appNavigationView.unmask();
+                deTabPanel.unmask();
             }
 
             @Override
             public void onSuccess(List<Group> result) {
+                createView();
+                view.getTree().mask(appearance.loadingMask());
                 addCommunitiesToTree(result);
                 selectedDesiredCommunity(selectedCommunity);
                 view.getTree().unmask();
@@ -98,10 +97,18 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
     }
 
+    void createView() {
+        this.view = viewFactory.create(new CommunityTreeStoreProvider().get());
+        view.addCommunitySelectedEventHandler(this);
+
+        this.deTabPanel.insert(view.getTree(), deTabPanel.getWidgetCount() - 1, appearance.communities());
+    }
+
     void selectedDesiredCommunity(HasId selectedCommunity) {
         if (selectedCommunity != null) {
             Tree<Group, String> tree = view.getTree();
             Group community = tree.getStore().findModelWithKey(selectedCommunity.getId());
+            deTabPanel.setActiveWidget(tree);
             tree.getSelectionModel().select(community, true);
         }
     }
@@ -121,10 +128,25 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
     @Override
     public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
-        List<Group> communitySelection = event.getCommunitySelection();
-        if (communitySelection.size() == 1) {
-            Group community = communitySelection.get(0);
-            view.getTree().getSelectionModel().select(community, true);
+        fireEvent(event);
+    }
+
+    @Override
+    public HandlerRegistration addCommunitySelectedEventHandler(CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler handler) {
+        return ensureHandlers().addHandler(CommunitySelectionChangedEvent.TYPE, handler);
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    void fireEvent(GwtEvent<?> event) {
+        if (handlerManager != null) {
+            handlerManager.fireEvent(event);
         }
     }
 }

@@ -16,6 +16,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
@@ -29,6 +30,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
@@ -303,6 +305,20 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         getAppsWithSelectedCategory();
     }
 
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
+        tileView.onCommunitySelectionChanged(event);
+        gridView.onCommunitySelectionChanged(event);
+
+        List<Group> communities = event.getCommunitySelection();
+
+        if (communities.isEmpty()) {
+            return;
+        }
+        Preconditions.checkArgument(event.getCommunitySelection().size() == 1);
+        getCommunityApps(communities.get(0));
+    }
+
     protected void disableTypeFilterForHPC() {
         if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
             filter = AppTypeFilter.AGAVE;
@@ -314,6 +330,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             }
         }
         activeView.setAppTypeFilter(filter);
+    }
+
+    void getCommunityApps(Group community) {
+        activeView.mask(appearance.getAppsLoadingMask());
+        appService.getCommunityApps(community, filter, new AppListCallback());
     }
 
     protected void getAppsWithSelectedCategory() {

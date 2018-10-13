@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.models.CommunityStringValueProvider;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.core.client.GWT;
@@ -20,6 +21,9 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -50,9 +54,16 @@ public class CommunitiesViewImpl extends ContentPanel implements CommunitiesView
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Group> event) {
-        if(!event.getSelection().isEmpty()){
-            fireEvent(new CommunitySelectionChangedEvent(event.getSelection()));
+        List<Group> communities = event.getSelection();
+        if(!communities.isEmpty()) {
+            fireEvent(new CommunitySelectionChangedEvent(event.getSelection(),
+                                                         getCommunityPath(communities)));
         }
+    }
+
+    List<String> getCommunityPath(List<Group> communities) {
+        // Assuming no sub-communities for now
+        return communities.stream().map(Subject::getGroupShortName).collect(Collectors.toList());
     }
 
     @Override

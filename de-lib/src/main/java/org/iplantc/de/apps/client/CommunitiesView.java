@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -29,14 +30,15 @@ public interface CommunitiesView extends IsWidget,
     }
 
 
-    interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+    interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler,
+                                CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers {
 
         Group getSelectedCommunity();
 
         CommunitiesView getView();
 
         void go(HasId selectedCommunity,
-                AppNavigationView appNavigationView);
+                DETabPanel deTabPanel);
 
         void setViewDebugId(String baseID);
     }

@@ -25,8 +25,11 @@ public class CommunitySelectionChangedEvent extends GwtEvent<CommunitySelectionC
     public static final Type<CommunitySelectionChangedEventHandler> TYPE = new Type<>();
 
     private final List<Group> communitySelection;
+    private List<String> path;
 
-    public CommunitySelectionChangedEvent(final List<Group> communitySelection) {
+    public CommunitySelectionChangedEvent(final List<Group> communitySelection,
+                                          List<String> path) {
+        this.path = path;
         Preconditions.checkNotNull(communitySelection);
         this.communitySelection = communitySelection;
     }
@@ -45,4 +48,7 @@ public class CommunitySelectionChangedEvent extends GwtEvent<CommunitySelectionC
         handler.onCommunitySelectionChanged(this);
     }
 
+    public List<String> getPath() {
+        return path;
+    }
 }

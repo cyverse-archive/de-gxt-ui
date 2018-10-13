@@ -12,6 +12,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
@@ -209,6 +210,16 @@ public class AppsTileViewImpl extends ContentPanel
         setHeading(Joiner.on(" >> ").join(event.getPath()));
 
         if (event.getSelectedHierarchy() != null) {
+            // Reset Search
+            setSearchPattern("");
+        }
+    }
+
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
+        setHeading(Joiner.on(" >> ").join(event.getPath()));
+
+        if (event.getCommunitySelection() != null) {
             // Reset Search
             setSearchPattern("");
         }

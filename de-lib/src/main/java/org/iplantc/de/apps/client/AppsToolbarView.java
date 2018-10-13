@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
@@ -48,7 +49,8 @@ public interface AppsToolbarView extends IsWidget,
                                          SwapViewButtonClickedEvent.HasSwapViewButtonClickedEventHandlers,
                                          RefreshAppsSelectedEvent.HasRefreshAppsSelectedEventHandlers,
                                          ManageToolsClickedEvent.HasManageToolsClickedEventHandlers,
-                                         PublishAppSelected.HasPublishAppSelectedHandlers {
+                                         PublishAppSelected.HasPublishAppSelectedHandlers,
+                                         CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
 
     interface AppsToolbarAppearance {
 
