@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -68,4 +69,12 @@ public interface AppServiceFacade {
      */
 
     void getAppCategories(boolean privateOnly, DECallback<List<AppCategory>> callback);
+
+    /**
+     * Retrieves an app listing for the specified community
+     * @param community
+     * @param filter
+     * @param callback
+     */
+    void getCommunityApps(Group community, AppTypeFilter filter, DECallback<List<App>> callback);
 }

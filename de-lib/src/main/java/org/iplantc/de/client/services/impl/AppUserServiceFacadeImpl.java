@@ -26,6 +26,7 @@ import org.iplantc.de.client.models.apps.sharing.AppPermissionsRequest;
 import org.iplantc.de.client.models.apps.sharing.AppSharingAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
@@ -83,6 +84,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     private final String APPS = "org.iplantc.services.apps";
     private final String CATEGORIES = "org.iplantc.services.apps.categories";
     private final String PIPELINES = "org.iplantc.services.apps.pipelines";
+    private final String APP_COMMUNITIES = "org.iplantc.services.apps.communities";
     private final DiscEnvApiService deServiceFacade;
     private final EmailServiceAsync emailService;
     @Inject IplantDisplayStrings displayStrings;
@@ -115,6 +117,22 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new AppCategoryListCallbackConverter(callback));
+    }
+
+    @Override
+    public void getCommunityApps(Group community, AppTypeFilter filter, DECallback<List<App>> callback) {
+        String address = APP_COMMUNITIES + "/" + URL.encode(community.getDisplayName()) + "/apps";
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
+            address = address + "?app-type=" + filter.getFilterString();
+        }
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
+            @Override
+            protected List<App> convertFrom(String object) {
+                return AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
+            }
+        });
     }
 
     @Override
