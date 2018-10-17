@@ -64,7 +64,6 @@ import com.sencha.gxt.widget.core.client.selection.CellSelection;
 import com.sencha.gxt.widget.core.client.selection.CellSelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.selection.CellSelectionChangedEvent.CellSelectionChangedHandler;
 import com.sencha.gxt.widget.core.client.tree.Tree;
-import com.sencha.gxt.widget.core.client.tree.Tree.TreeAppearance;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -268,7 +267,7 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             }
         });
 
-        setTreeIcons(categoryTree.getStyle());
+        categoryTree.setStyle(appearance.getTreeStyle());
         categoryTree.setCheckable(true);
         categoryTree.setCheckStyle(Tree.CheckCascade.NONE);
         categoryTreeStore.addSortInfo(new StoreSortInfo<>(ontologyUtil.getOntologyNameComparator(),
@@ -296,7 +295,7 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             }
         });
 
-        setTreeIcons(communityTree.getStyle());
+        communityTree.setStyle(appearance.getTreeStyle());
         communityTree.setCheckable(true);
         communityTree.setCheckStyle(Tree.CheckCascade.NONE);
         communityTreeStore.addSortInfo(new StoreSortInfo<>(new GroupComparator(),
@@ -359,15 +358,6 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         field.addValidator(new UrlValidator());
         field.setAllowBlank(false);
         return field;
-    }
-
-    /**
-     * FIXME JDS This needs to be implemented in an {@link TreeAppearance}
-     */
-    private void setTreeIcons(com.sencha.gxt.widget.core.client.tree.TreeStyle style) {
-        style.setNodeCloseIcon(appearance.categoryIcon());
-        style.setNodeOpenIcon(appearance.categoryOpenIcon());
-        style.setLeafIcon(appearance.subCategoryIcon());
     }
 
     @Override

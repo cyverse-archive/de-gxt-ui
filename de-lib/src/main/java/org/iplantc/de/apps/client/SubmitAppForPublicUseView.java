@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
+import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
 import java.util.List;
 
@@ -97,6 +98,8 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         String warning();
 
         SafeHtml communities();
+
+        TreeStyle getTreeStyle();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
