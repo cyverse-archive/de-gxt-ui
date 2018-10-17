@@ -7,8 +7,6 @@ import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
-import org.iplantc.de.client.models.apps.PublishAppRequest;
-import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -21,8 +19,6 @@ import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -397,8 +393,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     @Override
-    public TreeStore<OntologyHierarchy> getCategoryTreeStore() {
-        return categoryTreeStore;
+    public Tree<OntologyHierarchy, String> getCategoryTree() {
+        return categoryTree;
     }
 
     private GridEditing<AppRefLink> createGridEditing() {
@@ -453,28 +449,25 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     ;
 
     @Override
-    public PublishAppRequest getPublishAppRequest() {
-        PublishAppRequest appRequest = factory.publishAppRequest().as();
+    public String getAppDescription() {
+        return appDesc.getValue();
+    }
 
-        appRequest.setSystemId(selectedApp.getSystemId());
-        appRequest.setId(selectedApp.getId());
-        appRequest.setName(appName.getValue());
-        appRequest.setDescription(appDesc.getValue());
-        appRequest.setAvus(getAppAvus());
-        appRequest.setReferences(getRefLinks());
+    @Override
+    public String getAppName() {
+        return appName.getValue();
+    }
 
-
-
+    @Override
+    public String getMarkDownDocs() {
         String md = generateMarkDown(appName.getValue(),
-                                       appDesc.getValue(),
-                                       dataFolderSelector.getValue().getPath(),
-                                       inputDesc.getValue(),
-                                       paramDesc.getValue(),
-                                       outputDesc.getValue());
+                                     appDesc.getValue(),
+                                     dataFolderSelector.getValue().getPath(),
+                                     inputDesc.getValue(),
+                                     paramDesc.getValue(),
+                                     outputDesc.getValue());
         LOG.log(Level.SEVERE, md);
-        appRequest.setDocumentation(md);
-
-        return appRequest;
+        return md;
     }
 
     private boolean checkRefLinksGrid() {
@@ -499,20 +492,13 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         return communityTree.getCheckedSelection().size() > 0;
     }
 
-    private List<String> getRefLinks() {
+    @Override
+    public List<String> getReferenceLinks() {
         List<String> refLinks = Lists.newArrayList();
         for (AppRefLink model : listStore.getAll()) {
             refLinks.add(model.getRefLink());
         }
         return refLinks;
-    }
-
-    private List<Avu> getAppAvus() {
-        List<Avu> avus = Lists.newArrayList();
-        for (OntologyHierarchy model : categoryTree.getCheckedSelection()) {
-            avus.add(ontologyUtil.convertHierarchyToAvu(model));
-        }
-        return avus;
     }
 
     @Override
@@ -528,8 +514,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     @Override
-    public TreeStore<Group> getCommunityTreeStore() {
-        return communityTreeStore;
+    public Tree<Group, String> getCommunityTree() {
+        return communityTree;
     }
 
 }

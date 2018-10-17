@@ -4,13 +4,17 @@ import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppPublishedEvent;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
+import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 
@@ -28,6 +32,7 @@ import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author jstroot
@@ -46,7 +51,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
 
         @Override
         public void onSuccess(List<OntologyHierarchy> result) {
-            addHierarchies(view.getCategoryTreeStore(), null, result);
+            addHierarchies(view.getCategoryTree().getStore(), null, result);
         }
 
         void addHierarchies(TreeStore<OntologyHierarchy> treeStore, OntologyHierarchy parent, List<OntologyHierarchy> children) {
@@ -85,17 +90,22 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject SubmitAppForPublicUseView.SubmitAppAppearance appearance;
     @Inject EventBus eventBus;
     @Inject SubmitAppPresenterBeanFactory factory;
+    @Inject AppAutoBeanFactory appAutoBeanFactory;
+    @Inject AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject SubmitAppForPublicUseView view;
     private OntologyServiceFacade ontologyService;
     private GroupServiceFacade groupServiceFacade;
+    private OntologyUtil ontologyUtil;
     private AsyncCallback<String> callback;
     private Map<String, List<OntologyHierarchy>> iriToHierarchyMap = new FastMap<>();
 
     @Inject
     SubmitAppForPublicPresenter(OntologyServiceFacade ontologyService,
-                                GroupServiceFacade groupServiceFacade) {
+                                GroupServiceFacade groupServiceFacade,
+                                OntologyUtil ontologyUtil) {
         this.ontologyService = ontologyService;
         this.groupServiceFacade = groupServiceFacade;
+        this.ontologyUtil = ontologyUtil;
     }
 
     @Override
@@ -112,7 +122,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
 
             @Override
             public void onSuccess(List<Group> result) {
-                TreeStore<Group> treeStore = view.getCommunityTreeStore();
+                TreeStore<Group> treeStore = view.getCommunityTree().getStore();
                 treeStore.add(result);
             }
         });
@@ -129,12 +139,35 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Override
     public void onSubmit() {
         if (view.validate()) {
-            publishApp(view.getPublishAppRequest());
+            publishApp(getPublishAppRequest());
         } else {
             AlertMessageBox amb = new AlertMessageBox(appearance.warning(),
                                                       appearance.completeRequiredFieldsError());
             amb.show();
         }
+    }
+
+    PublishAppRequest getPublishAppRequest() {
+        PublishAppRequest appRequest = appAutoBeanFactory.publishAppRequest().as();
+        App selectedApp = view.getSelectedApp();
+
+        appRequest.setSystemId(selectedApp.getSystemId());
+        appRequest.setId(selectedApp.getId());
+        appRequest.setName(view.getAppName());
+        appRequest.setDescription(view.getAppDescription());
+        appRequest.setAvus(getAppAvus());
+        appRequest.setReferences(view.getReferenceLinks());
+        appRequest.setDocumentation(view.getMarkDownDocs());
+
+        return appRequest;
+    }
+
+    private List<Avu> getAppAvus() {
+        List<Avu> avus = Lists.newArrayList();
+        for (OntologyHierarchy model : view.getCategoryTree().getCheckedSelection()) {
+            avus.add(ontologyUtil.convertHierarchyToAvu(model));
+        }
+        return avus;
     }
 
     private void getAppDetails() {

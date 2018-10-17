@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import java.util.List;
 
@@ -104,9 +105,15 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         void go(HasOneWidget container, App selectedApp, AsyncCallback<String> callback);
     }
 
-    TreeStore<OntologyHierarchy> getCategoryTreeStore();
+    Tree<OntologyHierarchy, String> getCategoryTree();
 
-    PublishAppRequest getPublishAppRequest();
+    String getMarkDownDocs();
+
+    String getAppDescription();
+
+    List<String> getReferenceLinks();
+
+    String getAppName();
 
     App getSelectedApp();
 
@@ -116,5 +123,5 @@ public interface SubmitAppForPublicUseView extends IsWidget {
 
     void setSelectedApp(App selectedApp);
 
-    TreeStore<Group> getCommunityTreeStore();
+    Tree<Group, String> getCommunityTree();
 }
