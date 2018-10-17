@@ -222,4 +222,9 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     public String warning() {
         return iplantDisplayStrings.warning();
     }
+
+    @Override
+    public SafeHtml communities() {
+        return templates.requiredLabel(appsMessages.chooseCommunities());
+    }
 }

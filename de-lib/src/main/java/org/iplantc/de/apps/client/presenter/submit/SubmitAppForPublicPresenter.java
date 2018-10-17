@@ -6,8 +6,10 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppRefLink;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
@@ -44,7 +46,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
 
         @Override
         public void onSuccess(List<OntologyHierarchy> result) {
-            addHierarchies(view.getTreeStore(), null, result);
+            addHierarchies(view.getCategoryTreeStore(), null, result);
         }
 
         void addHierarchies(TreeStore<OntologyHierarchy> treeStore, OntologyHierarchy parent, List<OntologyHierarchy> children) {
@@ -85,12 +87,15 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject SubmitAppPresenterBeanFactory factory;
     @Inject SubmitAppForPublicUseView view;
     private OntologyServiceFacade ontologyService;
+    private GroupServiceFacade groupServiceFacade;
     private AsyncCallback<String> callback;
     private Map<String, List<OntologyHierarchy>> iriToHierarchyMap = new FastMap<>();
 
     @Inject
-    SubmitAppForPublicPresenter(OntologyServiceFacade ontologyService) {
+    SubmitAppForPublicPresenter(OntologyServiceFacade ontologyService,
+                                GroupServiceFacade groupServiceFacade) {
         this.ontologyService = ontologyService;
+        this.groupServiceFacade = groupServiceFacade;
     }
 
     @Override
@@ -98,6 +103,19 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         container.setWidget(view);
         // Fetch Hierarchies
         ontologyService.getRootHierarchies(new HierarchiesCallback());
+        // Fetch communities
+        groupServiceFacade.getCommunities(new AsyncCallback<List<Group>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(appearance.publishFailureDefaultMessage(), caught);
+            }
+
+            @Override
+            public void onSuccess(List<Group> result) {
+                TreeStore<Group> treeStore = view.getCommunityTreeStore();
+                treeStore.add(result);
+            }
+        });
     }
 
     @Override

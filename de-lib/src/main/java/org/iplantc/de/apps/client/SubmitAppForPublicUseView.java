@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppRefLink;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -93,6 +94,8 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         String testDataWarn();
 
         String warning();
+
+        SafeHtml communities();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
@@ -101,7 +104,7 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         void go(HasOneWidget container, App selectedApp, AsyncCallback<String> callback);
     }
 
-    TreeStore<OntologyHierarchy> getTreeStore();
+    TreeStore<OntologyHierarchy> getCategoryTreeStore();
 
     PublishAppRequest getPublishAppRequest();
 
@@ -112,4 +115,6 @@ public interface SubmitAppForPublicUseView extends IsWidget {
     public void loadReferences(List<AppRefLink> refs);
 
     void setSelectedApp(App selectedApp);
+
+    TreeStore<Group> getCommunityTreeStore();
 }
