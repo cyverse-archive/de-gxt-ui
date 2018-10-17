@@ -11,6 +11,7 @@ import org.iplantc.de.client.models.collaborators.Subject;
 public interface Group extends Subject, HasDescription {
 
     String DEFAULT_GROUP = "default";
+    String COMMUNITY_ATTR = "cyverse-community";
     
     String getType();
     void setType(String type);

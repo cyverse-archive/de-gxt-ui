@@ -167,6 +167,14 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         for (OntologyHierarchy model : view.getCategoryTree().getCheckedSelection()) {
             avus.add(ontologyUtil.convertHierarchyToAvu(model));
         }
+        for (Group community: view.getCommunityTree().getCheckedSelection()) {
+            Avu avu = avuAutoBeanFactory.getAvu().as();
+            avu.setAttribute(Group.COMMUNITY_ATTR);
+            avu.setValue(community.getDisplayName());
+            avu.setUnit("");
+
+            avus.add(avu);
+        }
         return avus;
     }
 
