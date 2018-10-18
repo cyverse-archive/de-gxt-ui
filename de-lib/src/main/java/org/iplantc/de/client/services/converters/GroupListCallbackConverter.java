@@ -9,6 +9,11 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import java.util.List;
 
+/**
+ * @author aramsey
+ *
+ * Converts a string of JSON data to a List of Group
+ */
 public class GroupListCallbackConverter extends AsyncCallbackConverter<String, List<Group>> {
     private GroupAutoBeanFactory factory;
 

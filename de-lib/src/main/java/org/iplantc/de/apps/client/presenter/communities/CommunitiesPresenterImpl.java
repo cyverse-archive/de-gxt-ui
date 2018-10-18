@@ -5,18 +5,12 @@ import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.factory.CommunitiesViewFactory;
-import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.services.AppServiceFacade;
-import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -29,7 +23,6 @@ import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -37,31 +30,21 @@ import java.util.List;
  */
 public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
-    private static class CommunityComparator implements Comparator<Group> {
-        @Override
-        public int compare(Group group1, Group group2) {
-            return group1.getSubjectDisplayName().compareToIgnoreCase(group2.getSubjectDisplayName());
-        }
-    }
-
-    protected String searchRegexPattern;
-    @Inject IplantAnnouncer announcer;
-    @Inject AsyncProviderWrapper<AppDetailsDialog> appDetailsDlgAsyncProvider;
-    @Inject AppServiceFacade appService;
-    @Inject GroupServiceFacade groupServiceFacade;
-    @Inject AppUserServiceFacade appUserService;
-    @Inject OauthServiceFacade oauthServiceFacade;
-    @Inject CommunitiesView.Appearance appearance;
-    @Inject UserInfo userInfo;
-    AppNavigationView appNavigationView;
-    CommunitiesViewFactory viewFactory;
-    CommunitiesView view;
-    HandlerManager handlerManager;
-    String baseId;
+    private AppNavigationView appNavigationView;
+    private CommunitiesViewFactory viewFactory;
+    private GroupServiceFacade groupServiceFacade;
+    private CommunitiesView.Appearance appearance;
+    private CommunitiesView view;
+    private HandlerManager handlerManager;
+    private String baseId;
 
     @Inject
-    CommunitiesPresenterImpl(final CommunitiesViewFactory viewFactory) {
+    CommunitiesPresenterImpl(CommunitiesViewFactory viewFactory,
+                             GroupServiceFacade groupServiceFacade,
+                             CommunitiesView.Appearance appearance) {
         this.viewFactory = viewFactory;
+        this.groupServiceFacade = groupServiceFacade;
+        this.appearance = appearance;
     }
 
     @Override
@@ -90,7 +73,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
                 createView();
                 view.getTree().mask(appearance.loadingMask());
                 addCommunitiesToTree(result);
-                selectedDesiredCommunity(selectedCommunity);
+                selectDesiredCommunity(selectedCommunity);
                 view.getTree().unmask();
             }
         });
@@ -104,7 +87,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
         this.appNavigationView.insert(view.getTree(), appNavigationView.getWidgetCount() - 1, appearance.communities());
     }
 
-    void selectedDesiredCommunity(HasId selectedCommunity) {
+    void selectDesiredCommunity(HasId selectedCommunity) {
         if (selectedCommunity != null) {
             Tree<Group, String> tree = view.getTree();
             Group community = tree.getStore().findModelWithKey(selectedCommunity.getId());
@@ -121,7 +104,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
     void addCommunitiesToTree(List<Group> communities) {
         TreeStore<Group> treeStore = view.getTree().getStore();
-        final Store.StoreSortInfo<Group> info = new Store.StoreSortInfo<>(new CommunityComparator(), SortDir.ASC);
+        final Store.StoreSortInfo<Group> info = new Store.StoreSortInfo<>(new GroupComparator(), SortDir.ASC);
         treeStore.addSortInfo(info);
         treeStore.add(communities);
     }
