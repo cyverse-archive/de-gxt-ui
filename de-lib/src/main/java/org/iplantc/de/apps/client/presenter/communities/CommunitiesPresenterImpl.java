@@ -29,20 +29,12 @@ import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author aramsey
  */
 public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
-
-    private static class CommunityComparator implements Comparator<Group> {
-        @Override
-        public int compare(Group group1, Group group2) {
-            return group1.getSubjectDisplayName().compareToIgnoreCase(group2.getSubjectDisplayName());
-        }
-    }
 
     protected String searchRegexPattern;
     @Inject IplantAnnouncer announcer;
@@ -60,8 +52,12 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
     String baseId;
 
     @Inject
-    CommunitiesPresenterImpl(final CommunitiesViewFactory viewFactory) {
+    CommunitiesPresenterImpl(CommunitiesViewFactory viewFactory,
+                             GroupServiceFacade groupServiceFacade,
+                             CommunitiesView.Appearance appearance) {
         this.viewFactory = viewFactory;
+        this.groupServiceFacade = groupServiceFacade;
+        this.appearance = appearance;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
                 createView();
                 view.getTree().mask(appearance.loadingMask());
                 addCommunitiesToTree(result);
-                selectedDesiredCommunity(selectedCommunity);
+                selectDesiredCommunity(selectedCommunity);
                 view.getTree().unmask();
             }
         });
@@ -104,7 +100,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
         this.deTabPanel.insert(view.getTree(), deTabPanel.getWidgetCount() - 1, appearance.communities());
     }
 
-    void selectedDesiredCommunity(HasId selectedCommunity) {
+    void selectDesiredCommunity(HasId selectedCommunity) {
         if (selectedCommunity != null) {
             Tree<Group, String> tree = view.getTree();
             Group community = tree.getStore().findModelWithKey(selectedCommunity.getId());
@@ -121,7 +117,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
     void addCommunitiesToTree(List<Group> communities) {
         TreeStore<Group> treeStore = view.getTree().getStore();
-        final Store.StoreSortInfo<Group> info = new Store.StoreSortInfo<>(new CommunityComparator(), SortDir.ASC);
+        final Store.StoreSortInfo<Group> info = new Store.StoreSortInfo<>(new GroupComparator(), SortDir.ASC);
         treeStore.addSortInfo(info);
         treeStore.add(communities);
     }

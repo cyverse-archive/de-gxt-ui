@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * @author aramsey
+ *
+ * A GWT event that fires when the user has selected a different community in the Apps window
  */
 public class CommunitySelectionChangedEvent extends GwtEvent<CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler> {
 
