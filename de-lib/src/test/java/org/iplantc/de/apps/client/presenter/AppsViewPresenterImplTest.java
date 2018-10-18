@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
+import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 
@@ -33,6 +34,7 @@ public class AppsViewPresenterImplTest {
     @Mock AppCategoriesView.Presenter categoriesPresenterMock;
     @Mock OntologyHierarchiesView hierarchiesView;
     @Mock OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    @Mock CommunitiesView.Presenter communitiesPresenterMock;
 
     @Mock AppsListView.Presenter listPresenterMock;
 
@@ -45,9 +47,11 @@ public class AppsViewPresenterImplTest {
         when(categoriesPresenterMock.getWorkspaceView()).thenReturn(categoriesViewMock);
         when(toolbarPresenterMock.getView()).thenReturn(toolbarViewMock);
         uut = new AppsViewPresenterImpl(viewFactoryMock,
-                                        categoriesPresenterMock, listPresenterMock,
+                                        categoriesPresenterMock,
+                                        listPresenterMock,
                                         toolbarPresenterMock,
-                                        hierarchiesPresenter);
+                                        hierarchiesPresenter,
+                                        communitiesPresenterMock);
     }
 
     @Test public void testConstructorEventHandlerWiring() {
@@ -60,8 +64,11 @@ public class AppsViewPresenterImplTest {
         verify(categoriesPresenterMock).addAppCategorySelectedEventHandler(eq(listPresenterMock));
         verify(categoriesPresenterMock).addAppCategorySelectedEventHandler(eq(toolbarViewMock));
 
-        hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(listPresenterMock);
-        hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(toolbarViewMock);
+        verify(hierarchiesPresenter).addOntologyHierarchySelectionChangedEventHandler(listPresenterMock);
+        verify(hierarchiesPresenter).addOntologyHierarchySelectionChangedEventHandler(toolbarViewMock);
+
+        verify(communitiesPresenterMock).addCommunitySelectedEventHandler(listPresenterMock);
+        verify(communitiesPresenterMock).addCommunitySelectedEventHandler(toolbarViewMock);
 
         // Verify grid wiring
         verify(listPresenterMock).addAppSelectionChangedEventHandler(toolbarViewMock);
@@ -80,7 +87,7 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addRefreshAppsSelectedEventHandler(isA(AppsViewPresenterImpl.class));
         verify(toolbarViewMock).addManageToolsClickedEventHandler(toolbarPresenterMock);
 
-        verify(toolbarPresenterMock, times(14)).getView();
+        verify(toolbarPresenterMock, times(15)).getView();
 
 
         verifyNoMoreInteractions(viewFactoryMock,

@@ -30,11 +30,11 @@ import java.util.List;
  */
 public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
-    private AppNavigationView appNavigationView;
+    AppNavigationView appNavigationView;
     private CommunitiesViewFactory viewFactory;
     private GroupServiceFacade groupServiceFacade;
     private CommunitiesView.Appearance appearance;
-    private CommunitiesView view;
+    CommunitiesView view;
     private HandlerManager handlerManager;
     private String baseId;
 
