@@ -82,13 +82,13 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <cp:ContentPanel ui:field="catPanel"
-                             height="200">
+                             height="{appearance.contentPanelHeight}">
                 <tree:Tree ui:field="categoryTree"/>
             </cp:ContentPanel>
         </con:child>
         <con:child layoutData="{layoutData}">
             <cp:ContentPanel ui:field="communityPanel"
-                             height="200">
+                             height="{appearance.contentPanelHeight}">
                 <tree:Tree ui:field="communityTree"/>
             </cp:ContentPanel>
         </con:child>

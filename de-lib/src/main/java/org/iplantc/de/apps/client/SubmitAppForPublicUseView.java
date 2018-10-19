@@ -100,6 +100,10 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         SafeHtml communities();
 
         TreeStyle getTreeStyle();
+
+        String contentPanelHeight();
+
+        String publicSubmissionFormCommunities();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

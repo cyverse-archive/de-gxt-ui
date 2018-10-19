@@ -240,4 +240,14 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
         
         return style;
     }
+
+    @Override
+    public String contentPanelHeight() {
+        return "200";
+    }
+
+    @Override
+    public String publicSubmissionFormCommunities() {
+        return appsMessages.publicSubmissionFormCommunities();
+    }
 }

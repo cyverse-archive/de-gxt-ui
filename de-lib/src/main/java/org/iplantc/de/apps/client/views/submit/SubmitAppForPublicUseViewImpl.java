@@ -212,6 +212,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
 
             }
         });
+
+        // Categories Help
         final ToolButton categoriesHelp = new ToolButton(ToolButton.QUESTION);
         catPanel.getHeader().addTool(categoriesHelp);
         categoriesHelp.addSelectHandler(new SelectHandler() {
@@ -223,6 +225,15 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
                 popup.showAt(categoriesHelp.getAbsoluteLeft(), categoriesHelp.getAbsoluteTop() + 15);
 
             }
+        });
+
+        // Communities Help
+        final ToolButton communitiesHelp = new ToolButton(ToolButton.QUESTION);
+        communityPanel.getHeader().addTool(communitiesHelp);
+        communitiesHelp.addSelectHandler(event -> {
+            ContextualHelpPopup popup = new ContextualHelpPopup();
+            popup.add(new HTML(appearance.publicSubmissionFormCommunities()));
+            popup.showAt(communitiesHelp.getAbsoluteLeft(), communitiesHelp.getAbsoluteTop() + 15);
         });
     }
 
