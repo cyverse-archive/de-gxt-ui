@@ -97,7 +97,7 @@ public interface SubmitAppForPublicUseView extends IsWidget {
 
         String warning();
 
-        SafeHtml communities();
+        String communities();
 
         TreeStyle getTreeStyle();
 

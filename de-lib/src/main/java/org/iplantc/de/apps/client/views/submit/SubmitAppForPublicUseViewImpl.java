@@ -422,7 +422,6 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
                appDesc.getCurrentValue() != null &&
                checkRefLinksGrid() &&
                checkAppCategories() &&
-               checkAppCommunities() &&
                inputDesc.isValid() &&
                paramDesc.isValid() &&
                outputDesc.isValid();
@@ -487,10 +486,6 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
 
     private boolean checkAppCategories() {
         return categoryTree.getCheckedSelection().size() > 0;
-    }
-
-    private boolean checkAppCommunities() {
-        return communityTree.getCheckedSelection().size() > 0;
     }
 
     @Override

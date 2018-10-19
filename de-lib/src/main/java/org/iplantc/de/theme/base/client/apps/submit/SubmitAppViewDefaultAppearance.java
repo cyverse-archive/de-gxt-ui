@@ -227,8 +227,8 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     }
 
     @Override
-    public SafeHtml communities() {
-        return templates.requiredLabel(appsMessages.chooseCommunities());
+    public String communities() {
+        return appsMessages.chooseCommunities();
     }
 
     @Override
