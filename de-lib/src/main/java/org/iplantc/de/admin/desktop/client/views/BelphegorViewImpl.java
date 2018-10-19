@@ -43,7 +43,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
 
     @UiField HtmlLayoutContainer northCon;
     @UiField DETabPanel deTabPanel;
-    @UiField SimpleContainer ontologiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
+    @UiField SimpleContainer ontologiesPanel, communitiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
             permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel;
     @UiField(provided = true) BelphegorViewAppearance appearance;
     private TextButton menuButton;

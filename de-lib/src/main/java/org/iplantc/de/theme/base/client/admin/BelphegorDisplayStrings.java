@@ -102,6 +102,8 @@ public interface BelphegorDisplayStrings extends Messages {
     String appDeleted();
 
     String appDelete();
+
+    String communities();
 }
 
 
