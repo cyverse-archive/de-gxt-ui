@@ -43,6 +43,11 @@
         <when-type-is class="org.iplantc.de.admin.desktop.client.ontologies.OntologiesView.OntologiesViewAppearance" />
     </replace-with>
 
+    <!--Communities-->
+    <replace-with class="org.iplantc.de.theme.base.client.admin.communities.CommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView.Appearance" />
+    </replace-with>
+
     
     <!--  Metadata -->
      <replace-with class="org.iplantc.de.theme.base.client.admin.metadata.DefaultTemplateListingAppearance">

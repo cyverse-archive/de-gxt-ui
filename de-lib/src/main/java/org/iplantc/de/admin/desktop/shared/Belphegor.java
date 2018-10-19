@@ -264,4 +264,8 @@ public interface Belphegor {
         String HEADER = ".header";
         String TREE_NODE = ".treeNode";
     }
+
+    interface CommunityIds {
+        String VIEW = ".view";
+    }
 }
