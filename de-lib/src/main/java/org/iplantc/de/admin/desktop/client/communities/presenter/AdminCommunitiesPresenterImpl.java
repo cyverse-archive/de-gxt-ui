@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.communities.presenter;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
@@ -18,6 +19,7 @@ import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.gwt.dom.client.Element;
@@ -88,6 +90,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         communityGridPresenter.getView().addAppSelectionChangedEventHandler(view);
 
         proxy.setHasHandlers(view);
+
+        view.addCommunitySelectionChangedHandler(this);
     }
 
     @Override
@@ -150,4 +154,25 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         return view.getSelectedCommunity();
     }
 
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
+        Group community = event.getCommunity();
+        AdminAppsGridView communityApps = communityGridPresenter.getView();
+        communityApps.mask(appearance.loadingMask());
+
+        serviceFacade.getCommunityApps(community, new AppsCallback<List<App>>() {
+
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                communityApps.unmask();
+                ErrorHandler.post(exception);
+            }
+
+            @Override
+            public void onSuccess(List<App> result) {
+                communityApps.clearAndAdd(result);
+                communityApps.unmask();
+            }
+        });
+    }
 }

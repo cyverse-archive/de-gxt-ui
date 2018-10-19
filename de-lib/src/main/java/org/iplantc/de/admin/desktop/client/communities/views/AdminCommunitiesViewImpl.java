@@ -2,7 +2,9 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
 import org.iplantc.de.apps.client.views.toolBar.AppSearchField;
 import org.iplantc.de.client.models.apps.App;
@@ -12,6 +14,7 @@ import org.iplantc.de.client.util.OntologyUtil;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -65,6 +68,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @UiField(provided = true) TreeStore<Group> communityTreeStore;
     @UiField(provided = true) TreeStore<OntologyHierarchy> hierarchyTreeStore;
     private App targetApp;
+    private Group selectedCommunity;
     private OntologyUtil ontologyUtil = OntologyUtil.getInstance();
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
 
@@ -92,7 +96,12 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     void addTreeSelectionHandlers() {
         communityTree = createCommunityTree(communityTreeStore);
         communityTree.getSelectionModel().addSelectionChangedHandler(event -> {
-            updateButtonStatus();
+            List<Group> selectedCommunities = event.getSelection();
+            if (selectedCommunities.size() == 1) {
+                selectedCommunity = selectedCommunities.get(0);
+                fireEvent(new CommunitySelectionChanged(selectedCommunity));
+                updateButtonStatus();
+            }
         });
         hierarchyTree = createHierarchyTree(hierarchyTreeStore);
         hierarchyTree.getSelectionModel().addSelectionChangedHandler(event -> {
@@ -145,8 +154,9 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     }
 
     public void updateButtonStatus() {
+        editCommunity.setEnabled(selectedCommunity != null);
+        deleteButton.setEnabled(selectedCommunity != null);
     }
-
 
     @UiHandler("addButton")
     void addButtonClicked(SelectEvent event) {
@@ -213,5 +223,10 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
+    }
+
+    @Override
+    public HandlerRegistration addCommunitySelectionChangedHandler(CommunitySelectionChanged.CommunitySelectionChangedHandler handler) {
+        return addHandler(handler, CommunitySelectionChanged.TYPE);
     }
 }
