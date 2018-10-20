@@ -3,8 +3,8 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
 import org.iplantc.de.apps.client.views.toolBar.AppSearchField;
 import org.iplantc.de.client.models.apps.App;
@@ -105,6 +105,10 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         });
         hierarchyTree = createHierarchyTree(hierarchyTreeStore);
         hierarchyTree.getSelectionModel().addSelectionChangedHandler(event -> {
+            List<OntologyHierarchy> selectedHierarchies = event.getSelection();
+            if (selectedHierarchies.size() == 1) {
+                fireEvent(new HierarchySelectedEvent(selectedHierarchies.get(0), null, null));
+            }
             updateButtonStatus();
         });
     }
@@ -228,5 +232,10 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addCommunitySelectionChangedHandler(CommunitySelectionChanged.CommunitySelectionChangedHandler handler) {
         return addHandler(handler, CommunitySelectionChanged.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addHierarchySelectedEventHandler(HierarchySelectedEvent.HierarchySelectedEventHandler handler) {
+        return addHandler(handler, HierarchySelectedEvent.TYPE);
     }
 }
