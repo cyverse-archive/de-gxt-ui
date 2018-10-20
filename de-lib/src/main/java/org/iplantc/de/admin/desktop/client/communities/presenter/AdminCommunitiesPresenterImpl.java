@@ -9,6 +9,7 @@ import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEv
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.App;
@@ -39,7 +40,8 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Presenter {
+public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Presenter,
+                                                      AppSearchResultLoadEvent.AppSearchResultLoadEventHandler {
 
     @Inject AppAdminServiceFacade adminAppService;
     @Inject DEClientConstants constants;
@@ -99,6 +101,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addCommunitySelectionChangedHandler(this);
         view.addHierarchySelectedEventHandler(this);
         view.addHierarchySelectedEventHandler(hierarchyGridPresenter.getView());
+        view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
+        view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
+        view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
     }
 
     @Override
@@ -252,5 +257,10 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                                         hierarchyView.unmask();
                                                      }
                                                  });
+    }
+
+    @Override
+    public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
+        view.deselectHierarchies();
     }
 }

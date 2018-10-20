@@ -4,6 +4,8 @@ import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
+import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
 import org.iplantc.de.apps.client.views.toolBar.AppSearchField;
@@ -139,6 +141,11 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     }
 
     @Override
+    public void deselectHierarchies() {
+        hierarchyTree.getSelectionModel().deselectAll();
+    }
+
+    @Override
     public Group getCommunityFromElement(Element el) {
         Tree.TreeNode<Group> node = communityTree.findNode(el);
         if (node != null) {
@@ -237,5 +244,15 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addHierarchySelectedEventHandler(HierarchySelectedEvent.HierarchySelectedEventHandler handler) {
         return addHandler(handler, HierarchySelectedEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAppSearchResultLoadEventHandler(AppSearchResultLoadEvent.AppSearchResultLoadEventHandler handler) {
+        return addHandler(handler, AppSearchResultLoadEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addBeforeAppSearchEventHandler(BeforeAppSearchEvent.BeforeAppSearchEventHandler handler) {
+        return addHandler(handler, BeforeAppSearchEvent.TYPE);
     }
 }

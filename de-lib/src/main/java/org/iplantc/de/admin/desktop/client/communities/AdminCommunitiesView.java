@@ -2,6 +2,8 @@ package org.iplantc.de.admin.desktop.client.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
+import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.client.models.groups.Group;
 
@@ -18,7 +20,9 @@ public interface AdminCommunitiesView extends IsWidget,
                                               HasHandlers,
                                               AppSelectionChangedEvent.AppSelectionChangedEventHandler,
                                               CommunitySelectionChanged.HasCommunitySelectionChangedHandlers,
-                                              HierarchySelectedEvent.HasHierarchySelectedEventHandlers {
+                                              HierarchySelectedEvent.HasHierarchySelectedEventHandlers,
+                                              BeforeAppSearchEvent.HasBeforeAppSearchEventHandlers,
+                                              AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers {
 
     interface Appearance {
 
@@ -73,4 +77,6 @@ public interface AdminCommunitiesView extends IsWidget,
     void showNoCommunitiesPanel();
 
     void showCommunitiesPanel();
+
+    void deselectHierarchies();
 }
