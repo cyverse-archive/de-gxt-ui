@@ -7,6 +7,8 @@ import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelection
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
+import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
+import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.admin.desktop.client.communities.views.EditCommunityDialog;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
@@ -16,6 +18,9 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
+import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
@@ -28,6 +33,7 @@ import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -59,6 +65,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject AppServiceFacade appService;
     private OntologyServiceFacade ontologyServiceFacade;
     private GroupAutoBeanFactory groupFactory;
+    private AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject AppSearchFacade appSearchService;
     @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
     OntologyUtil ontologyUtil;
@@ -78,6 +85,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     public AdminCommunitiesPresenterImpl(AdminCommunityServiceFacade serviceFacade,
                                          OntologyServiceFacade ontologyServiceFacade,
                                          GroupAutoBeanFactory groupFactory,
+                                         AvuAutoBeanFactory avuAutoBeanFactory,
                                          AppSearchFacade appSearchService,
                                          GroupServiceFacade groupServiceFacade,
                                          final TreeStore<Group> communityTreeStore,
@@ -89,6 +97,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         this.serviceFacade = serviceFacade;
         this.ontologyServiceFacade = ontologyServiceFacade;
         this.groupFactory = groupFactory;
+        this.avuAutoBeanFactory = avuAutoBeanFactory;
         this.appSearchService = appSearchService;
         this.groupServiceFacade = groupServiceFacade;
         this.communityTreeStore = communityTreeStore;
@@ -105,7 +114,15 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                    hierarchyTreeStore,
                                    loader,
                                    hierarchyGridPresenter.getView(),
-                                   communityGridPresenter.getView());
+                                   communityGridPresenter.getView(),
+                                   new CommunityToAppDND(appearance,
+                                                         hierarchyGridPresenter,
+                                                         communityGridPresenter,
+                                                         this),
+                                   new AppToCommunityDND(appearance,
+                                                         hierarchyGridPresenter,
+                                                         communityGridPresenter,
+                                                         this));
 
         hierarchyGridPresenter.getView().addAppSelectionChangedEventHandler(view);
         communityGridPresenter.getView().addAppSelectionChangedEventHandler(view);
@@ -145,6 +162,44 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Override
     public AdminCommunitiesView getView() {
         return view;
+    }
+
+    @Override
+    public void appsDNDtoCommunity(List<App> apps, Group community) {
+        if (apps != null && apps.size() > 0) {
+            for (App app: apps) {
+                communityDNDtoApp(community, app);
+            }
+        }
+    }
+
+    @Override
+    public void communityDNDtoApp(Group community, App targetApp) {
+        AvuList avuList = getCommunityAvu(community);
+        ontologyServiceFacade.addAVUsToApp(targetApp, avuList, new AsyncCallback<List<Avu>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Avu> result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.appAddedToCommunity(targetApp.getName(), community.getName())));
+                view.selectCommunity(community);
+            }
+        });
+    }
+
+    AvuList getCommunityAvu(Group community) {
+        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+        Avu avu = avuAutoBeanFactory.getAvu().as();
+        avu.setAttribute(properties.getCommunityAttr());
+        avu.setValue(community.getDisplayName());
+        avu.setUnit("");
+
+        avuList.setAvus(Lists.newArrayList(avu));
+
+        return avuList;
     }
 
     boolean previewTreeHasHierarchy(OntologyHierarchy hierarchy) {

@@ -91,6 +91,16 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     }
 
     @Override
+    public String externalAppDND(String appLabels) {
+        return displayStrings.externalAppDND(appLabels);
+    }
+
+    @Override
+    public String appAddedToCommunity(String appName, String communityName) {
+        return displayStrings.appAddedToCommunity(appName, communityName);
+    }
+
+    @Override
     public String searchFieldWidth() {
         return "200px";
     }

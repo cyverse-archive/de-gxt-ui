@@ -24,4 +24,8 @@ public interface CommunityDisplayStrings extends Messages{
     String communityTreePanel();
 
     String hierarchyTreePanel();
+
+    String externalAppDND(String appLabels);
+
+    String appAddedToCommunity(String appName, String communityName);
 }

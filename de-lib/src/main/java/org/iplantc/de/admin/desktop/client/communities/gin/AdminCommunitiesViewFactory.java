@@ -2,6 +2,8 @@ package org.iplantc.de.admin.desktop.client.communities.gin;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
+import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -22,5 +24,7 @@ public interface AdminCommunitiesViewFactory {
                                 @Assisted("hierarchyTreeStore") TreeStore<OntologyHierarchy> hierarchyTreeStore,
                                 PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader,
                                 @Assisted("hierarchyGridView") AdminAppsGridView communityGridView,
-                                @Assisted("communityGridView") AdminAppsGridView hierarchyGridView);
+                                @Assisted("communityGridView") AdminAppsGridView hierarchyGridView,
+                                CommunityToAppDND communityDndHandler,
+                                AppToCommunityDND appDndHandler);
 }

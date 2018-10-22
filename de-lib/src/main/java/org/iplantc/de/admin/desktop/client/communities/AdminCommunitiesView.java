@@ -7,6 +7,7 @@ import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEv
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.dom.client.Element;
@@ -14,6 +15,8 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -63,6 +66,10 @@ public interface AdminCommunitiesView extends IsWidget,
         String name();
 
         String description();
+
+        String externalAppDND(String appLabels);
+
+        String appAddedToCommunity(String appName, String communityName);
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,
@@ -78,6 +85,10 @@ public interface AdminCommunitiesView extends IsWidget,
         Group getSelectedCommunity();
 
         void setViewDebugId(String id);
+
+        void appsDNDtoCommunity(List<App> apps, Group community);
+
+        void communityDNDtoApp(Group community, App targetApp);
     }
 
     Group getCommunityFromElement(Element el);
@@ -89,4 +100,6 @@ public interface AdminCommunitiesView extends IsWidget,
     void showCommunitiesPanel();
 
     void deselectHierarchies();
+
+    void selectCommunity(Group community);
 }

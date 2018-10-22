@@ -35,6 +35,8 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.dnd.core.client.DragSource;
+import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -75,6 +77,8 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     private Group selectedCommunity;
     private OntologyUtil ontologyUtil = OntologyUtil.getInstance();
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
+    private CommunityToAppDND communityToAppDND;
+    private AppToCommunityDND appToCommunityDND;
 
     @Inject
     public AdminCommunitiesViewImpl(AdminCommunitiesView.Appearance appearance,
@@ -82,19 +86,25 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
                                     @Assisted("hierarchyTreeStore") TreeStore<OntologyHierarchy> hierarchyTreeStore,
                                     @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader,
                                     @Assisted("communityGridView") AdminAppsGridView communityGridView,
-                                    @Assisted("hierarchyGridView") AdminAppsGridView hierarchyGridView) {
+                                    @Assisted("hierarchyGridView") AdminAppsGridView hierarchyGridView,
+                                    @Assisted CommunityToAppDND communityToAppDND,
+                                    @Assisted AppToCommunityDND appToCommunityDND) {
         this.appearance = appearance;
         this.loader = loader;
         this.communityTreeStore = communityTreeStore;
         this.hierarchyTreeStore = hierarchyTreeStore;
         this.communityGridView = communityGridView;
         this.hierarchyGridView = hierarchyGridView;
+        this.communityToAppDND = communityToAppDND;
+        this.appToCommunityDND = appToCommunityDND;
 
         addTreeSelectionHandlers();
 
         initWidget(uiBinder.createAndBindUi(this));
 
         updateButtonStatus();
+
+        setUpDND();
     }
 
     void addTreeSelectionHandlers() {
@@ -145,6 +155,11 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public void deselectHierarchies() {
         hierarchyTree.getSelectionModel().deselectAll();
+    }
+
+    @Override
+    public void selectCommunity(Group community) {
+        communityTree.getSelectionModel().select(community, true);
     }
 
     @Override
@@ -270,5 +285,39 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addEditCommunityClickedHandler(EditCommunityClicked.EditCommunityClickedHandler handler) {
         return addHandler(handler, EditCommunityClicked.TYPE);
+    }
+
+    void setUpDND() {
+        //App DND
+        DropTarget hierarchyGridTarget = new DropTarget(hierarchyGridView.asWidget());
+        hierarchyGridTarget.setAllowSelfAsSource(false);
+        hierarchyGridTarget.addDragEnterHandler(communityToAppDND);
+        hierarchyGridTarget.addDragMoveHandler(communityToAppDND);
+        hierarchyGridTarget.addDragEnterHandler(communityToAppDND);
+        hierarchyGridTarget.addDropHandler(communityToAppDND);
+
+        DropTarget communityGridTarget = new DropTarget(communityGridView.asWidget());
+        communityGridTarget.setAllowSelfAsSource(false);
+        communityGridTarget.addDragEnterHandler(communityToAppDND);
+        communityGridTarget.addDragMoveHandler(communityToAppDND);
+        communityGridTarget.addDragEnterHandler(communityToAppDND);
+        communityGridTarget.addDropHandler(communityToAppDND);
+
+        DragSource hierarchyGridSource = new DragSource(hierarchyGridView.asWidget());
+        hierarchyGridSource.addDragStartHandler(appToCommunityDND);
+
+        DragSource communityGridSource = new DragSource(communityGridView.asWidget());
+        communityGridSource.addDragStartHandler(appToCommunityDND);
+
+        //Tree DND
+        DragSource communityTreeSource = new DragSource(communityTree);
+        communityTreeSource.addDragStartHandler(communityToAppDND);
+
+        DropTarget communityTreeTarget = new DropTarget(communityTree);
+        communityTreeTarget.setAllowSelfAsSource(false);
+        communityTreeTarget.addDragEnterHandler(appToCommunityDND);
+        communityTreeTarget.addDragMoveHandler(appToCommunityDND);
+        communityTreeTarget.addDragEnterHandler(appToCommunityDND);
+        communityTreeTarget.addDropHandler(appToCommunityDND);
     }
 }
