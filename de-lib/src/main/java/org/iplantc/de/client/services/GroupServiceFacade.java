@@ -7,7 +7,6 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
-import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -56,6 +55,14 @@ public interface GroupServiceFacade {
      * @param teamCallback
      */
     void addTeam(Group team, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> teamCallback);
+
+    /**
+     * Create a Community
+     * @param community
+     * @param publicPrivileges
+     * @param communityCallback
+     */
+    void addCommunity(Group community, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> communityCallback);
 
     /**
      * Delete a collaborator list

@@ -110,7 +110,18 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     @Override
     public void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback) {
         String address = TEAMS;
+        addGroup(group, publicPrivileges, address, callback);
+    }
 
+    @Override
+    public void addCommunity(Group community,
+                             List<PrivilegeType> publicPrivileges,
+                             AsyncCallback<Group> communityCallback) {
+        String address = COMMUNITIES;
+        addGroup(community, publicPrivileges, address, communityCallback);
+    }
+
+    void addGroup(Group group, List<PrivilegeType> publicPrivileges, String address, AsyncCallback<Group> callback) {
         CreateTeamRequest request = factory.getCreateTeamRequest().as();
         request.setName(group.getName());
         request.setDescription(group.getDescription());
