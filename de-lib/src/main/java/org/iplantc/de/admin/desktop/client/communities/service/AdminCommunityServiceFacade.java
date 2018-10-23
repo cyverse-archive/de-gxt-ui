@@ -25,4 +25,12 @@ public interface AdminCommunityServiceFacade {
      * @param appListCallback
      */
     void getCommunityApps(Group community, DECallback<List<App>> appListCallback);
+
+    /**
+     * Update the details of a Community
+     * @param originalCommunity
+     * @param updatedCommunity
+     * @param communityCallback
+     */
+    void updateCommunity(String originalCommunity, Group updatedCommunity, AsyncCallback<Group> communityCallback);
 }

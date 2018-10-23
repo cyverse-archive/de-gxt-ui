@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.communities.service.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
 import org.iplantc.de.client.models.apps.App;
@@ -9,6 +10,7 @@ import org.iplantc.de.client.models.apps.proxy.AppSearchAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListCallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -18,6 +20,8 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -56,5 +60,17 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
                 return listResult.getData();
             }
         });
+    }
+
+    @Override
+    public void updateCommunity(String originalCommunity,
+                                Group updatedCommunity,
+                                AsyncCallback<Group> communityCallback) {
+        String address = ADMIN_COMMUNITIES + "/" + URL.encodePathSegment(originalCommunity);
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updatedCommunity));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
+        deService.getServiceData(wrapper, new GroupCallbackConverter(communityCallback, factory));
     }
 }
