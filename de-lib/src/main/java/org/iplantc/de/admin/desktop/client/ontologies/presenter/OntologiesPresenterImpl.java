@@ -64,6 +64,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -100,18 +101,17 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
         @Override
         public void onSuccess(List<Avu> result) {
+            Map<Boolean, List<Avu>> isOntologyAvu = getOntologyAvuMap(result);
             CategorizeDialog dlg = new CategorizeDialog(appearance,
-                                                        selectedApp, categorizeView,
-                                                        hierarchyRoots, iriToHierarchyMap, result);
+                                                        selectedApp,
+                                                        categorizeView,
+                                                        hierarchyRoots,
+                                                        iriToHierarchyMap,
+                                                        isOntologyAvu.get(true));
             dlg.addCategorizeHierarchiesToAppEventHandler(new CategorizeHierarchiesToAppEvent.CategorizeHierarchiesToAppEventHandler() {
                 @Override
                 public void onCategorizeHierarchiesToApp(CategorizeHierarchiesToAppEvent event) {
-                    if (event.getSelectedHierarchies() == null || event.getSelectedHierarchies().size() == 0) {
-                        clearAvus(event.getTargetApp());
-                    } else {
-                        categorizeHierarchiesToApp(event);
-                    }
-
+                    categorizeHierarchiesToApp(event.getTargetApp(), event.getSelectedHierarchies(), isOntologyAvu.get(false));
                 }
             });
         }
@@ -289,11 +289,10 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         return view;
     }
 
-    void categorizeHierarchiesToApp(CategorizeHierarchiesToAppEvent event) {
-        final App targetApp = event.getTargetApp();
-        List<OntologyHierarchy> selectedHierarchies = event.getSelectedHierarchies();
-
+    void categorizeHierarchiesToApp(App targetApp, List<OntologyHierarchy> selectedHierarchies, List<Avu> nonOntologyAvus) {
         AvuList avus = ontologyUtil.convertHierarchiesToAvus(selectedHierarchies);
+        List<Avu> ontologyAvus = avus.getAvus();
+        ontologyAvus.addAll(nonOntologyAvus);
 
         serviceFacade.setAppAVUs(targetApp, avus, new AsyncCallback<List<Avu>>() {
             @Override
@@ -346,6 +345,10 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
                 }
             }
         });
+    }
+
+    Map<Boolean, List<Avu>> getOntologyAvuMap(List<Avu> avus) {
+        return avus.stream().collect(Collectors.partitioningBy(avu -> ontologyUtil.isOntologyAVU(avu)));
     }
 
     boolean previewTreeHasHierarchy(OntologyHierarchy hierarchy) {

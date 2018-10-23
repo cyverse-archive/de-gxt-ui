@@ -107,6 +107,14 @@ public class OntologyUtil {
         return true;
     }
 
+    public boolean isOntologyAVU(Avu value) {
+        return getOntologyAttrs().contains(value.getAttribute());
+    }
+
+    List<String> getOntologyAttrs() {
+        return Lists.newArrayList(iriToAttrMap.values());
+    }
+
     public void buildIriToAttrMap(String ontologyAttr) {
         JSONObject map = jsonUtil.getObject(ontologyAttr);
 
