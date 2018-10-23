@@ -1,6 +1,8 @@
 package org.iplantc.de.admin.desktop.client.communities;
 
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
@@ -22,7 +24,9 @@ public interface AdminCommunitiesView extends IsWidget,
                                               CommunitySelectionChanged.HasCommunitySelectionChangedHandlers,
                                               HierarchySelectedEvent.HasHierarchySelectedEventHandlers,
                                               BeforeAppSearchEvent.HasBeforeAppSearchEventHandlers,
-                                              AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers {
+                                              AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers,
+                                              AddCommunityClicked.HasAddCommunityClickedHandlers,
+                                              EditCommunityClicked.HasEditCommunityClickedHandlers {
 
     interface Appearance {
 
@@ -55,10 +59,16 @@ public interface AdminCommunitiesView extends IsWidget,
         String hierarchyTreePanel();
 
         String loadingMask();
+
+        String name();
+
+        String description();
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,
-                                HierarchySelectedEvent.HierarchySelectedEventHandler {
+                                HierarchySelectedEvent.HierarchySelectedEventHandler,
+                                AddCommunityClicked.AddCommunityClickedHandler,
+                                EditCommunityClicked.EditCommunityClickedHandler {
         void go(HasOneWidget container);
 
         AdminCommunitiesView getView();

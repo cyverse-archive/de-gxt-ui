@@ -1,23 +1,11 @@
 package org.iplantc.de.theme.base.client.admin.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
-import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.theme.base.client.admin.BelphegorErrorStrings;
 
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeUri;
-
-import com.sencha.gxt.core.client.XTemplates;
-
-import java.util.List;
 
 /**
  * @author aramsey
@@ -90,6 +78,16 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     @Override
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String name() {
+        return iplantDisplayStrings.name();
+    }
+
+    @Override
+    public String description() {
+        return iplantDisplayStrings.description();
     }
 
     @Override

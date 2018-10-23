@@ -2,7 +2,9 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
@@ -171,6 +173,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("addButton")
     void addButtonClicked(SelectEvent event) {
+        fireEvent(new AddCommunityClicked());
     }
 
     @UiHandler("deleteButton")
@@ -179,6 +182,9 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("editCommunity")
     void editCommunityClicked(SelectEvent event) {
+        if (selectedCommunity != null) {
+            fireEvent(new EditCommunityClicked(selectedCommunity));
+        }
     }
 
     @UiHandler("categorize")
@@ -254,5 +260,15 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addBeforeAppSearchEventHandler(BeforeAppSearchEvent.BeforeAppSearchEventHandler handler) {
         return addHandler(handler, BeforeAppSearchEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAddCommunityClickedHandler(AddCommunityClicked.AddCommunityClickedHandler handler) {
+        return addHandler(handler, AddCommunityClicked.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addEditCommunityClickedHandler(EditCommunityClicked.EditCommunityClickedHandler handler) {
+        return addHandler(handler, EditCommunityClicked.TYPE);
     }
 }

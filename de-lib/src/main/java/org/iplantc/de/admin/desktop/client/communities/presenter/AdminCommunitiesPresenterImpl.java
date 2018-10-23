@@ -2,9 +2,12 @@ package org.iplantc.de.admin.desktop.client.communities.presenter;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
+import org.iplantc.de.admin.desktop.client.communities.views.EditCommunityDialog;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
@@ -14,17 +17,22 @@ import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -50,12 +58,15 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject JsonUtil jsonUtil;
     @Inject AppServiceFacade appService;
     private OntologyServiceFacade ontologyServiceFacade;
+    private GroupAutoBeanFactory groupFactory;
     @Inject AppSearchFacade appSearchService;
+    @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
     OntologyUtil ontologyUtil;
     AppSearchRpcProxy proxy;
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     private AdminCommunitiesView view;
     private AdminCommunityServiceFacade serviceFacade;
+    private GroupServiceFacade groupServiceFacade;
     private final TreeStore<Group> communityTreeStore;
     private final TreeStore<OntologyHierarchy> hierarchyTreeStore;
     private AdminCommunitiesView.Appearance appearance;
@@ -66,8 +77,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject
     public AdminCommunitiesPresenterImpl(AdminCommunityServiceFacade serviceFacade,
                                          OntologyServiceFacade ontologyServiceFacade,
+                                         GroupAutoBeanFactory groupFactory,
                                          AppSearchFacade appSearchService,
-                                         AppServiceFacade appService,
+                                         GroupServiceFacade groupServiceFacade,
                                          final TreeStore<Group> communityTreeStore,
                                          final TreeStore<OntologyHierarchy> hierarchyTreeStore,
                                          AdminCommunitiesViewFactory factory,
@@ -76,7 +88,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                          AdminAppsGridView.Presenter communityGridPresenter) {
         this.serviceFacade = serviceFacade;
         this.ontologyServiceFacade = ontologyServiceFacade;
+        this.groupFactory = groupFactory;
         this.appSearchService = appSearchService;
+        this.groupServiceFacade = groupServiceFacade;
         this.communityTreeStore = communityTreeStore;
         this.hierarchyTreeStore = hierarchyTreeStore;
         this.appearance = appearance;
@@ -104,6 +118,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
+        view.addAddCommunityClickedHandler(this);
+        view.addEditCommunityClickedHandler(this);
     }
 
     @Override
@@ -262,5 +278,69 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
         view.deselectHierarchies();
+    }
+
+    @Override
+    public void onAddCommunityClicked(AddCommunityClicked event) {
+        editCommunityDlgProvider.get(new AsyncCallback<EditCommunityDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(EditCommunityDialog result) {
+                result.show(null);
+                result.addOkButtonSelectHandler(event -> {
+                    Group community = groupFactory.getGroup().as();
+                    community.setName(result.getName());
+                    community.setDescription(result.getDescription());
+
+                    List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
+
+                    groupServiceFacade.addCommunity(community, publicPrivileges, new AsyncCallback<Group>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            ErrorHandler.post(caught);
+                        }
+
+                        @Override
+                        public void onSuccess(Group result) {
+                            communityTreeStore.add(result);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onEditCommunityClicked(EditCommunityClicked event) {
+        editCommunityDlgProvider.get(new AsyncCallback<EditCommunityDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(EditCommunityDialog result) {
+                Group community = event.getCommunity();
+                result.show(community);
+                result.addOkButtonSelectHandler(event -> {
+                    Group updatedCommunity = groupFactory.getGroup().as();
+                    updatedCommunity.setName(result.getName());
+                    updatedCommunity.setDescription(result.getDescription());
+
+                    serviceFacade.updateCommunity(result.getOriginalName(), updatedCommunity, new AsyncCallback<Group>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            ErrorHandler.post(caught);
+                        }
+
+                        @Override
+                        public void onSuccess(Group result) {
+                            communityTreeStore.update(result);
+                            communityTreeStore.applySort(true);
+                        }
+                    });
+                });
+            }
+        });
     }
 }
