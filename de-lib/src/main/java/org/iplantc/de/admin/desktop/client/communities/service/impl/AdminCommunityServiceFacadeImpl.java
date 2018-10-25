@@ -1,5 +1,6 @@
 package org.iplantc.de.admin.desktop.client.communities.service.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 
@@ -71,6 +72,14 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updatedCommunity));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
+        deService.getServiceData(wrapper, new GroupCallbackConverter(communityCallback, factory));
+    }
+
+    @Override
+    public void deleteCommunity(Group community, AsyncCallback<Group> communityCallback) {
+        String address = ADMIN_COMMUNITIES + "/" + URL.encodePathSegment(community.getName());
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(communityCallback, factory));
     }
 }

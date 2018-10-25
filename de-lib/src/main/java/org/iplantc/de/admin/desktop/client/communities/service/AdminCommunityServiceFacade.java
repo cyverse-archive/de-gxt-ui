@@ -33,4 +33,11 @@ public interface AdminCommunityServiceFacade {
      * @param communityCallback
      */
     void updateCommunity(String originalCommunity, Group updatedCommunity, AsyncCallback<Group> communityCallback);
+
+    /**
+     * Delete a community
+     * @param community
+     * @param communityCallback
+     */
+    void deleteCommunity(Group community, AsyncCallback<Group> communityCallback);
 }
