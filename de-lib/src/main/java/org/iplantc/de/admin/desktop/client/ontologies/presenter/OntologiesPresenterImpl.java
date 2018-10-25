@@ -54,6 +54,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -210,7 +211,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
                                    OntologiesView.OntologiesViewAppearance appearance,
                                    AdminAppsGridView.Presenter previewGridPresenter,
                                    AdminAppsGridView.Presenter editorGridPresenter,
-                                   AppCategorizeView categorizeView) {
+                                   @Named(AppCategorizeView.HIERARCHIES) AppCategorizeView categorizeView) {
         this.serviceFacade = serviceFacade;
         this.appSearchService = appSearchService;
         this.avuFactory = avuFactory;

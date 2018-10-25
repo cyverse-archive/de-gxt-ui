@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class AppCategorizeViewImpl implements AppCategorizeView {
+public class AppCategorizeViewImpl implements AppCategorizeView<OntologyHierarchy> {
 
     @UiTemplate("AppCategorizeView.ui.xml")
     interface AppCategorizeViewUiBinder extends UiBinder<Widget, AppCategorizeViewImpl> {
@@ -120,7 +120,7 @@ public class AppCategorizeViewImpl implements AppCategorizeView {
     }
 
     @Override
-    public void setHierarchies(List<OntologyHierarchy> hierarchies) {
+    public void setItems(List<OntologyHierarchy> hierarchies) {
         treeStore.clear();
         addHierarchies(null, hierarchies);
     }
@@ -152,7 +152,7 @@ public class AppCategorizeViewImpl implements AppCategorizeView {
     }
 
     @Override
-    public void setSelectedHierarchies(List<OntologyHierarchy> hierarchies) {
+    public void setSelectedItems(List<OntologyHierarchy> hierarchies) {
         List<OntologyHierarchy> selection = Lists.newArrayList();
         for (OntologyHierarchy hierarchy : hierarchies) {
             OntologyHierarchy model = treeStore.findModel(hierarchy);
@@ -176,7 +176,7 @@ public class AppCategorizeViewImpl implements AppCategorizeView {
     }
 
     @Override
-    public List<OntologyHierarchy> getSelectedCategories() {
+    public List<OntologyHierarchy> getSelectedItems() {
         if (tree.isCheckable()) {
             return tree.getCheckedSelection();
         }

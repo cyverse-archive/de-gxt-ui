@@ -10,6 +10,8 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -28,9 +30,10 @@ public class CategorizeDialog extends IPlantDialog implements CategorizeHierarch
     private Map<String, List<OntologyHierarchy>> iriToHierarchyMap;
     private App targetApp;
 
+    @Inject
     public CategorizeDialog(OntologiesView.OntologiesViewAppearance appearance,
                             final App targetApp,
-                            final AppCategorizeView categorizeView,
+                            AppCategorizeView categorizeView,
                             List<OntologyHierarchy> hierarchyRoots,
                             Map<String, List<OntologyHierarchy>> iriToHierarchyMap,
                             List<Avu> selectedAvus) {
@@ -56,7 +59,7 @@ public class CategorizeDialog extends IPlantDialog implements CategorizeHierarch
         show();
 
         categorizeView.mask(appearance.loadingMask());
-        categorizeView.setHierarchies(hierarchyRoots);
+        categorizeView.setItems(hierarchyRoots);
         markTaggedHierarchies();
         categorizeView.unmask();
 
@@ -68,7 +71,7 @@ public class CategorizeDialog extends IPlantDialog implements CategorizeHierarch
         addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                fireEvent(new CategorizeHierarchiesToAppEvent(targetApp, categorizeView.getSelectedCategories()));
+                fireEvent(new CategorizeHierarchiesToAppEvent(targetApp, categorizeView.getSelectedItems()));
                 hide();
             }
         });
@@ -88,7 +91,7 @@ public class CategorizeDialog extends IPlantDialog implements CategorizeHierarch
                 selectedHierarchies.addAll(hierarchies);
             }
         }
-        categorizeView.setSelectedHierarchies(selectedHierarchies);
+        categorizeView.setSelectedItems(selectedHierarchies);
     }
 
     @Override

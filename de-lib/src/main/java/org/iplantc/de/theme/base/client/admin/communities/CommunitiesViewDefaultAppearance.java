@@ -1,11 +1,18 @@
 package org.iplantc.de.theme.base.client.admin.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+
+import com.sencha.gxt.widget.core.client.tree.TreeStyle;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -98,6 +105,42 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     @Override
     public String appAddedToCommunity(String appName, String communityName) {
         return displayStrings.appAddedToCommunity(appName, communityName);
+    }
+
+    @Override
+    public void setTreeIcons(TreeStyle style) {
+        style.setNodeCloseIcon(iplantResources.category());
+        style.setNodeOpenIcon(iplantResources.category_open());
+        style.setLeafIcon(iplantResources.subCategory());
+    }
+
+    @Override
+    public String clearCommunitySelection() {
+        return displayStrings.clearCommunitySelection();
+    }
+
+    @Override
+    public String categorizeDialogWidth() {
+        return "400px";
+    }
+
+    @Override
+    public String categorizeDialogHeight() {
+        return "400px";
+    }
+
+    @Override
+    public String selectCommunitiesFor(App targetApp) {
+        return displayStrings.selectCommunitiesFor(targetApp.getName());
+    }
+
+    @Override
+    public String communityAvusSet(App app, List<Group> selectedCommunities) {
+        if (selectedCommunities == null || selectedCommunities.size() == 0) {
+            return displayStrings.appRemovedFromCommunities(app.getName());
+        }
+        List<String> communityNames = selectedCommunities.stream().map(Group::getName).collect(Collectors.toList());
+        return displayStrings.appTaggedWithCommunities(app.getName(), communityNames);
     }
 
     @Override

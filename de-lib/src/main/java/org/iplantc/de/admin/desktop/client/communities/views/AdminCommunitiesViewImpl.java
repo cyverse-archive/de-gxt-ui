@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
+import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
@@ -204,6 +205,9 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("categorize")
     void categorizeButtonClicked(SelectEvent event) {
+        if (targetApp != null) {
+            fireEvent(new CategorizeButtonClicked(targetApp));
+        }
     }
 
     Tree<OntologyHierarchy, String> createHierarchyTree(TreeStore<OntologyHierarchy> store) {
@@ -285,6 +289,11 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addEditCommunityClickedHandler(EditCommunityClicked.EditCommunityClickedHandler handler) {
         return addHandler(handler, EditCommunityClicked.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCategorizeButtonClickedHandler(CategorizeButtonClicked.CategorizeButtonClickedHandler handler) {
+        return addHandler(handler, CategorizeButtonClicked.TYPE);
     }
 
     void setUpDND() {

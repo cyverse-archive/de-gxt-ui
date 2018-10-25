@@ -3,10 +3,12 @@ package org.iplantc.de.admin.desktop.client.communities.presenter;
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
+import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
+import org.iplantc.de.admin.desktop.client.communities.views.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
 import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.admin.desktop.client.communities.views.EditCommunityDialog;
@@ -50,6 +52,8 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -68,6 +72,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     private AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject AppSearchFacade appSearchService;
     @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
+    @Inject AsyncProviderWrapper<AppCommunityListEditorDialog> communityEditorDlgProvider;
     OntologyUtil ontologyUtil;
     AppSearchRpcProxy proxy;
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
@@ -137,6 +142,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
         view.addAddCommunityClickedHandler(this);
         view.addEditCommunityClickedHandler(this);
+        view.addCategorizeButtonClickedHandler(this);
     }
 
     @Override
@@ -175,7 +181,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     @Override
     public void communityDNDtoApp(Group community, App targetApp) {
-        AvuList avuList = getCommunityAvu(community);
+        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(community)));
         ontologyServiceFacade.addAVUsToApp(targetApp, avuList, new AsyncCallback<List<Avu>>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -190,16 +197,22 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         });
     }
 
-    AvuList getCommunityAvu(Group community) {
-        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+    List<Avu> getCommunityAvuList(List<Group> communities) {
+        List<Avu> avuList = Lists.newArrayList();
+        for (Group community : communities) {
+            Avu avu = getCommunityAvu(community);
+            avuList.add(avu);
+        }
+        return avuList;
+    }
+
+    Avu getCommunityAvu(Group community) {
         Avu avu = avuAutoBeanFactory.getAvu().as();
         avu.setAttribute(properties.getCommunityAttr());
         avu.setValue(community.getDisplayName());
         avu.setUnit("");
 
-        avuList.setAvus(Lists.newArrayList(avu));
-
-        return avuList;
+        return avu;
     }
 
     boolean previewTreeHasHierarchy(OntologyHierarchy hierarchy) {
@@ -397,5 +410,57 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 });
             }
         });
+    }
+    @Override
+    public void onCategorizeButtonClicked(CategorizeButtonClicked event) {
+        App selectedApp = event.getTargetApp();
+        ontologyServiceFacade.getAppAVUs(selectedApp, new AsyncCallback<List<Avu>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Avu> appAvus) {
+                communityEditorDlgProvider.get(new AsyncCallback<AppCommunityListEditorDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {}
+
+                    @Override
+                    public void onSuccess(AppCommunityListEditorDialog result) {
+                        Map<Boolean, List<Avu>> isCommunityAvu = getCommunityAvuMap(appAvus);
+                        result.show(selectedApp,
+                                    communityTreeStore.getAll(),
+                                    isCommunityAvu.get(true));
+                        result.addOkButtonSelectHandler(event -> {
+                            setCommunityAvus(selectedApp, result.getSelectedCommunities(), isCommunityAvu.get(false));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    void setCommunityAvus(App app, List<Group> selectedCommunities, List<Avu> nonCommunityAvus) {
+        List<Avu> listAvus = getCommunityAvuList(selectedCommunities);
+        listAvus.addAll(nonCommunityAvus);
+        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+        avuList.setAvus(listAvus);
+
+        ontologyServiceFacade.setAppAVUs(app, avuList, new AsyncCallback<List<Avu>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Avu> result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.communityAvusSet(app, selectedCommunities)));
+            }
+        });
+    }
+
+    Map<Boolean, List<Avu>> getCommunityAvuMap(List<Avu> avus) {
+        return avus.stream().collect(Collectors.partitioningBy(avu -> properties.getCommunityAttr().equals(avu.getAttribute())));
     }
 }

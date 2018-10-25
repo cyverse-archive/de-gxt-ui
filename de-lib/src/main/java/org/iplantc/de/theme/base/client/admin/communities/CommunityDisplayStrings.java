@@ -28,4 +28,12 @@ public interface CommunityDisplayStrings extends Messages{
     String externalAppDND(String appLabels);
 
     String appAddedToCommunity(String appName, String communityName);
+
+    String clearCommunitySelection();
+
+    String selectCommunitiesFor(String appName);
+
+    String appRemovedFromCommunities(String name);
+
+    String appTaggedWithCommunities(String name, @PluralCount List<String> communityNames);
 }

@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
+import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
@@ -16,6 +17,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import com.sencha.gxt.widget.core.client.tree.TreeStyle;
+
 import java.util.List;
 
 /**
@@ -29,7 +32,8 @@ public interface AdminCommunitiesView extends IsWidget,
                                               BeforeAppSearchEvent.HasBeforeAppSearchEventHandlers,
                                               AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers,
                                               AddCommunityClicked.HasAddCommunityClickedHandlers,
-                                              EditCommunityClicked.HasEditCommunityClickedHandlers {
+                                              EditCommunityClicked.HasEditCommunityClickedHandlers,
+                                              CategorizeButtonClicked.HasCategorizeButtonClickedHandlers {
 
     interface Appearance {
 
@@ -70,12 +74,25 @@ public interface AdminCommunitiesView extends IsWidget,
         String externalAppDND(String appLabels);
 
         String appAddedToCommunity(String appName, String communityName);
+
+        void setTreeIcons(TreeStyle style);
+
+        String clearCommunitySelection();
+
+        String categorizeDialogWidth();
+
+        String categorizeDialogHeight();
+
+        String selectCommunitiesFor(App targetApp);
+
+        String communityAvusSet(App app, List<Group> selectedCommunities);
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,
                                 HierarchySelectedEvent.HierarchySelectedEventHandler,
                                 AddCommunityClicked.AddCommunityClickedHandler,
-                                EditCommunityClicked.EditCommunityClickedHandler {
+                                EditCommunityClicked.EditCommunityClickedHandler,
+                                CategorizeButtonClicked.CategorizeButtonClickedHandler {
         void go(HasOneWidget container);
 
         AdminCommunitiesView getView();
