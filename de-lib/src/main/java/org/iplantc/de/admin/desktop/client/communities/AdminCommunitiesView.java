@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.communities;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -33,7 +34,8 @@ public interface AdminCommunitiesView extends IsWidget,
                                               AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers,
                                               AddCommunityClicked.HasAddCommunityClickedHandlers,
                                               EditCommunityClicked.HasEditCommunityClickedHandlers,
-                                              CategorizeButtonClicked.HasCategorizeButtonClickedHandlers {
+                                              CategorizeButtonClicked.HasCategorizeButtonClickedHandlers,
+                                              DeleteCommunityClicked.HasDeleteCommunityClickedHandlers {
 
     interface Appearance {
 
@@ -86,13 +88,20 @@ public interface AdminCommunitiesView extends IsWidget,
         String selectCommunitiesFor(App targetApp);
 
         String communityAvusSet(App app, List<Group> selectedCommunities);
+
+        String confirmDeleteCommunityTitle();
+
+        String confirmDeleteCommunityMessage(String communityName);
+
+        String communityDeleted(Group community);
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,
                                 HierarchySelectedEvent.HierarchySelectedEventHandler,
                                 AddCommunityClicked.AddCommunityClickedHandler,
                                 EditCommunityClicked.EditCommunityClickedHandler,
-                                CategorizeButtonClicked.CategorizeButtonClickedHandler {
+                                CategorizeButtonClicked.CategorizeButtonClickedHandler,
+                                DeleteCommunityClicked.DeleteCommunityClickedHandler {
         void go(HasOneWidget container);
 
         AdminCommunitiesView getView();

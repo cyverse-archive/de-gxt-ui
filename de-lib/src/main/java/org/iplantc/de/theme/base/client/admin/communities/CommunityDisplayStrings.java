@@ -36,4 +36,10 @@ public interface CommunityDisplayStrings extends Messages{
     String appRemovedFromCommunities(String name);
 
     String appTaggedWithCommunities(String name, @PluralCount List<String> communityNames);
+
+    String confirmDeleteCommunityTitle();
+
+    String confirmDeleteCommunityMessage(String communityName);
+
+    String communityDeleted(String name);
 }

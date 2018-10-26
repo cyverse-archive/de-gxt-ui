@@ -5,12 +5,14 @@ import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
 import org.iplantc.de.admin.desktop.client.communities.views.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
 import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
+import org.iplantc.de.admin.desktop.client.communities.views.DeleteCommunityConfirmationDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.EditCommunityDialog;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
@@ -50,6 +52,7 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Dialog;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +76,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject AppSearchFacade appSearchService;
     @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
     @Inject AsyncProviderWrapper<AppCommunityListEditorDialog> communityEditorDlgProvider;
+    @Inject AsyncProviderWrapper<DeleteCommunityConfirmationDialog> deleteCommunityDlgProvider;
     OntologyUtil ontologyUtil;
     AppSearchRpcProxy proxy;
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
@@ -143,6 +147,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addAddCommunityClickedHandler(this);
         view.addEditCommunityClickedHandler(this);
         view.addCategorizeButtonClickedHandler(this);
+        view.addDeleteCommunityClickedHandler(this);
     }
 
     @Override
@@ -462,5 +467,40 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     Map<Boolean, List<Avu>> getCommunityAvuMap(List<Avu> avus) {
         return avus.stream().collect(Collectors.partitioningBy(avu -> properties.getCommunityAttr().equals(avu.getAttribute())));
+    }
+
+    @Override
+    public void onDeleteCommunityClicked(DeleteCommunityClicked event) {
+        Group community = event.getSelectedCommunity();
+
+        deleteCommunityDlgProvider.get(new AsyncCallback<DeleteCommunityConfirmationDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(DeleteCommunityConfirmationDialog result) {
+                result.show(community);
+                result.addDialogHideHandler(event -> {
+                    if (Dialog.PredefinedButton.YES == event.getHideButton()) {
+                        deleteCommunity(community);
+                    }
+                });
+            }
+        });
+    }
+
+    void deleteCommunity(Group community) {
+        serviceFacade.deleteCommunity(community, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.communityDeleted(community)));
+                communityTreeStore.remove(community);
+            }
+        });
     }
 }

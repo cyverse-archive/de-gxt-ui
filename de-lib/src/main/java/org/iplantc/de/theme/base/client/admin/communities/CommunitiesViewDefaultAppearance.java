@@ -144,6 +144,21 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     }
 
     @Override
+    public String confirmDeleteCommunityTitle() {
+        return displayStrings.confirmDeleteCommunityTitle();
+    }
+
+    @Override
+    public String confirmDeleteCommunityMessage(String communityName) {
+        return displayStrings.confirmDeleteCommunityMessage(communityName);
+    }
+
+    @Override
+    public String communityDeleted(Group community) {
+        return displayStrings.communityDeleted(community.getName());
+    }
+
+    @Override
     public String searchFieldWidth() {
         return "200px";
     }

@@ -5,6 +5,7 @@ import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
+import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -194,6 +195,9 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("deleteButton")
     void deleteButtonClicked(SelectEvent event) {
+        if (selectedCommunity != null) {
+            fireEvent(new DeleteCommunityClicked(selectedCommunity));
+        }
     }
 
     @UiHandler("editCommunity")
@@ -294,6 +298,11 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     public HandlerRegistration addCategorizeButtonClickedHandler(CategorizeButtonClicked.CategorizeButtonClickedHandler handler) {
         return addHandler(handler, CategorizeButtonClicked.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteCommunityClickedHandler(DeleteCommunityClicked.DeleteCommunityClickedHandler handler) {
+        return addHandler(handler, DeleteCommunityClicked.TYPE);
     }
 
     void setUpDND() {
