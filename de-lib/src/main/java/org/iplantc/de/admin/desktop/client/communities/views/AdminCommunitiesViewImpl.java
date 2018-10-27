@@ -76,7 +76,6 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @UiField(provided = true) TreeStore<Group> communityTreeStore;
     @UiField(provided = true) TreeStore<OntologyHierarchy> hierarchyTreeStore;
     private App targetApp;
-    private Group selectedCommunity;
     private OntologyUtil ontologyUtil = OntologyUtil.getInstance();
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     private CommunityToAppDND communityToAppDND;
@@ -114,8 +113,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         communityTree.getSelectionModel().addSelectionChangedHandler(event -> {
             List<Group> selectedCommunities = event.getSelection();
             if (selectedCommunities.size() == 1) {
-                selectedCommunity = selectedCommunities.get(0);
-                fireEvent(new CommunitySelectionChanged(selectedCommunity));
+                fireEvent(new CommunitySelectionChanged(getSelectedCommunity()));
                 updateButtonStatus();
             }
         });
@@ -184,6 +182,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     }
 
     public void updateButtonStatus() {
+        Group selectedCommunity = getSelectedCommunity();
         editCommunity.setEnabled(selectedCommunity != null);
         deleteButton.setEnabled(selectedCommunity != null);
     }
@@ -195,6 +194,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("deleteButton")
     void deleteButtonClicked(SelectEvent event) {
+        Group selectedCommunity = getSelectedCommunity();
         if (selectedCommunity != null) {
             fireEvent(new DeleteCommunityClicked(selectedCommunity));
         }
@@ -202,6 +202,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @UiHandler("editCommunity")
     void editCommunityClicked(SelectEvent event) {
+        Group selectedCommunity = getSelectedCommunity();
         if (selectedCommunity != null) {
             fireEvent(new EditCommunityClicked(selectedCommunity));
         }
