@@ -18,6 +18,7 @@ import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEv
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
+import org.iplantc.de.apps.client.ManageCommunitiesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.DEClientConstants;
@@ -361,11 +362,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
             @Override
             public void onSuccess(EditCommunityDialog result) {
-                result.show(null);
+                result.show(null, ManageCommunitiesView.MODE.CREATE);
                 result.addOkButtonSelectHandler(event -> {
-                    Group community = groupFactory.getGroup().as();
-                    community.setName(result.getName());
-                    community.setDescription(result.getDescription());
+                    Group community = result.getUpdatedCommunity();
 
                     List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
 
@@ -394,13 +393,10 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             @Override
             public void onSuccess(EditCommunityDialog result) {
                 Group community = event.getCommunity();
-                result.show(community);
+                result.show(community, ManageCommunitiesView.MODE.EDIT);
                 result.addOkButtonSelectHandler(event -> {
-                    Group updatedCommunity = groupFactory.getGroup().as();
-                    updatedCommunity.setName(result.getName());
-                    updatedCommunity.setDescription(result.getDescription());
-
-                    serviceFacade.updateCommunity(result.getOriginalName(), updatedCommunity, new AsyncCallback<Group>() {
+                    Group updatedCommunity = result.getUpdatedCommunity();
+                    serviceFacade.updateCommunity(community.getName(), updatedCommunity, new AsyncCallback<Group>() {
                         @Override
                         public void onFailure(Throwable caught) {
                             ErrorHandler.post(caught);

@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.admin.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -156,6 +157,11 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     @Override
     public String communityDeleted(Group community) {
         return displayStrings.communityDeleted(community.getName());
+    }
+
+    @Override
+    public String failedToAddCommunityAdmin(Subject admin, Group community) {
+        return displayStrings.failedToAddCommunityAdmin(admin.getSubjectDisplayName(), community.getName());
     }
 
     @Override

@@ -28,6 +28,15 @@
         <when-type-is class="org.iplantc.de.apps.client.OntologyHierarchiesView.OntologyHierarchiesAppearance"/>
     </replace-with>
 
+    <!-- Communities -->
+    <replace-with class="org.iplantc.de.theme.base.client.apps.communities.CommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.client.CommunitiesView.Appearance"/>
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.apps.communities.ManageCommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.client.ManageCommunitiesView.Appearance"/>
+    </replace-with>
+
     <!-- Cells -->
     <replace-with class="org.iplantc.de.theme.base.client.apps.cells.AppCommentCellDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.client.views.list.cells.AppCommentCell.AppCommentCellAppearance"/>

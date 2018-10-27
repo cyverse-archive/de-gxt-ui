@@ -16,12 +16,10 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
-import org.iplantc.de.client.models.groups.UpdateMemberResultList;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListCallbackConverter;
-import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
+import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.client.services.converters.UpdateMemberResultsCallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -30,7 +28,6 @@ import org.iplantc.de.shared.services.ServiceCallWrapper;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -101,7 +98,7 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
         String address = ADMIN_COMMUNITIES + "/" + URL.encodePathSegment(community.getName()) + "/admins";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new SubjectListCallbackConverter(adminListCallback, collaboratorAutoBeanFactory));
+        deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(adminListCallback, collaboratorAutoBeanFactory));
     }
 
     @Override

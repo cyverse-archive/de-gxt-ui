@@ -42,4 +42,6 @@ public interface CommunityDisplayStrings extends Messages{
     String confirmDeleteCommunityMessage(String communityName);
 
     String communityDeleted(String name);
+
+    String failedToAddCommunityAdmin(String adminName, String communityName);
 }
