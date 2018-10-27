@@ -293,9 +293,9 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     void categorizeHierarchiesToApp(App targetApp, List<OntologyHierarchy> selectedHierarchies, List<Avu> nonOntologyAvus) {
         AvuList avus = ontologyUtil.convertHierarchiesToAvus(selectedHierarchies);
         List<Avu> ontologyAvus = avus.getAvus();
-        ontologyAvus.addAll(nonOntologyAvus);
+        AvuList allAvus = combineAvusToAvuList(ontologyAvus, nonOntologyAvus);
 
-        serviceFacade.setAppAVUs(targetApp, avus, new AsyncCallback<List<Avu>>() {
+        serviceFacade.setAppAVUs(targetApp, allAvus, new AsyncCallback<List<Avu>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -303,9 +303,20 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(List<Avu> result) {
-                announcer.schedule(new SuccessAnnouncementConfig(appearance.appClassified(targetApp.getName(), result)));
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.appClassified(targetApp.getName(), ontologyAvus)));
             }
         });
+    }
+
+    AvuList combineAvusToAvuList(List<Avu> avus1, List<Avu> avus2) {
+        List<Avu> totalAvus = Lists.newArrayList();
+        AvuList avuList = avuFactory.getAvuList().as();
+
+        totalAvus.addAll(avus1);
+        totalAvus.addAll(avus2);
+
+        avuList.setAvus(totalAvus);
+        return avuList;
     }
 
     @Override

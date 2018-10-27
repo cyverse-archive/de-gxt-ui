@@ -274,6 +274,9 @@ public class OntologiesViewDefaultAppearance implements OntologiesView.Ontologie
 
     @Override
     public String appClassified(String name, List<Avu> result) {
+        if (result == null || result.size() == 0) {
+            return displayStrings.appAvusCleared(name);
+        }
         List<String> tags = Lists.newArrayList();
         for (Avu avu : result) {
             List<Avu> subAvus = avu.getAvus();
