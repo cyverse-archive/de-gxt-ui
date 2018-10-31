@@ -82,4 +82,8 @@ public interface AppIntegrationModule {
         String UNCHECKED_VALUE = ".unCheckedValue";
         String COMMAND_LINE = ".commandLine";
     }
+
+    interface ValidationRuleIds {
+        String VALIDATION_DLG = "validationDlg";
+    }
 }
