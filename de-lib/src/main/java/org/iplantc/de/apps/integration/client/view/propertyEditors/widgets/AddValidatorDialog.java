@@ -273,6 +273,23 @@ public class AddValidatorDialog extends IPlantDialog implements ValidHandler, In
         hide();
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        charLimitField.setId(baseID + ValidationRuleIds.CHAR_LIMIT);
+        dblAboveField.setId(baseID + ValidationRuleIds.DBL_ABOVE);
+        dblBelowField.setId(baseID + ValidationRuleIds.DBL_BELOW);
+        dblRangeAboveField.setId(baseID + ValidationRuleIds.DBL_RANGE_ABOVE);
+        dblRangeBelowField.setId(baseID + ValidationRuleIds.DBL_RANGE_BELOW);
+        intAboveField.setId(baseID + ValidationRuleIds.INT_ABOVE);
+        intBelowField.setId(baseID + ValidationRuleIds.INT_BELOW);
+        intRangeAboveField.setId(baseID + ValidationRuleIds.INT_RANGE_ABOVE);
+        intRangeBelowField.setId(baseID + ValidationRuleIds.INT_RANGE_BELOW);
+        regexField.setId(baseID + ValidationRuleIds.REGEX);
+        validatorTypeCB.setId(baseID + ValidationRuleIds.VALIDATOR_TYPE);
+    }
+
     /**
      * This method should be called when after okButton is clicked.
      */

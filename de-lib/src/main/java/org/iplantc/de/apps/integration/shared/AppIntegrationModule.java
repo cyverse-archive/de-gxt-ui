@@ -85,5 +85,16 @@ public interface AppIntegrationModule {
 
     interface ValidationRuleIds {
         String VALIDATION_DLG = "validationDlg";
+        String CHAR_LIMIT = ".charLimit";
+        String DBL_ABOVE = ".dblAbove";
+        String DBL_BELOW = ".dblBelow";
+        String DBL_RANGE_ABOVE = ".dblRangeAbove";
+        String DBL_RANGE_BELOW = ".dblRangeBelow";
+        String INT_ABOVE = ".intAbove";
+        String INT_BELOW = ".intBelow";
+        String INT_RANGE_ABOVE = ".intRangeAbove";
+        String INT_RANGE_BELOW = ".intRangeBelow";
+        String REGEX = ".regex";
+        String VALIDATOR_TYPE = ".validatorType";
     }
 }
