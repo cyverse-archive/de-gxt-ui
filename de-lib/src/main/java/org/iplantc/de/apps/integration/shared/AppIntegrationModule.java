@@ -96,5 +96,7 @@ public interface AppIntegrationModule {
         String INT_RANGE_BELOW = ".intRangeBelow";
         String REGEX = ".regex";
         String VALIDATOR_TYPE = ".validatorType";
+        String OK_BTN = ".okBtn";
+        String CANCEL_BTN = ".cancelBtn";
     }
 }

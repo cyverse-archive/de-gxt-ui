@@ -288,6 +288,9 @@ public class AddValidatorDialog extends IPlantDialog implements ValidHandler, In
         intRangeBelowField.setId(baseID + ValidationRuleIds.INT_RANGE_BELOW);
         regexField.setId(baseID + ValidationRuleIds.REGEX);
         validatorTypeCB.setId(baseID + ValidationRuleIds.VALIDATOR_TYPE);
+
+        getButton(PredefinedButton.OK).setId(baseID + ValidationRuleIds.OK_BTN);
+        getButton(PredefinedButton.CANCEL).setId(baseID + ValidationRuleIds.CANCEL_BTN);
     }
 
     /**
