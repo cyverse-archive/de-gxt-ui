@@ -23,6 +23,7 @@ import appType from "../model/appType";
 import TextField from '@material-ui/core/TextField';
 import AnalysesMenu from "./AnalysesMenu";
 import { injectIntl } from "react-intl";
+import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 
 class AnalysesToolbar extends Component {
     constructor(props) {
@@ -76,54 +77,47 @@ class AnalysesToolbar extends Component {
                         {getMessage("refresh")}
                     </Button>
                     <form autoComplete="off">
-                        <FormControl className={classes.toolbarMargins}>
-                            <InputLabel htmlFor="filter-simple"
-                                        className={classes.toolbarMargins}>Filter</InputLabel>
+                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
                             <Select
-                                native
                                 value={this.props.permFilter}
-                                onChange={this.props.onPermissionsFilterChange}
-                                variant="outlined"
+                                onChange={(e) => this.props.onPermissionsFilterChange(e.target.value)}
                                 inputProps={{
                                     name: 'perm-filter',
                                     id: "sharingFilter",
-                                }}>
-                                <option
-                                    value={permission.all}>{permission.all}</option>
-                                <option
-                                    value={permission.mine}>{permission.mine}</option>
-                                <option
-                                    value={permission.theirs}>{permission.theirs}</option>
+                                }}
+                                style={{minWidth: 200}}>
+                                <MenuItem
+                                    value={permission.all}>{permission.all}</MenuItem>
+                                <MenuItem
+                                    value={permission.mine}>{permission.mine}</MenuItem>
+                                <MenuItem
+                                    value={permission.theirs}>{permission.theirs}</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl className={classes.toolbarMargins}>
-                            <InputLabel htmlFor="filter-simple">Filter</InputLabel>
+                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
                             <Select
-                                native
-                                value={this.props.appsFilter}
-                                onChange={this.props.onAppsFilterChange}
-                                variant="outlined"
+                                value={this.props.typeFilter}
+                                onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
                                 inputProps={{
                                     name: 'apps-filter',
                                     id: "appsFilter",
-                                }}>
-                                <option
-                                    value={appType.all}>{appType.all}</option>
-                                <option
-                                    value={appType.agave}>{appType.agave}</option>
-                                <option
-                                    value={appType.de}>{appType.de}</option>
-                                <option
-                                    value={appType.interactive}>{appType.interactive}</option>
-                                <option
-                                    value={appType.osg}>{appType.osg}</option>
+                                }} style={{minWidth: 120}}>
+                                <MenuItem
+                                    value={appType.all}>{appType.all}</MenuItem>
+                                <MenuItem
+                                    value={appType.agave}>{appType.agave}</MenuItem>
+                                <MenuItem
+                                    value={appType.de}>{appType.de}</MenuItem>
+                                <MenuItem
+                                    value={appType.interactive}>{appType.interactive}</MenuItem>
+                                <MenuItem
+                                    value={appType.osg}>{appType.osg}</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl className={classes.toolbarMargins}>
+                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
                             <TextField
                                 id="search"
                                 placeholder={formatMessage(intl,"search")}
-                                variant="outlined"
                                 style={{fontSize: 10}}
                             />
                         </FormControl>

@@ -174,7 +174,6 @@ class AnalysesView extends Component {
             orderBy: 'enddate',
             permFilter: permission.all,
             typeFilter: appType.all,
-            parentId: "",
             renameDialogOpen: false,
             commentsDialogOpen: false,
             shareWithSupportDialogOpen: false,
@@ -205,17 +204,20 @@ class AnalysesView extends Component {
         this.onShareWithSupport = this.onShareWithSupport.bind(this);
         this.statusClick = this.statusClick.bind(this);
         this.handleBatchIconClick = this.handleBatchIconClick.bind(this);
+        this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
+        this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
+
     }
 
     componentDidMount() {
         this.fetchAnalyses();
     }
 
-    fetchAnalyses() {
+    fetchAnalyses(parent_id) {
         const {rowsPerPage, offset, filter, order, orderBy} = this.state;
         this.setState({loading: true});
 
-        const parentFilter = this.getParentIdFilter();
+        const parentFilter = this.getParentIdFilter(parent_id);
         const typeFilter = this.getTypeFilter();
         const permFilter = this.getPermissionFilter();
 
@@ -244,14 +246,13 @@ class AnalysesView extends Component {
 
     handleBatchIconClick(event, id) {
         event.stopPropagation();
-        this.handleRowClick(id);
-        this.fetchAnalyses();
+        this.setState({typeFilter: "", permFilter: ""}, () => this.fetchAnalyses(id));
     }
 
-    getParentIdFilter() {
+    getParentIdFilter(parent_id) {
         const idParentFilter = Object.create(filter);
         idParentFilter.field = "parent_id";
-        idParentFilter.value = this.state.selected[0];
+        idParentFilter.value = parent_id;
         return idParentFilter;
     }
 
@@ -264,7 +265,7 @@ class AnalysesView extends Component {
 
         const typeFilter = Object.create(filter);
         typeFilter.field = "type";
-        typeFilter.value = typeFilter1;
+        typeFilter.value = typeFilter1.toLowerCase();
         return typeFilter;
     }
 
@@ -555,6 +556,16 @@ class AnalysesView extends Component {
 
     }
 
+    onPermissionsFilterChange(permFilterVal) {
+        console.log("filter=>" + permFilterVal);
+        this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses());
+    }
+
+    onTypeFilterChange(typeFilterVal) {
+        console.log("filter=>" + typeFilterVal);
+        this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses());
+    }
+
     render() {
         const {classes, intl, presenter, name, email, user} = this.props;
         const {
@@ -565,7 +576,9 @@ class AnalysesView extends Component {
             selected,
             total,
             data,
-            shareWithSupportDialogOpen
+            shareWithSupportDialogOpen,
+            permFilter,
+            typeFilter,
         } = this.state;
             return (
                 <React.Fragment>
@@ -588,7 +601,11 @@ class AnalysesView extends Component {
                                          shouldDisableCancel={this.shouldDisableCancel}
                                          isOwner={this.isOwner}
                                          isSharable={this.isSharable}
-                                         handleRefersh={this.fetchAnalyses}/>
+                                         handleRefersh={this.fetchAnalyses}
+                                         permFilter={permFilter}
+                                         typeFilter={typeFilter}
+                                         onPermissionsFilterChange={this.onPermissionsFilterChange}
+                                         onTypeFilterChange={this.onTypeFilterChange}/>
                         <div className={classes.table}>
                             <Table>
                                 <EnhancedTableHead

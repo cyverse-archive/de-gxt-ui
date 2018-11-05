@@ -2,7 +2,7 @@ const appType = {
     all: "All",
     agave: "Agave",
     de: "DE",
-    interactive: "interactive",
+    interactive: "Interactive",
     osg: "OSG",
 
 };
