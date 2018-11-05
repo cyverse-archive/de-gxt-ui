@@ -10,7 +10,6 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.dom.client.Element;
@@ -96,7 +95,7 @@ public interface AdminCommunitiesView extends IsWidget,
 
         String communityDeleted(Group community);
 
-        String failedToAddCommunityAdmin(Subject admin, Group community);
+        String failedToAddCommunityAdmin(String adminName, Group community);
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,

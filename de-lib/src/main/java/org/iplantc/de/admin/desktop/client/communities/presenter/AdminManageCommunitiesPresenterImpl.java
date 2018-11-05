@@ -4,7 +4,6 @@ import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdm
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
 import org.iplantc.de.apps.client.ManageCommunitiesView;
 import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -12,7 +11,6 @@ import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -72,6 +70,11 @@ public class AdminManageCommunitiesPresenterImpl implements ManageCommunitiesVie
     @Override
     public Group getUpdatedCommunity() {
         return view.getUpdatedCommunity();
+    }
+
+    @Override
+    public List<Subject> getCommunityAdmins() {
+        return view.getAdmins();
     }
 
     void getCommunityAdmins(Group community) {

@@ -3,7 +3,6 @@ package org.iplantc.de.apps.client;
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
 import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 
@@ -63,6 +62,8 @@ public interface ManageCommunitiesView extends IsWidget,
         boolean isViewValid();
 
         Group getUpdatedCommunity();
+
+        List<Subject> getCommunityAdmins();
     }
 
     void edit(Group community);
@@ -74,4 +75,6 @@ public interface ManageCommunitiesView extends IsWidget,
     Group getUpdatedCommunity();
 
     void removeAdmin(Subject admin);
+
+    List<Subject> getAdmins();
 }

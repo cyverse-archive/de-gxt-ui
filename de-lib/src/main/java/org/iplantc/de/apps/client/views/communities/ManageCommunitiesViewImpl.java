@@ -1,13 +1,9 @@
 package org.iplantc.de.apps.client.views.communities;
 
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
-import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.ManageCommunitiesView;
 import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
-import org.iplantc.de.apps.client.models.AppModelKeyProvider;
-import org.iplantc.de.apps.client.views.list.AppColumnModel;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
@@ -127,6 +123,11 @@ public class ManageCommunitiesViewImpl extends Composite implements ManageCommun
     @Override
     public void removeAdmin(Subject admin) {
         adminListStore.remove(admin);
+    }
+
+    @Override
+    public List<Subject> getAdmins() {
+        return adminListStore.getAll();
     }
 
     @Override

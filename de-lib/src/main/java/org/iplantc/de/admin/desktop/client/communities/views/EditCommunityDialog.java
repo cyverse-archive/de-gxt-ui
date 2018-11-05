@@ -2,12 +2,15 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.apps.client.ManageCommunitiesView;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.button.TextButton;
+
+import java.util.List;
 
 /**
  * A dialog that can be used to create or edit a community
@@ -55,5 +58,9 @@ public class EditCommunityDialog extends IPlantDialog {
 
     public Group getUpdatedCommunity() {
         return presenter.getUpdatedCommunity();
+    }
+
+    public List<Subject> getSelectedAdmins() {
+        return presenter.getCommunityAdmins();
     }
 }

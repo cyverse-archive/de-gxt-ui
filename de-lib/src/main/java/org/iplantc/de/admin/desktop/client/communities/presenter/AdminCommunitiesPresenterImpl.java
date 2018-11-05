@@ -26,9 +26,11 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.avu.AvuList;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppSearchFacade;
@@ -37,6 +39,7 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AppsCallback;
@@ -366,20 +369,46 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 result.show(null, ManageCommunitiesView.MODE.CREATE);
                 result.addOkButtonSelectHandler(event -> {
                     Group community = result.getUpdatedCommunity();
+                    List<Subject> admins = result.getSelectedAdmins();
 
-                    List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
+                    addCommunityWithAdmins(community, admins);
+                });
+            }
+        });
+    }
 
-                    groupServiceFacade.addCommunity(community, publicPrivileges, new AsyncCallback<Group>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            ErrorHandler.post(caught);
-                        }
+    void addCommunityWithAdmins(Group community, List<Subject> admins) {
+        List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
 
-                        @Override
-                        public void onSuccess(Group result) {
-                            communityTreeStore.add(result);
-                        }
-                    });
+        groupServiceFacade.addCommunity(community, publicPrivileges, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                communityTreeStore.add(result);
+                if (admins != null) {
+                    addCommunityAdmins(result, admins);
+                }
+            }
+        });
+    }
+
+    void addCommunityAdmins(Group community, List<Subject> admins) {
+        serviceFacade.addCommunityAdmins(community, admins, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> result) {
+                result.forEach(updateMemberResult -> {
+                    if (!updateMemberResult.isSuccess()) {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.failedToAddCommunityAdmin(updateMemberResult.getSubjectName(), community)));
+                    }
                 });
             }
         });
@@ -413,6 +442,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             }
         });
     }
+
     @Override
     public void onCategorizeButtonClicked(CategorizeButtonClicked event) {
         App selectedApp = event.getTargetApp();
