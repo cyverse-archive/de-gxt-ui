@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.apps.client;
 
 import org.iplantc.de.admin.apps.client.events.selection.RestoreAppSelected;
+import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.PreviewHierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.SelectOntologyVersionEvent;
@@ -35,7 +36,8 @@ public interface AdminAppsGridView extends IsWidget,
                                            BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                            HierarchySelectedEvent.HierarchySelectedEventHandler,
                                            PreviewHierarchySelectedEvent.PreviewHierarchySelectedEventHandler,
-                                           SelectOntologyVersionEvent.SelectOntologyVersionEventHandler {
+                                           SelectOntologyVersionEvent.SelectOntologyVersionEventHandler,
+                                           CommunitySelectionChanged.CommunitySelectionChangedHandler {
 
     interface Appearance extends AppsListView.AppsListAppearance {
 

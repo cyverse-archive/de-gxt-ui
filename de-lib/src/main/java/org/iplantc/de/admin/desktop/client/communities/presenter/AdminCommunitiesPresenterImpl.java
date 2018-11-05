@@ -142,6 +142,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addCommunitySelectionChangedHandler(this);
         view.addHierarchySelectedEventHandler(this);
         view.addHierarchySelectedEventHandler(hierarchyGridPresenter.getView());
+        view.addCommunitySelectionChangedHandler(communityGridPresenter.getView());
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());

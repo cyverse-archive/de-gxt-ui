@@ -39,4 +39,8 @@ public class CommunitySelectionChanged extends GwtEvent<CommunitySelectionChange
     public Group getCommunity() {
         return community;
     }
+
+    public String getPath() {
+        return community.getName();
+    }
 }
