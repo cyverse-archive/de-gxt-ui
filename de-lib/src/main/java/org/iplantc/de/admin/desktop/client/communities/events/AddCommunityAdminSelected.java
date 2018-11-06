@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.client.events;
+package org.iplantc.de.admin.desktop.client.communities.events;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;

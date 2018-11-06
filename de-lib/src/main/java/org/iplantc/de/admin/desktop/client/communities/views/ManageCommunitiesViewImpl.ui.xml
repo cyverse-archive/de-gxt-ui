@@ -40,7 +40,7 @@
     </ui:with>
 
     <ui:with field="appearance"
-             type="org.iplantc.de.apps.client.ManageCommunitiesView.Appearance"/>
+             type="org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView.Appearance"/>
     <container:VerticalLayoutContainer ui:field="vlc"
                                        scrollMode="AUTO">
         <container:child layoutData="{layoutData}">

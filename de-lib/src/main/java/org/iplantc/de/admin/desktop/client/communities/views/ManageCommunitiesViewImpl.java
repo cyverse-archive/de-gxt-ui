@@ -1,8 +1,8 @@
-package org.iplantc.de.apps.client.views.communities;
+package org.iplantc.de.admin.desktop.client.communities.views;
 
+import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityAdminSelected;
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
-import org.iplantc.de.apps.client.ManageCommunitiesView;
-import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;

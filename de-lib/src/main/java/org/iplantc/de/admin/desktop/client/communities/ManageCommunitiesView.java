@@ -1,7 +1,7 @@
-package org.iplantc.de.apps.client;
+package org.iplantc.de.admin.desktop.client.communities;
 
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityAdminSelected;
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
-import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
@@ -55,26 +55,67 @@ public interface ManageCommunitiesView extends IsWidget,
     interface Presenter extends AddCommunityAdminSelected.AddCommunityAdminSelectedHandler,
                                 RemoveCommunityAdminSelected.RemoveCommunityAdminSelectedHandler {
 
+        /**
+         * Initializes the view with a mode and a container to hold the view
+         * @param widget
+         * @param mode
+         */
         void go(HasOneWidget widget, MODE mode);
 
+        /**
+         * Initializes the {@link org.iplantc.de.teams.client.views.TeamDetailsView.EditorDriver}
+         * for editing the provided community
+         * @param community
+         */
         void editCommunity(Group community);
 
+        /**
+         * @return true if the view's fields are all valid
+         */
         boolean isViewValid();
 
+        /**
+         * @return the current community with any modifications from the user
+         */
         Group getUpdatedCommunity();
 
+        /**
+         * @return the list of collaborators selected to be admins to this community
+         */
         List<Subject> getCommunityAdmins();
     }
 
+    /**
+     * Initializes the {@link org.iplantc.de.teams.client.views.TeamDetailsView.EditorDriver}
+     * for editing the provided community
+     * @param community
+     */
     void edit(Group community);
 
+    /**
+     * Add the provided collaborators to the view's list of admins
+     * @param communityAdmins
+     */
     void addAdmins(List<Subject> communityAdmins);
 
+    /**
+     * @return true if the view's fields are all valid
+     */
     boolean isValid();
 
+    /**
+     * @return the current community with any modifications from the user
+     */
     Group getUpdatedCommunity();
 
+    /**
+     * Remove the specified collaborator from the view's list of admins
+     * @param admin
+     */
     void removeAdmin(Subject admin);
 
+    /**
+     * @return the list of collaborators selected to be admins to this community
+     */
     List<Subject> getAdmins();
 }

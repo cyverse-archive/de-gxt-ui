@@ -1,21 +1,17 @@
-package org.iplantc.de.admin.desktop.client.communities.views;
+package org.iplantc.de.admin.desktop.client.communities.views.dialogs;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
-import org.iplantc.de.admin.desktop.client.ontologies.events.CategorizeHierarchiesToAppEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.views.AppCategorizeView;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
 
@@ -81,8 +77,10 @@ public class AppCommunityListEditorDialog extends IPlantDialog {
     void markTaggedCommunities(List<Avu> selectedAvus, List<Group> allCommunities) {
         List<Group> selectedCommunities = Lists.newArrayList();
         for (Avu avu: selectedAvus) {
-            Group selectedCommunity = allCommunities.stream().filter(community -> avu.getValue().equals(community.getDisplayName())).findFirst().get();
-            selectedCommunities.add(selectedCommunity);
+            allCommunities.stream()
+                          .filter(community -> avu.getValue().equals(community.getDisplayName()))
+                          .findFirst()
+                          .ifPresent(selectedCommunities::add);
         }
         categorizeView.setSelectedItems(selectedCommunities);
     }

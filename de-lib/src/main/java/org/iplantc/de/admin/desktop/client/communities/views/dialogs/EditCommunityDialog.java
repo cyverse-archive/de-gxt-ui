@@ -1,7 +1,7 @@
-package org.iplantc.de.admin.desktop.client.communities.views;
+package org.iplantc.de.admin.desktop.client.communities.views.dialogs;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
-import org.iplantc.de.apps.client.ManageCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;

@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.communities.presenter;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CategorizeButtonClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
@@ -9,16 +10,15 @@ import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityCli
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
-import org.iplantc.de.admin.desktop.client.communities.views.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
 import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
-import org.iplantc.de.admin.desktop.client.communities.views.DeleteCommunityConfirmationDialog;
-import org.iplantc.de.admin.desktop.client.communities.views.EditCommunityDialog;
+import org.iplantc.de.admin.desktop.client.communities.views.dialogs.AppCommunityListEditorDialog;
+import org.iplantc.de.admin.desktop.client.communities.views.dialogs.DeleteCommunityConfirmationDialog;
+import org.iplantc.de.admin.desktop.client.communities.views.dialogs.EditCommunityDialog;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.apps.client.ManageCommunitiesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.DEClientConstants;
@@ -28,7 +28,6 @@ import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.ontologies.Ontology;
@@ -75,7 +74,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject JsonUtil jsonUtil;
     @Inject AppServiceFacade appService;
     private OntologyServiceFacade ontologyServiceFacade;
-    private GroupAutoBeanFactory groupFactory;
     private AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject AppSearchFacade appSearchService;
     @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
@@ -97,7 +95,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject
     public AdminCommunitiesPresenterImpl(AdminCommunityServiceFacade serviceFacade,
                                          OntologyServiceFacade ontologyServiceFacade,
-                                         GroupAutoBeanFactory groupFactory,
                                          AvuAutoBeanFactory avuAutoBeanFactory,
                                          AppSearchFacade appSearchService,
                                          GroupServiceFacade groupServiceFacade,
@@ -109,7 +106,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                          AdminAppsGridView.Presenter communityGridPresenter) {
         this.serviceFacade = serviceFacade;
         this.ontologyServiceFacade = ontologyServiceFacade;
-        this.groupFactory = groupFactory;
         this.avuAutoBeanFactory = avuAutoBeanFactory;
         this.appSearchService = appSearchService;
         this.groupServiceFacade = groupServiceFacade;
@@ -432,18 +428,19 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             @Override
             public void onSuccess(EditCommunityDialog result) {
                 Group community = event.getCommunity();
+                String originalCommunityName = community.getName();
                 result.show(community, ManageCommunitiesView.MODE.EDIT);
                 result.addOkButtonSelectHandler(event -> {
                     Group updatedCommunity = result.getUpdatedCommunity();
-                    updateCommunity(community, updatedCommunity);
+                    updateCommunity(originalCommunityName, updatedCommunity);
                 });
             }
         });
     }
 
-    void updateCommunity(Group originalCommunity, Group updatedCommunity) {
+    void updateCommunity(String originalCommunity, Group updatedCommunity) {
         view.maskCommunities();
-        serviceFacade.updateCommunity(originalCommunity.getName(), updatedCommunity, new AsyncCallback<Group>() {
+        serviceFacade.updateCommunity(originalCommunity, updatedCommunity, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -454,6 +451,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             public void onSuccess(Group result) {
                 communityTreeStore.update(result);
                 communityTreeStore.applySort(true);
+                view.selectCommunity(result);
                 view.unmaskCommunities();
             }
         });

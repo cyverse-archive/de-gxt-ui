@@ -1,9 +1,9 @@
 package org.iplantc.de.admin.desktop.client.communities.presenter;
 
+import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
+import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityAdminSelected;
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
-import org.iplantc.de.apps.client.ManageCommunitiesView;
-import org.iplantc.de.apps.client.events.AddCommunityAdminSelected;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;

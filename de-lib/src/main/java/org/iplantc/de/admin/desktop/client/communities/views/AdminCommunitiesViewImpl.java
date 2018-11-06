@@ -159,6 +159,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
 
     @Override
     public void selectCommunity(Group community) {
+        communityTree.getSelectionModel().deselectAll();
         communityTree.getSelectionModel().select(community, true);
     }
 

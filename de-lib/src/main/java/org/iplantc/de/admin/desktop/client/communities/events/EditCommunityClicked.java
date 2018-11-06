@@ -7,7 +7,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * A GWT even that fires when the user clicks the Edit Community button
+ * A GWT event that fires when the user clicks the Edit Community button
  */
 public class EditCommunityClicked extends GwtEvent<EditCommunityClicked.EditCommunityClickedHandler> {
     public interface EditCommunityClickedHandler extends EventHandler {

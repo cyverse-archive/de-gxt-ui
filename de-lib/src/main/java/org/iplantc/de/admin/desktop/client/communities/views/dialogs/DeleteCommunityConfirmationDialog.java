@@ -1,15 +1,11 @@
-package org.iplantc.de.admin.desktop.client.communities.views;
+package org.iplantc.de.admin.desktop.client.communities.views.dialogs;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 /**
  * @author aramsey

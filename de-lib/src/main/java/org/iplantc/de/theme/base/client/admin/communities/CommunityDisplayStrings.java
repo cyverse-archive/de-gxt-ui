@@ -44,4 +44,6 @@ public interface CommunityDisplayStrings extends Messages{
     String communityDeleted(String name);
 
     String failedToAddCommunityAdmin(String adminName, String communityName);
+
+    String searchEmptyText();
 }

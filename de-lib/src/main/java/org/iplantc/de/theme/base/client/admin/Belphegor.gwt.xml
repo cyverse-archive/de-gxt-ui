@@ -48,6 +48,9 @@
         <when-type-is class="org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView.Appearance" />
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.admin.communities.ManageCommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView.Appearance"/>
+    </replace-with>
     
     <!--  Metadata -->
      <replace-with class="org.iplantc.de.theme.base.client.admin.metadata.DefaultTemplateListingAppearance">

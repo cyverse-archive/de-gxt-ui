@@ -74,7 +74,7 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
 
     @Override
     public String emptySearchFieldText() {
-        return iplantDisplayStrings.searchEmptyText();
+        return displayStrings.searchEmptyText();
     }
 
     @Override
