@@ -130,4 +130,8 @@ public interface AdminCommunitiesView extends IsWidget,
     void deselectHierarchies();
 
     void selectCommunity(Group community);
+
+    void maskCommunities();
+
+    void unmaskCommunities();
 }

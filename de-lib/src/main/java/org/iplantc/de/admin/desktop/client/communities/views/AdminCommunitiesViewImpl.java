@@ -163,6 +163,16 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     }
 
     @Override
+    public void maskCommunities() {
+        communityTree.mask();
+    }
+
+    @Override
+    public void unmaskCommunities() {
+        communityTree.unmask();
+    }
+
+    @Override
     public Group getCommunityFromElement(Element el) {
         Tree.TreeNode<Group> node = communityTree.findNode(el);
         if (node != null) {

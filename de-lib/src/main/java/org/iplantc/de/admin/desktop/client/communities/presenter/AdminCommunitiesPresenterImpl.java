@@ -280,10 +280,12 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         communityGridPresenter.getView().clearAndAdd(null);
         hierarchyGridPresenter.getView().clearAndAdd(null);
 
+        view.maskCommunities();
         serviceFacade.getCommunities(new AsyncCallback<List<Group>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCommunities();
             }
 
             @Override
@@ -294,6 +296,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 } else {
                     view.showNoCommunitiesPanel();
                 }
+                view.unmaskCommunities();
             }
         });
     }
@@ -379,11 +382,13 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     void addCommunityWithAdmins(Group community, List<Subject> admins) {
         List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
+        view.maskCommunities();
 
         groupServiceFacade.addCommunity(community, publicPrivileges, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCommunities();
             }
 
             @Override
@@ -391,6 +396,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 communityTreeStore.add(result);
                 if (admins != null) {
                     addCommunityAdmins(result, admins);
+                } else {
+                    view.unmaskCommunities();
                 }
             }
         });
@@ -401,6 +408,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCommunities();
             }
 
             @Override
@@ -410,6 +418,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.failedToAddCommunityAdmin(updateMemberResult.getSubjectName(), community)));
                     }
                 });
+                view.unmaskCommunities();
             }
         });
     }
@@ -426,19 +435,26 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 result.show(community, ManageCommunitiesView.MODE.EDIT);
                 result.addOkButtonSelectHandler(event -> {
                     Group updatedCommunity = result.getUpdatedCommunity();
-                    serviceFacade.updateCommunity(community.getName(), updatedCommunity, new AsyncCallback<Group>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            ErrorHandler.post(caught);
-                        }
-
-                        @Override
-                        public void onSuccess(Group result) {
-                            communityTreeStore.update(result);
-                            communityTreeStore.applySort(true);
-                        }
-                    });
+                    updateCommunity(community, updatedCommunity);
                 });
+            }
+        });
+    }
+
+    void updateCommunity(Group originalCommunity, Group updatedCommunity) {
+        view.maskCommunities();
+        serviceFacade.updateCommunity(originalCommunity.getName(), updatedCommunity, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+                view.unmaskCommunities();
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                communityTreeStore.update(result);
+                communityTreeStore.applySort(true);
+                view.unmaskCommunities();
             }
         });
     }
@@ -517,16 +533,19 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     }
 
     void deleteCommunity(Group community) {
+        view.maskCommunities();
         serviceFacade.deleteCommunity(community, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCommunities();
             }
 
             @Override
             public void onSuccess(Group result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.communityDeleted(community)));
                 communityTreeStore.remove(community);
+                view.unmaskCommunities();
             }
         });
     }
