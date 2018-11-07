@@ -1,6 +1,8 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
 import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
+import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
+import org.iplantc.de.apps.integration.shared.AppIntegrationModule.ValidationRuleIds;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.AbstractArgumentEditor;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
@@ -233,6 +235,8 @@ public class AddValidatorDialog extends IPlantDialog implements ValidHandler, In
         validatorTypeCB.setValue(next, true);
         cardLC.setActiveWidget(validatorTypeToCardMap.get(next));
         super.show();
+
+        ensureDebugId(ValidationRuleIds.VALIDATION_DLG);
     }
 
     @Override
@@ -267,6 +271,26 @@ public class AddValidatorDialog extends IPlantDialog implements ValidHandler, In
     @Override
     protected void onOkButtonClicked() {
         hide();
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        charLimitField.setId(baseID + ValidationRuleIds.CHAR_LIMIT);
+        dblAboveField.setId(baseID + ValidationRuleIds.DBL_ABOVE);
+        dblBelowField.setId(baseID + ValidationRuleIds.DBL_BELOW);
+        dblRangeAboveField.setId(baseID + ValidationRuleIds.DBL_RANGE_ABOVE);
+        dblRangeBelowField.setId(baseID + ValidationRuleIds.DBL_RANGE_BELOW);
+        intAboveField.setId(baseID + ValidationRuleIds.INT_ABOVE);
+        intBelowField.setId(baseID + ValidationRuleIds.INT_BELOW);
+        intRangeAboveField.setId(baseID + ValidationRuleIds.INT_RANGE_ABOVE);
+        intRangeBelowField.setId(baseID + ValidationRuleIds.INT_RANGE_BELOW);
+        regexField.setId(baseID + ValidationRuleIds.REGEX);
+        validatorTypeCB.setId(baseID + ValidationRuleIds.VALIDATOR_TYPE);
+
+        getButton(PredefinedButton.OK).setId(baseID + ValidationRuleIds.OK_BTN);
+        getButton(PredefinedButton.CANCEL).setId(baseID + ValidationRuleIds.CANCEL_BTN);
     }
 
     /**
