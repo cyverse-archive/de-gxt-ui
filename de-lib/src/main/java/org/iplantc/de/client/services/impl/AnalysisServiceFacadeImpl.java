@@ -245,8 +245,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback) {
-        String address = ANALYSES + "/" + analysis.getId() + "/parameters";
+    public void getAnalysisParams(String analysis_id, DECallback<List<AnalysisParameter>> callback) {
+        String address = ANALYSES + "/" + analysis_id + "/parameters";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
         deServiceFacade.getServiceData(wrapper, new StringListAsyncCallbackConverter(callback, factory));

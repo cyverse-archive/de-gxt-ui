@@ -1,9 +1,11 @@
 package org.iplantc.de.analysis.client.views;
 
 import org.iplantc.de.analysis.client.AnalysesView;
+import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.analysis.client.ReactAnalyses;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -33,12 +35,19 @@ public class AnalysesViewImpl implements AnalysesView/*,
     AnalysisSearchField searchField;
     HTMLPanel panel;
     Presenter presenter;
+    AnalysisParametersView.Presenter paramPresenter;
+    DiskResourceUtil diskResourceUtil;
+
 
     @Inject
-    AnalysesViewImpl(/*final AnalysisToolBarFactory toolBarFactory,
+    AnalysesViewImpl(AnalysisParametersView.Presenter paramPresenter,
+                     DiskResourceUtil diskResourceUtil
+            /*final AnalysisToolBarFactory toolBarFactory,
                      @Assisted final ListStore<Analysis> listStore,
                      @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader*/) {
         panel = new HTMLPanel("<div></div>");
+        this.paramPresenter = paramPresenter;
+        this.diskResourceUtil = diskResourceUtil;
 /*        this.listStore = listStore;
         this.toolBar = toolBarFactory.create(loader);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Analysis>());
@@ -80,9 +89,11 @@ public class AnalysesViewImpl implements AnalysesView/*,
         ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
         props.presenter = this.presenter;
         final UserInfo instance = UserInfo.getInstance();
-        props.user = instance.getFullUsername();
+        props.username = instance.getFullUsername();
         props.email = instance.getEmail();
         props.name = instance.getFirstName() + " " + instance.getLastName();
+        props.paramPresenter = paramPresenter;
+        props.diskResourceUtil = diskResourceUtil;
         CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
     }
 

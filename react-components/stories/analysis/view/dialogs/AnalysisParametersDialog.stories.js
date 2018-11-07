@@ -4,6 +4,9 @@ import AnalysisParametersDialog from "../../../../src/analysis/view/dialogs/Anal
 class AnalysisParametersDialogTest extends Component {
 
     render() {
+        const drUtil = {
+            parseNameFromPath: ()=> {return "testfile"},
+        };
         const parameterList = {
             "app_id": "5c13a988-bc75-11e4-8418-ef0021a84d3d",
             "system_id": "de",
@@ -81,7 +84,11 @@ class AnalysisParametersDialogTest extends Component {
         return (
             <AnalysisParametersDialog parameters={parameterList.parameters}
                                       analysisName="Test_analysis1"
-                                      dialogOpen={true}/>
+                                      dialogOpen={true}
+                                      diskResourceUtil={drUtil}
+                                      onViewParamDialogClose={() => console.log(
+                                          "View params dialog closed")}
+                                      onValueClick={() => console.log("value clicked")} />
         );
     }
 }

@@ -1,6 +1,8 @@
 package org.iplantc.de.analysis.client;
 
 
+import org.iplantc.de.client.util.DiskResourceUtil;
+
 import gwt.react.client.components.ReactClass;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
@@ -19,9 +21,11 @@ public class ReactAnalyses {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class AnalysesProps extends BaseProps {
         public AnalysesView.Presenter presenter;
-        public String user;
+        public String username;
         public String email;
         public String name;
+        public AnalysisParametersView.Presenter paramPresenter;
+        public DiskResourceUtil diskResourceUtil;
     }
 }
 

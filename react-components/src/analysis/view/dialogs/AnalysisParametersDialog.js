@@ -46,7 +46,7 @@ const ArgumentType = {
 };
 
 function ParameterValue(props) {
-    const {parameter} = props;
+    const {parameter, classes, diskResourceUtil, onValueClick} = props;
     let info_type = parameter.info_type;
     let valid_info_type = (!(info_type === "ReferenceGenome")
         && !(info_type === "ReferenceSequence")
@@ -64,9 +64,16 @@ function ParameterValue(props) {
         || ArgumentType.MultiFileSelector === (type) ||
         ArgumentType.FileFolderInput === (type))
         && valid_info_type) {
-        return (<span> {displayValue} </span>);
+        return (
+            <span
+                className={classes.inputType}
+                title={displayValue}
+                onClick={() => onValueClick(parameter)}
+            >
+                {diskResourceUtil.parseNameFromPath(displayValue)}
+            </span>);
     } else {
-        return (<span>{displayValue}</span>);
+        return (<span className={classes.otherType}>{displayValue}</span>);
     }
 
 }
@@ -81,24 +88,21 @@ class AnalysisParametersDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dialogOpen: props.dialogOpen,
             order: 'desc',
             orderBy: 'Name',
         }
     }
 
     render() {
-        const {classes, analysisName, parameters} = this.props;
+        const {classes, analysisName, parameters, onViewParamDialogClose} = this.props;
         const {order, orderBy} = this.state;
         return (
-            <Dialog open={this.state.dialogOpen}>
+            <Dialog open={this.props.dialogOpen}>
                 <DEDialogHeader
                     heading={getMessage("analysisParamTitle", {values: {name: analysisName}})}
-                    onClose={() => {
-                        this.setState({dialogOpen: false})
-                    }}/>
+                    onClose={onViewParamDialogClose}/>
                 <DialogContent>
-                    <Table className={classes.table}>
+                    <Table>
                         <EnhancedTableHead
                             columnData={columnData}
                             ids={ids}
@@ -112,7 +116,11 @@ class AnalysisParametersDialog extends Component {
                                     <TableRow key={n.param_id}>
                                         <TableCell>{n.param_name}</TableCell>
                                         <TableCell>{n.param_type}</TableCell>
-                                        <TableCell><ParameterValue parameter={n}/></TableCell>
+                                        <TableCell><ParameterValue
+                                            parameter={n}
+                                            classes={classes}
+                                            diskResourceUtil={this.props.diskResourceUtil}
+                                            onValueClick={this.props.onValueClick}/></TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -120,11 +128,17 @@ class AnalysisParametersDialog extends Component {
                     </Table>
                 </DialogContent>
                 <DialogActions>
+                    <Button variant="contained"
+                            color="secondary"
+                            style={{textTransform: "none"}}>
+                        {getMessage("saveToFile")}
+                    </Button>
+
                     <Button
-                        onClick={() => {
-                            this.setState({dialogOpen: false})
-                        }}
-                        color="primary">
+                        onClick={onViewParamDialogClose}
+                        variant="contained"
+                        color="primary"
+                        style={{textTransform: "none"}}>
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

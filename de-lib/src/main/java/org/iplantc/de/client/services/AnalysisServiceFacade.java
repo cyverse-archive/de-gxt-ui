@@ -45,7 +45,7 @@ public interface AnalysisServiceFacade {
      */
     void stopAnalysis(Analysis analysis, DECallback<String> callback, String status);
 
-    void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback);
+    void getAnalysisParams(String analysis_id, DECallback<List<AnalysisParameter>> callback);
 
     void updateAnalysisComments(String id, String newComment, DECallback<Void> callback);
 

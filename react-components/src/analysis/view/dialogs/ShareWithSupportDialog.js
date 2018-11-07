@@ -159,7 +159,7 @@ class ShareWithSupportDialog extends React.Component {
         this.handleConditionChange = this.handleConditionChange.bind(this);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.analysis !== prevProps.analysis) {
             this.setState({analysis: this.props.analysis});
         }
@@ -174,7 +174,7 @@ class ShareWithSupportDialog extends React.Component {
         const {analysis, intl, name, email, onShareWithSupport} = this.props;
         const {outputCondition, shareWithSupport, enableSubmit} = this.state;
 
-        const status = analysis.status;
+        const status = analysis ? analysis.status : "";
         return (
             <React.Fragment>
                 <Dialog open={this.props.dialogOpen}>

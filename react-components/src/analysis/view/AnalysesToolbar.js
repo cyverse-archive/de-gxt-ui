@@ -63,6 +63,7 @@ class AnalysesToolbar extends Component {
                     </Button>
                     <Menu
                         id="simple-menu"
+                        style={{zIndex: 888887,}}
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={this.handleClose}>

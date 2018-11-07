@@ -37,6 +37,7 @@ var intlData = {
         "noOutput": "Analysis completed but I got no output.",
         "unExpectedOutput": "Analysis completed but I got unexpected output.",
         "outputConditionHeader": "Select Output condition:",
+        "saveToFile": "Save to file",
         "shareDisclaimer": "<span style=\"overflow:auto;\">I agree to <a href=\"https://wiki.cyverse.org/wiki/x/KBfHAQ\" target=\"_blank\">share my analysis</a> details, output file(s) and logs with CyVerse Support. If you want any of the <a href=\"https://wiki.cyverse.org/wiki/x/XRfHAQ\" target=\"_blank\">Science Informaticians</a> to recuse themselves from assisting with this problem, please list their name(s) in comments.</span>",
         "agaveRunning": "<h4> My Analysis never completes </h4>\n" +
             "<p style=\"margin:10px;\">HPC apps that use the Agave API will display as \"Running\" while the data is being transferred. If your analysis has a very large input file or output file, part of the run time may be due to data transfer. Certain apps have very long run times, depending on the input. Please check the app documentation to estimate how long you it should take for your analysis to complete.</p>\n" +

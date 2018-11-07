@@ -31,6 +31,7 @@ class AnalysesMenu extends Component {
             handleCancel,
             handleShare,
             handleDelete,
+            handleViewParams,
         } = this.props;
         return (
             <React.Fragment>
@@ -44,7 +45,10 @@ class AnalysesMenu extends Component {
                     {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || multiSelect()}
-                          onClick={onClick}
+                          onClick={() => {
+                              handleClose();
+                              handleViewParams();
+                          }}
                           className={classes.menuItem}>
                     <FolderIcon className={classes.toolbarItemColor}/>
                     {getMessage("viewParam")}

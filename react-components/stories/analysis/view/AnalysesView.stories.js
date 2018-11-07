@@ -223,7 +223,7 @@ class AnalysesViewTest extends Component {
 
         return (
             <AnalysesView analysesList={analysesList}
-                          user="sriram@iplantcollaborative.org"
+                          username="sriram@iplantcollaborative.org"
                           presenter={presenter}
                           email="abc@cyverse.org"
                           name="sriram srinivasan"

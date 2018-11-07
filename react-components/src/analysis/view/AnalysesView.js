@@ -31,6 +31,7 @@ import permission from "../model/permission";
 import DEPromptDialog from "../../util/dialog/DEPromptDialog";
 import { injectIntl } from "react-intl";
 import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
+import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -83,8 +84,8 @@ function AppName(props) {
 }
 
 function Status(props) {
-    const {analysis, onClick, user} = props;
-    if (user === analysis.username && analysis.status !== analysisStatus.CANCELED) {
+    const {analysis, onClick, username} = props;
+    if (username === analysis.username && analysis.status !== analysisStatus.CANCELED) {
         return (<DEHyperLink
             onClick={(analysis) => onClick(analysis)}
             text={analysis.status}/>);
@@ -177,6 +178,8 @@ class AnalysesView extends Component {
             renameDialogOpen: false,
             commentsDialogOpen: false,
             shareWithSupportDialogOpen: false,
+            parameters: [],
+            viewParamsDialogOpen: false,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -206,7 +209,7 @@ class AnalysesView extends Component {
         this.handleBatchIconClick = this.handleBatchIconClick.bind(this);
         this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
         this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
-
+        this.handleParamValueClick = this.handleParamValueClick.bind(this);
     }
 
     componentDidMount() {
@@ -233,7 +236,7 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                     data: analysesList.analyses,
-                    total: analysesList.total,
+                    total: analysesList.total ? analysesList.total : 0,
                 })
             },
             (errorCode, errorMessage) => {
@@ -387,7 +390,32 @@ class AnalysesView extends Component {
     }
 
     handleViewParams() {
+        let selected = this.state.selected[0];
+        this.props.paramPresenter.fetchAnalysisParameters(selected, (params) => {
+                this.setState({
+                    loading: false,
+                    parameters: params.parameters,
+                    viewParamsDialogOpen: true,
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            });
+    }
+    handleParamValueClick(parameter) {
+       this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
+    }
 
+    handleSaveParamsToFileClick(parameters) {
+        if(parameters && parameters.length >0) {
+            let contents = "Name\t" + "Type\t" + "Value\t\n";
+            parameters.forEach(function(param){
+               constants.concat(param.name + "\t" + param.type + "\t" + param.displayValue + "\t\n");
+            });
+            console.log(contents);
+        }
     }
 
     handleRelaunch() {
@@ -425,8 +453,8 @@ class AnalysesView extends Component {
         this.props.presenter.deleteAnalyses(selectedAnalyses, () => {
                 this.setState({
                     loading: false,
-                });
-                this.fetchAnalyses();
+                    selected: []
+                }, () => this.fetchAnalyses());
             },
             (errorCode, errorMessage) => {
                 this.setState({
@@ -567,7 +595,7 @@ class AnalysesView extends Component {
     }
 
     render() {
-        const {classes, intl, presenter, name, email, user} = this.props;
+        const {classes, intl, presenter, name, email, username} = this.props;
         const {
             rowsPerPage,
             page,
@@ -577,9 +605,12 @@ class AnalysesView extends Component {
             total,
             data,
             shareWithSupportDialogOpen,
+            viewParamsDialogOpen,
             permFilter,
             typeFilter,
+            parameters,
         } = this.state;
+        const selectedAnalysis = this.findAnalysis(selected[0]);
             return (
                 <React.Fragment>
                     <div className={classes.container}>
@@ -625,7 +656,7 @@ class AnalysesView extends Component {
                                     {data.map(n => {
                                         const id = n.id;
                                         const isSelected = this.isSelected(id);
-                                        const username = n.username.includes(IPLANT) ?
+                                        const user = n.username.includes(IPLANT) ?
                                             n.username.split('@')[0] :
                                             n.username;
                                         return (
@@ -653,7 +684,7 @@ class AnalysesView extends Component {
                                                                       id)}/>
                                                 </TableCell>
                                                 <TableCell className={classes.cellText}
-                                                           padding="none">{username}</TableCell>
+                                                           padding="none">{user}</TableCell>
                                                 <TableCell className={classes.cellText}
                                                            padding="none">
                                                     <AppName analysis={n}
@@ -675,7 +706,7 @@ class AnalysesView extends Component {
                                                 <TableCell padding="none">
                                                     <Status analysis={n}
                                                             onClick={() => this.statusClick(n)}
-                                                            user={user}/>
+                                                            username={username}/>
                                                 </TableCell>
                                                 <TableCell padding="none">
                                                     <DotMenu
@@ -715,7 +746,8 @@ class AnalysesView extends Component {
                             />
                         </div>
                     </div>
-                    <Prompt analysis={this.findAnalysis(selected[0])}
+                    {selectedAnalysis &&
+                    <Prompt analysis={selectedAnalysis}
                             intl={intl}
                             renameDialogOpen={this.state.renameDialogOpen}
                             commentsDialogOpen={this.state.commentsDialogOpen}
@@ -724,13 +756,24 @@ class AnalysesView extends Component {
                             onCommentsOkClicked={this.doComments}
                             onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
                     />
-                    {selected[0] &&
+                    }
+                    {selectedAnalysis &&
                     <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}
-                                            analysis={this.findAnalysis(selected[0])}
+                                            analysis={selectedAnalysis}
                                             name={name}
                                             email={email}
                                             onShareWithSupport={this.onShareWithSupport}/>
                     }
+                    {selectedAnalysis &&
+                    <AnalysisParametersDialog dialogOpen={viewParamsDialogOpen}
+                                              analysisName={selectedAnalysis.name}
+                                              parameters={parameters}
+                                              diskResourceUtil={this.props.diskResourceUtil}
+                                              onViewParamDialogClose={() => this.setState({viewParamsDialogOpen: false})}
+                                              onValueClick={this.handleParamValueClick}
+                    />
+                    }
+
                 </React.Fragment>
         );
     }

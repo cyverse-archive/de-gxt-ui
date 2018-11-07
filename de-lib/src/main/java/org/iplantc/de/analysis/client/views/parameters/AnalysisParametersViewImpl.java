@@ -3,7 +3,6 @@ package org.iplantc.de.analysis.client.views.parameters;
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.analysis.client.events.SaveAnalysisParametersEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisParamValueSelectedEvent;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -11,7 +10,6 @@ import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -64,16 +62,6 @@ public class AnalysisParametersViewImpl extends Composite implements AnalysisPar
         AnalysisParamViewUiBinder uiBinder = GWT.create(AnalysisParamViewUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
         grid.getView().setEmptyText(appearance.noParameters());
-    }
-
-    @Override
-    public HandlerRegistration addAnalysisParamValueSelectedEventHandler(AnalysisParamValueSelectedEvent.AnalysisParamValueSelectedEventHandler handler) {
-        return apcm.addAnalysisParamValueSelectedEventHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addSaveAnalysisParametersEventHandler(SaveAnalysisParametersEvent.SaveAnalysisParametersEventHandler handler) {
-        return addHandler(handler, SaveAnalysisParametersEvent.TYPE);
     }
 
     @UiHandler("btnSave")

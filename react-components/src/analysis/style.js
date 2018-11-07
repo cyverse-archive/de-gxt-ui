@@ -61,4 +61,14 @@ export default (theme) => ({
     toolbarItemColor: {
         color: Color.darkBlue,
     },
+
+    inputType: {
+        cursor: "pointer",
+        textDecoration: "underline",
+        textOverflow: "ellipsis",
+    },
+
+    otherType: {
+        whiteSpace: "pre-wrap",
+    }
 });
