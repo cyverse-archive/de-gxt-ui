@@ -32,6 +32,7 @@ class AnalysesMenu extends Component {
             handleShare,
             handleDelete,
             handleViewParams,
+            handleViewInfo,
         } = this.props;
         return (
             <React.Fragment>
@@ -63,7 +64,10 @@ class AnalysesMenu extends Component {
                     {getMessage("relaunch")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || multiSelect()}
-                          onClick={onClick}
+                          onClick={() => {
+                              handleClose();
+                              handleViewInfo();
+                          }}
                           className={classes.menuItem}>
                     <InfoIcon className={classes.toolbarItemColor}/>
                     {getMessage("analysisInfo")}

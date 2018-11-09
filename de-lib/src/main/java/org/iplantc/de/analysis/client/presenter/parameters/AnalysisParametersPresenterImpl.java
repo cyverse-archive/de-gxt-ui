@@ -9,6 +9,7 @@ import static org.iplantc.de.client.models.apps.integration.ArgumentType.MultiFi
 import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.FileSavedEvent;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
@@ -31,12 +32,14 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -47,6 +50,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
 
@@ -93,6 +97,8 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         private final UserInfo userInfo;
         private final UserSessionServiceFacade userSessionService;
         private final String filePath;
+        private final ReactSuccessCallback callback;
+        private final ReactErrorCallback errorCallback;
 
         private SaveAnalysisParametersCallback(final IplantAnnouncer announcer,
                                                final AnalysisParametersView.Appearance appearance,
@@ -101,7 +107,9 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                                                final NotificationAutoBeanFactory notificationFactory,
                                                final UserInfo userInfo,
                                                final UserSessionServiceFacade userSessionService,
-                                               final String filePath) {
+                                               final String filePath,
+                                               final ReactSuccessCallback callback,
+                                               final ReactErrorCallback errorCallback) {
             this.announcer = announcer;
             this.appearance = appearance;
             this.diskResourceUtil = diskResourceUtil;
@@ -110,11 +118,14 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
             this.userInfo = userInfo;
             this.userSessionService = userSessionService;
             this.filePath = filePath;
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
+            errorCallback.onError(statusCode, caught.getMessage());
         }
 
         @Override
@@ -149,6 +160,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                               announcer.schedule(new SuccessAnnouncementConfig(appearance.importRequestSubmit(file.getName())));
                           }
                       });
+            callback.onSuccess(null);
         }
     }
 
@@ -164,6 +176,9 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     @Inject NotificationAutoBeanFactory notificationFactory;
     @Inject
     AnalysesAutoBeanFactory analysesAutoBeanFactory;
+
+    @Inject
+    AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
 
     private final AnalysisParametersView.Appearance appearance;
 
@@ -240,16 +255,21 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         });
     }
 
-    @Override
-    public void onRequestSaveAnalysisParameters(String path, String contents) {
+    private void saveFile(String path,
+                          String contents,
+                          IsHideable dialog,
+                          ReactSuccessCallback callback,
+                          ReactErrorCallback errorCallback) {
         fileEditorServiceAsyncProvider.get(new AsyncCallback<FileEditorServiceFacade>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                errorCallback.onError(Response.SC_NO_CONTENT, caught.getMessage());
             }
 
             @Override
             public void onSuccess(FileEditorServiceFacade service) {
+                dialog.hide();
                 service.uploadTextAsFile(path,
                                          contents,
                                          true,
@@ -260,8 +280,49 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                                                                             notificationFactory,
                                                                             userInfo,
                                                                             userSessionService,
-                                                                            path));
+                                                                            path,
+                                                                            callback,
+                                                                            errorCallback));
 
+            }
+        });
+    }
+
+    @Override
+    public void saveParamsToFile(String contents,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        saveAsDialogProvider.get(new AsyncCallback<SaveAsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(final SaveAsDialog result) {
+                result.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
+
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        if (result.isValid()) {
+                            saveFile(result.getSelectedFolder().getPath() + "/" + result.getFileName(),
+                                     contents,
+                                     result,
+                                     callback,
+                                     errorCallback);
+                        }
+                    }
+                });
+
+                result.addCancelButtonSelectHandler(new SelectEvent.SelectHandler() {
+
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        result.hide();
+                    }
+                });
+                result.show(null);
+                result.toFront();
             }
         });
     }

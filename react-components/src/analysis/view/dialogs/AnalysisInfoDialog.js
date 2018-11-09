@@ -24,20 +24,15 @@ const columnData = [
 class AnalysisInfoDialog extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            dialogOpen: props.dialogOpen,
-        }
     }
 
     render() {
-        const {info, classes} = this.props;
+        const {info, classes, dialogOpen, onInfoDialogClose} = this.props;
         return (
-            <Dialog open={this.state.dialogOpen}>
+            <Dialog open={dialogOpen}>
                 <DEDialogHeader
                     heading={getMessage("analysisInfo")}
-                    onClose={() => {
-                        this.setState({dialogOpen: false})
-                    }}/>
+                    onClose={onInfoDialogClose}/>
                 <DialogContent>
                     <Table>
                         <EnhancedTableHead
@@ -59,9 +54,7 @@ class AnalysisInfoDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        onClick={() => {
-                            this.setState({dialogOpen: false})
-                        }}
+                        onClick={onInfoDialogClose}
                         color="primary">
                         {getMessage("okBtnText")}
                     </Button>

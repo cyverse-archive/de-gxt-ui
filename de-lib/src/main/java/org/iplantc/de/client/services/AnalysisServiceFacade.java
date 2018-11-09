@@ -52,10 +52,10 @@ public interface AnalysisServiceFacade {
     /**
      * 
      * @sriram: the URL path for the new service will be `/analyses/:analysis-id/steps`
-     * @param analysis
+     * @param id analysis id
      * @param callback
      */
-    void getAnalysisSteps(Analysis analysis, DECallback<AnalysisStepsInfo> callback);
+    void getAnalysisSteps(String id, DECallback<AnalysisStepsInfo> callback);
 
     void shareAnalyses(AnalysisSharingRequestList request, DECallback<String> callback);
 

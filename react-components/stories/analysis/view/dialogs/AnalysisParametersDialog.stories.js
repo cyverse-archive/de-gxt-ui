@@ -6,6 +6,7 @@ class AnalysisParametersDialogTest extends Component {
     render() {
         const drUtil = {
             parseNameFromPath: ()=> {return "testfile"},
+            
         };
         const parameterList = {
             "app_id": "5c13a988-bc75-11e4-8418-ef0021a84d3d",
@@ -88,7 +89,8 @@ class AnalysisParametersDialogTest extends Component {
                                       diskResourceUtil={drUtil}
                                       onViewParamDialogClose={() => console.log(
                                           "View params dialog closed")}
-                                      onValueClick={() => console.log("value clicked")} />
+                                      onValueClick={() => console.log("value clicked!")}
+                                      onSaveClick={() => console.log("save params to file clicked!")}/>
         );
     }
 }

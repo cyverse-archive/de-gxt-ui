@@ -94,7 +94,7 @@ class AnalysisParametersDialog extends Component {
     }
 
     render() {
-        const {classes, analysisName, parameters, onViewParamDialogClose} = this.props;
+        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick} = this.props;
         const {order, orderBy} = this.state;
         return (
             <Dialog open={this.props.dialogOpen}>
@@ -116,11 +116,13 @@ class AnalysisParametersDialog extends Component {
                                     <TableRow key={n.param_id}>
                                         <TableCell>{n.param_name}</TableCell>
                                         <TableCell>{n.param_type}</TableCell>
-                                        <TableCell><ParameterValue
-                                            parameter={n}
-                                            classes={classes}
-                                            diskResourceUtil={this.props.diskResourceUtil}
-                                            onValueClick={this.props.onValueClick}/></TableCell>
+                                        <TableCell>
+                                            <ParameterValue
+                                                parameter={n}
+                                                classes={classes}
+                                                diskResourceUtil={this.props.diskResourceUtil}
+                                                onValueClick={this.props.onValueClick}/>
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -128,9 +130,11 @@ class AnalysisParametersDialog extends Component {
                     </Table>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained"
-                            color="secondary"
-                            style={{textTransform: "none"}}>
+                    <Button
+                        onClick={() => onSaveClick(parameters)}
+                        variant="contained"
+                        color="secondary"
+                        style={{textTransform: "none"}}>
                         {getMessage("saveToFile")}
                     </Button>
 

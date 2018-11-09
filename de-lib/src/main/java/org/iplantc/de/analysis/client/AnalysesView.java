@@ -266,6 +266,10 @@ public interface AnalysesView extends IsWidget/*,
                                     ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback);
 
+        void onAnalysisJobInfoSelected(String id,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback);
+
     }
 
 //    void filterByAnalysisId(String id, String name);

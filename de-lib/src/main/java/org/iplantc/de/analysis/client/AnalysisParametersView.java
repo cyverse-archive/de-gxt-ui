@@ -53,6 +53,8 @@ public interface AnalysisParametersView {
 
         void onAnalysisParamValueSelected(Splittable param);
 
-        void onRequestSaveAnalysisParameters(String path, String contents);
+        void saveParamsToFile(String contents,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
     }
 }

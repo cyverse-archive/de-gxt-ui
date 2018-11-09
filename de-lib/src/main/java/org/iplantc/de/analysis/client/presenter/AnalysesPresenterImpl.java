@@ -5,7 +5,6 @@ import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
@@ -14,7 +13,6 @@ import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
@@ -49,6 +47,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -77,7 +76,6 @@ import java.util.List;
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
-                                              AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
                                               CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
                                               ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
@@ -135,7 +133,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
     @Inject
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
-    @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
     @Inject AsyncProviderWrapper<AnalysisParametersDialog> analysisParametersDialogAsyncProvider;
 
@@ -549,29 +546,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onAnalysisJobInfoSelected(AnalysisJobInfoSelected event) {
-        analysisService.getAnalysisSteps(event.getAnalysis(), new AnalysisCallback<AnalysisStepsInfo>() {
+    public void onAnalysisJobInfoSelected(String id,
+                                          ReactSuccessCallback callback,
+                                          ReactErrorCallback errorCallback) {
+        analysisService.getAnalysisSteps(id, new AnalysisCallback<AnalysisStepsInfo>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.analysisStepInfoError()));
+                errorCallback.onError(statusCode, caught.getMessage());
 
             }
 
             @Override
             public void onSuccess(AnalysisStepsInfo stepsInfo) {
-                stepsInfoDialogProvider.get(new AsyncCallback<AnalysisStepsInfoDialog>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(AnalysisStepsInfoDialog result) {
-                        result.show(stepsInfo);
-                    }
-                });
+                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(stepsInfo));
+                GWT.log(sp.getPayload());
+                callback.onSuccess(sp);
             }
         });
 

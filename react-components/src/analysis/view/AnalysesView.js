@@ -11,14 +11,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import { formatMessage, getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import moment from "moment";
 import constants from "../../constants";
 import ids from "../ids";
-import { withStyles } from "@material-ui/core/styles";
-import exStyles from "../style";
-import intlData from "../messages";
 import AnalysesToolbar from "./AnalysesToolbar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
@@ -29,9 +26,14 @@ import Color from "../../util/CyVersePalette";
 import appType from "../model/appType";
 import permission from "../model/permission";
 import DEPromptDialog from "../../util/dialog/DEPromptDialog";
-import { injectIntl } from "react-intl";
 import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
+import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
+import { withStyles } from "@material-ui/core/styles";
+import withI18N from "../../util/I18NWrapper";
+import { injectIntl } from "react-intl";
+import intlData from "../messages";
+import exStyles from "../style";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -180,6 +182,8 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen: false,
             parameters: [],
             viewParamsDialogOpen: false,
+            info: null,
+            infoDialogOpen: false,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -210,6 +214,8 @@ class AnalysesView extends Component {
         this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
         this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
         this.handleParamValueClick = this.handleParamValueClick.bind(this);
+        this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(this);
+
     }
 
     componentDidMount() {
@@ -331,6 +337,7 @@ class AnalysesView extends Component {
     }
 
     onShareWithSupport(analysis, comment, supportRequested) {
+        this.setState({loading: true});
         if (supportRequested) {
             this.setState({loading: true, shareWithSupportDialogOpen: false});
             this.props.presenter.onUserSupportRequested(analysis, comment, () => {
@@ -391,6 +398,7 @@ class AnalysesView extends Component {
 
     handleViewParams() {
         let selected = this.state.selected[0];
+        this.setState({loading: true});
         this.props.paramPresenter.fetchAnalysisParameters(selected, (params) => {
                 this.setState({
                     loading: false,
@@ -405,16 +413,32 @@ class AnalysesView extends Component {
             });
     }
     handleParamValueClick(parameter) {
+        this.setState({viewParamsDialogOpen: false}); //have to close view params
+        // otherwise file viewer wont show up front
        this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
-        if(parameters && parameters.length >0) {
-            let contents = "Name\t" + "Type\t" + "Value\t\n";
+        this.setState({loading: true, viewParamsDialogOpen: false});   //close view params temporarily
+        if (parameters && parameters.length > 0) {                       //so that save as dialog opens on
+            let contents = "Name\t" + "Type\t" + "Value\t\n";          // top of the screen
             parameters.forEach(function(param){
-               constants.concat(param.name + "\t" + param.type + "\t" + param.displayValue + "\t\n");
+                contents =
+                    contents.concat(param.param_name + "\t" + param.param_type + "\t" +
+                        param.displayValue + "\t\n");
             });
-            console.log(contents);
+            this.props.paramPresenter.saveParamsToFile(contents, () => {
+                    this.setState({
+                        loading: false,
+                        viewParamsDialogOpen: true,
+                    });
+                },
+                (errorCode, errorMessage) => {
+                    this.setState({
+                        loading: false,
+                        viewParamsDialogOpen: true,
+                    });
+                });
         }
     }
 
@@ -423,7 +447,20 @@ class AnalysesView extends Component {
     }
 
     handleViewInfo() {
-
+        let id = this.state.selected[0];
+        this.setState({loading: true});
+        this.props.presenter.onAnalysisJobInfoSelected(id, (info) => {
+                this.setState({
+                    loading: false,
+                    info: info,
+                    infoDialogOpen: true
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            });
     }
 
     handleShare() {
@@ -609,172 +646,180 @@ class AnalysesView extends Component {
             permFilter,
             typeFilter,
             parameters,
+            info,
+            infoDialogOpen,
         } = this.state;
         const selectedAnalysis = this.findAnalysis(selected[0]);
-            return (
-                <React.Fragment>
-                    <div className={classes.container}>
-                        {this.state.loading &&
-                        <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                        }
-                        <AnalysesToolbar selected={selected}
-                                         handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                         handleViewParams={this.handleViewParams}
-                                         handleRelaunch={this.handleRelaunch}
-                                         handleViewInfo={this.handleViewInfo}
-                                         handleShare={this.handleShare}
-                                         handleCancel={this.handleCancel}
-                                         handleDelete={this.handleDelete}
-                                         handleRename={this.handleRename}
-                                         handleUpdateComments={this.handleUpdateComments}
-                                         disabled={this.disabled}
-                                         multiSelect={this.multiSelect}
-                                         shouldDisableCancel={this.shouldDisableCancel}
-                                         isOwner={this.isOwner}
-                                         isSharable={this.isSharable}
-                                         handleRefersh={this.fetchAnalyses}
-                                         permFilter={permFilter}
-                                         typeFilter={typeFilter}
-                                         onPermissionsFilterChange={this.onPermissionsFilterChange}
-                                         onTypeFilterChange={this.onTypeFilterChange}/>
-                        <div className={classes.table}>
-                            <Table>
-                                <EnhancedTableHead
-                                    selectable={true}
-                                    numSelected={selected.length}
-                                    order={order}
-                                    orderBy={orderBy}
-                                    onSelectAllClick={this.handleSelectAllClick}
-                                    onRequestSort={this.handleRequestSort}
-                                    rowCount={total}
-                                    columnData={columnData}
-                                    baseId="analysis"
-                                    ids={ids}
-                                    padding="none"
-                                />
-                                <TableBody>
-                                    {data.map(n => {
-                                        const id = n.id;
-                                        const isSelected = this.isSelected(id);
-                                        const user = n.username.includes(IPLANT) ?
-                                            n.username.split('@')[0] :
-                                            n.username;
-                                        return (
-                                            <TableRow onClick={() => this.handleRowClick(id)}
-                                                      role="checkbox"
-                                                      aria-checked={isSelected}
-                                                      tabIndex={-1}
-                                                      selected={isSelected}
-                                                      hover
-                                                      key={id}
-                                            >
-                                                <TableCell padding="none">
-                                                    <Checkbox
-                                                        onClick={(event, n) => this.handleCheckBoxClick(
-                                                            event,
-                                                            id)}
-                                                        checked={isSelected}/>
-                                                </TableCell>
-                                                <TableCell padding="none">
-                                                    <AnalysisName classes={classes}
-                                                                  analysis={n}
-                                                                  handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                                                  handleBatchIconClick={(event) => this.handleBatchIconClick(
-                                                                      event,
-                                                                      id)}/>
-                                                </TableCell>
-                                                <TableCell className={classes.cellText}
-                                                           padding="none">{user}</TableCell>
-                                                <TableCell className={classes.cellText}
-                                                           padding="none">
-                                                    <AppName analysis={n}
-                                                             handleRelaunch={this.handleRelaunch}
-                                                             classes={classes}/>
-                                                </TableCell>
-                                                <TableCell className={classes.cellText} padding="none">
-                                                    {parseInt(n.startdate, 10) ?
-                                                        moment(parseInt(n.startdate, 10), "x").format(
-                                                            constants.LONG_DATE_FORMAT) :
-                                                        getMessage("emptyValue")}
-                                                </TableCell>
-                                                <TableCell className={classes.cellText} padding="none">
-                                                    {parseInt(n.enddate, 10) ?
-                                                        moment(parseInt(n.enddate, 10), "x").format(
-                                                            constants.LONG_DATE_FORMAT) :
-                                                        getMessage("emptyValue")}
-                                                </TableCell>
-                                                <TableCell padding="none">
-                                                    <Status analysis={n}
-                                                            onClick={() => this.statusClick(n)}
-                                                            username={username}/>
-                                                </TableCell>
-                                                <TableCell padding="none">
-                                                    <DotMenu
-                                                        handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                                        handleViewParams={this.handleViewParams}
-                                                        handleRelaunch={this.handleRelaunch}
-                                                        handleViewInfo={this.handleViewInfo}
-                                                        handleShare={this.handleShare}
-                                                        handleCancel={this.handleCancel}
-                                                        handleDelete={this.handleDelete}
-                                                        handleRename={this.handleRename}
-                                                        handleUpdateComments={this.handleUpdateComments}
-                                                        disabled={this.disabled}
-                                                        multiSelect={this.multiSelect}
-                                                        shouldDisableCancel={this.shouldDisableCancel}
-                                                        isOwner={this.isOwner}
-                                                        isSharable={this.isSharable}
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </div>
-                        <div>
-                            <TablePagination
-                                colSpan={3}
-                                component="div"
-                                count={total}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                                rowsPerPageOptions={[100, 500, 1000]}
+        return (
+            <React.Fragment>
+                <div className={classes.container}>
+                    {this.state.loading &&
+                    <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
+                    }
+                    <AnalysesToolbar selected={selected}
+                                     handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                     handleViewParams={this.handleViewParams}
+                                     handleRelaunch={this.handleRelaunch}
+                                     handleViewInfo={this.handleViewInfo}
+                                     handleShare={this.handleShare}
+                                     handleCancel={this.handleCancel}
+                                     handleDelete={this.handleDelete}
+                                     handleRename={this.handleRename}
+                                     handleUpdateComments={this.handleUpdateComments}
+                                     disabled={this.disabled}
+                                     multiSelect={this.multiSelect}
+                                     shouldDisableCancel={this.shouldDisableCancel}
+                                     isOwner={this.isOwner}
+                                     isSharable={this.isSharable}
+                                     handleRefersh={this.fetchAnalyses}
+                                     permFilter={permFilter}
+                                     typeFilter={typeFilter}
+                                     onPermissionsFilterChange={this.onPermissionsFilterChange}
+                                     onTypeFilterChange={this.onTypeFilterChange}/>
+                    <div className={classes.table}>
+                        <Table>
+                            <EnhancedTableHead
+                                selectable={true}
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={this.handleSelectAllClick}
+                                onRequestSort={this.handleRequestSort}
+                                rowCount={total}
+                                columnData={columnData}
+                                baseId="analysis"
+                                ids={ids}
+                                padding="none"
                             />
-                        </div>
+                            <TableBody>
+                                {data.map(n => {
+                                    const id = n.id;
+                                    const isSelected = this.isSelected(id);
+                                    const user = n.username.includes(IPLANT) ?
+                                        n.username.split('@')[0] :
+                                        n.username;
+                                    return (
+                                        <TableRow onClick={() => this.handleRowClick(id)}
+                                                  role="checkbox"
+                                                  aria-checked={isSelected}
+                                                  tabIndex={-1}
+                                                  selected={isSelected}
+                                                  hover
+                                                  key={id}
+                                        >
+                                            <TableCell padding="none">
+                                                <Checkbox
+                                                    onClick={(event, n) => this.handleCheckBoxClick(
+                                                        event,
+                                                        id)}
+                                                    checked={isSelected}/>
+                                            </TableCell>
+                                            <TableCell padding="none">
+                                                <AnalysisName classes={classes}
+                                                              analysis={n}
+                                                              handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                              handleBatchIconClick={(event) => this.handleBatchIconClick(
+                                                                  event,
+                                                                  id)}/>
+                                            </TableCell>
+                                            <TableCell className={classes.cellText}
+                                                       padding="none">{user}</TableCell>
+                                            <TableCell className={classes.cellText}
+                                                       padding="none">
+                                                <AppName analysis={n}
+                                                         handleRelaunch={this.handleRelaunch}
+                                                         classes={classes}/>
+                                            </TableCell>
+                                            <TableCell className={classes.cellText} padding="none">
+                                                {parseInt(n.startdate, 10) ?
+                                                    moment(parseInt(n.startdate, 10), "x").format(
+                                                        constants.LONG_DATE_FORMAT) :
+                                                    getMessage("emptyValue")}
+                                            </TableCell>
+                                            <TableCell className={classes.cellText} padding="none">
+                                                {parseInt(n.enddate, 10) ?
+                                                    moment(parseInt(n.enddate, 10), "x").format(
+                                                        constants.LONG_DATE_FORMAT) :
+                                                    getMessage("emptyValue")}
+                                            </TableCell>
+                                            <TableCell padding="none">
+                                                <Status analysis={n}
+                                                        onClick={() => this.statusClick(n)}
+                                                        username={username}/>
+                                            </TableCell>
+                                            <TableCell padding="none">
+                                                <DotMenu
+                                                    handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                    handleViewParams={this.handleViewParams}
+                                                    handleRelaunch={this.handleRelaunch}
+                                                    handleViewInfo={this.handleViewInfo}
+                                                    handleShare={this.handleShare}
+                                                    handleCancel={this.handleCancel}
+                                                    handleDelete={this.handleDelete}
+                                                    handleRename={this.handleRename}
+                                                    handleUpdateComments={this.handleUpdateComments}
+                                                    disabled={this.disabled}
+                                                    multiSelect={this.multiSelect}
+                                                    shouldDisableCancel={this.shouldDisableCancel}
+                                                    isOwner={this.isOwner}
+                                                    isSharable={this.isSharable}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
                     </div>
-                    {selectedAnalysis &&
-                    <Prompt analysis={selectedAnalysis}
-                            intl={intl}
-                            renameDialogOpen={this.state.renameDialogOpen}
-                            commentsDialogOpen={this.state.commentsDialogOpen}
-                            onRenameOkClicked={this.doRename}
-                            onRenameCancelClicked={() => this.setState({renameDialogOpen: false})}
-                            onCommentsOkClicked={this.doComments}
-                            onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
-                    />
-                    }
-                    {selectedAnalysis &&
-                    <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}
-                                            analysis={selectedAnalysis}
-                                            name={name}
-                                            email={email}
-                                            onShareWithSupport={this.onShareWithSupport}/>
-                    }
-                    {selectedAnalysis &&
-                    <AnalysisParametersDialog dialogOpen={viewParamsDialogOpen}
-                                              analysisName={selectedAnalysis.name}
-                                              parameters={parameters}
-                                              diskResourceUtil={this.props.diskResourceUtil}
-                                              onViewParamDialogClose={() => this.setState({viewParamsDialogOpen: false})}
-                                              onValueClick={this.handleParamValueClick}
-                    />
-                    }
-
-                </React.Fragment>
+                    <div>
+                        <TablePagination
+                            colSpan={3}
+                            component="div"
+                            count={total}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={this.handleChangePage}
+                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                            rowsPerPageOptions={[100, 500, 1000]}
+                        />
+                    </div>
+                </div>
+                {selectedAnalysis &&
+                <Prompt analysis={selectedAnalysis}
+                        intl={intl}
+                        renameDialogOpen={this.state.renameDialogOpen}
+                        commentsDialogOpen={this.state.commentsDialogOpen}
+                        onRenameOkClicked={this.doRename}
+                        onRenameCancelClicked={() => this.setState({renameDialogOpen: false})}
+                        onCommentsOkClicked={this.doComments}
+                        onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
+                />
+                }
+                {selectedAnalysis &&
+                <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}
+                                        analysis={selectedAnalysis}
+                                        name={name}
+                                        email={email}
+                                        onShareWithSupport={this.onShareWithSupport}/>
+                }
+                {selectedAnalysis &&
+                <AnalysisParametersDialog dialogOpen={viewParamsDialogOpen}
+                                          analysisName={selectedAnalysis.name}
+                                          parameters={parameters}
+                                          diskResourceUtil={this.props.diskResourceUtil}
+                                          onViewParamDialogClose={() => this.setState({viewParamsDialogOpen: false})}
+                                          onValueClick={this.handleParamValueClick}
+                                          onSaveClick={this.handleSaveParamsToFileClick}
+                />
+                }
+                {info && selectedAnalysis &&
+                <AnalysisInfoDialog info={info}
+                                    dialogOpen={infoDialogOpen}
+                                    onInfoDialogClose={() => this.setState({infoDialogOpen: false})}
+                />
+                }
+            </React.Fragment>
         );
     }
 }
