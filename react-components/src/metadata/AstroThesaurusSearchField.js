@@ -3,6 +3,8 @@
  */
 import React, { Component } from 'react';
 
+import PropTypes from "prop-types";
+
 import { getMessage } from "../util/I18NWrapper";
 import { FormikSearchField } from "../util/FormField";
 
@@ -38,6 +40,12 @@ class AstroThesaurusSearchField extends Component {
 
         this.loadOptions = this.loadOptions.bind(this);
     }
+
+    static propTypes = {
+        presenter: PropTypes.shape({
+            searchAstroThesaurusTerms: PropTypes.func.isRequired,
+        }),
+    };
 
     loadOptions(inputValue, callback) {
         this.props.presenter.searchAstroThesaurusTerms(inputValue, (results) => callback(results && results.items));

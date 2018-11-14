@@ -5,6 +5,7 @@ import React, { Component, Fragment } from 'react';
 
 import { FastField, FieldArray, withFormik } from 'formik';
 import moment from "moment";
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import constants from "../constants";
@@ -297,6 +298,13 @@ class MetadataTemplateView extends Component {
         this.closeMetadataTemplateDialog = this.closeMetadataTemplateDialog.bind(this);
         this.closeConfirmationDialog = this.closeConfirmationDialog.bind(this);
     }
+
+    static propTypes = {
+        presenter: PropTypes.shape({
+            updateMetadataFromTemplateView: PropTypes.func.isRequired,
+            closeMetadataTemplateDialog: PropTypes.func.isRequired,
+        }),
+    };
 
     closeMetadataTemplateDialog() {
         this.closeConfirmationDialog();

@@ -3,6 +3,8 @@
  */
 import React, { Component } from 'react';
 
+import PropTypes from "prop-types";
+
 import { getMessage } from "../util/I18NWrapper";
 import { FormikSearchField } from "../util/FormField";
 
@@ -43,6 +45,12 @@ class OntologyLookupServiceSearchField extends Component {
 
         this.loadOptions = this.loadOptions.bind(this);
     }
+
+    static propTypes = {
+        presenter: PropTypes.shape({
+            searchOLSTerms: PropTypes.func.isRequired,
+        }),
+    };
 
     loadOptions(inputValue, callback) {
         const { attribute, presenter } = this.props;
