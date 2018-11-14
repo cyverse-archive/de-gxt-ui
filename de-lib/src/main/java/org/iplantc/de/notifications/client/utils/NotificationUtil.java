@@ -168,7 +168,7 @@ public class NotificationUtil {
                 PayloadTeam payloadTeam = AutoBeanCodex.decode(notFactory, PayloadTeam.class, payload).as();
                 String action = notification.getEmailTemplate();
                 payloadTeam.setAction(action);
-                if (action.equals(PayloadTeam.ACTION_ADD) && (!msg.getMessage().contains(payloadTeam.getTeamName()))) {
+                if (PayloadTeam.ACTION_ADD.equals(action) && (!msg.getMessage().contains(payloadTeam.getTeamName()))) {
                     msg.setMessage(msg.getMessage() + " " + payloadTeam.getTeamName());
                 }
                 msg.setContext(payload.getPayload());
