@@ -161,9 +161,7 @@ class NotificationView extends Component {
         }
         const filter = newSelected.filter(id => {
             let n = this.findNotification(id);
-            if (n && !(n.seen)) {
-                return n;
-            }
+            return (n && !(n.seen)) ? n : null;
         });
 
         this.setState({selected: newSelected, markAsSeenDisabled: filter.length === 0});
