@@ -53,7 +53,6 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.Selecti
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -398,28 +397,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @Override
     public void updateMetadataFromTemplateView(List<Avu> metadataList,
                                                List<MetadataTemplateAttribute> templateAttributes) {
-        userMdGrid.mask();
-        if (userMdListStore.size() == 0) {
-            userMdListStore.addAll(metadataList);
-            userMdGrid.unmask();
-            return;
-        }
-
-        List<Avu> toRemove = new ArrayList<>();
-        templateAttributes.forEach(ta -> {
-            userMdListStore.getAll().forEach(umd -> {
-                if (ta.getName().equals(umd.getAttribute())) {
-                    toRemove.add(umd);
-                }
-            });
-        });
-
-        toRemove.forEach(tr -> {
-            userMdListStore.remove(tr);
-        });
-
+        userMdListStore.clear();
         userMdListStore.addAll(metadataList);
-        userMdGrid.unmask();
     }
 
     @Override

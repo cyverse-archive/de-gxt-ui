@@ -8,7 +8,15 @@ import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.client.models.ontologies.AstroThesaurusResponse;
+import org.iplantc.de.client.models.ontologies.AstroThesaurusResult;
+import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceResponse;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.OntologyLookupServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.WindowUtil;
@@ -19,23 +27,29 @@ import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
+import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,78 +61,26 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
                                               ImportMetadataBtnSelected.ImportMetadataBtnSelectedHandler,
                                               SaveMetadataToFileBtnSelected.SaveMetadataToFileBtnSelectedHandler {
 
-    private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
-
-        private MetadataTemplateViewDialog metadataTemplateDlg;
-
-        public TemplateViewCancelSelectHandler(MetadataTemplateViewDialog metadataTemplateDlg) {
-            this.metadataTemplateDlg = metadataTemplateDlg;
-        }
-
-        @Override
-        public void onSelect(SelectEvent event) {
-            metadataTemplateDlg.hide();
-        }
-    }
-
-    private class TemplateViewOkSelectHandler implements SelectEvent.SelectHandler {
-
-        private MetadataTemplateViewDialog metadataTemplateDlg;
-        private boolean writable;
-
-        public TemplateViewOkSelectHandler(boolean writable, MetadataTemplateViewDialog metadataTemplateDlg) {
-            this.writable = writable;
-            this.metadataTemplateDlg = metadataTemplateDlg;
-        }
-
-        @Override
-        public void onSelect(SelectEvent event) {
-            if (!writable) {
-                return;
-            }
-
-            if (!metadataTemplateDlg.isValid()) {
-                ConfirmMessageBox cmb =
-                        new ConfirmMessageBox(appearance.error(), appearance.incomplete());
-                cmb.addDialogHideHandler(new DialogHideHandler() {
-
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        if (event.getHideButton().equals(PredefinedButton.YES)) {
-                            updateMetadataFromTemplateView();
-                        }
-
-                    }
-                });
-                cmb.show();
-            } else {
-                updateMetadataFromTemplateView();
-            }
-        }
-
-        private void updateMetadataFromTemplateView() {
-            metadataTemplateDlg.mask(appearance.loadingMask());
-            ArrayList<Avu> mdList = metadataTemplateDlg.getMetadataFromTemplate();
-            view.updateMetadataFromTemplateView(mdList, templateAttributes);
-        }
-    }
-
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
     List<MetadataTemplateInfo> templates;
 
+    private DiskResourceMetadataList metadata;
     private List<Avu> userMdList;
     private List<MetadataTemplateAttribute> templateAttributes;
 
     private static DiskResourceAutoBeanFactory autoBeanFactory =
             GWT.create(DiskResourceAutoBeanFactory.class);
+    @Inject OntologyAutoBeanFactory ontologyAutoBeanFactory;
+
     @Inject MetadataView.Presenter.Appearance appearance;
 
-    @Inject AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
-    MetadataTemplateViewDialog templateViewDialog;
+    @Inject MetadataTemplateView templateViewDialog;
+    @Inject MetadataUtil metadataUtil;
+    @Inject OntologyLookupServiceFacade svcFacade;
     @Inject EventBus eventBus;
 
     @Inject
@@ -221,11 +183,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     }
 
     @Override
-    public DiskResource getSelectedResource() {
-        return resource;
-    }
-
-    @Override
     public void onImportMetadataBtnSelected(ImportMetadataBtnSelected event) {
         List<Avu> selectedItems = event.getAvuList();
         ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.importMd(), appearance.importMdMsg());
@@ -260,6 +217,88 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
 
     }
 
+    @SuppressWarnings("unusable-by-js")
+    @Override
+    public void updateMetadataFromTemplateView(Splittable metadata,
+                                               ReactSuccessCallback resolve,
+                                               ReactErrorCallback reject) {
+        DiskResourceMetadataList mdList =
+                AutoBeanCodex.decode(autoBeanFactory, DiskResourceMetadataList.class, metadata).as();
+
+        final List<Avu> avus = mdList.getAvus();
+        avus.forEach(avu -> {
+            final AutoBean<Object> metadataBean = AutoBeanUtils.getAutoBean(avu);
+            if (metadataBean.getTag(Avu.AVU_BEAN_TAG_MODEL_KEY) == null) {
+                metadataUtil.setAvuModelKey(avu);
+            }
+        });
+
+        view.updateMetadataFromTemplateView(avus, templateAttributes);
+        resolve.onSuccess(metadata);
+        closeMetadataTemplateDialog();
+    }
+
+    @Override
+    public void closeMetadataTemplateDialog() {
+        templateViewDialog.closeDialog();
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void searchOLSTerms(String inputValue,
+                               Splittable loaderSettings,
+                               ReactSuccessCallback callback) {
+        if (Strings.isNullOrEmpty(inputValue)) {
+            callback.onSuccess(null);
+            return;
+        }
+
+        OntologyLookupServiceQueryParams olsQueryParams =
+                AutoBeanCodex.decode(ontologyAutoBeanFactory, OntologyLookupServiceQueryParams.class, loaderSettings)
+                             .as();
+
+        OntologyLookupServiceLoadConfig loadConfig = new OntologyLookupServiceLoadConfig(olsQueryParams);
+        loadConfig.setQuery(inputValue);
+
+        svcFacade.searchOntologyLookupService(loadConfig, new AsyncCallback<OntologyLookupServiceResponse>() {
+            @Override
+            public void onSuccess(OntologyLookupServiceResponse result) {
+                callback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result.getResults())));
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public void searchAstroThesaurusTerms(String inputValue, ReactSuccessCallback callback) {
+        if (Strings.isNullOrEmpty(inputValue)) {
+            callback.onSuccess(null);
+            return;
+        }
+
+        AstroThesaurusLoadConfig uatLoadConfig = new AstroThesaurusLoadConfig();
+        uatLoadConfig.setQuery(inputValue);
+
+        svcFacade.searchUnifiedAstronomyThesaurus(uatLoadConfig, new AsyncCallback<AstroThesaurusResponse>() {
+            @Override
+            public void onSuccess(AstroThesaurusResponse response) {
+                final AstroThesaurusResult result = response.getResult();
+                result.setItems(AstroThesaurusProxy.normalizeAstroThesaurusResults(result.getItems()));
+
+                callback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result)));
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onSuccess(null);
+            }
+        });
+    }
+
     @Override
     public void downloadTemplate(String templateId) {
         final String encodedSimpleDownloadURL = drService.downloadTemplate(templateId);
@@ -285,6 +324,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
             implements AsyncCallback<DiskResourceMetadataList> {
         @Override
         public void onSuccess(final DiskResourceMetadataList result) {
+            metadata = result;
             view.loadMetadata(result.getOtherMetadata());
             userMdList = result.getAvus();
             if (userMdList != null) {
@@ -313,31 +353,11 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
 
         @Override
         public void onSuccess(MetadataTemplate result) {
-            //close exisitng view before opening one...
-            if (templateViewDialog != null) {
-                templateViewDialog.hide();
-            }
             templateAttributes = result.getAttributes();
-            templateViewDialogProvider.get(new AsyncCallback<MetadataTemplateViewDialog>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    ErrorHandler.post(throwable);
-                }
+            metadata.setAvus(view.getUserMetadata());
+            metadata.setOtherMetadata(view.getAvus());
 
-                @Override
-                public void onSuccess(MetadataTemplateViewDialog dialog) {
-                    templateViewDialog = dialog;
-                    templateViewDialog.addOkButtonSelectHandler(new TemplateViewOkSelectHandler(isWritable(),
-                                                                                                templateViewDialog));
-                    templateViewDialog.addCancelButtonSelectHandler(new TemplateViewCancelSelectHandler(
-                            templateViewDialog));
-                    templateViewDialog.setHeading(result.getName());
-                    templateViewDialog.setModal(false);
-                    templateViewDialog.show(view.getUserMetadata(),
-                                            isWritable(),
-                                            templateAttributes);
-                }
-            });
+            templateViewDialog.openDialog(MetadataPresenterImpl.this, result, metadata, isWritable());
         }
 
         private boolean isWritable() {

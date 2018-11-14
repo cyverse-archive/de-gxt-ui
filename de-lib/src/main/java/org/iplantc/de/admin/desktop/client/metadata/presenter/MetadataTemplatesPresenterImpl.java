@@ -174,7 +174,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                     reject.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
-                presenter.closeTemplateInfoDialog();
+                presenter.closeMetadataTemplateDialog();
             }
 
             @Override
@@ -187,7 +187,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                                                                                 result)));
                 }
 
-                presenter.closeTemplateInfoDialog();
+                presenter.closeMetadataTemplateDialog();
                 loadTemplates();
             }
         });
@@ -209,7 +209,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                     reject.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
-                presenter.closeTemplateInfoDialog();
+                presenter.closeMetadataTemplateDialog();
             }
 
             @Override
@@ -223,7 +223,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                                                                                 result)));
                 }
 
-                presenter.closeTemplateInfoDialog();
+                presenter.closeMetadataTemplateDialog();
                 loadTemplates();
             }
         });
@@ -254,7 +254,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
     }
 
     @Override
-    public void closeTemplateInfoDialog() {
+    public void closeMetadataTemplateDialog() {
         editView.closeDialog();
     }
 

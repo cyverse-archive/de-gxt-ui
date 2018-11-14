@@ -25,6 +25,7 @@ export default {
         errAttrNameMustBeUnique: "Attribute name must be unique",
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",
+        formatMetadataTermFreeTextOption: `Use "{ inputValue }"`,
         markAsDeleted: "Mark as Deleted?",
         moveDown: "Move Down",
         moveUp: "Move Up",
@@ -45,6 +46,9 @@ export default {
         required: "Required",
         save: "Save",
         templateNameLabel: "Name",
+        templateValidationErrMsgNumber: "Please enter a valid number.",
+        templateValidationErrMsgTimestamp: "Please enter a valid date/time.",
+        templateValidationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
         value: "Value",
         yes: "Yes",
     }

@@ -232,7 +232,6 @@ export default {
 
     notificationMenu: {
         width: 400,
-        zIndex: 888888,
         maxHeight: 650,
 
     },

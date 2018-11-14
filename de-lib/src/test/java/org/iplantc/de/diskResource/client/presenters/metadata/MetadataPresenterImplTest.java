@@ -9,18 +9,12 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
-import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -51,21 +45,13 @@ public class MetadataPresenterImplTest {
     @Mock MetadataView view;
     @Mock DiskResourceServiceFacade drService;
     @Mock List<Avu> userMdList;
-    @Mock OntologyAutoBeanFactory autoBeanFactory;
-    @Mock OntologyLookupServiceProxy olsSearchProxy;
-    @Mock AstroThesaurusProxy uatSearchProxy;
-    @Mock MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearanceMock;
     @Mock MetadataView.Presenter.Appearance appearanceMock;
     @Mock List<MetadataTemplateInfo> templatesMock;
-    @Mock List<MetadataTemplateAttribute> templateAttributesMock;
-    @Mock AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDlgProviderMock;
-    @Mock MetadataTemplateViewDialog templateViewDlgMock;
     @Mock AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProviderMock;
     @Mock SelectMetadataTemplateDialog selectMetaTemplateDlgMock;
     @Mock DiskResource diskResourceMock;
     @Mock DialogHideEvent hideEventMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<MetadataTemplateViewDialog>> templateViewDlgCaptor;
     @Captor ArgumentCaptor<AsyncCallback<SelectMetadataTemplateDialog>> selectMetaTemplateDlgCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<MetadataTemplateInfo>>> templateInfosCaptor;
     @Captor ArgumentCaptor<AsyncCallback<String>> stringCallbackCaptor;
@@ -78,7 +64,6 @@ public class MetadataPresenterImplTest {
     public void setUp() {
         uut = new MetadataPresenterImpl(view,
                                               drService);
-        uut.templateViewDialogProvider = templateViewDlgProviderMock;
         uut.selectMetaTemplateDlgProvider = selectMetaTemplateDlgProviderMock;
         uut.appearance = appearanceMock;
 

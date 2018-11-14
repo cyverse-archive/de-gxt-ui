@@ -3,7 +3,8 @@ package org.iplantc.de.diskResource.client;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
@@ -14,8 +15,12 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * A view to allow users to create and modify metadata for any disk resource
@@ -34,17 +39,7 @@ public interface MetadataView extends IsWidget,
 
         String attribute();
 
-        SafeHtml boldHeader(String name);
-
-        SafeHtml buildLabelWithDescription(String label, String description, boolean allowBlank);
-
         String confirmAction();
-
-        String metadataTemplateConfirmRemove();
-
-        String metadataTemplateRemove();
-
-        String metadataTemplateSelect();
 
         String newAttribute();
 
@@ -53,8 +48,6 @@ public interface MetadataView extends IsWidget,
         String newUnit();
 
         String paramValue();
-
-        SafeHtml renderComboBoxHtml(MetadataTemplateInfo object);
 
         void renderMetadataCell(SafeHtmlBuilder sb, String value);
 
@@ -68,8 +61,6 @@ public interface MetadataView extends IsWidget,
 
         String delete();
 
-        String metadataTermGuide();
-
         ImageResource deleteIcon();
 
         String additionalMetadata();
@@ -77,12 +68,6 @@ public interface MetadataView extends IsWidget,
         String paramUnit();
 
         String selectTemplate();
-
-        SafeHtml importMd();
-
-        String panelWidth();
-
-        String panelHeight();
 
         ImageResource editIcon();
 
@@ -101,8 +86,6 @@ public interface MetadataView extends IsWidget,
         String loading();
 
         String backgroundStyle();
-
-        String urlGhostText();
 
         String requiredGhostText();
 
@@ -125,19 +108,12 @@ public interface MetadataView extends IsWidget,
         int valueColumnWidth();
 
         int unitColumnWidth();
-
-        int metadataTermAnchorWidth();
-
-        String metadataFieldLabelWidth();
-
-        String addBtnText();
-
-        String removeBtnText();
     }
 
     /**
      * A presenter to handle the logic for MetadataView
      */
+    @JsType
     interface Presenter {
 
         String AVU_BEAN_TAG_MODEL_KEY = "model-key";
@@ -181,14 +157,24 @@ public interface MetadataView extends IsWidget,
 
         boolean isValid();
 
-        DiskResource getSelectedResource();
-
+        @JsIgnore
         void setDiskResourceMetadata(DiskResourceMetadataUpdateCallback callback);
 
         boolean isDirty();
 
+        @SuppressWarnings("unusable-by-js")
+        void updateMetadataFromTemplateView(Splittable metadata, ReactSuccessCallback resolve, ReactErrorCallback reject);
+
+        void closeMetadataTemplateDialog();
+
+        @SuppressWarnings("unusable-by-js")
+        void searchOLSTerms(String inputValue, Splittable loaderSettings, ReactSuccessCallback callback);
+
+        void searchAstroThesaurusTerms(String inputValue, ReactSuccessCallback callback);
+
         void downloadTemplate(String templateId);
 
+        @JsIgnore
         void go(HasOneWidget container, final DiskResource selected);
     }
 
