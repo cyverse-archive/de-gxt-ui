@@ -1,6 +1,5 @@
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -52,7 +51,7 @@ public interface AppTemplateServices {
      * @param appId
      * @param callback
      */
-    void rerunAnalysis(HasId analysisId, String appId, DECallback<AppTemplate> callback);
+    void rerunAnalysis(String analysisId, String appId, DECallback<AppTemplate> callback);
 
     /**
      * Performs an initial publishing of new AppTemplates to the database, or updates of existing ones

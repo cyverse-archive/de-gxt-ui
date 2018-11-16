@@ -210,8 +210,6 @@ public interface AnalysesView extends IsWidget/*,
         @JsIgnore
         void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
 
-        void onShowAllSelected();
-
         @JsIgnore
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
@@ -222,9 +220,6 @@ public interface AnalysesView extends IsWidget/*,
 
         @JsIgnore
         AppTypeFilter getCurrentTypeFilter();
-
-        @JsIgnore
-        void loadAnalyses(AnalysisPermissionFilter filter, AppTypeFilter typeFilter);
 
         @JsIgnore
         void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter);
@@ -249,9 +244,9 @@ public interface AnalysesView extends IsWidget/*,
 
         void onAnalysisNameSelected(String resultFolderId);
 
-        void onAnalysisAppSelected(Splittable analysis);
+        void onAnalysisAppSelected(String analysisId, String systemId, String appId);
 
-        void onCancelAnalysisSelected(Splittable[] analysisList,
+        void onCancelAnalysisSelected(Splittable analysis,
                                       ReactSuccessCallback callback,
                                       ReactErrorCallback errorCallback);
 
@@ -270,23 +265,11 @@ public interface AnalysesView extends IsWidget/*,
                                        ReactSuccessCallback callback,
                                        ReactErrorCallback errorCallback);
 
+        void onCompleteAnalysisSelected(Splittable selected,
+                                        ReactSuccessCallback callback,
+                                        ReactErrorCallback errorCallback);
+
     }
-
-//    void filterByAnalysisId(String id, String name);
-//
-//    void filterByParentAnalysisId(String id);
-//
-//    List<Analysis> getSelectedAnalyses();
-//
-//    void setSelectedAnalyses(List<Analysis> selectedAnalyses);
-//
-//    void setPermFilterInView(AnalysisPermissionFilter filter, AppTypeFilter typeFilter);
-//
-//    String getParentAnalysisId();
-
-//    AnalysisSearchField getSearchField();
-
-//    AnalysisToolBarView getToolBarView();
 
     void setPresenter(Presenter presenter);
 

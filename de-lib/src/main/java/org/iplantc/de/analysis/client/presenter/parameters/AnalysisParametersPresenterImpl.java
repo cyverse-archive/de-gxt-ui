@@ -189,7 +189,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
 
     @Override
     public void go(HasOneWidget container) {
-        // container.setWidget(view);
+
     }
 
     @Override
@@ -211,7 +211,6 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                 apl.setParametersList(result);
                 if (callback != null) {
                     Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(apl));
-                    GWT.log("params==>" + encode.getPayload());
                     callback.onSuccess(encode);
                 }
             }

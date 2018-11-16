@@ -13,7 +13,6 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
@@ -150,11 +149,10 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
 
     @Override
     public void onRequestOpenAppForRelaunch(OpenAppForRelaunchEvent event) {
-        final Analysis analysisForRelaunch = event.getAnalysisForRelaunch();
-        final String systemId = analysisForRelaunch.getSystemId();
-        final String appId = analysisForRelaunch.getAppId();
+        final String systemId = event.getSystemId();
+        final String appId = event.getAppId();
         AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
-        config.setAnalysisId(analysisForRelaunch);
+        config.setAnalysisId(event.getAnalysisId());
         config.setRelaunchAnalysis(true);
 
         presenter.show(config);

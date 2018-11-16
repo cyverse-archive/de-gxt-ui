@@ -10,7 +10,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
 import org.iplantc.de.client.DEClientConstants;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -187,12 +186,12 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void rerunAnalysis(HasId analysisId, String appId, DECallback<AppTemplate> callback) {
-        String address = ANALYSES + "/" + analysisId.getId() + "/relaunch-info";
+    public void rerunAnalysis(String analysisId, String appId, DECallback<AppTemplate> callback) {
+        String address = ANALYSES + "/" + analysisId + "/relaunch-info";
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, APP_EVENT);
         mdcMap.put(APP_ID, appId);
-        mdcMap.put(ANALYSIS_ID, analysisId.getId());
+        mdcMap.put(ANALYSIS_ID, analysisId);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 

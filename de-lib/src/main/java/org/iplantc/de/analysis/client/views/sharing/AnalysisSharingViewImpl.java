@@ -97,7 +97,7 @@ public class AnalysisSharingViewImpl implements AnalysisSharingView {
     }
 
     @UiFactory
-    ListStore<Analysis> buildAnalyisStore() {
+    ListStore<Analysis> buildAnalysisStore() {
         ListStore<Analysis> analysisStore = new ListStore<>(new ModelKeyProvider<Analysis>() {
 
             @Override

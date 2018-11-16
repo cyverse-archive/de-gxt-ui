@@ -1,12 +1,7 @@
 package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
-import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
-import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
-import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
-import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
@@ -40,18 +35,14 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -59,8 +50,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 
 import org.apache.http.HttpStatus;
 
@@ -74,47 +63,37 @@ import java.util.List;
  *
  * @author sriram, jstroot
  */
-public class AnalysesPresenterImpl implements AnalysesView.Presenter,
-                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
-                                              AnalysisFilterChanged.AnalysisFilterChangedHandler,
-                                              CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
-                                              ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
-                                              InteractiveIconClicked.InteractiveIconClickedHandler {
-
-    @Override
-    public void onCancelAnalysisSelected(Splittable[] analysisList,
-                                         ReactSuccessCallback callback,
-                                         ReactErrorCallback errorCallback) {
-
-
-        for (Splittable sp : analysisList) {
-            Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, sp).as();
-            analysisService.stopAnalysis(analysis,
-                                         new CancelAnalysisServiceCallback(analysis,
-                                                                           callback,
-                                                                           errorCallback),
-                                         "Canceled");
-        }
-    }
+public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
+        final ReactSuccessCallback callback;
+        final ReactErrorCallback errorCallback;
 
-        public CompleteAnalysisServiceCallback(final Analysis ae) {
+        public CompleteAnalysisServiceCallback(final Analysis ae,
+                                               final ReactSuccessCallback callback,
+                                               final ReactErrorCallback errorCallback) {
             this.ae = ae;
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
             SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(ae.getName()));
             announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
+            if (errorCallback != null) {
+                errorCallback.onError(statusCode, caught.getMessage());
+            }
         }
 
         @Override
         public void onSuccess(String result) {
             SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(ae.getName()));
             announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
-            loadAnalyses(currentPermFilter, currentTypeFilter);
+            if (callback != null) {
+                callback.onSuccess(null);
+            }
         }
 
     }
@@ -232,12 +211,29 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onCompleteAnalysisSelected(CompleteAnalysisSelected event) {
-        List<Analysis> analysesToComplete = event.getAnalysisList();
+    public void onCancelAnalysisSelected(Splittable selected,
+                                         ReactSuccessCallback callback,
+                                         ReactErrorCallback errorCallback) {
 
-        for (Analysis analysis : analysesToComplete) {
-            analysisService.stopAnalysis(analysis, new CompleteAnalysisServiceCallback(analysis), "Completed");
-        }
+
+        Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, selected).as();
+        analysisService.stopAnalysis(analysis,
+                                     new CancelAnalysisServiceCallback(analysis,
+                                                                       callback,
+                                                                       errorCallback),
+                                     "Canceled");
+    }
+
+    @Override
+    public void onCompleteAnalysisSelected(Splittable selected,
+                                           ReactSuccessCallback callback,
+                                           ReactErrorCallback errorCallback) {
+        Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, selected).as();
+        analysisService.stopAnalysis(analysis,
+                                     new CompleteAnalysisServiceCallback(analysis,
+                                                                         callback,
+                                                                         errorCallback),
+                                     "Completed");
     }
 
     @Override
@@ -276,25 +272,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void setSelectedAnalyses(final List<Analysis> selectedAnalyses) {
-/*        if (selectedAnalyses == null || selectedAnalyses.isEmpty()) {
-            return;
-        }
 
-        ArrayList<Analysis> selectNow = getNewAnalysisList();
-
-        for (Analysis select : selectedAnalyses) {
-            Analysis storeModel = listStore.findModel(select);
-            if (storeModel != null) {
-                selectNow.add(storeModel);
-            }
-        }*/
-
-/*        if (selectNow.isEmpty()) {
-            Analysis first = selectedAnalyses.get(0);
-            view.filterByAnalysisId(first.getId(), first.getName());
-        } else {
-            view.setSelectedAnalyses(selectNow);
-        }*/
     }
 
     ArrayList<Analysis> getNewAnalysisList() {
@@ -303,90 +281,14 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void go(final HasOneWidget container, final List<Analysis> selectedAnalyses) {
-/*        if (selectedAnalyses != null && !selectedAnalyses.isEmpty()) {
-            handlerFirstLoad = loader.addLoadHandler(new FirstLoadHandler(selectedAnalyses));
-        }
-        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);*/
         view.setPresenter(this);
         container.setWidget(view);
         view.load();
     }
 
     @Override
-    public void loadAnalyses(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
-       /* if (!Strings.isNullOrEmpty(view.getSearchField().getCurrentValue())) {
-            view.getSearchField().refreshSearch();
-            return;
-        }
-
-        FilterPagingLoadConfig config = loader.getLastLoadConfig();
-        config.getFilters().clear();
-
-        FilterConfigBean idParentFilter = getFilterConfigBean();
-        FilterConfigBean filterCb = getFilterConfigBean();
-
-        idParentFilter.setField(AnalysisSearchField.PARENT_ID);
-        filterCb.setField("ownership");
-
-        if (permFilter != null) {
-            idParentFilter.setValue("");
-            switch (permFilter) {
-                case ALL:
-                    filterCb.setValue("all");
-                    break;
-                case SHARED_WITH_ME:
-                    filterCb.setValue("theirs");
-                    break;
-                case MY_ANALYSES:
-                    filterCb.setValue("mine");
-                    break;
-            }
-        } else {
-            idParentFilter.setValue(view.getParentAnalysisId());
-        }
-
-        FilterConfigBean typeFilterCb = getFilterConfigBean();
-        typeFilterCb.setField("type");
-
-        if (typeFilter != null) {
-            switch (typeFilter) {
-                case DE:
-                    typeFilterCb.setValue("DE");
-                    break;
-                case OSG:
-                    typeFilterCb.setValue("OSG");
-                    break;
-                case AGAVE:
-                    typeFilterCb.setValue("Agave");
-                    break;
-                case INTERACTIVE:
-                    typeFilterCb.setValue("Interactive");
-                    break;
-                case ALL:
-                default:
-                    typeFilterCb.setValue(null);
-                    break;
-            }
-            config.getFilters().add(typeFilterCb);
-        }
-
-        config.getFilters().add(idParentFilter);
-        config.getFilters().add(filterCb);
-
-        config.setLimit(200);
-        config.setOffset(0);
-        loader.load(config);
-        */
-    }
-
-    @Override
     public void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         //  view.setPermFilterInView(permFilter, typeFilter);
-    }
-
-    @Override
-    public void onShowAllSelected() {
-        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);
     }
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
@@ -427,31 +329,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onAnalysisFilterChanged(AnalysisFilterChanged event) {
-        AnalysisPermissionFilter permFilter = event.getPermFilter();
-        AppTypeFilter typeFilter = event.getTypeFilter();
-        boolean filterChanged = false;
-
-        if (permFilter == null && typeFilter == null) {
-            currentPermFilter = permFilter;
-            currentTypeFilter = typeFilter;
-            return;
-        }
-        if (permFilter!= null && !(permFilter.equals(this.currentPermFilter))) {
-            currentPermFilter = permFilter;
-            filterChanged = true;
-        }
-
-        if (typeFilter != null && !(typeFilter.equals(this.currentTypeFilter))) {
-            currentTypeFilter = typeFilter;
-            filterChanged = true;
-        }
-        if(filterChanged) {
-            loadAnalyses(currentPermFilter, currentTypeFilter);
-        }
-    }
-
-    @Override
     public AnalysisPermissionFilter getCurrentPermFilter() {
         return currentPermFilter;
     }
@@ -462,9 +339,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onAnalysisAppSelected(Splittable analysis) {
-        Analysis relaunchAnalysis = AutoBeanCodex.decode(factory,Analysis.class,analysis).as();
-        eventBus.fireEvent(new OpenAppForRelaunchEvent(relaunchAnalysis));
+    public void onAnalysisAppSelected(String analysisId,
+                                      String systemId,
+                                      String appId) {
+        eventBus.fireEvent(new OpenAppForRelaunchEvent(analysisId, systemId, appId));
     }
 
     @Override
@@ -541,11 +419,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onHTAnalysisExpanded(HTAnalysisExpandEvent event) {
-        //view.filterByParentAnalysisId(event.getValue().getId());
-    }
-
-    @Override
     public void onAnalysisJobInfoSelected(String id,
                                           ReactSuccessCallback callback,
                                           ReactErrorCallback errorCallback) {
@@ -555,15 +428,18 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.analysisStepInfoError()));
-                errorCallback.onError(statusCode, caught.getMessage());
+                if(errorCallback != null) {
+                    errorCallback.onError(statusCode, caught.getMessage());
+                }
 
             }
 
             @Override
             public void onSuccess(AnalysisStepsInfo stepsInfo) {
                 Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(stepsInfo));
-                GWT.log(sp.getPayload());
-                callback.onSuccess(sp);
+                if(callback != null) {
+                    callback.onSuccess(sp);
+                }
             }
         });
 
@@ -667,41 +543,5 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 });
             }
         });
-    }
-
-    @Override
-    public void onViewAnalysisParamsSelected(ViewAnalysisParamsSelected event) {
-        Analysis selectedAnalysis = event.getAnalysis();
-        analysisParametersDialogAsyncProvider.get(new AsyncCallback<AnalysisParametersDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisParametersDialog result) {
-                result.show(selectedAnalysis);
-            }
-        });
-    }
-
-    ConfirmMessageBox getDeleteAnalysisDlg() {
-        return new ConfirmMessageBox(appearance.warning(), appearance.analysesExecDeleteWarning());
-    }
-
-    IPlantPromptDialog getRenameAnalysisDlg(String name) {
-        return new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
-    }
-
-    @Override
-    public void onInteractiveIconClicked(InteractiveIconClicked event) {
-        Analysis analysis = event.getAnalysis();
-        List<String> interactiveUrls = analysis.getInteractiveUrls();
-
-        if (interactiveUrls != null && !interactiveUrls.isEmpty()) {
-            //For now, assume only one URL is returned since we don't currently
-            //allow batch jobs or workflows with VICE apps
-            Window.open(interactiveUrls.get(0), "_blank", "");
-        }
     }
 }
