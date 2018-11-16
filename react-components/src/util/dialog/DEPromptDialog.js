@@ -67,21 +67,21 @@ class DEPromptDialog extends Component {
                     <Button
                         onClick={() => {
                             this.setState({dialogOpen: false});
-                            onOkBtnClick(value);
-                        }}
-                        disabled={disableOkBtn}
-                        color="primary">
-                        {getMessage("okBtnText")}
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.setState({dialogOpen: false});
                             if (onCancelBtnClick) {
                                 onCancelBtnClick();
                             }
                         }}
                         color="primary">
                         {getMessage("cancelBtnText")}
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.setState({dialogOpen: false});
+                            onOkBtnClick(value);
+                        }}
+                        disabled={disableOkBtn}
+                        color="primary">
+                        {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>
             </Dialog>

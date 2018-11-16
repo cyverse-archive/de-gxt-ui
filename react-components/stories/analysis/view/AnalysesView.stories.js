@@ -183,7 +183,8 @@ class AnalysesViewTest extends Component {
                 "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                 "notify": true,
                 "resultfolderid": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
-                "app_name": "Word Count"
+                "app_name": "Word Count",
+                "interactive_urls":["https://a60068256.cyverse.run"],
             }],
             "timestamp": "1534875863833",
             "total": 10

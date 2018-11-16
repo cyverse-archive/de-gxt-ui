@@ -10,6 +10,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import EditIcon from "@material-ui/icons/Edit";
 import CommentIcon from "@material-ui/icons/Comment";
+import SaveIcon from "@material-ui/icons/Save";
 import { withStyles } from "@material-ui/core/styles";
 import exStyles from "../style";
 
@@ -30,9 +31,10 @@ class AnalysesMenu extends Component {
             handleRelaunch,
             handleCancel,
             handleShare,
-            handleDelete,
+            handleDeleteClick,
             handleViewParams,
             handleViewInfo,
+            handleSaveAndComplete
         } = this.props;
         return (
             <React.Fragment>
@@ -82,6 +84,15 @@ class AnalysesMenu extends Component {
                     {getMessage("share")}
                 </MenuItem>
                 <MenuItem disabled={shouldDisableCancel() || !isOwner()}
+                          onClick={() => {
+                              handleClose();
+                              handleSaveAndComplete();
+                          }}
+                          className={classes.menuItem}>
+                    <SaveIcon className={classes.toolbarItemColor}/>
+                    {getMessage("completeAndSave")}
+                </MenuItem>
+                <MenuItem disabled={shouldDisableCancel() || !isOwner()}
                           onClick={()=> {
                               handleClose();
                               handleCancel();
@@ -93,7 +104,7 @@ class AnalysesMenu extends Component {
                 <MenuItem disabled={disabled() || !isOwner()}
                           onClick={() => {
                               handleClose();
-                              handleDelete();
+                              handleDeleteClick();
                           }}
                           className={classes.menuItem}>
                     <DeleteIcon className={classes.toolbarItemColor}/>

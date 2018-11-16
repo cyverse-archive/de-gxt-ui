@@ -8,7 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 import exStyles from "../style";
 import ids from "../ids";
 import { withStyles } from "@material-ui/core/styles";
@@ -18,12 +18,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import permission from "../model/permission";
-import InputLabel from "@material-ui/core/InputLabel";
 import appType from "../model/appType";
-import TextField from '@material-ui/core/TextField';
 import AnalysesMenu from "./AnalysesMenu";
 import { injectIntl } from "react-intl";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
+import SearchField from "../../util/SearchField";
 
 class AnalysesToolbar extends Component {
     constructor(props) {
@@ -104,24 +103,21 @@ class AnalysesToolbar extends Component {
                                     id: "appsFilter",
                                 }} style={{minWidth: 120}}>
                                 <MenuItem
-                                    value={appType.all}>{appType.all}</MenuItem>
+                                    value={"All"}>{appType.all}</MenuItem>
                                 <MenuItem
-                                    value={appType.agave}>{appType.agave}</MenuItem>
+                                    value={"Agave"}>{appType.agave}</MenuItem>
                                 <MenuItem
-                                    value={appType.de}>{appType.de}</MenuItem>
+                                    value={"DE"}>{appType.de}</MenuItem>
                                 <MenuItem
-                                    value={appType.interactive}>{appType.interactive}</MenuItem>
+                                    value={"Interactive"}>{appType.interactive}</MenuItem>
                                 <MenuItem
-                                    value={appType.osg}>{appType.osg}</MenuItem>
+                                    value={"OSG"}>{appType.osg}</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
-                            <TextField
-                                id="search"
-                                placeholder={formatMessage(intl,"search")}
-                                style={{fontSize: 10}}
-                            />
+                            <SearchField handleSearch={this.props.onSearch} helperText="Search..."/>
                         </FormControl>
+
                     </form>
 
                 </ToolbarGroup>

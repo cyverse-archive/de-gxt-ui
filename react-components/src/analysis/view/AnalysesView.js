@@ -11,7 +11,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { formatMessage, getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import moment from "moment";
 import constants from "../../constants";
@@ -30,10 +30,11 @@ import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
 import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
 import { withStyles } from "@material-ui/core/styles";
-import withI18N from "../../util/I18NWrapper";
 import { injectIntl } from "react-intl";
 import intlData from "../messages";
 import exStyles from "../style";
+import LaunchIcon from "@material-ui/icons/Launch";
+import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -43,6 +44,8 @@ function AnalysisName(props) {
     const resultFolderId = props.analysis.resultfolderid;
     const handleGoToOutputFolder = props.handleGoToOutputFolder;
     const handleBatchIconClick = props.handleBatchIconClick;
+    const interactiveUrls = props.analysis.interactive_urls;
+    const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
 
     if (isBatch) {
         return (
@@ -52,6 +55,14 @@ function AnalysisName(props) {
                 <sup>{name}</sup>
             </span>
         );
+    } else if (interactiveUrls && interactiveUrls.length > 0) {
+        return (
+            <span className={className} onClick={handleGoToOutputFolder}>
+                <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
+                            style={{color: Color.darkBlue}}/>
+                <sup>{name}</sup>
+            </span>
+        )
     } else {
         return (
             <span className={className} onClick={handleGoToOutputFolder}>
@@ -92,7 +103,7 @@ function Status(props) {
             onClick={(analysis) => onClick(analysis)}
             text={analysis.status}/>);
     } else {
-        return (<span>{analysis.status}</span>);
+        return (<span style={{textAlign: 'left', fontSize: '11px'}}>{analysis.status}</span>);
     }
 }
 
@@ -160,6 +171,14 @@ const MINE = "mine";
 
 const THEIRS = "theirs";
 
+const PARENT_ID = "parent_id";
+
+const APP_NAME = "app_name";
+
+const NAME = "name";
+
+const ID = "id";
+
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
@@ -177,13 +196,18 @@ class AnalysesView extends Component {
             orderBy: 'enddate',
             permFilter: permission.all,
             typeFilter: appType.all,
-            renameDialogOpen: false,
-            commentsDialogOpen: false,
-            shareWithSupportDialogOpen: false,
+            parentId: "",
+            nameFilter: "",
+            appNameFilter: "",
+            idFilter: "",
             parameters: [],
-            viewParamsDialogOpen: false,
             info: null,
             infoDialogOpen: false,
+            renameDialogOpen: false,
+            commentsDialogOpen: false,
+            viewParamsDialogOpen: false,
+            shareWithSupportDialogOpen: false,
+            confirmDeleteDialogOpen: false,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -215,27 +239,36 @@ class AnalysesView extends Component {
         this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
         this.handleParamValueClick = this.handleParamValueClick.bind(this);
         this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(this);
-
+        this.handleSearch = this.handleSearch.bind(this);
+        this.getSearchFilter = this.getSearchFilter.bind(this);
+        this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(this);
+        this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
     }
 
     componentDidMount() {
         this.fetchAnalyses();
     }
 
-    fetchAnalyses(parent_id) {
+    fetchAnalyses() {
         const {rowsPerPage, offset, filter, order, orderBy} = this.state;
         this.setState({loading: true});
 
-        const parentFilter = this.getParentIdFilter(parent_id);
+        const parentFilter = this.getParentIdFilter();
         const typeFilter = this.getTypeFilter();
         const permFilter = this.getPermissionFilter();
+        const searchFilter = this.getSearchFilter();
 
         if (permFilter && permFilter.value) {
             parentFilter.value = "";
         }
 
         const filtersObj = Object.create(filterList);
-        filtersObj.filters = [parentFilter, typeFilter, permFilter];
+        if (searchFilter && searchFilter.length > 0) {
+            filtersObj.filters = searchFilter;
+        } else {
+            filtersObj.filters = [parentFilter, typeFilter, permFilter];
+        }
 
         this.props.presenter.getAnalyses(rowsPerPage, offset, filtersObj, orderBy, order.toUpperCase(),
             (analysesList) => {
@@ -255,13 +288,13 @@ class AnalysesView extends Component {
 
     handleBatchIconClick(event, id) {
         event.stopPropagation();
-        this.setState({typeFilter: "", permFilter: ""}, () => this.fetchAnalyses(id));
+        this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses());
     }
 
-    getParentIdFilter(parent_id) {
+    getParentIdFilter() {
         const idParentFilter = Object.create(filter);
         idParentFilter.field = "parent_id";
-        idParentFilter.value = parent_id;
+        idParentFilter.value = this.state.parentId;
         return idParentFilter;
     }
 
@@ -274,7 +307,7 @@ class AnalysesView extends Component {
 
         const typeFilter = Object.create(filter);
         typeFilter.field = "type";
-        typeFilter.value = typeFilter1.toLowerCase();
+        typeFilter.value = typeFilter1;
         return typeFilter;
     }
 
@@ -305,12 +338,39 @@ class AnalysesView extends Component {
         permFilter.value = val;
         return permFilter;
     }
+
+    getSearchFilter() {
+        const {nameFilter, appNameFilter, idFilter} = this.state;
+        const searchFilters = [];
+        if (nameFilter) {
+            const nameFilterObj = Object.create(filter);
+            nameFilterObj.field = NAME;
+            nameFilterObj.value = nameFilter;
+            searchFilters.push(nameFilterObj);
+        }
+
+        if (appNameFilter) {
+            const appNameFilterObj = Object.create(filter);
+            appNameFilterObj.field = APP_NAME;
+            appNameFilterObj.value = appNameFilter;
+            searchFilters.push(appNameFilterObj);
+        }
+
+        if (idFilter) {
+            const idFilterObj = Object.create(filter);
+            idFilterObj.field = ID;
+            idFilterObj.value = idFilter;
+            searchFilters.push(idFilterObj);
+        }
+
+        return searchFilters;
+
+    }
     
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
         this.setState({page: page, offset: rowsPerPage * page});
-
     }
 
     handleChangeRowsPerPage(event) {
@@ -396,6 +456,10 @@ class AnalysesView extends Component {
         this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]));
     }
 
+    handleInteractiveUrlClick(url) {
+        window.open(url, '_blank');
+    }
+
     handleViewParams() {
         let selected = this.state.selected[0];
         this.setState({loading: true});
@@ -442,8 +506,8 @@ class AnalysesView extends Component {
         }
     }
 
-    handleRelaunch() {
-        this.props.presenter.onAnalysisAppSelected(this.findAnalysis(this.state.selected[0]));
+    handleRelaunch(analysis) {
+        this.props.presenter.onAnalysisAppSelected(analysis.id, analysis.system_id, analysis.app_id);
     }
 
     handleViewInfo() {
@@ -471,21 +535,68 @@ class AnalysesView extends Component {
     handleCancel() {
         this.setState({loading: true});
         const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
-        this.props.presenter.onCancelAnalysisSelected(selectedAnalyses, () => {
-                this.setState({
-                    loading: false,
+        const presenter = this.props.presenter;
+        let promises = [];
+
+        if (selectedAnalyses && selectedAnalyses.length > 0) {
+            selectedAnalyses.forEach(function (analysis) {
+                let p = new Promise((resolve, reject) => {
+                    presenter.onCancelAnalysisSelected(analysis, () => {
+                            resolve("");
+                        },
+                        (errorCode, errorMessage) => {
+                            reject("");
+                        });
                 });
-                this.fetchAnalyses();
-            },
-            (errorCode, errorMessage) => {
-                this.setState({
-                    loading: false,
-                });
+                promises.push(p);
             });
+
+            Promise.all(promises)
+                .then(value => {
+                    this.setState({loading: false});
+                    this.fetchAnalyses();
+                })
+                .catch(error => {
+                    this.setState({loading: false});
+                });
+        }
     }
 
-    handleDelete() {
+    handleSaveAndComplete() {
         this.setState({loading: true});
+        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        const presenter = this.props.presenter;
+        let promises = [];
+
+        if (selectedAnalyses && selectedAnalyses.length > 0) {
+            selectedAnalyses.forEach(function (analysis) {
+                let p = new Promise((resolve, reject) => {
+                    presenter.onCompleteAnalysisSelected(analysis, () => {
+                            resolve("");
+                        },
+                        (errorCode, errorMessage) => {
+                            reject("");
+                        });
+                });
+                promises.push(p);
+            });
+
+            Promise.all(promises)
+                .then(value => {
+                    this.setState({loading: false});
+                    this.fetchAnalyses();
+                })
+                .catch(error => {
+                    this.setState({loading: false});
+                });
+        }
+    }
+
+    handleDeleteClick() {
+        this.setState({confirmDeleteDialogOpen: true});
+    }
+    handleDelete() {
+        this.setState({loading: true, confirmDeleteDialogOpen: false});
         const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
         this.props.presenter.deleteAnalyses(selectedAnalyses, () => {
                 this.setState({
@@ -631,6 +742,26 @@ class AnalysesView extends Component {
         this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses());
     }
 
+    handleSearch(searchText) {
+        if (searchText) {
+            this.setState({
+                permFilter: "",
+                typeFilter: "",
+                parentId: "",
+                nameFilter: searchText,
+                appNameFilter: searchText,
+            }, () => this.fetchAnalyses());
+        } else {
+            this.setState({
+                permFilter: permission.all,
+                typeFilter: appType.all,
+                parentId: "",
+                nameFilter: "",
+                appNameFilter: "",
+            }, () => this.fetchAnalyses());
+        }
+    }
+
     render() {
         const {classes, intl, presenter, name, email, username} = this.props;
         const {
@@ -643,6 +774,7 @@ class AnalysesView extends Component {
             data,
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
+            confirmDeleteDialogOpen,
             permFilter,
             typeFilter,
             parameters,
@@ -663,9 +795,10 @@ class AnalysesView extends Component {
                                      handleViewInfo={this.handleViewInfo}
                                      handleShare={this.handleShare}
                                      handleCancel={this.handleCancel}
-                                     handleDelete={this.handleDelete}
+                                     handleDeleteClick={this.handleDeleteClick}
                                      handleRename={this.handleRename}
                                      handleUpdateComments={this.handleUpdateComments}
+                                     handleSaveAndComplete={this.handleSaveAndComplete}
                                      disabled={this.disabled}
                                      multiSelect={this.multiSelect}
                                      shouldDisableCancel={this.shouldDisableCancel}
@@ -675,7 +808,9 @@ class AnalysesView extends Component {
                                      permFilter={permFilter}
                                      typeFilter={typeFilter}
                                      onPermissionsFilterChange={this.onPermissionsFilterChange}
-                                     onTypeFilterChange={this.onTypeFilterChange}/>
+                                     onTypeFilterChange={this.onTypeFilterChange}
+                                     onSearch={this.handleSearch}
+                    />
                     <div className={classes.table}>
                         <Table>
                             <EnhancedTableHead
@@ -718,6 +853,7 @@ class AnalysesView extends Component {
                                                 <AnalysisName classes={classes}
                                                               analysis={n}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                              handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
                                                                   event,
                                                                   id)}/>
@@ -755,7 +891,7 @@ class AnalysesView extends Component {
                                                     handleViewInfo={this.handleViewInfo}
                                                     handleShare={this.handleShare}
                                                     handleCancel={this.handleCancel}
-                                                    handleDelete={this.handleDelete}
+                                                    handleDeleteClick={this.handleDeleteClick}
                                                     handleRename={this.handleRename}
                                                     handleUpdateComments={this.handleUpdateComments}
                                                     disabled={this.disabled}
@@ -763,6 +899,7 @@ class AnalysesView extends Component {
                                                     shouldDisableCancel={this.shouldDisableCancel}
                                                     isOwner={this.isOwner}
                                                     isSharable={this.isSharable}
+                                                    handleSaveAndComplete={this.handleSaveAndComplete}
                                                 />
                                             </TableCell>
                                         </TableRow>
@@ -817,6 +954,16 @@ class AnalysesView extends Component {
                 <AnalysisInfoDialog info={info}
                                     dialogOpen={infoDialogOpen}
                                     onInfoDialogClose={() => this.setState({infoDialogOpen: false})}
+                />
+                }
+                {selectedAnalysis &&
+                <DEConfirmationDialog dialogOpen={confirmDeleteDialogOpen}
+                                      message={formatMessage(intl, "analysesExecDeleteWarning")}
+                                      heading={formatMessage(intl,"delete")}
+                                      onOkBtnClick={this.handleDelete}
+                                      onCancelBtnClick={() => {
+                                          this.setState({confirmDeleteDialogOpen: false})
+                                      }}
                 />
                 }
             </React.Fragment>
