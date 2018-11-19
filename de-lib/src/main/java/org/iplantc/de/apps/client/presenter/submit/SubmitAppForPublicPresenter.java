@@ -17,6 +17,7 @@ import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -32,7 +33,6 @@ import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * @author jstroot
@@ -96,16 +96,19 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     private OntologyServiceFacade ontologyService;
     private GroupServiceFacade groupServiceFacade;
     private OntologyUtil ontologyUtil;
+    private DEProperties properties;
     private AsyncCallback<String> callback;
     private Map<String, List<OntologyHierarchy>> iriToHierarchyMap = new FastMap<>();
 
     @Inject
     SubmitAppForPublicPresenter(OntologyServiceFacade ontologyService,
                                 GroupServiceFacade groupServiceFacade,
-                                OntologyUtil ontologyUtil) {
+                                OntologyUtil ontologyUtil,
+                                DEProperties properties) {
         this.ontologyService = ontologyService;
         this.groupServiceFacade = groupServiceFacade;
         this.ontologyUtil = ontologyUtil;
+        this.properties = properties;
     }
 
     @Override
@@ -169,7 +172,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         }
         for (Group community: view.getCommunityTree().getCheckedSelection()) {
             Avu avu = avuAutoBeanFactory.getAvu().as();
-            avu.setAttribute(Group.COMMUNITY_ATTR);
+            avu.setAttribute(properties.getCommunityAttr());
             avu.setValue(community.getDisplayName());
             avu.setUnit("");
 
