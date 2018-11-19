@@ -211,6 +211,11 @@ public class OntologiesPresenterImplTest {
                 return loaderMock;
             }
 
+            @Override
+            AvuList combineAvusToAvuList(List<Avu> avus1, List<Avu> avus2) {
+                return avuListBeanMock;
+            }
+
             void displayErrorToAdmin() {}
         };
         uut.announcer = announcerMock;
@@ -290,12 +295,11 @@ public class OntologiesPresenterImplTest {
     @Test
     public void testCategorizeHierarchiesToApp() {
         App appMock = mock(App.class);
-        CategorizeHierarchiesToAppEvent eventMock = mock(CategorizeHierarchiesToAppEvent.class);
-        when(eventMock.getTargetApp()).thenReturn(appMock);
-        when(eventMock.getSelectedHierarchies()).thenReturn(ontologyHierarchyListMock);
+        when(utilMock.convertHierarchiesToAvus(ontologyHierarchyListMock)).thenReturn(avuListBeanMock);
+        when(avuListBeanMock.getAvus()).thenReturn(avuListMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.categorizeHierarchiesToApp(eventMock);
+        uut.categorizeHierarchiesToApp(appMock, ontologyHierarchyListMock, avuListMock);
         verify(serviceFacadeMock).setAppAVUs(eq(appMock), eq(avuListBeanMock), asyncAvuListCaptor.capture());
 
         asyncAvuListCaptor.getValue().onSuccess(avuListMock);
