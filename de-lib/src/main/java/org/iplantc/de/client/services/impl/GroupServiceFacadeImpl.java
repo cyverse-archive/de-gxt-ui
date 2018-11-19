@@ -22,6 +22,7 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
+import org.iplantc.de.client.services.converters.GroupListCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListToSubjectListCallbackConverter;
 import org.iplantc.de.client.services.converters.PrivilegeListCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
@@ -47,6 +48,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     private final String LISTS = "org.iplantc.services.collaboratorLists";
     private final String TEAMS = "org.iplantc.services.teams";
+    private final String COMMUNITIES = "org.iplantc.services.communities";
 
     private GroupAutoBeanFactory factory;
     private CollaboratorAutoBeanFactory collabFactory;
@@ -76,13 +78,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         String address = TEAMS;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
-            @Override
-            protected List<Group> convertFrom(String object) {
-                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
-                return groupList.getGroups();
-            }
-        });
+        deService.getServiceData(wrapper, new GroupListCallbackConverter(factory, callback));
     }
 
     @Override
@@ -90,13 +86,15 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         String address = TEAMS + "?member=" + userInfo.getUsername();
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
-            @Override
-            protected List<Group> convertFrom(String object) {
-                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
-                return groupList.getGroups();
-            }
-        });
+        deService.getServiceData(wrapper, new GroupListCallbackConverter(factory, callback));
+    }
+
+    @Override
+    public void getCommunities(AsyncCallback<List<Group>> communitiesCallback) {
+        String address = COMMUNITIES;
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new GroupListCallbackConverter(factory, communitiesCallback));
     }
 
     @Override
