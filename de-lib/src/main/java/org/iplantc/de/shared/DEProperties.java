@@ -99,6 +99,8 @@ public class DEProperties {
 
     private static final String ONTOLOGY_ATTRS = WORKSPACE_PREFIX + "ontologyAttrs";
 
+    private static final String COMMUNITY_ATTR = WORKSPACE_PREFIX + "communityAttr";
+
     private static final String APPS_WORKSPACE = WORKSPACE_PREFIX + "apps.";
 
     private static final String APPS_CARD_URL = APPS_WORKSPACE + "cardUrl";
@@ -208,6 +210,8 @@ public class DEProperties {
     private String betaAvuUnit;
 
     private String ontologyAttrs;
+
+    private String communityAttr;
 
     private String cardUrl;
 
@@ -321,6 +325,7 @@ public class DEProperties {
         keys.add(BETA_AVU_VALUE);
         keys.add(BETA_AVU_UNIT);
         keys.add(ONTOLOGY_ATTRS);
+        keys.add(COMMUNITY_ATTR);
         keys.add(APPS_CARD_URL);
         keys.add(APPS_CARD_URL_OPTIONS);
         keys.add(CYVERSE_SUPPORT_USER);
@@ -364,6 +369,7 @@ public class DEProperties {
         betaAvuValue = properties.get(BETA_AVU_VALUE);
         betaAvuUnit = properties.get(BETA_AVU_UNIT);
         ontologyAttrs = properties.get(ONTOLOGY_ATTRS);
+        communityAttr = properties.get(COMMUNITY_ATTR);
         cardUrl = properties.get(APPS_CARD_URL);
         cardUrlOptions = properties.get(APPS_CARD_URL_OPTIONS);
         supportUser = properties.get(CYVERSE_SUPPORT_USER);
@@ -519,6 +525,10 @@ public class DEProperties {
 
     public String getOntologyAttrs() {
         return ontologyAttrs;
+    }
+
+    public String getCommunityAttr() {
+        return communityAttr;
     }
 
     public String getAppsCardUrl() {
