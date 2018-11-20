@@ -35,6 +35,7 @@ import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.CollaboratorsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.TeamsWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.ReactNotifications.DenyTeamProps;
 import org.iplantc.de.notifications.client.ReactNotifications.HistoryProps;
@@ -269,7 +270,7 @@ public class NotificationUtil {
                                                           new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
-                        CollaboratorsWindowConfig window = ConfigFactory.collaboratorsWindowConfig();
+                        TeamsWindowConfig window = ConfigFactory.teamsWindowConfig();
                         eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     }
                     break;
