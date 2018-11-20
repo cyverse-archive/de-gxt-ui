@@ -6,6 +6,7 @@ var intlData = {
         "feedbackLink": "Feedback",
         "preferences": "Preferences",
         "collaborators"  : "Collaborators",
+        "teams": "Teams",
         "documentation" : "User Manual",
         "introduction" : "Introduction",
         "about": "About",

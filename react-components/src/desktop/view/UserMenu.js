@@ -70,6 +70,13 @@ class UserMenu extends Component {
                               }}>
                         <DEHyperlink text={getMessage("collaborators")}/>
                     </MenuItem>
+                    <MenuItem id={build(ids.DESKTOP, ids.TEAMS_LINK)}
+                              onClick={() => {
+                                  presenter.onTeamsClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("teams")}/>
+                    </MenuItem>
                       <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
                               onClick={() => {

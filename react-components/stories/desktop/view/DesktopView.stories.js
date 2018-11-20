@@ -429,6 +429,11 @@ class DesktopViewTest extends  Component {
             onTaskButtonClicked: () => logger("Task Button Clicked"),
             onNotificationSelected: () => logger("Notification Selected"),
             onPreferencesClick: () => logger("Preferences Clicked"),
+            onDocumentationClick: () => logger("User Manual Clicked"),
+            onAboutClick: () => logger("About Clicked"),
+            doLogout: () => logger("Logout Clicked"),
+            onCollaboratorsClick: () => logger("Collaborators Clicked"),
+            onTeamsClick: () => logger("Teams Clicked"),
         };
         return (
             <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>
