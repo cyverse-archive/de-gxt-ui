@@ -90,7 +90,7 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public String collaborators() {
-        return displayStrings.collaborationWindowHeading();
+        return displayStrings.collaboratorsWindowHeading();
     }
 
     @Override
@@ -295,7 +295,7 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public String windowHeading() {
-        return displayStrings.collaborationWindowHeading();
+        return displayStrings.collaboratorsWindowHeading();
     }
 
     @Override

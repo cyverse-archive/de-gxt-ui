@@ -68,7 +68,7 @@ class UserMenu extends Component {
                                   presenter.onCollaboratorsClick();
                                   this.handleClose();
                               }}>
-                        <DEHyperlink text={getMessage("collaboration")}/>
+                        <DEHyperlink text={getMessage("collaborators")}/>
                     </MenuItem>
                       <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}

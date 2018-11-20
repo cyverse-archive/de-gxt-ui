@@ -5,7 +5,7 @@ var intlData = {
         "forumsLink": "Forum",
         "feedbackLink": "Feedback",
         "preferences": "Preferences",
-        "collaboration"  : "Collaboration",
+        "collaborators"  : "Collaborators",
         "documentation" : "User Manual",
         "introduction" : "Introduction",
         "about": "About",
