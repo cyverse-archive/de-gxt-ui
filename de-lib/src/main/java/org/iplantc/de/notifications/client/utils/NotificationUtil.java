@@ -27,7 +27,6 @@ import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
@@ -270,8 +269,7 @@ public class NotificationUtil {
                                                           new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
-                        CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
-                        window.setSelectedTab(CollaborationView.TAB.Teams);
+                        CollaboratorsWindowConfig window = ConfigFactory.collaboratorsWindowConfig();
                         eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     }
                     break;

@@ -76,12 +76,10 @@ public class CollaborationPresenterImplTest {
     @Test
     public void go1() {
         HasOneWidget containerMock = mock(HasOneWidget.class);
-        CollaborationWindowConfig windowConfigMock = mock(CollaborationWindowConfig.class);
-        when(windowConfigMock.getSelectedTab()).thenReturn(CollaborationView.TAB.Teams);
+        CollaboratorsWindowConfig windowConfigMock = mock(CollaboratorsWindowConfig.class);
 
         /** CALL METHOD UNDER TEST **/
         uut.go(containerMock, windowConfigMock);
-        verify(viewMock).setActiveTab(eq(CollaborationView.TAB.Teams));
         verify(collabPresenterMock).go();
         verify(teamPresenterMock).go();
 
