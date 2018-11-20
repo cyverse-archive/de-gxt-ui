@@ -428,6 +428,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
+    public void onTeamsClick() {
+        desktopWindowManager.show(WindowType.TEAMS);
+    }
+
+    @Override
     public void onPreferencesClick() {
         preferencesDialogProvider.get(new AsyncCallback<PreferencesDialog>() {
             @Override
