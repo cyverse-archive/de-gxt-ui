@@ -69,17 +69,16 @@ public class CollaborationPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock);
 
-        verify(spy).go(eq(containerMock), eq(null));
+        verify(spy).go(eq(containerMock));
         verify(teamPresenterMock).showCheckBoxes();
     }
 
     @Test
     public void go1() {
         HasOneWidget containerMock = mock(HasOneWidget.class);
-        CollaboratorsWindowConfig windowConfigMock = mock(CollaboratorsWindowConfig.class);
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(containerMock, windowConfigMock);
+        uut.go(containerMock);
         verify(collabPresenterMock).go();
         verify(teamPresenterMock).go();
 
