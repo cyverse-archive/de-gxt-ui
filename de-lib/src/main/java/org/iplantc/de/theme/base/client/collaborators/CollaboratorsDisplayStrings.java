@@ -58,4 +58,6 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String retainPermissionsBtn();
 
     String removePermissionsBtn();
+
+    String collaboratorsHelp();
 }

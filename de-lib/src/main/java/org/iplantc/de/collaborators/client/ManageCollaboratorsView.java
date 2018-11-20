@@ -135,6 +135,8 @@ public interface ManageCollaboratorsView extends IsWidget,
         int chooseCollaboratorsWidth();
 
         int chooseCollaboratorsHeight();
+
+        String collaborationHelp();
     }
 
     /**
