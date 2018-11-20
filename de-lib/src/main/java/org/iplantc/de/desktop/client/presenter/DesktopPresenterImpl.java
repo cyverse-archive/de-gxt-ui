@@ -424,7 +424,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
 
     @Override
     public void onCollaboratorsClick() {
-        desktopWindowManager.show(WindowType.COLLABORATION);
+        desktopWindowManager.show(WindowType.COLLABORATORS);
     }
 
     @Override

@@ -34,7 +34,7 @@ import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.windows.AboutApplicationWindow;
 import org.iplantc.de.desktop.client.views.windows.AppEditorWindow;
 import org.iplantc.de.desktop.client.views.windows.AppLaunchWindow;
-import org.iplantc.de.desktop.client.views.windows.CollaborationWindow;
+import org.iplantc.de.desktop.client.views.windows.CollaboratorsWindow;
 import org.iplantc.de.desktop.client.views.windows.DEAppsWindow;
 import org.iplantc.de.desktop.client.views.windows.DeDiskResourceWindow;
 import org.iplantc.de.desktop.client.views.windows.FileViewerWindow;
@@ -199,6 +199,6 @@ public class DEGinModule extends AbstractGinModule {
         bind(NotificationWindow.class);
         bind(PipelineEditorWindow.class);
         bind(SimpleDownloadWindow.class);
-        bind(CollaborationWindow.class);
+        bind(CollaboratorsWindow.class);
     }
 }

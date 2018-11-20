@@ -13,7 +13,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.gin.CollaborationViewFactory;
-import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CollaboratorsWindowConfig;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.gwt.user.client.ui.HasOneWidget;

@@ -13,6 +13,6 @@ public abstract class GroupsCallback<T> implements DECallback<T> {
 
     @Override
     public List<WindowType> getWindowTypes() {
-        return Lists.newArrayList(WindowType.COLLABORATION);
+        return Lists.newArrayList(WindowType.COLLABORATORS);
     }
 }

@@ -38,8 +38,8 @@ public class ConfigFactory {
         return awc.as();
     }
 
-    public static CollaborationWindowConfig collaborationWindowConfig() {
-        AutoBean<CollaborationWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig());
+    public static CollaboratorsWindowConfig collaboratorsWindowConfig() {
+        AutoBean<CollaboratorsWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATORS, factory.collaboratorsWindowConfig());
         applyTag("Collab", collabWindowConfig);
         return collabWindowConfig.as();
     }
@@ -192,8 +192,8 @@ public class ConfigFactory {
                 config = simpleDownloadWindowConfig();
                 break;
 
-            case COLLABORATION:
-                config = collaborationWindowConfig();
+            case COLLABORATORS:
+                config = collaboratorsWindowConfig();
                 break;
 
             case APP_INTEGRATION:
@@ -274,9 +274,9 @@ public class ConfigFactory {
                                               ManageToolsWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
-            case COLLABORATION:
+            case COLLABORATORS:
                 config = AutoBeanCodex.decode(factory,
-                                              CollaborationWindowConfig.class,
+                                              CollaboratorsWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
         }

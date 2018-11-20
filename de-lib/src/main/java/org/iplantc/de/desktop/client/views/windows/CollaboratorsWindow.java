@@ -1,10 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.WindowType;
-import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.widgets.ContextualHelpToolButton;
@@ -19,14 +17,14 @@ import com.sencha.gxt.core.shared.FastMap;
 /**
  * @author jstroot
  */
-public class CollaborationWindow extends WindowBase {
+public class CollaboratorsWindow extends WindowBase {
 
     public static final String COLLABORATION = "#collaboration";
     private final ManageCollaboratorsView.Presenter presenter;
     private ManageCollaboratorsView.Appearance appearance;
 
     @Inject
-    CollaborationWindow(final ManageCollaboratorsView.Presenter presenter,
+    CollaboratorsWindow(final ManageCollaboratorsView.Presenter presenter,
                         ManageCollaboratorsView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
@@ -49,13 +47,13 @@ public class CollaborationWindow extends WindowBase {
         presenter.go();
         add(presenter.getView());
 
-        ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
+        ensureDebugId(DeModule.WindowIds.COLLABORATORS_WINDOW);
     }
 
 
     @Override
     public WindowConfig getWindowConfig() {
-        return ConfigFactory.collaborationWindowConfig();
+        return ConfigFactory.collaboratorsWindowConfig();
     }
 
     @Override
@@ -68,7 +66,7 @@ public class CollaborationWindow extends WindowBase {
 
     @Override
     public String getWindowType() {
-        return WindowType.COLLABORATION.toString();
+        return WindowType.COLLABORATORS.toString();
     }
 
     @Override
