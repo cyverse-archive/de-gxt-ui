@@ -22,11 +22,11 @@ import com.sencha.gxt.core.shared.FastMap;
 public class CollaborationWindow extends WindowBase {
 
     public static final String COLLABORATION = "#collaboration";
-    private final CollaborationView.Presenter presenter;
+    private final ManageCollaboratorsView.Presenter presenter;
     private ManageCollaboratorsView.Appearance appearance;
 
     @Inject
-    CollaborationWindow(final CollaborationView.Presenter presenter,
+    CollaborationWindow(final ManageCollaboratorsView.Presenter presenter,
                         ManageCollaboratorsView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
@@ -46,8 +46,8 @@ public class CollaborationWindow extends WindowBase {
                                               final String tag,
                                               final boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
-        final CollaborationWindowConfig collabWindowConfig = (CollaborationWindowConfig)windowConfig;
-        presenter.go(this, collabWindowConfig);
+        presenter.go();
+        add(presenter.getView());
 
         ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
     }

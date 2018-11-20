@@ -180,6 +180,12 @@ public interface ManageCollaboratorsView extends IsWidget,
          * @return
          */
         CollaborationView.TAB getTabType();
+
+        /**
+         * Sets the view's debug ID
+         * @param baseID
+         */
+        void setViewDebugId(String baseID);
     }
 
     /**
