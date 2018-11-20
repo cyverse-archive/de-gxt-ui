@@ -167,6 +167,18 @@ public interface TeamsView extends IsWidget,
         String creatorColumnLabel();
 
         SafeHtml editTeamHelpText();
+
+        String teamsHelp();
+
+        int windowMinWidth();
+
+        int windowMinHeight();
+
+        String windowHeading();
+
+        String windowWidth();
+
+        String windowHeight();
     }
 
     /**
@@ -196,6 +208,12 @@ public interface TeamsView extends IsWidget,
          * @return
          */
         List<Group> getSelectedTeams();
+
+        /**
+         * Set the base ID for the view
+         * @param baseID
+         */
+        void setViewDebugId(String baseID);
     }
 
     /**

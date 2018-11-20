@@ -44,6 +44,12 @@ public class ConfigFactory {
         return collabWindowConfig.as();
     }
 
+    public static TeamsWindowConfig teamsWindowConfig() {
+        AutoBean<TeamsWindowConfig> teamsWindowConfig = applyWindowType(WindowType.TEAMS, factory.teamsWindowConfig());
+        applyTag("Teams", teamsWindowConfig);
+        return teamsWindowConfig.as();
+    }
+
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
         AutoBean<AppsIntegrationWindowConfig> aiwc = applyWindowType(WindowType.APP_INTEGRATION,
                 factory.appsIntegrationWindowConfig());
@@ -196,6 +202,9 @@ public class ConfigFactory {
                 config = collaboratorsWindowConfig();
                 break;
 
+            case TEAMS:
+                config = teamsWindowConfig();
+
             case APP_INTEGRATION:
             case APP_WIZARD:
             case FILE_VIEWER:
@@ -277,6 +286,12 @@ public class ConfigFactory {
             case COLLABORATORS:
                 config = AutoBeanCodex.decode(factory,
                                               CollaboratorsWindowConfig.class,
+                                              wc.getWindowConfig()).as();
+                break;
+
+            case TEAMS:
+                config = AutoBeanCodex.decode(factory,
+                                              TeamsWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
         }

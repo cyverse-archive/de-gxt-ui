@@ -10,6 +10,7 @@ import org.iplantc.de.desktop.client.views.windows.CollaboratorsWindow;
 import org.iplantc.de.desktop.client.views.windows.DEAppsWindow;
 import org.iplantc.de.desktop.client.views.windows.DeDiskResourceWindow;
 import org.iplantc.de.desktop.client.views.windows.FileViewerWindow;
+import org.iplantc.de.desktop.client.views.windows.TeamsWindow;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.client.views.windows.ManageToolsWindow;
 import org.iplantc.de.desktop.client.views.windows.MyAnalysesWindow;
@@ -41,6 +42,7 @@ public class WindowFactory {
     @Inject AsyncProviderWrapper<PipelineEditorWindow> pipelineEditorWindowAsyncProvider;
     @Inject AsyncProviderWrapper<ManageToolsWindow> ManageToolsWindowAsyncProvider;
     @Inject AsyncProviderWrapper<CollaboratorsWindow> collaboratorsWindowAsyncProvider;
+    @Inject AsyncProviderWrapper<TeamsWindow> teamsWindowAsyncProvider;
 
     @Inject
     WindowFactory() { }
@@ -93,6 +95,8 @@ public class WindowFactory {
             case COLLABORATORS:
                 ret = collaboratorsWindowAsyncProvider;
                 break;
+            case TEAMS:
+                ret = teamsWindowAsyncProvider;
             default:
                 break;
         }

@@ -396,4 +396,34 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public SafeHtml editTeamHelpText() {
         return displayStrings.editTeamHelpText();
     }
+
+    @Override
+    public String teamsHelp() {
+        return displayStrings.teamsHelp();
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 200;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 300;
+    }
+
+    @Override
+    public String windowHeading() {
+        return displayStrings.teamsMenu();
+    }
+
+    @Override
+    public String windowWidth() {
+        return "600px";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "400px";
+    }
 }
