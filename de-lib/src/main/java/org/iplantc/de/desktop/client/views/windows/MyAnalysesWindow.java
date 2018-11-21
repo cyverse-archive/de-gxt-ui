@@ -53,7 +53,7 @@ public class MyAnalysesWindow extends WindowBase {
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
-        presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
+        presenter.go(this);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {

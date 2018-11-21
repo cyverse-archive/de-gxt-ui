@@ -8,6 +8,8 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestList;
 import org.iplantc.de.shared.DECallback;
 
+import com.google.web.bindery.autobean.shared.Splittable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public interface AnalysisServiceFacade {
      * @param analysesToDelete the analyses to be deleted.
      * @param callback executed when RPC call completes.
      */
-    void deleteAnalyses(List<Analysis> analysesToDelete, DECallback<String> callback);
+    void deleteAnalyses(String[] analysesToDelete, DECallback<String> callback);
 
     /**
      * Renames an analysis.
@@ -40,10 +42,10 @@ public interface AnalysisServiceFacade {
     /**
      * Stop a currently running analysis
      * 
-     * @param analysis the analysis to be stopped.
+     * @param analysisId the analysis to be stopped.
      * @param callback executed when RPC call completes.
      */
-    void stopAnalysis(Analysis analysis, DECallback<String> callback, String status);
+    void stopAnalysis(String analysisId, DECallback<String> callback, String status);
 
     void getAnalysisParams(String analysis_id, DECallback<List<AnalysisParameter>> callback);
 

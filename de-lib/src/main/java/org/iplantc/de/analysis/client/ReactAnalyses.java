@@ -26,6 +26,7 @@ public class ReactAnalyses {
         public String name;
         public AnalysisParametersView.Presenter paramPresenter;
         public DiskResourceUtil diskResourceUtil;
+        public String baseDebugId;
     }
 }
 

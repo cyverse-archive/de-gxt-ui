@@ -113,4 +113,14 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.renameAnalysis();
     }
 
+    @Override
+    public String supportRequestFailed() {
+        return analysesMessages.supportRequestFailed();
+    }
+
+    @Override
+    public String supportRequestSuccess() {
+        return analysesMessages.supportRequestSuccess();
+    }
+
 }

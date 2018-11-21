@@ -20,6 +20,7 @@ import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -41,6 +42,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -209,9 +211,10 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
 
 
     @Override
-    public void deleteAnalyses(List<Analysis> analysesToBeDeleted, DECallback<String> callback) {
+    public void deleteAnalyses(String[] analysesToDelete, DECallback<String> callback) {
         String address = ANALYSES + "/shredder"; //$NON-NLS-1$ //$NON-NLS-2$
-        final Splittable stringIdListSplittable = diskResourceUtil.createStringIdListSplittable(analysesToBeDeleted);
+        final String jArr = JsonUtil.getInstance().buildJsonArrayString(Arrays.asList(analysesToDelete));
+        final Splittable stringIdListSplittable = StringQuoter.split(jArr);
         final Splittable payload = StringQuoter.createSplittable();
         stringIdListSplittable.assign(payload, "analyses");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
@@ -236,8 +239,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
 
     // TODO: Change status to use AnalysisExecutionStatus instead of a string
     @Override
-    public void stopAnalysis(Analysis analysis, DECallback<String> callback, String status) {
-        String address = ANALYSES + "/" + analysis.getId() + "/stop?job_status=" + status;
+    public void stopAnalysis(String analysisId, DECallback<String> callback, String status) {
+        String address = ANALYSES + "/" + analysisId + "/stop?job_status=" + status;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
 

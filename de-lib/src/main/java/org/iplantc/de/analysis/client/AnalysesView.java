@@ -23,23 +23,7 @@ import jsinterop.annotations.JsType;
  * @author sriram, jstroot
  */
 @JsType
-public interface AnalysesView extends IsWidget/*,
-                                      AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
-                                      AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
-                                      HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
-                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
-                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers,
-                                      RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
-                                      ShareAnalysisSelected.HasShareAnalysisSelectedHandlers,
-                                      RenameAnalysisSelected.HasRenameAnalysisSelectedHandlers,
-                                      GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
-                                      DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
-                                      CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
-                                      CompleteAnalysisSelected.HasCompleteAnalysisSelectedHandlers,
-                                      ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
-                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
-                                      InteractiveIconClicked.HasInteractiveIconClickedHandlers {
-                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers */ {
+public interface AnalysesView extends IsWidget {
     interface Appearance {
 
         String appName();
@@ -162,9 +146,6 @@ public interface AnalysesView extends IsWidget/*,
     @JsType
     interface Presenter {
 
-        @JsIgnore
-        void onShareSupportSelected(List<Analysis> currentSelection, boolean shareInputs);
-
         interface Appearance {
 
             String analysesRetrievalFailure();
@@ -202,13 +183,17 @@ public interface AnalysesView extends IsWidget/*,
             String rename();
 
             String renameAnalysis();
+
+            String supportRequestFailed();
+
+            String supportRequestSuccess();
         }
 
         @JsIgnore
         List<Analysis> getSelectedAnalyses();
 
         @JsIgnore
-        void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
+        void go(final HasOneWidget container, String baseDebugId);
 
         @JsIgnore
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
@@ -246,13 +231,14 @@ public interface AnalysesView extends IsWidget/*,
 
         void onAnalysisAppSelected(String analysisId, String systemId, String appId);
 
-        void onCancelAnalysisSelected(Splittable analysis,
+        void onCancelAnalysisSelected(String analysisId,
+                                      String analysisName,
                                       ReactSuccessCallback callback,
                                       ReactErrorCallback errorCallback);
 
         void onShareAnalysisSelected(Splittable[] analysisList);
 
-        void deleteAnalyses(Splittable[] analysesToDelete,
+        void deleteAnalyses(String[] analysesToDelete,
                             ReactSuccessCallback callback,
                             ReactErrorCallback errorCallback);
 
@@ -265,13 +251,14 @@ public interface AnalysesView extends IsWidget/*,
                                        ReactSuccessCallback callback,
                                        ReactErrorCallback errorCallback);
 
-        void onCompleteAnalysisSelected(Splittable selected,
-                                        ReactSuccessCallback callback,
-                                        ReactErrorCallback errorCallback);
+        public void onCompleteAnalysisSelected(String analysisId,
+                                               String analysisName,
+                                               ReactSuccessCallback callback,
+                                               ReactErrorCallback errorCallback);
 
     }
 
-    void setPresenter(Presenter presenter);
+    void setPresenter(Presenter presenter, String baseDebugId);
 
     void load();
 }

@@ -4,11 +4,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
-import org.iplantc.de.analysis.client.views.AnalysisStepsView;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.AppTypeFilter;
@@ -66,21 +62,21 @@ import java.util.List;
 public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
-        private final Analysis ae;
+        private final String analysisName;
         final ReactSuccessCallback callback;
         final ReactErrorCallback errorCallback;
 
-        public CompleteAnalysisServiceCallback(final Analysis ae,
+        public CompleteAnalysisServiceCallback(final String analysisName,
                                                final ReactSuccessCallback callback,
                                                final ReactErrorCallback errorCallback) {
-            this.ae = ae;
+            this.analysisName = analysisName;
             this.callback = callback;
             this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(ae.getName()));
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(analysisName));
             announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
             if (errorCallback != null) {
                 errorCallback.onError(statusCode, caught.getMessage());
@@ -89,7 +85,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
         @Override
         public void onSuccess(String result) {
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(ae.getName()));
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(analysisName));
             announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
             if (callback != null) {
                 callback.onSuccess(null);
@@ -107,16 +103,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Inject
     AnalysesView.Presenter.Appearance appearance;
     @Inject
-    AnalysisStepsView analysisStepView;
-    @Inject
     AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
-    @Inject
-    AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
-    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
-    @Inject AsyncProviderWrapper<AnalysisParametersDialog> analysisParametersDialogAsyncProvider;
 
-    @Inject
-    AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
     @Inject
     DEProperties deProperties;
     @Inject
@@ -186,11 +174,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void onShareSupportSelected(List<Analysis> currentSelection, boolean shareWithInput) {
-
-    }
-
-    @Override
     public void onShareAnalysisSelected(Splittable[] analysisList) {
         ArrayList<Analysis> selected = new ArrayList<>();
         for(Splittable sp: analysisList) {
@@ -211,41 +194,35 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void onCancelAnalysisSelected(Splittable selected,
+    public void onCancelAnalysisSelected(String analysisId,
+                                         String analysisName,
                                          ReactSuccessCallback callback,
                                          ReactErrorCallback errorCallback) {
 
 
-        Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, selected).as();
-        analysisService.stopAnalysis(analysis,
-                                     new CancelAnalysisServiceCallback(analysis,
+        analysisService.stopAnalysis(analysisId,
+                                     new CancelAnalysisServiceCallback(analysisName,
                                                                        callback,
                                                                        errorCallback),
                                      "Canceled");
     }
 
     @Override
-    public void onCompleteAnalysisSelected(Splittable selected,
+    public void onCompleteAnalysisSelected(String analysisId,
+                                           String analysisName,
                                            ReactSuccessCallback callback,
                                            ReactErrorCallback errorCallback) {
-        Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, selected).as();
-        analysisService.stopAnalysis(analysis,
-                                     new CompleteAnalysisServiceCallback(analysis,
+        analysisService.stopAnalysis(analysisId, new CompleteAnalysisServiceCallback(analysisName,
                                                                          callback,
                                                                          errorCallback),
                                      "Completed");
     }
 
     @Override
-    public void deleteAnalyses(Splittable[] analysesToDelete,
+    public void deleteAnalyses(String[] analysesToDelete,
                                ReactSuccessCallback callback,
                                ReactErrorCallback errorCallback) {
-        ArrayList<Analysis> selected = new ArrayList<>();
-        for (Splittable sp : analysesToDelete) {
-            Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, sp).as();
-            selected.add(analysis);
-        }
-        analysisService.deleteAnalyses(selected, new AnalysisCallback<String>() {
+        analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -280,8 +257,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void go(final HasOneWidget container, final List<Analysis> selectedAnalyses) {
-        view.setPresenter(this);
+    public void go(final HasOneWidget container, String baseDebugId) {
+        view.setPresenter(this, baseDebugId);
         container.setWidget(view);
         view.load();
     }
@@ -292,14 +269,14 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
-        private final Analysis ae;
+        private final String analysisName;
         private final ReactSuccessCallback callback;
         private final ReactErrorCallback errorCallback;
 
-        public CancelAnalysisServiceCallback(final Analysis ae,
+        public CancelAnalysisServiceCallback(final String analysisName,
                                              final ReactSuccessCallback callback,
                                              final ReactErrorCallback errorCallback) {
-            this.ae = ae;
+            this.analysisName = analysisName;
             this.callback = callback;
             this.errorCallback = errorCallback;
         }
@@ -310,7 +287,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
              * JDS Send generic error message. In the future, the "error_code" string should be parsed
              * from the JSON to provide more detailed user feedback.
              */
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(ae.getName()));
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(analysisName));
             announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
             if (errorCallback != null) {
                 errorCallback.onError(statusCode, caught.getMessage());
@@ -319,7 +296,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
         @Override
         public void onSuccess(String result) {
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(ae.getName()));
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(analysisName));
             announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
             if (callback != null) {
                 callback.onSuccess(null);
@@ -356,7 +333,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                                String newName,
                                ReactSuccessCallback callback,
                                ReactErrorCallback errorCallback) {
-        analysisService.renameAnalysis(analysisId, newName, new AnalysisCallback() {
+        analysisService.renameAnalysis(analysisId, newName, new AnalysisCallback<Void>() {
 
             @Override
             public void onFailure(Integer statusCode,
@@ -371,7 +348,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             }
 
             @Override
-            public void onSuccess(Object result) {
+            public void onSuccess(Void result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.analysisRenameSuccess(),
                                                                  true,
                                                                  5000));
@@ -392,7 +369,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                                        String comment,
                                        ReactSuccessCallback callback,
                                        ReactErrorCallback errorCallback) {
-        analysisService.updateAnalysisComments(id, comment, new AnalysisCallback() {
+        analysisService.updateAnalysisComments(id, comment, new AnalysisCallback<Void>() {
 
             @Override
             public void onFailure(Integer statusCode,
@@ -407,7 +384,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             }
 
             @Override
-            public void onSuccess(Object result) {
+            public void onSuccess(Void result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.analysisCommentUpdateSuccess(),
                                                                  true,
                                                                  5000));
@@ -531,13 +508,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 serviceFacade.submitSupportRequest(parent, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.supportRequestFailed()));
                         errorCallback.onError(HttpStatus.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                     }
 
                     @Override
                     public void onSuccess(Void result) {
-                        announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+                        announcer.schedule(new SuccessAnnouncementConfig(appearance.supportRequestSuccess()));
                         callback.onSuccess(null);
                     }
                 });
