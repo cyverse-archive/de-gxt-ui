@@ -33,8 +33,8 @@ class SearchField extends Component {
     handleChange(event) {
         const inputValue = event.target.value;
         if (inputValue === "") {
-            //handlekeypress on called on backspace. So when the search is field is cleared,
-            //parent components should be notified.
+            //handlekeypress on called on backspace. So when the search field is cleared,
+            //parent components is notified.
             this.setState({inputValue: inputValue}, this.handleSearch);
         } else {
             this.setState({inputValue: inputValue});
@@ -67,7 +67,9 @@ class SearchField extends Component {
     render() {
         let { inputValue } = this.state;
         let {
+            id,
             label,
+            placeholder,
             startAdornment,
             endAdornment,
             children,
@@ -77,7 +79,10 @@ class SearchField extends Component {
         return (
             <div>
                 <TextField
+                    id={id}
+                    variant="outlined"
                     label={label}
+                    placeholder={placeholder}
                     value={inputValue}
                     onKeyPress={this.handleKeyPress}
                     onChange={this.handleChange}
@@ -96,9 +101,10 @@ class SearchField extends Component {
 }
 
 SearchField.propTypes = {
+    id: PropTypes.any,
     handleSearch: PropTypes.func.isRequired,
     label: PropTypes.any,
-    helperText: PropTypes.any,
+    placeholder: PropTypes.any,
     startAdornment: PropTypes.object,
     endAdornment: PropTypes.object,
     keyPressTimer: PropTypes.number
