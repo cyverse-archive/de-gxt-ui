@@ -35,6 +35,7 @@ import intlData from "../messages";
 import exStyles from "../style";
 import LaunchIcon from "@material-ui/icons/Launch";
 import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
+import build from "../../util/DebugIDUtil";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -541,7 +542,7 @@ class AnalysesView extends Component {
         if (selectedAnalyses && selectedAnalyses.length > 0) {
             selectedAnalyses.forEach(function (analysis) {
                 let p = new Promise((resolve, reject) => {
-                    presenter.onCancelAnalysisSelected(analysis, () => {
+                    presenter.onCancelAnalysisSelected(analysis.id, analysis.name, () => {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
@@ -558,6 +559,7 @@ class AnalysesView extends Component {
                 })
                 .catch(error => {
                     this.setState({loading: false});
+                    this.fetchAnalyses();
                 });
         }
     }
@@ -571,7 +573,7 @@ class AnalysesView extends Component {
         if (selectedAnalyses && selectedAnalyses.length > 0) {
             selectedAnalyses.forEach(function (analysis) {
                 let p = new Promise((resolve, reject) => {
-                    presenter.onCompleteAnalysisSelected(analysis, () => {
+                    presenter.onCompleteAnalysisSelected(analysis.id, analysis.name, () => {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
@@ -588,6 +590,7 @@ class AnalysesView extends Component {
                 })
                 .catch(error => {
                     this.setState({loading: false});
+                    this.fetchAnalyses();
                 });
         }
     }
@@ -597,8 +600,7 @@ class AnalysesView extends Component {
     }
     handleDelete() {
         this.setState({loading: true, confirmDeleteDialogOpen: false});
-        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
-        this.props.presenter.deleteAnalyses(selectedAnalyses, () => {
+        this.props.presenter.deleteAnalyses(this.state.selected, () => {
                 this.setState({
                     loading: false,
                     selected: []
@@ -763,7 +765,7 @@ class AnalysesView extends Component {
     }
 
     render() {
-        const {classes, intl, presenter, name, email, username} = this.props;
+        const {classes, intl, presenter, name, email, username, baseDebugId} = this.props;
         const {
             rowsPerPage,
             page,
@@ -782,13 +784,16 @@ class AnalysesView extends Component {
             infoDialogOpen,
         } = this.state;
         const selectedAnalysis = this.findAnalysis(selected[0]);
+        const baseId = baseDebugId + ids.ANALYSES_VIEW;
+        const gridId = baseDebugId + ids.ANALYSES_VIEW + ids.GRID;
         return (
             <React.Fragment>
-                <div className={classes.container}>
+                <div id={baseId} className={classes.container}>
                     {this.state.loading &&
                     <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                     }
-                    <AnalysesToolbar selected={selected}
+                    <AnalysesToolbar baseDebugId={build(baseId, ids.TOOLBAR)}
+                                     selected={selected}
                                      handleGoToOutputFolder={this.handleGoToOutputFolder}
                                      handleViewParams={this.handleViewParams}
                                      handleRelaunch={this.handleRelaunch}
@@ -822,7 +827,7 @@ class AnalysesView extends Component {
                                 onRequestSort={this.handleRequestSort}
                                 rowCount={total}
                                 columnData={columnData}
-                                baseId="analysis"
+                                baseId={baseId}
                                 ids={ids}
                                 padding="none"
                             />
@@ -849,7 +854,8 @@ class AnalysesView extends Component {
                                                         id)}
                                                     checked={isSelected}/>
                                             </TableCell>
-                                            <TableCell padding="none">
+                                            <TableCell id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
+                                                       padding="none">
                                                 <AnalysisName classes={classes}
                                                               analysis={n}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
@@ -860,7 +866,8 @@ class AnalysesView extends Component {
                                             </TableCell>
                                             <TableCell className={classes.cellText}
                                                        padding="none">{user}</TableCell>
-                                            <TableCell className={classes.cellText}
+                                            <TableCell id={build(gridId, id + ids.APP_NAME_CELL)}
+                                                       className={classes.cellText}
                                                        padding="none">
                                                 <AppName analysis={n}
                                                          handleRelaunch={this.handleRelaunch}
@@ -878,13 +885,16 @@ class AnalysesView extends Component {
                                                         constants.LONG_DATE_FORMAT) :
                                                     getMessage("emptyValue")}
                                             </TableCell>
-                                            <TableCell padding="none">
+                                            <TableCell id={build(gridId, id + ids.SUPPORT_CELL)}
+                                                       adding="none">
                                                 <Status analysis={n}
                                                         onClick={() => this.statusClick(n)}
                                                         username={username}/>
                                             </TableCell>
-                                            <TableCell padding="none">
+                                            <TableCell padding="none"
+                                                       id={build(gridId, id + ids.ANALYSIS_DOT_MENU)}>
                                                 <DotMenu
+                                                    baseDebugId={build(gridId, id + ids.ANALYSIS_DOT_MENU)}
                                                     handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                     handleViewParams={this.handleViewParams}
                                                     handleRelaunch={this.handleRelaunch}
@@ -908,19 +918,17 @@ class AnalysesView extends Component {
                             </TableBody>
                         </Table>
                     </div>
-                    <div>
-                        <TablePagination
-                            colSpan={3}
-                            component="div"
-                            count={total}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onChangePage={this.handleChangePage}
-                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                            rowsPerPageOptions={[100, 500, 1000]}
-                        />
-                    </div>
+                    <TablePagination style={{height: 50}}
+                                     colSpan={3}
+                                     component="div"
+                                     count={total}
+                                     rowsPerPage={rowsPerPage}
+                                     page={page}
+                                     onChangePage={this.handleChangePage}
+                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                     ActionsComponent={TablePaginationActions}
+                                     rowsPerPageOptions={[100, 500, 1000]}
+                    />
                 </div>
                 {selectedAnalysis &&
                 <Prompt analysis={selectedAnalysis}

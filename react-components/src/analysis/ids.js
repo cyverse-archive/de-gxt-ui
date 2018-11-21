@@ -10,4 +10,32 @@ export default ({
     TYPE:"type",
     VALUE:"value",
     JOB_ID:"job_id",
+    ANALYSES_VIEW : ".analysesView",
+
+    MENUITEM_ANALYSES : ".analyses",
+    MENUITEM_GO_TO_FOLDER : "goToFolder",
+    MENUITEM_VIEW_PARAMS : "viewParams",
+    MENUITEM_VIEW_ANALYSES_INFO : "viewInfo",
+    MENUITEM_RELAUNCH : "relaunch",
+    MENUITEM_DELETE : "delete",
+    MENUITEM_CANCEL : "cancel",
+    MENUITEM_COMPLETE : ".complete",
+    MENUITEM_EDIT : "edit",
+    MENUITEM_RENAME : "rename",
+    MENUITEM_UPDATE_COMMENTS : "updateComments",
+    MENUITEM_SHARE_COLLAB : "sharecollab",
+    MENUITEM_SHARE_SUPPORT :"sharesupport",
+
+    VIEW_PARAMS : ".viewParamsView",
+
+    BUTTON_REFRESH : "refresh",
+
+    FIELD_SEARCH : "search",
+
+    ANALYSIS_DOT_MENU : ".dotMenu",
+    GRID : ".grid",
+    MENUBAR: "menuBar",
+    ANALYSIS_NAME_CELL : ".nameCell",
+    APP_NAME_CELL : ".appNameCell",
+    SUPPORT_CELL : ".supportCell",
 });

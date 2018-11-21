@@ -228,6 +228,7 @@ class AnalysesViewTest extends Component {
                           presenter={presenter}
                           email="abc@cyverse.org"
                           name="sriram srinivasan"
+                          baseDebugId="AnalysesWindow"
                           />
         );
     }

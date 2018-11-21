@@ -2,8 +2,8 @@ import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
     table: {
-        height: "70%",
-        width: "100%",
+        overflow: "auto",
+        height: "80%",
     },
     tableHead: {
         backgroundColor: "#e2e2e2",

@@ -40,6 +40,8 @@ var intlData = {
         "unExpectedOutput": "Analysis completed but I got unexpected output.",
         "outputConditionHeader": "Select Output condition:",
         "saveToFile": "Save to file",
+        "type": "App Type",
+        "permission": "Permission",
         "analysesExecDeleteWarning" : "This will remove the selected analyses and the parameters information associated with those analyses. Outputs can still be viewed in the Data window within the folder created by these analyses.",
 
 "shareDisclaimer": "<span style=\"overflow:auto;\">I agree to <a href=\"https://wiki.cyverse.org/wiki/x/KBfHAQ\" target=\"_blank\">share my analysis</a> details, output file(s) and logs with CyVerse Support. If you want any of the <a href=\"https://wiki.cyverse.org/wiki/x/XRfHAQ\" target=\"_blank\">Science Informaticians</a> to recuse themselves from assisting with this problem, please list their name(s) in comments.</span>",

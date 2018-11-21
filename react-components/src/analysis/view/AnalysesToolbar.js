@@ -8,7 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import exStyles from "../style";
 import ids from "../ids";
 import { withStyles } from "@material-ui/core/styles";
@@ -23,6 +23,9 @@ import AnalysesMenu from "./AnalysesMenu";
 import { injectIntl } from "react-intl";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import SearchField from "../../util/SearchField";
+import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
+import build from "../../util/DebugIDUtil";
 
 class AnalysesToolbar extends Component {
     constructor(props) {
@@ -44,10 +47,8 @@ class AnalysesToolbar extends Component {
 
     render() {
         const {classes, baseDebugId, intl} = this.props;
-        const baseId = baseDebugId + ids.TOOLBAR;
-
         const {anchorEl} = this.state;
-
+         const analysesMenuBaseId = build(baseDebugId, ids.MENUITEM_ANALYSES);
         return (
             <Toolbar className={classes.toolbar}>
                 <ToolbarGroup style={{paddingLeft: 0}}>
@@ -61,30 +62,35 @@ class AnalysesToolbar extends Component {
                         {getMessage("analyses")}
                     </Button>
                     <Menu
-                        id="simple-menu"
+                        id={analysesMenuBaseId}
                         style={{zIndex: 888887,}}
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={this.handleClose}>
-                        <AnalysesMenu handleClose={this.handleClose}
-                                      {...this.props}/>
+                        <AnalysesMenu
+                            handleClose={this.handleClose}
+                            {...this.props}/>
                     </Menu>
-                    <Button variant="raised"
-                            size="small"
-                            className={classes.toolbarButton}
-                            onClick={this.props.handleRefersh}>
+                    <Button
+                        id={build(baseDebugId, ids.BUTTON_REFRESH)}
+                        variant="raised"
+                        size="small"
+                        className={classes.toolbarButton}
+                        onClick={this.props.handleRefersh}>
                         <RefreshIcon className={classes.toolbarItemColor}/>
                         {getMessage("refresh")}
                     </Button>
                     <form autoComplete="off">
-                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
+                        <FormControl
+                            className={classes.toolbarMargins}
+                            style={{margin: 5}}>
+                            <InputLabel style={{paddingLeft: 5}}>{getMessage("permission")}</InputLabel>
                             <Select
                                 value={this.props.permFilter}
                                 onChange={(e) => this.props.onPermissionsFilterChange(e.target.value)}
-                                inputProps={{
-                                    name: 'perm-filter',
-                                    id: "sharingFilter",
-                                }}
+                                input={
+                                    <OutlinedInput name="permission" id="permission"/>
+                                }
                                 style={{minWidth: 200}}>
                                 <MenuItem
                                     value={permission.all}>{permission.all}</MenuItem>
@@ -94,14 +100,16 @@ class AnalysesToolbar extends Component {
                                     value={permission.theirs}>{permission.theirs}</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
+                        <FormControl
+                            className={classes.toolbarMargins}
+                            style={{margin: 5}}>
+                            <InputLabel style={{paddingLeft: 5}}>{getMessage("type")}</InputLabel>
                             <Select
                                 value={this.props.typeFilter}
                                 onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
-                                inputProps={{
-                                    name: 'apps-filter',
-                                    id: "appsFilter",
-                                }} style={{minWidth: 120}}>
+                                input={
+                                    <OutlinedInput name="type" id="appType"/>
+                                } style={{minWidth: 120}}>
                                 <MenuItem
                                     value={"All"}>{appType.all}</MenuItem>
                                 <MenuItem
@@ -114,8 +122,10 @@ class AnalysesToolbar extends Component {
                                     value={"OSG"}>{appType.osg}</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl className={classes.toolbarMargins} style={{paddingTop: 10}}>
-                            <SearchField handleSearch={this.props.onSearch} helperText="Search..."/>
+                        <FormControl className={classes.toolbarMargins} style={{margin: 5}}>
+                            <SearchField id={build(baseDebugId, ids.FIELD_SEARCH)}
+                                         handleSearch={this.props.onSearch}
+                                         placeholder={formatMessage(intl, "search")}/>
                         </FormControl>
 
                     </form>

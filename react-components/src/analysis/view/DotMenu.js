@@ -38,7 +38,6 @@ class DotMenu extends Component {
                     <MoreVertIcon/>
                 </IconButton>
                 <Menu
-                    id="dot-menu"
                     anchorEl={anchorEl}
                     open={open}
                     onClose={this.handleDotMenuClose}
