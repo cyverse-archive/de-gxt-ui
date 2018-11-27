@@ -78,21 +78,19 @@ class SearchField extends Component {
 
         return (
             <div>
-                <TextField
-                    id={id}
-                    variant="outlined"
-                    label={label}
-                    placeholder={placeholder}
-                    value={inputValue}
-                    onKeyPress={this.handleKeyPress}
-                    onChange={this.handleChange}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: startAdornment,
-                        endAdornment: endAdornment,
-                        className: classes.searchInput
-                    }}
-                >
+                <TextField id={id}
+                           variant="outlined"
+                           label={label}
+                           placeholder={placeholder}
+                           value={inputValue}
+                           onKeyPress={this.handleKeyPress}
+                           onChange={this.handleChange}
+                           InputProps={{
+                               disableUnderline: true,
+                               startAdornment: startAdornment,
+                               endAdornment: endAdornment,
+                               className: classes.searchInput
+                           }}>
                 </TextField>
                 {children}
             </div>

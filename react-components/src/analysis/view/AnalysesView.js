@@ -47,6 +47,7 @@ function AnalysisName(props) {
     const handleBatchIconClick = props.handleBatchIconClick;
     const interactiveUrls = props.analysis.interactive_urls;
     const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
+    const status = props.analysis.status;
 
     if (isBatch) {
         return (
@@ -56,7 +57,7 @@ function AnalysisName(props) {
                 <sup>{name}</sup>
             </span>
         );
-    } else if (interactiveUrls && interactiveUrls.length > 0) {
+    } else if (status === analysisStatus.RUNNING && interactiveUrls && interactiveUrls.length > 0) {
         return (
             <span className={className} onClick={handleGoToOutputFolder}>
                 <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
@@ -74,12 +75,12 @@ function AnalysisName(props) {
 }
 
 function AppName(props) {
-    let analysis = props.analysis;
-    let name = analysis.app_name;
-    let isDisabled = analysis.app_disabled;
-    let className = props.classes.analysisName;
-    let presenter = props.presenter;
-    let handleRelaunch = props.handleRelaunch;
+    const analysis = props.analysis;
+    const name = analysis.app_name;
+    const isDisabled = analysis.app_disabled;
+    const className = props.classes.analysisName;
+    const presenter = props.presenter;
+    const handleRelaunch = props.handleRelaunch;
 
     if (!isDisabled) {
         return (
@@ -109,14 +110,14 @@ function Status(props) {
 }
 
 function Prompt(props) {
-    let analysis = props.analysis;
-    let renameDialogOpen = props.renameDialogOpen;
-    let commentsDialogOpen = props.commentsDialogOpen;
-    let onRenameOkClicked = props.onRenameOkClicked;
-    let onRenameCancelClicked = props.onRenameCancelClicked;
-    let onCommentsOkClicked = props.onCommentsOkClicked;
-    let onCommentsCancelClicked = props.onCommentsCancelClicked;
-    let intl = props.intl;
+    const analysis = props.analysis;
+    const renameDialogOpen = props.renameDialogOpen;
+    const commentsDialogOpen = props.commentsDialogOpen;
+    const onRenameOkClicked = props.onRenameOkClicked;
+    const onRenameCancelClicked = props.onRenameCancelClicked;
+    const onCommentsOkClicked = props.onCommentsOkClicked;
+    const onCommentsCancelClicked = props.onCommentsCancelClicked;
+    const intl = props.intl;
 
     if (renameDialogOpen) {
         return (

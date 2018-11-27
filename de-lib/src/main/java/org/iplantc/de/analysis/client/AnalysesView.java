@@ -193,7 +193,9 @@ public interface AnalysesView extends IsWidget {
         List<Analysis> getSelectedAnalyses();
 
         @JsIgnore
-        void go(final HasOneWidget container, String baseDebugId);
+        void go(final HasOneWidget container,
+                String baseDebugId,
+                final List<Analysis> selectedAnalyses);
 
         @JsIgnore
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
@@ -258,7 +260,9 @@ public interface AnalysesView extends IsWidget {
 
     }
 
-    void setPresenter(Presenter presenter, String baseDebugId);
+    void setPresenter(Presenter presenter,
+                      String baseDebugId,
+                      List<Analysis> selectedAnalyses);
 
     void load();
 }

@@ -150,7 +150,7 @@ class AnalysesViewTest extends Component {
                 "app_name": "Word Count"
             }, {
                 "description": "",
-                "name": "Word_Count_analysis1",
+                "name": "Interactive_analysis1",
                 "can_share": true,
                 "username": "sriram@iplantcollaborative.org",
                 "app_id": "c7f05682-23c8-4182-b9a2-e09650a5f49b",
@@ -165,10 +165,11 @@ class AnalysesViewTest extends Component {
                 "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                 "notify": true,
                 "resultfolderid": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
-                "app_name": "Word Count"
+                "app_name": "Word Count",
+                "interactive_urls":["https://a60068256.cyverse.run"],
             }, {
                 "description": "",
-                "name": "Word_Count_analysis1",
+                "name": "Interactive_analysis2",
                 "can_share": true,
                 "username": "ipctest@iplantcollaborative.org",
                 "app_id": "c7f05682-23c8-4182-b9a2-e09650a5f49b",

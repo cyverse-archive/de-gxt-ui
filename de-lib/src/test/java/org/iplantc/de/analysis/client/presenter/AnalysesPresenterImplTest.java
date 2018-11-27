@@ -38,6 +38,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
@@ -218,9 +219,9 @@ public class AnalysesPresenterImplTest {
         HasOneWidget containerMock = mock(HasOneWidget.class);
 
         /** CALL METHOD UNDER TEST **/
-        spy.go(containerMock);
+        spy.go(containerMock,"baseId", analysisListMock);
 
-        verify(viewMock).setPresenter(spy);
+        verify(viewMock).setPresenter(spy, "baseId", analysisListMock);
         verify(viewMock).load();
     }
 
@@ -296,7 +297,6 @@ public class AnalysesPresenterImplTest {
                                                      analysisStepsCaptor.capture());
 
         analysisStepsCaptor.getValue().onSuccess(analysisStepsInfoMock);
-
     }
 
     @Test

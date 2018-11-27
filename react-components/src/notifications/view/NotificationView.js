@@ -236,6 +236,7 @@ class NotificationView extends Component {
                             columnData={columnData}
                             baseId={baseId}
                             ids={ids}
+                            padding="none"
                         />
                         <TableBody>
                             {data.map(n => {
@@ -248,15 +249,18 @@ class NotificationView extends Component {
                                               selected={isSelected}
                                               hover
                                               key={n.message.id}>
-                                        <TableCell padding="checkbox">
+                                        <TableCell padding="none">
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell>{notificationCategory[n.type.replace(/\s/g, "_").toLowerCase()]}</TableCell>
+                                        <TableCell padding="none">{notificationCategory[n.type.replace(
+                                            /\s/g,
+                                            "_").toLowerCase()]}</TableCell>
                                         <Message message={n.message}
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
+                                        <TableCell padding="none">{(n.message.timestamp) ?
+                                            moment(n.message.timestamp, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>
                                     </TableRow>

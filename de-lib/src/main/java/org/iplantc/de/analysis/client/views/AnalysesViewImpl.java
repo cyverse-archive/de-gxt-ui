@@ -4,12 +4,15 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.analysis.client.ReactAnalyses;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import java.util.List;
 
 /**
  * @author sriram, jstroot
@@ -37,7 +40,9 @@ public class AnalysesViewImpl implements AnalysesView {
     }
 
     @Override
-    public void setPresenter(Presenter presenter, String baseDebugId) {
+    public void setPresenter(Presenter presenter,
+                             String baseDebugId,
+                             List<Analysis> selectedAnalyses) {
         this.presenter = presenter;
         this.baseDebugId = baseDebugId;
     }

@@ -94,6 +94,44 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     }
 
+    private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
+        private final String analysisName;
+        private final ReactSuccessCallback callback;
+        private final ReactErrorCallback errorCallback;
+
+        public CancelAnalysisServiceCallback(final String analysisName,
+                                             final ReactSuccessCallback callback,
+                                             final ReactErrorCallback errorCallback) {
+            this.analysisName = analysisName;
+            this.callback = callback;
+            this.errorCallback = errorCallback;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode,
+                              Throwable caught) {
+            /*
+             * JDS Send generic error message. In the future, the "error_code" string should be parsed
+             * from the JSON to provide more detailed user feedback.
+             */
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(analysisName));
+            announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
+            if (errorCallback != null) {
+                errorCallback.onError(statusCode, caught.getMessage());
+            }
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(analysisName));
+            announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
+            if (callback != null) {
+                callback.onSuccess(null);
+            }
+        }
+
+    }
+
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
@@ -257,8 +295,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void go(final HasOneWidget container, String baseDebugId) {
-        view.setPresenter(this, baseDebugId);
+    public void go(final HasOneWidget container,
+                   String baseDebugId,
+                   List<Analysis> selectedAnalyses) {
+        view.setPresenter(this, baseDebugId, selectedAnalyses);
         container.setWidget(view);
         view.load();
     }
@@ -268,42 +308,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         //  view.setPermFilterInView(permFilter, typeFilter);
     }
 
-    private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
-        private final String analysisName;
-        private final ReactSuccessCallback callback;
-        private final ReactErrorCallback errorCallback;
-
-        public CancelAnalysisServiceCallback(final String analysisName,
-                                             final ReactSuccessCallback callback,
-                                             final ReactErrorCallback errorCallback) {
-            this.analysisName = analysisName;
-            this.callback = callback;
-            this.errorCallback = errorCallback;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-            /*
-             * JDS Send generic error message. In the future, the "error_code" string should be parsed
-             * from the JSON to provide more detailed user feedback.
-             */
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(analysisName));
-            announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
-            if (errorCallback != null) {
-                errorCallback.onError(statusCode, caught.getMessage());
-            }
-        }
-
-        @Override
-        public void onSuccess(String result) {
-            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(analysisName));
-            announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
-            if (callback != null) {
-                callback.onSuccess(null);
-            }
-        }
-
-    }
 
     @Override
     public AnalysisPermissionFilter getCurrentPermFilter() {
@@ -422,36 +426,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     }
 
-
-    private void shareWithSupport(Analysis selectedAnalysis,
-                                  final Splittable parent,
-                                  ReactSuccessCallback callback,
-                                  ReactErrorCallback errorCallback) {
-        AnalysisPermission ap = shareFactory.analysisPermission().as();
-        ap.setId(selectedAnalysis.getId());
-        ap.setPermission(PermissionValue.read.toString());
-        AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
-        SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-        sharingSubject.setSourceId("ldap");
-        sharingSubject.setId(deProperties.getSupportUser());
-        asr.setSubject(sharingSubject);
-        asr.setAnalysisPermissions(Arrays.asList(ap));
-        AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
-        listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));
-        analysisService.shareAnalyses(listRequest, new AnalysisCallback<String>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable exception) {
-                ErrorHandler.post(exception);
-                errorCallback.onError(statusCode, exception.getMessage());
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                emailSupport(parent, callback, errorCallback);
-            }
-        });
-    }
-
     @Override
     public void onUserSupportRequested(Splittable analysis,
                                        String comment,
@@ -521,4 +495,35 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             }
         });
     }
+
+    private void shareWithSupport(Analysis selectedAnalysis,
+                                  final Splittable parent,
+                                  ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
+        AnalysisPermission ap = shareFactory.analysisPermission().as();
+        ap.setId(selectedAnalysis.getId());
+        ap.setPermission(PermissionValue.read.toString());
+        AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
+        SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+        sharingSubject.setSourceId("ldap");
+        sharingSubject.setId(deProperties.getSupportUser());
+        asr.setSubject(sharingSubject);
+        asr.setAnalysisPermissions(Arrays.asList(ap));
+        AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
+        listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));
+        analysisService.shareAnalyses(listRequest, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                ErrorHandler.post(exception);
+                errorCallback.onError(statusCode, exception.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                emailSupport(parent, callback, errorCallback);
+            }
+        });
+    }
 }
+
