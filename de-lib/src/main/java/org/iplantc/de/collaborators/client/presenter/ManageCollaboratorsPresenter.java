@@ -474,11 +474,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public CollaborationView.TAB getTabType() {
-        return CollaborationView.TAB.Collaborators;
-    }
-
-    @Override
     public void onAddGroupSelected(AddGroupSelected event) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
             @Override
