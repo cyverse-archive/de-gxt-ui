@@ -27,15 +27,15 @@ import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CollaboratorsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.TeamsWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.ReactNotifications.DenyTeamProps;
 import org.iplantc.de.notifications.client.ReactNotifications.HistoryProps;
@@ -270,8 +270,7 @@ public class NotificationUtil {
                                                           new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
-                        CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
-                        window.setSelectedTab(CollaborationView.TAB.Teams);
+                        TeamsWindowConfig window = ConfigFactory.teamsWindowConfig();
                         eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     }
                     break;

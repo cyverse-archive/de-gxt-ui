@@ -38,10 +38,16 @@ public class ConfigFactory {
         return awc.as();
     }
 
-    public static CollaborationWindowConfig collaborationWindowConfig() {
-        AutoBean<CollaborationWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig());
+    public static CollaboratorsWindowConfig collaboratorsWindowConfig() {
+        AutoBean<CollaboratorsWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATORS, factory.collaboratorsWindowConfig());
         applyTag("Collab", collabWindowConfig);
         return collabWindowConfig.as();
+    }
+
+    public static TeamsWindowConfig teamsWindowConfig() {
+        AutoBean<TeamsWindowConfig> teamsWindowConfig = applyWindowType(WindowType.TEAMS, factory.teamsWindowConfig());
+        applyTag("Teams", teamsWindowConfig);
+        return teamsWindowConfig.as();
     }
 
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
@@ -192,9 +198,12 @@ public class ConfigFactory {
                 config = simpleDownloadWindowConfig();
                 break;
 
-            case COLLABORATION:
-                config = collaborationWindowConfig();
+            case COLLABORATORS:
+                config = collaboratorsWindowConfig();
                 break;
+
+            case TEAMS:
+                config = teamsWindowConfig();
 
             case APP_INTEGRATION:
             case APP_WIZARD:
@@ -274,9 +283,15 @@ public class ConfigFactory {
                                               ManageToolsWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
-            case COLLABORATION:
+            case COLLABORATORS:
                 config = AutoBeanCodex.decode(factory,
-                                              CollaborationWindowConfig.class,
+                                              CollaboratorsWindowConfig.class,
+                                              wc.getWindowConfig()).as();
+                break;
+
+            case TEAMS:
+                config = AutoBeanCodex.decode(factory,
+                                              TeamsWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
         }

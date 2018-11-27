@@ -135,6 +135,8 @@ public interface ManageCollaboratorsView extends IsWidget,
         int chooseCollaboratorsWidth();
 
         int chooseCollaboratorsHeight();
+
+        String collaborationHelp();
     }
 
     /**
@@ -176,10 +178,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         ManageCollaboratorsView getView();
 
         /**
-         * Returns the tab type that identifies this view in the Collaboration window
-         * @return
+         * Sets the view's debug ID
+         * @param baseID
          */
-        CollaborationView.TAB getTabType();
+        void setViewDebugId(String baseID);
     }
 
     /**

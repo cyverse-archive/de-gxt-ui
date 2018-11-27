@@ -90,12 +90,12 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public String collaborators() {
-        return displayStrings.collaborationWindowHeading();
+        return displayStrings.collaboratorsWindowHeading();
     }
 
     @Override
     public String collaboratorsHelp() {
-        return iplantContextualHelpStrings.collaboratorsHelp();
+        return displayStrings.collaboratorsHelp();
     }
 
     @Override
@@ -295,7 +295,7 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public String windowHeading() {
-        return displayStrings.collaborationWindowHeading();
+        return displayStrings.collaboratorsWindowHeading();
     }
 
     @Override
@@ -351,5 +351,10 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     @Override
     public int chooseCollaboratorsHeight() {
         return 400;
+    }
+
+    @Override
+    public String collaborationHelp() {
+        return iplantContextualHelpStrings.collaborationHelp();
     }
 }

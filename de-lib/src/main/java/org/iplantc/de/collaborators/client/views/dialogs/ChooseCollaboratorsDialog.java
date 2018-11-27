@@ -53,7 +53,7 @@ public class ChooseCollaboratorsDialog extends IPlantDialog {
     private void initDialog() {
         setPredefinedButtons(PredefinedButton.OK);
         setHeading(appearance.collaborators());
-        addHelp(new HTML(appearance.collaboratorsHelp()));
+        addHelp(new HTML(appearance.collaborationHelp()));
         setPixelSize(appearance.chooseCollaboratorsWidth(), appearance.chooseCollaboratorsHeight());
         addOkButtonHandler();
         setHideOnButtonClick(true);

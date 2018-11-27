@@ -49,7 +49,7 @@ public interface CollaboratorsDisplayStrings extends Messages {
 
     String membersAddedToGroupSuccess(String groupName, @PluralCount List<String> names);
 
-    String collaborationWindowHeading();
+    String collaboratorsWindowHeading();
 
     String retainPermissionsHeader();
 
@@ -58,4 +58,6 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String retainPermissionsBtn();
 
     String removePermissionsBtn();
+
+    String collaboratorsHelp();
 }

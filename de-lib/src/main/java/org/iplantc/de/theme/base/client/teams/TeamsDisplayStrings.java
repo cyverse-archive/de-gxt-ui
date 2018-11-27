@@ -97,4 +97,6 @@ public interface TeamsDisplayStrings extends Messages {
     String creatorColumnLabel();
 
     SafeHtml editTeamHelpText();
+
+    String teamsHelp();
 }

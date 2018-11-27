@@ -7,7 +7,6 @@ import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.gin.CollaborationViewFactory;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.common.collect.Lists;
@@ -38,18 +37,9 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
 
     @Override
     public void go(HasOneWidget container) {
-        go(container, null);
-        teamPresenter.showCheckBoxes();
-    }
-
-    @Override
-    public void go(HasOneWidget container, CollaborationWindowConfig windowConfig) {
-        if (windowConfig != null) {
-            view.setActiveTab(windowConfig.getSelectedTab());
-        }
         collabPresenter.go();
         teamPresenter.go();
-
+        teamPresenter.showCheckBoxes();
         container.setWidget(view);
     }
 

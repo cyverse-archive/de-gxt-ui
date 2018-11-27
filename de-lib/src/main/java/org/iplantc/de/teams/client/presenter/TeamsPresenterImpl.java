@@ -17,6 +17,7 @@ import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
+import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -89,6 +90,11 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     @Override
     public List<Group> getSelectedTeams() {
         return view.getSelectedTeams();
+    }
+
+    @Override
+    public void setViewDebugId(String baseID) {
+        view.asWidget().ensureDebugId(baseID + Teams.Ids.VIEW);
     }
 
     @Override

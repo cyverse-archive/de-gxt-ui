@@ -566,6 +566,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         return new CollaboratorDNDHandler(groupAppearance, this);
     }
 
+    @Override
     public void setViewDebugId(String viewDebugId) {
         view.asWidget().ensureDebugId(viewDebugId + CollaboratorsModule.Ids.VIEW);
     }

@@ -13,7 +13,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.gin.CollaborationViewFactory;
-import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CollaboratorsWindowConfig;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -69,19 +69,16 @@ public class CollaborationPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock);
 
-        verify(spy).go(eq(containerMock), eq(null));
+        verify(spy).go(eq(containerMock));
         verify(teamPresenterMock).showCheckBoxes();
     }
 
     @Test
     public void go1() {
         HasOneWidget containerMock = mock(HasOneWidget.class);
-        CollaborationWindowConfig windowConfigMock = mock(CollaborationWindowConfig.class);
-        when(windowConfigMock.getSelectedTab()).thenReturn(CollaborationView.TAB.Teams);
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(containerMock, windowConfigMock);
-        verify(viewMock).setActiveTab(eq(CollaborationView.TAB.Teams));
+        uut.go(containerMock);
         verify(collabPresenterMock).go();
         verify(teamPresenterMock).go();
 
