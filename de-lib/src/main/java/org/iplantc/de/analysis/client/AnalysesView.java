@@ -262,7 +262,7 @@ public interface AnalysesView extends IsWidget {
 
     void setPresenter(Presenter presenter,
                       String baseDebugId,
-                      List<Analysis> selectedAnalyses);
+                      Analysis selectedAnalysis);
 
     void load();
 }

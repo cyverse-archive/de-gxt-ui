@@ -46,7 +46,7 @@ class AnalysesToolbar extends Component {
 
 
     render() {
-        const {classes, baseDebugId, intl} = this.props;
+        const {classes, baseDebugId, intl, searchInputValue} = this.props;
         const {anchorEl} = this.state;
          const analysesMenuBaseId = build(baseDebugId, ids.MENUITEM_ANALYSES);
         return (
@@ -125,6 +125,7 @@ class AnalysesToolbar extends Component {
                         <FormControl className={classes.toolbarMargins} style={{margin: 5}}>
                             <SearchField id={build(baseDebugId, ids.FIELD_SEARCH)}
                                          handleSearch={this.props.onSearch}
+                                         value={searchInputValue}
                                          placeholder={formatMessage(intl, "search")}/>
                         </FormControl>
 

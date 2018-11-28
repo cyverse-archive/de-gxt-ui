@@ -196,12 +196,12 @@ class AnalysesView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'enddate',
-            permFilter: permission.all,
-            typeFilter: appType.all,
+            permFilter: this.props.permFilter,
+            typeFilter: this.props.appTypeFilter,
             parentId: "",
             nameFilter: "",
             appNameFilter: "",
-            idFilter: "",
+            idFilter: this.props.selectedAnalysisId,
             parameters: [],
             info: null,
             infoDialogOpen: false,
@@ -751,6 +751,7 @@ class AnalysesView extends Component {
                 permFilter: "",
                 typeFilter: "",
                 parentId: "",
+                idFilter:"",
                 nameFilter: searchText,
                 appNameFilter: searchText,
             }, () => this.fetchAnalyses());
@@ -766,7 +767,15 @@ class AnalysesView extends Component {
     }
 
     render() {
-        const {classes, intl, presenter, name, email, username, baseDebugId} = this.props;
+        const {
+            classes,
+            intl,
+            name,
+            email,
+            username,
+            baseDebugId,
+            selectedAnalysisName
+        } = this.props;
         const {
             rowsPerPage,
             page,
@@ -816,6 +825,7 @@ class AnalysesView extends Component {
                                      onPermissionsFilterChange={this.onPermissionsFilterChange}
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
+                                     searchInputValue={selectedAnalysisName}
                     />
                     <div className={classes.table}>
                         <Table>

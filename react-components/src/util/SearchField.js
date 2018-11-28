@@ -16,7 +16,7 @@ class SearchField extends Component {
         super(props);
 
         this.state = {
-            inputValue: ''
+            inputValue: this.props.value
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -30,10 +30,16 @@ class SearchField extends Component {
         this.keyPressTimer = null;
     }
 
+    componentDidUpdate(prevProps) {
+       if(this.props.value !== prevProps.value) {
+           this.setState({inputValue: this.props.value});
+       }
+    }
+
     handleChange(event) {
         const inputValue = event.target.value;
         if (inputValue === "") {
-            //handlekeypress on called on backspace. So when the search field is cleared,
+            //handlekeypress called on backspace. So when the search field is cleared,
             //parent components is notified.
             this.setState({inputValue: inputValue}, this.handleSearch);
         } else {
@@ -105,7 +111,8 @@ SearchField.propTypes = {
     placeholder: PropTypes.any,
     startAdornment: PropTypes.object,
     endAdornment: PropTypes.object,
-    keyPressTimer: PropTypes.number
+    keyPressTimer: PropTypes.number,
+    value: PropTypes.string,
 };
 
 SearchField.defaultProps = {

@@ -12,8 +12,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import java.util.List;
-
 /**
  * @author sriram, jstroot
  */
@@ -23,8 +21,8 @@ public class AnalysesViewImpl implements AnalysesView {
     Presenter presenter;
     AnalysisParametersView.Presenter paramPresenter;
     DiskResourceUtil diskResourceUtil;
-    private String baseDebugId;
-
+    String baseDebugId;
+    Analysis selectedAnalysis;
 
     @Inject
     AnalysesViewImpl(AnalysisParametersView.Presenter paramPresenter,
@@ -42,9 +40,10 @@ public class AnalysesViewImpl implements AnalysesView {
     @Override
     public void setPresenter(Presenter presenter,
                              String baseDebugId,
-                             List<Analysis> selectedAnalyses) {
+                             Analysis selectedAnalysis) {
         this.presenter = presenter;
         this.baseDebugId = baseDebugId;
+        this.selectedAnalysis = selectedAnalysis;
     }
 
     @Override
@@ -58,6 +57,17 @@ public class AnalysesViewImpl implements AnalysesView {
         props.paramPresenter = paramPresenter;
         props.diskResourceUtil = diskResourceUtil;
         props.baseDebugId = baseDebugId;
+        if (selectedAnalysis != null) {
+            props.selectedAnalysisId = selectedAnalysis.getId();
+            props.selectedAnalysisName = selectedAnalysis.getName();
+            props.permFilter="";
+            props.appTypeFilter="";
+        } else {
+            props.selectedAnalysisId = "";
+            props.selectedAnalysisName = "";
+            props.permFilter="All";
+            props.appTypeFilter="All";
+        }
         CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
     }
 }

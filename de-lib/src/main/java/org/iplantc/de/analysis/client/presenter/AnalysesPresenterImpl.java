@@ -298,7 +298,11 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
-        view.setPresenter(this, baseDebugId, selectedAnalyses);
+        if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
+            view.setPresenter(this, baseDebugId, selectedAnalyses.get(0));
+        } else {
+            view.setPresenter(this, baseDebugId, null);
+        }
         container.setWidget(view);
         view.load();
     }
