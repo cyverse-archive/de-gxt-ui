@@ -654,9 +654,9 @@ class AnalysesView extends Component {
     }
 
 
-    multiSelect = () => this.state.selected && (this.state.selected.length > 1) ? true : false;
+    isMultiSelect = () => this.state.selected && (this.state.selected.length > 1) ? true : false;
 
-    disabled = () => this.state.selected && (this.state.selected.length > 0) ? false : true;
+    isDisabled = () => this.state.selected && (this.state.selected.length > 0) ? false : true;
 
     isOwner() {
         let selection = this.state.selected;
@@ -695,7 +695,7 @@ class AnalysesView extends Component {
 
     shouldDisableCancel() {
         let selection = this.state.selected;
-        if (this.disabled(selection)) {
+        if (this.isDisabled(selection)) {
             return true;
         }
         for (let i = 0; i < selection.length; i++) {
@@ -736,12 +736,10 @@ class AnalysesView extends Component {
     }
 
     onPermissionsFilterChange(permFilterVal) {
-        console.log("filter=>" + permFilterVal);
         this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses());
     }
 
     onTypeFilterChange(typeFilterVal) {
-        console.log("filter=>" + typeFilterVal);
         this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses());
     }
 
@@ -759,6 +757,7 @@ class AnalysesView extends Component {
             this.setState({
                 permFilter: permission.all,
                 typeFilter: appType.all,
+                idFilter: "",
                 parentId: "",
                 nameFilter: "",
                 appNameFilter: "",
@@ -814,8 +813,8 @@ class AnalysesView extends Component {
                                      handleRename={this.handleRename}
                                      handleUpdateComments={this.handleUpdateComments}
                                      handleSaveAndComplete={this.handleSaveAndComplete}
-                                     disabled={this.disabled}
-                                     multiSelect={this.multiSelect}
+                                     isDisabled={this.isDisabled}
+                                     isMultiSelect={this.isMultiSelect}
                                      shouldDisableCancel={this.shouldDisableCancel}
                                      isOwner={this.isOwner}
                                      isSharable={this.isSharable}
@@ -915,8 +914,8 @@ class AnalysesView extends Component {
                                                     handleDeleteClick={this.handleDeleteClick}
                                                     handleRename={this.handleRename}
                                                     handleUpdateComments={this.handleUpdateComments}
-                                                    disabled={this.disabled}
-                                                    multiSelect={this.multiSelect}
+                                                    isDisabled={this.isDisabled}
+                                                    isMultiSelect={this.isMultiSelect}
                                                     shouldDisableCancel={this.shouldDisableCancel}
                                                     isOwner={this.isOwner}
                                                     isSharable={this.isSharable}

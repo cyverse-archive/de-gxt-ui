@@ -21,8 +21,8 @@ class AnalysesMenu extends Component {
     render() {
         const {
             onClick,
-            disabled,
-            multiSelect,
+            isDisabled,
+            isMultiSelect,
             shouldDisableCancel,
             isOwner,
             classes,
@@ -42,7 +42,7 @@ class AnalysesMenu extends Component {
         return (
             <React.Fragment>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_GO_TO_FOLDER)}
-                          disabled={disabled() || multiSelect()}
+                          disabled={isDisabled() || isMultiSelect()}
                           onClick={() => {
                               handleClose();
                               handleGoToOutputFolder();
@@ -52,7 +52,7 @@ class AnalysesMenu extends Component {
                     {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_VIEW_PARAMS)}
-                          disabled={disabled() || multiSelect()}
+                          disabled={isDisabled() || isMultiSelect()}
                           onClick={() => {
                               handleClose();
                               handleViewParams();
@@ -62,7 +62,7 @@ class AnalysesMenu extends Component {
                     {getMessage("viewParam")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_RELAUNCH)}
-                          disabled={disabled() || multiSelect()}
+                          disabled={isDisabled() || isMultiSelect()}
                           onClick={() => {
                               handleClose();
                               handleRelaunch();
@@ -72,7 +72,7 @@ class AnalysesMenu extends Component {
                     {getMessage("relaunch")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_VIEW_ANALYSES_INFO)}
-                          disabled={disabled() || multiSelect()}
+                          disabled={isDisabled() || isMultiSelect()}
                           onClick={() => {
                               handleClose();
                               handleViewInfo();
@@ -82,7 +82,7 @@ class AnalysesMenu extends Component {
                     {getMessage("analysisInfo")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_SHARE_COLLAB)}
-                          disabled={disabled() || !isOwner()}
+                          disabled={isDisabled() || !isOwner()}
                           onClick={()=> {
                               handleClose();
                               handleShare();
@@ -112,7 +112,7 @@ class AnalysesMenu extends Component {
                     {getMessage("cancel")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_DELETE)}
-                          disabled={disabled() || !isOwner()}
+                          disabled={isDisabled() || !isOwner()}
                           onClick={() => {
                               handleClose();
                               handleDeleteClick();
@@ -122,7 +122,7 @@ class AnalysesMenu extends Component {
                     {getMessage("delete")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_RENAME)}
-                          disabled={disabled() || multiSelect() || !isOwner()}
+                          disabled={isDisabled() || isMultiSelect() || !isOwner()}
                           onClick={() => {
                               handleClose();
                               handleRename();
@@ -132,7 +132,7 @@ class AnalysesMenu extends Component {
                     {getMessage("rename")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_UPDATE_COMMENTS)}
-                          disabled={disabled() || multiSelect() || !isOwner()}
+                          disabled={isDisabled() || isMultiSelect() || !isOwner()}
                           onClick={() => {
                               handleClose();
                               handleUpdateComments();
