@@ -12,7 +12,7 @@ class TaskbarTest extends Component {
         const windowConfigs = [{
             "tag": "0",
             "type": "DATA",
-            "windowTitle": "Data",
+            "windowTitle": "reuiytuirytiyreiutyireytireitiuertiuertretretretre",
             "minimized": false,
 
         },
