@@ -323,14 +323,12 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         hierarchyGridTarget.setAllowSelfAsSource(false);
         hierarchyGridTarget.addDragEnterHandler(communityToAppDND);
         hierarchyGridTarget.addDragMoveHandler(communityToAppDND);
-        hierarchyGridTarget.addDragEnterHandler(communityToAppDND);
         hierarchyGridTarget.addDropHandler(communityToAppDND);
 
         DropTarget communityGridTarget = new DropTarget(communityGridView.asWidget());
         communityGridTarget.setAllowSelfAsSource(false);
         communityGridTarget.addDragEnterHandler(communityToAppDND);
         communityGridTarget.addDragMoveHandler(communityToAppDND);
-        communityGridTarget.addDragEnterHandler(communityToAppDND);
         communityGridTarget.addDropHandler(communityToAppDND);
 
         DragSource hierarchyGridSource = new DragSource(hierarchyGridView.asWidget());
@@ -347,7 +345,6 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         communityTreeTarget.setAllowSelfAsSource(false);
         communityTreeTarget.addDragEnterHandler(appToCommunityDND);
         communityTreeTarget.addDragMoveHandler(appToCommunityDND);
-        communityTreeTarget.addDragEnterHandler(appToCommunityDND);
         communityTreeTarget.addDropHandler(appToCommunityDND);
     }
 }
