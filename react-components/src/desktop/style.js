@@ -224,7 +224,6 @@ export default {
         color: color.orange,
     },
     notificationMenu: {
-        zIndex: 888888,
         maxHeight: 650,
     },
     notification: {
