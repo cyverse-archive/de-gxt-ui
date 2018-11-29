@@ -8,10 +8,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  * @author jstroot
  */
 public interface AnalysesMessages extends Messages {
-    String analysesExecDeleteWarning();
-
-    String analysesMenuLbl();
-
     String analysesRetrievalFailure();
 
     SafeHtml analysisCommentUpdateFailed();
@@ -24,99 +20,28 @@ public interface AnalysesMessages extends Messages {
 
     String analysisStopSuccess(String name);
 
-    String appName();
-
-    String cancelAnalysis();
-
-    String completeAndSaveAnalysis();
+    String comments();
 
     String deleteAnalysisError();
 
-    String endDate();
-
-    String goToOutputFolder();
-
-    String gridEmptyText();
-
-    String importRequestSubmit(String name);
-
-    String noParameters();
-
-    String paramName();
-
-    String paramType();
-
-    String relaunchAnalysis();
-
-    String renameAnalysis();
-
-    String renameMenuItem();
-
-    String savingFileMask();
-
-    String searchFieldEmptyText();
-
-    String selectionCount(int count);
-
-    String showAll();
-
-    String startDate();
-
     String stopAnalysisError(String name);
 
-    String updateComments();
-
-    String viewParamLbl();
-
-    String viewParameters(String name);
-
     String analysisStepInfoError();
-
-    String viewAnalysisStepInfo();
-
-    String stepType();
-
-    String jobId();
-
-    String share();
-
-    String shareCollab();
-
-    String shareSupportMi();
-
-    String shareSupportConfirm();
-
-    String shareWithInput();
-
-    String shareOutputOnly();
-
-    String outputUnexpected();
-
-    String noOutput();
-
-    String selectCondition();
-
-    String comments();
-
-    String needHelp();
-
-    String submit();
-
-    String agreeToShare();
-
-    String disclaimer();
-
-    String termsOfSupport();
-
-    String supportRequestFailed();
-
-    String supportRequestSuccess();
 
     String userRequestingHelpSubject();
 
     String requestProcessing();
 
-    String stepInfoDialogHeader();
+    String analysesExecDeleteWarning();
 
-    String interactiveAnalysisTooltip();
+    String renameAnalysis();
+
+    String supportRequestFailed();
+
+    String supportRequestSuccess();
+
+    String viewParameters(String name);
+
+    String importRequestSubmit(String name);
 }
+

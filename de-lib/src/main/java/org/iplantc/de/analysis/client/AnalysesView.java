@@ -6,9 +6,7 @@ import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
-import org.iplantc.de.theme.base.client.analyses.AnalysesViewDefaultAppearance.AnalysisInfoStyle;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -24,123 +22,15 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public interface AnalysesView extends IsWidget {
+
     interface Appearance {
-
-        String appName();
-
-        String endDate();
-
-        String gridEmptyText();
-
-        String name();
-
-        String noParameters();
-
-        String pagingToolbarStyle();
-
-        String paramName();
-
-        String paramType();
-
-        String paramValue();
-
-        String retrieveParametersLoadingMask();
-
-        String searchFieldEmptyText();
-
-        String selectionCount(int count);
-
-        String startDate();
-
-        String status();
-
-        String goToOutputFolder();
-
-        ImageResource folderIcon();
-
-        String viewParamLbl();
-
-        ImageResource fileViewIcon();
-
-        String relaunchAnalysis();
-
-        ImageResource runIcon();
-
-        String cancelAnalysis();
-
-        String completeAndSaveAnalysis();
-
-        ImageResource deleteIcon();
-
-        String delete();
-
-        ImageResource completeIcon();
-
-        ImageResource cancelIcon();
-
-        String analysesMenuLbl();
-
-        String editMenuLbl();
-
-        String renameMenuItem();
-
-        ImageResource fileRenameIcon();
-
-        String updateComments();
-
-        ImageResource userCommentIcon();
-
-        String refresh();
-
-        ImageResource refreshIcon();
-
-        String showAll();
-
-        ImageResource arrow_undoIcon();
-
-        ImageResource saveIcon();
-
-        String saveAs();
-
-        String viewAnalysisStepInfo();
-
-        String stepType();
-
-        String jobId();
-
-        AnalysisInfoStyle css();
-
-        ImageResource shareIcon();
-
-        String share();
-
-        String shareCollab();
-
-        String shareSupport();
-
-        String shareSupportConfirm();
-
-        String shareWithInput();
-
-        String shareOutputOnly();
-
-        String stepInfoDialogHeader();
-
-        String stepInfoDialogWidth();
-
-        String stepInfoDialogHeight();
-
-        int dotMenuWidth();
-
-        String windowWidth();
-
-        String windowHeight();
-
         int windowMinWidth();
 
         int windowMinHeight();
 
-        int liveGridRowHeight();
+        String windowWidth();
+
+        String windowHeight();
     }
 
     @JsType
