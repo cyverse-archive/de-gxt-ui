@@ -131,8 +131,8 @@ export default {
     },
 
     notificationMenuPosition: {
-        top: '60px',
-        right: '150px',
+        top: '70px',
+        right: '130px',
         position: 'absolute',
     },
 
@@ -206,6 +206,9 @@ export default {
         width: '100%',
         bottom: 0,
         minHeight: 30,
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        display: 'inline-block',
         backgroundColor: color.lightGray,
     },
 
@@ -231,16 +234,22 @@ export default {
     },
 
     notificationMenu: {
-        width: 400,
+        zIndex: 888888,
         maxHeight: 650,
-
     },
     notification: {
         fontSize: 10,
+        padding: 10,
+        outline: 'none',
+        cursor: 'pointer',
+        wordwrap: 'break-word',
+        display: 'inline-block',
+        width: 300,
     },
     unSeenNotificationBackground: {
         backgroundColor: color.lightBlue,
         borderBottom: 1,
+        width: '100%',
     }
 
 };

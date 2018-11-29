@@ -40,8 +40,9 @@ function ErrorComponent(props) {
 }
 
 function NotificationFooter(props) {
+    const classes = props.classes;
     return (
-        <MenuItem onClick={props.onClick}>
+        <div className={classes.notification} onClick={props.onClick}>
             {(props.unSeenCount > 10) ?
                 <div>
                      <span id={build(ids.DESKTOP, ids.NEW_NOTIFICATIONS)}>
@@ -65,7 +66,7 @@ function NotificationFooter(props) {
                         text={getMessage("viewAllNotifi")}/>
                 </span>
             }
-        </MenuItem>
+        </div>
     );
 }
 
@@ -77,18 +78,19 @@ function Notification(props) {
     }
 
     return (
-        <span style={{outline: 'none'}}>
-                    <MenuItem
-                        id={notification.message.id}
-                        onClick={onClick}
-                        className={className}>
+        <React.Fragment>
+            <div id={notification.message.id}
+                 className={className}
+                 onClick={onClick}>
+                    <span>
                         {notification.message.text}
                         {notification.payload.access_url &&
                         <InteractiveAnalysisUrl notification={notification}/>
                         }
-                    </MenuItem>
-                    <Divider/>
-        </span>
+                    </span>
+            </div>
+            <Divider/>
+        </React.Fragment>
     );
 
 }
@@ -202,6 +204,7 @@ class Notifications extends Component {
                                         markAllAsSeen={this.props.markAllAsSeen}
                                         viewNewNotification={this.props.viewNewNotification}
                                         onClick={this.handleClose}
+                                        classes={classes}
                                         />
                     </Menu>
             </React.Fragment>
