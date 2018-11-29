@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.client.gin;
 
 import org.iplantc.de.admin.apps.client.gin.AdminAppsGinModule;
+import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesGinModule;
 import org.iplantc.de.admin.desktop.client.gin.BelphegorAppsGinModule;
 import org.iplantc.de.admin.desktop.client.ontologies.gin.OntologiesGinModule;
 import org.iplantc.de.admin.desktop.client.toolAdmin.gin.ToolAdminGinModule;
@@ -18,11 +19,12 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 
 /**
- * @author jstroot
+ * @author jstroot, aramsey
  */
 @GinModules({ BelphegorAppsGinModule.class,
               AdminAppsGinModule.class,
               OntologiesGinModule.class,
+              AdminCommunitiesGinModule.class,
               DiskResourceGinModule.class,
               CommonsGinModule.class,
               CollaboratorsGinModule.class,

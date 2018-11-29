@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.views;
 
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
+import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
 import org.iplantc.de.admin.desktop.client.permIdRequest.views.PermanentIdRequestView;
@@ -43,7 +44,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
 
     @UiField HtmlLayoutContainer northCon;
     @UiField DETabPanel deTabPanel;
-    @UiField SimpleContainer ontologiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
+    @UiField SimpleContainer ontologiesPanel, communitiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
             permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel;
     @UiField(provided = true) BelphegorViewAppearance appearance;
     private TextButton menuButton;
@@ -55,9 +56,11 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     private OntologiesView.Presenter ontologiesPresenter;
     private WorkshopAdminView.Presenter workshopAdminPresenter;
     private AdminAppStatsGridView.Presenter appStatsPresenter;
+    private AdminCommunitiesView.Presenter communitiesPresenter;
 
     @Inject
     public BelphegorViewImpl(final OntologiesView.Presenter ontologiesPresenter,
+                             final AdminCommunitiesView.Presenter communitiesPresenter,
                              final RefGenomeView.Presenter refGenPresenter,
                              final ToolRequestView.Presenter toolReqPresenter,
                              final ToolAdminView.Presenter toolAdminPresenter,
@@ -66,6 +69,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                              final WorkshopAdminView.Presenter workshopAdminPresenter,
                              final AdminAppStatsGridView.Presenter appStatsPresenter,
                              final BelphegorViewAppearance appearance) {
+        this.communitiesPresenter = communitiesPresenter;
         this.appearance = appearance;
         this.ontologiesPresenter = ontologiesPresenter;
         this.refGenPresenter = refGenPresenter;
@@ -78,6 +82,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
 
         initWidget(uiBinder.createAndBindUi(this));
         init(ontologiesPresenter,
+             communitiesPresenter,
              refGenPresenter,
              toolReqPresenter,
              toolAdminPresenter,
@@ -93,6 +98,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     }
 
     private void init(final OntologiesView.Presenter ontologiesPresenter,
+                      final AdminCommunitiesView.Presenter communitiesPresenter,
                       final RefGenomeView.Presenter refGenPresenter,
                       final ToolRequestView.Presenter toolReqPresenter,
                       final ToolAdminView.Presenter toolAdminPresenter,
@@ -103,6 +109,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         buildUserMenu();
 
         ontologiesPresenter.go(ontologiesPanel);
+        communitiesPresenter.go(communitiesPanel);
         refGenPresenter.go(refGenomePanel);
         toolReqPresenter.go(toolRequestPanel);
         toolAdminPresenter.go(toolAdminPanel);

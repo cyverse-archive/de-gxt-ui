@@ -32,6 +32,10 @@
              type="com.sencha.gxt.widget.core.client.TabItemConfig">
         <ui:attributes text="{appearance.ontologies}"/>
     </ui:with>
+    <ui:with field="communitiesTabConfig"
+             type="com.sencha.gxt.widget.core.client.TabItemConfig">
+        <ui:attributes text="{appearance.communities}"/>
+    </ui:with>
     <ui:with field="statsTabConfig"
              type="com.sencha.gxt.widget.core.client.TabItemConfig" >
         <ui:attributes text="{appearance.appStats}"/>
@@ -70,6 +74,9 @@
                 <de:DETabPanel ui:field="deTabPanel">
                     <de:child config="{ontologiesTabConfig}">
                         <con:SimpleContainer ui:field="ontologiesPanel"/>
+                    </de:child>
+                    <de:child config="{communitiesTabConfig}">
+                        <con:SimpleContainer ui:field="communitiesPanel"/>
                     </de:child>
                     <de:child config="{statsTabConfig}">
                         <con:SimpleContainer ui:field="statsPanel"/>

@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.apps.client.views.grid;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
+import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.PreviewHierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.SelectOntologyVersionEvent;
@@ -99,6 +100,12 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
     @Override
     public void onPreviewHierarchySelected(PreviewHierarchySelectedEvent event) {
         setHeading(Joiner.on(" >> ").join(event.getPath()));
+    }
+
+
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
+        setHeading(event.getPath());
     }
 
     @Override

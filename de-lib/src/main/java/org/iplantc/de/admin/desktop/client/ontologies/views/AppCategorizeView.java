@@ -1,21 +1,22 @@
 package org.iplantc.de.admin.desktop.client.ontologies.views;
 
-import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
-
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
 
 /**
- * @author jstroot
+ * @author jstroot, aramsey
  */
-public interface AppCategorizeView extends IsWidget {
+public interface AppCategorizeView<T> extends IsWidget {
 
-    void setHierarchies(List<OntologyHierarchy> categories);
+    String HIERARCHIES = "hierarchies";
+    String COMMUNITIES = "communities";
 
-    List<OntologyHierarchy> getSelectedCategories();
+    void setItems(List<T> items);
 
-    void setSelectedHierarchies(List<OntologyHierarchy> categories);
+    List<T> getSelectedItems();
+
+    void setSelectedItems(List<T> items);
 
     void mask(String loadingMask);
 

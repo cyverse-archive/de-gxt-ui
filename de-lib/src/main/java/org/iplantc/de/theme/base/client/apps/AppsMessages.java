@@ -157,4 +157,20 @@ public interface AppsMessages extends Messages {
     String cannotPublish();
 
     String system();
+
+    String communities();
+
+    String chooseCommunities();
+
+    String publicSubmissionFormCommunities();
+
+    String communityName();
+
+    String communityAdmins();
+
+    String adminPrivilegesExplanation();
+
+    String failedToAddCommunityAdmin(String adminSubjectDisplayName, String communityName);
+
+    String failedToRemoveCommunityAdmin(String adminSubjectDisplayName, String communityName);
 }
