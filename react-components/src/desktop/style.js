@@ -131,8 +131,8 @@ export default {
     },
 
     notificationMenuPosition: {
-        top: '60px',
-        right: '150px',
+        top: '70px',
+        right: '130px',
         position: 'absolute',
     },
 
@@ -171,9 +171,13 @@ export default {
         color: '#fff',
         marginRight: 5,
         minHeight: 20,
-        width: 150,
+        width: '150px',
         fontSize: 10,
         textTransform: 'none',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        display: 'inline-block',
         borderRadius: 4,
         '&:hover': {
            backgroundColor: color.blue,
@@ -192,10 +196,14 @@ export default {
         color: '#fff',
         marginRight: 5,
         minHeight: 20,
-        width: 150,
+        width: '150px',
         fontSize: 10,
         borderRadius: 4,
         textTransform: 'none',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
         '&:hover': {
             backgroundColor: color.blue,
         },
@@ -206,6 +214,9 @@ export default {
         width: '100%',
         bottom: 0,
         minHeight: 30,
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        display: 'inline-block',
         backgroundColor: color.lightGray,
     },
 
@@ -231,16 +242,22 @@ export default {
     },
 
     notificationMenu: {
-        width: 400,
+        zIndex: 888888,
         maxHeight: 650,
-
     },
     notification: {
         fontSize: 10,
+        padding: 10,
+        outline: 'none',
+        cursor: 'pointer',
+        wordwrap: 'break-word',
+        display: 'inline-block',
+        width: 300,
     },
     unSeenNotificationBackground: {
         backgroundColor: color.lightBlue,
         borderBottom: 1,
+        width: '100%',
     }
 
 };

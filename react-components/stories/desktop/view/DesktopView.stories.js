@@ -64,7 +64,7 @@ class DesktopViewTest extends  Component {
                 "message": {
                     "id": "CB9C08F4-EC38-44F7-9342-1B85916A9029",
                     "timestamp": "1520448918196",
-                    "text": "Word_Count_analysis1 submitted"
+                    "text": "Word_Count_analysis1 submitted."
                 },
                 "seen": false,
                 "deleted": false
@@ -412,7 +412,7 @@ class DesktopViewTest extends  Component {
                 "message": {
                     "id": "9CBEB717-925A-4C38-B417-45A962327ED3",
                     "timestamp": "1524159931444",
-                    "text": "Word_Count_analysis1 completed"
+                    "text": "Word_Count_analysis1 completed.Word_Count_analysis1 completedWord_Count_analysis1 completedWord_Count_analysis1 completedWord_Count_analysis1 completed"
                 },
                 "seen": true,
                 "deleted": false

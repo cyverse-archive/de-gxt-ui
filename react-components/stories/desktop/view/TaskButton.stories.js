@@ -11,7 +11,7 @@ class TaskButtonTest extends Component {
         const windowConfig1 = {
             "tag": "0",
             "type": "DATA",
-            "windowTitle": "Data",
+            "windowTitle": "reuiytuirytiyreiutyireytireitiuertiuertretretretre",
             "minimized": false,
 
         };
