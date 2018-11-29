@@ -36,7 +36,6 @@ export default {
         right: 0,
         boxShadow: '-1px 0 4px 0 #777',
     },
-
     menuIcon: {
         height: '24px',
         width: '24px',
@@ -54,7 +53,6 @@ export default {
         },
         borderRadius: '10px',
     },
-
     logoContainer: {
         color: '#eee',
         fontSize: '1.1em',
@@ -65,8 +63,6 @@ export default {
         paddingLeft: '35px',
         verticalAlign: 'top',
     },
-
-
     logo: {
         backgroundImage: `url(${cyverseHeader})`,
         display: 'inline-block',
@@ -77,13 +73,11 @@ export default {
         backgroundSize: 30,
         backgroundRepeat: 'no-repeat',
     },
-
     userMenuContainer: {
         position: 'absolute',
         bottom: 0,
         right: '15px',
     },
-
     data: {
         height: '72px',
         width: '72px',
@@ -99,7 +93,6 @@ export default {
         borderRadius: '10px',
 
     },
-
     apps: {
         height: '72px',
         width: '72px',
@@ -114,7 +107,6 @@ export default {
         },
         borderRadius: '10px',
     },
-
     analyses: {
         height: '72px',
         width: '72px',
@@ -129,25 +121,21 @@ export default {
         },
         borderRadius: '10px',
     },
-
     notificationMenuPosition: {
         top: '70px',
         right: '130px',
         position: 'absolute',
     },
-
     userMenuPosition: {
         top: '70px',
         right: '120px',
         position: 'absolute',
     },
-
     helpMenuPosition: {
         top: '70px',
         right: '50px',
         position: 'absolute',
     },
-
     unSeenCount: {
         backgroundColor: color.orange,
         fontSize: '.625em',
@@ -184,7 +172,6 @@ export default {
            boxShadow: 'none',
         },
     },
-
     taskbarButtonMinimized: {
         backgroundImage: `url(${cyverseMini})`,
         backgroundSize: 20,
@@ -208,7 +195,6 @@ export default {
             backgroundColor: color.blue,
         },
     },
-
     taskbar: {
         position: 'absolute',
         width: '100%',
@@ -219,7 +205,6 @@ export default {
         display: 'inline-block',
         backgroundColor: color.lightGray,
     },
-
     errorRetryButton: {
         backgroundColor: color.orange,
         position: 'relative',
@@ -228,19 +213,16 @@ export default {
             backgroundColor: color.blue,
         },
     },
-
     notificationError: {
         marginBottom: 10,
         fontSize: 10
     },
-
     loadingStyle: {
         outline: 'none',
         position: 'absolute',
         left: 50,
         color: color.orange,
     },
-
     notificationMenu: {
         zIndex: 888888,
         maxHeight: 650,
