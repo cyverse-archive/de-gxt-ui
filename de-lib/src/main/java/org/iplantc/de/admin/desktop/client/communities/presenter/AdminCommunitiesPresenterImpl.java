@@ -450,7 +450,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
             @Override
             public void onSuccess(Group result) {
                 communityTreeStore.update(result);
-                communityTreeStore.applySort(true);
+                communityTreeStore.applySort(false);
                 view.selectCommunity(result);
                 view.unmaskCommunities();
             }

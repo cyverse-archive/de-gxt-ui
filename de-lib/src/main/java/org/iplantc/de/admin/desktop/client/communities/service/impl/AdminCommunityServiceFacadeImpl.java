@@ -61,7 +61,7 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
 
     @Override
     public void getCommunityApps(Group community, DECallback<List<App>> appListCallback) {
-        String address = ADMIN_APPS_COMMUNITIES + "/" + URL.encode(community.getDisplayName()) + "/apps";
+        String address = ADMIN_APPS_COMMUNITIES + "/" + URL.encodePathSegment(community.getDisplayName()) + "/apps";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(appListCallback) {
