@@ -1,6 +1,8 @@
 package org.iplantc.de.commons.client;
 
+import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.errorHandling.ServiceError;
+import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.views.dialogs.ErrorDialog;
 
@@ -11,6 +13,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.client.GXT;
 
@@ -49,8 +52,10 @@ public class ErrorHandler {
 
 
     private static final ErrorHandlerAppearance appearance;
+    private static final DiskResourceAutoBeanFactory factory;
     static {
         appearance = GWT.create(ErrorHandlerAppearance.class);
+        factory = GWT.create(DiskResourceAutoBeanFactory.class);
     }
 
     private static final String NEWLINE = "<br>"; //$NON-NLS-1$
@@ -241,6 +246,17 @@ public class ErrorHandler {
         String host = appearance.host() + ": " + GWT.getHostPageBaseURL();
 
         return gwtVersion + NEWLINE + gxtVersion + NEWLINE + userAgent + NEWLINE + date + NEWLINE + host;
+    }
+
+    public static String getServiceError(Throwable caught) {
+        try {
+            SimpleServiceError simpleServiceError =
+                    AutoBeanCodex.decode(factory, SimpleServiceError.class, caught.getMessage()).as();
+            return simpleServiceError.getErrorCode();
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
 }
