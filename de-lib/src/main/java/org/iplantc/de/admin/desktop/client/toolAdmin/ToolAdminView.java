@@ -223,6 +223,20 @@ public interface ToolAdminView extends IsWidget,
         String pidsLimit();
 
         String timeLimitEmptyText();
+
+        String interactive();
+
+        String maxCPUCoresLabel();
+
+        String minMemoryLimitLabel();
+
+        String minCPUCoresLabel();
+
+        String skipTmpMountLabel();
+
+        String minDiskSpaceLabel();
+
+        String osgImagePathLabel();
     }
 
     interface Presenter {

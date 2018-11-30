@@ -196,6 +196,14 @@ public interface Belphegor {
         String NAME_CELL = ".nameCell";
         String COL_HEADER = ".colHeader";
         String PIDS_LIMIT = ".pidsLimit";
+        String TOOL_INTERACTIVE_LABEL = ".interactiveLabel";
+        String TOOL_INTERACTIVE = ".interactive";
+        String MIN_MEM_LIMIT = ".minMemLimit";
+        String MAX_CPU_CORES = ".maxCPUCores";
+        String MIN_CPU_CORES = ".minCPUCores";
+        String SKIP_TMP_MOUNT = ".skipTmpMount";
+        String MIN_DISK_SPACE = ".minDiskSpace";
+        String OSG_IMAGE_PATH = ".osgImagePath";
     }
 
     interface WorkshopAdminIds {

@@ -92,6 +92,13 @@
             </form:FieldLabel>
         </container:child>
         <container:child layoutData="{layoutData}">
+            <form:FieldLabel ui:field="interactiveLabel" text="{appearance.interactive}">
+                <form:widget>
+                    <form:CheckBox ui:field="interactiveEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+        <container:child layoutData="{layoutData}">
             <d:ToolImplementationEditor ui:field="implementationEditor"/>
         </container:child>
         <container:child layoutData="{layoutData}">

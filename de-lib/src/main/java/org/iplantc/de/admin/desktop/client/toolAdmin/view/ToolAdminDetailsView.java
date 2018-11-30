@@ -40,18 +40,16 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
             GWT.create(ToolAdminDetailsWindowUiBinder.class);
 
     @UiField VerticalLayoutContainer layoutContainer;
-    @Ignore
-    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel;
+    @Ignore @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel, interactiveLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
     @UiField TextField typeEditor;
     @UiField TextField attributionEditor;
     @UiField TextField versionEditor;
     @UiField TextField locationEditor;
-    @UiField
-    CheckBox restrictedEditor;
-    @UiField
-    IntegerField timeLimitEditor;
+    @UiField CheckBox restrictedEditor;
+    @UiField CheckBox interactiveEditor;
+    @UiField IntegerField timeLimitEditor;
     @UiField (provided = true) ToolImplementationEditor implementationEditor;
     @UiField (provided = true) ToolContainerEditor containerEditor;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
@@ -97,6 +95,8 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
         typeLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_TYPE_LABEL);
         locationLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_LOCATION_LABEL);
         descriptionEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_DESCRIPTION);
+        interactiveLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_INTERACTIVE_LABEL);
+        interactiveEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_INTERACTIVE);
         nameEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_NAME);
         typeEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_TYPE);
         attributionEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_ATTRIBUTION);
