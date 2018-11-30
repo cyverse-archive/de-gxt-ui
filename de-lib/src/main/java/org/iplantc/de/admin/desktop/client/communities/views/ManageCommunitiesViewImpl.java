@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.communities.views;
 import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.events.AddCommunityAdminSelected;
 import org.iplantc.de.admin.desktop.client.communities.events.RemoveCommunityAdminSelected;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
@@ -138,5 +139,18 @@ public class ManageCommunitiesViewImpl extends Composite implements ManageCommun
     @Override
     public HandlerRegistration addRemoveCommunityAdminSelectedHandler(RemoveCommunityAdminSelected.RemoveCommunityAdminSelectedHandler handler) {
         return addHandler(handler, RemoveCommunityAdminSelected.TYPE);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        nameEditor.setId(baseID + Belphegor.CommunityIds.COMMUNITY_NAME);
+        descriptionEditor.setId(baseID + Belphegor.CommunityIds.DESCRIPTION);
+        String adminToolbarId = baseID + Belphegor.CommunityIds.TOOLBAR;
+        adminToolbar.ensureDebugId(adminToolbarId);
+        removeAdmin.ensureDebugId(adminToolbarId + Belphegor.CommunityIds.REMOVE_BTN);
+        adminSearch.asWidget().ensureDebugId(adminToolbarId + Belphegor.CommunityIds.USER_SEARCH);
+        adminGrid.ensureDebugId(baseID + Belphegor.CommunityIds.ADMIN_GRID);
     }
 }

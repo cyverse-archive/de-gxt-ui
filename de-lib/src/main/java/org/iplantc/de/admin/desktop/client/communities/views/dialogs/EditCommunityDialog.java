@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.communities.views.dialogs;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.communities.ManageCommunitiesView;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -49,6 +50,8 @@ public class EditCommunityDialog extends IPlantDialog {
             setHeading(appearance.addCommunity());
         }
         super.show();
+
+        ensureDebugId(Belphegor.CommunityIds.EDIT_COMMUNITY_DLG);
     }
 
     @Override
@@ -63,5 +66,14 @@ public class EditCommunityDialog extends IPlantDialog {
 
     public List<Subject> getSelectedAdmins() {
         return presenter.getCommunityAdmins();
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + Belphegor.CommunityIds.OK_BTN);
     }
 }

@@ -25,6 +25,8 @@ public interface Belphegor {
         String WORKSHOP_ADMIN_TAB = ".workshopAdminTab";
         String STATS_TAB = ".statsTab";
         String STATS = ".stats";
+        String COMMUNITIES_TAB = ".communitiesTab";
+        String COMMUNITIES = ".communities";
     }
 
     interface AppIds {
@@ -267,5 +269,27 @@ public interface Belphegor {
 
     interface CommunityIds {
         String VIEW = ".view";
+        String ADD_BTN = ".addBtn";
+        String DELETE_BTN = ".deleteBtn";
+        String EDIT_COMMUNITY_BTN = ".editCommunityBtn";
+        String CATEGORIZE_BTN = ".categorizeBtn";
+        String APP_SEARCH = ".appSearchField";
+        String COMMUNITIES_PANEL = ".communitiesPanel";
+        String COMMUNITY_TREE = ".communityTree";
+        String HIERARCHY_PANEL = ".hierarchyPanel";
+        String HIERARCHY_TREE = ".hierarchyTree";
+        String CATEGORIZE_DLG = "categorizeAppsDlg";
+        String DELETE_COMMUNITY_DLG = "deleteCommunityDlg";
+        String YES_BTN = ".yesBtn";
+        String NO_BTN = ".noBtn";
+        String EDIT_COMMUNITY_DLG = "editCommunityDlg";
+        String COMMUNITY_NAME = ".name";
+        String DESCRIPTION = ".description";
+        String TOOLBAR = ".toolbar";
+        String REMOVE_BTN = ".removeBtn";
+        String USER_SEARCH = ".userSearch";
+        String ADMIN_GRID = ".grid";
+        String RETAG_DLG = "retagAppsDlg";
+        String OK_BTN = ".okBtn";
     }
 }

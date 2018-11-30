@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.communities.views.dialogs;
 
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.ontologies.views.AppCategorizeView;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.groups.Group;
@@ -54,6 +55,8 @@ public class AppCommunityListEditorDialog extends IPlantDialog {
         categorizeView.unmask();
 
         super.show();
+
+        ensureDebugId(Belphegor.CommunityIds.CATEGORIZE_DLG);
     }
 
     public List<Group> getSelectedCommunities() {
