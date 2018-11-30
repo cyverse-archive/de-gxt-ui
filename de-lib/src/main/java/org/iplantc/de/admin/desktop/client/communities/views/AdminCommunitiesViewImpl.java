@@ -8,6 +8,7 @@ import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelection
 import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
@@ -196,6 +197,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         Group selectedCommunity = getSelectedCommunity();
         editCommunity.setEnabled(selectedCommunity != null);
         deleteButton.setEnabled(selectedCommunity != null);
+        categorize.setEnabled(targetApp != null);
     }
 
     @UiHandler("addButton")
@@ -275,6 +277,20 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
+
+        addButton.ensureDebugId(baseID + Belphegor.CommunityIds.ADD_BTN);
+        deleteButton.ensureDebugId(baseID + Belphegor.CommunityIds.DELETE_BTN);
+        editCommunity.ensureDebugId(baseID + Belphegor.CommunityIds.EDIT_COMMUNITY_BTN);
+        categorize.ensureDebugId(baseID + Belphegor.CommunityIds.CATEGORIZE_BTN);
+        appSearchField.ensureDebugId(baseID + Belphegor.CommunityIds.APP_SEARCH);
+        String communityPanelId = baseID + Belphegor.CommunityIds.COMMUNITIES_PANEL;
+        communityPanel.ensureDebugId(communityPanelId);
+        communityTree.ensureDebugId(communityPanelId + Belphegor.CommunityIds.COMMUNITY_TREE);
+        communityGridView.asWidget().ensureDebugId(communityPanelId);
+        String appsPanelId = baseID + Belphegor.CommunityIds.HIERARCHY_PANEL;
+        appsPanel.ensureDebugId(appsPanelId);
+        hierarchyTree.ensureDebugId(appsPanelId + Belphegor.CommunityIds.HIERARCHY_TREE);
+        hierarchyGridView.asWidget().ensureDebugId(appsPanelId);
     }
 
     @Override

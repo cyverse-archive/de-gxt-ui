@@ -46,4 +46,8 @@ public interface CommunityDisplayStrings extends Messages{
     String failedToAddCommunityAdmin(String adminName, String communityName);
 
     String searchEmptyText();
+
+    String retagAppsConfirmationTitle();
+
+    String retagAppsCommunityMessage(String name);
 }

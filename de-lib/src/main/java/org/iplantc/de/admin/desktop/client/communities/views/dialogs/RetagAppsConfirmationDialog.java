@@ -11,28 +11,29 @@ import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 /**
  * @author aramsey
  *
- * A dialog that is presented to admins to confirm they want to delete a community
+ * A dialog that is presented to admins to confirm they want to continue renaming a community and thus
+ * retag any apps currently tagged with the old community name
  */
-public class DeleteCommunityConfirmationDialog extends ConfirmMessageBox {
+public class RetagAppsConfirmationDialog extends ConfirmMessageBox {
 
     private AdminCommunitiesView.Appearance appearance;
 
     @Inject
-    public DeleteCommunityConfirmationDialog(AdminCommunitiesView.Appearance appearance) {
-        super(appearance.confirmDeleteCommunityTitle(), "");
+    public RetagAppsConfirmationDialog(AdminCommunitiesView.Appearance appearance) {
+        super(appearance.retagAppsConfirmationTitle(), "");
         this.appearance = appearance;
     }
 
-    public void show(Group selectedCommunity) {
-        setMessage(appearance.confirmDeleteCommunityMessage(selectedCommunity.getName()));
+    public void show(String oldCommunityName) {
+        setMessage(appearance.retagAppsCommunityMessage(oldCommunityName));
         super.show();
 
-        ensureDebugId(Belphegor.CommunityIds.DELETE_COMMUNITY_DLG);
+        ensureDebugId(Belphegor.CommunityIds.RETAG_DLG);
     }
 
     @Override
     public void show() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("This method is not supported. Use 'show(Group)' instead.");
+        throw new UnsupportedOperationException("This method is not supported. Use 'show(String)' instead.");
     }
 
     @Override

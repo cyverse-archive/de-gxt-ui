@@ -76,8 +76,9 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
     @Override
     public void updateCommunity(String originalCommunity,
                                 Group updatedCommunity,
+                                boolean retagApps,
                                 AsyncCallback<Group> communityCallback) {
-        String address = ADMIN_COMMUNITIES + "/" + URL.encodePathSegment(originalCommunity);
+        String address = ADMIN_COMMUNITIES + "/" + URL.encodePathSegment(originalCommunity) + "?retag-apps=" + retagApps;
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updatedCommunity));
 

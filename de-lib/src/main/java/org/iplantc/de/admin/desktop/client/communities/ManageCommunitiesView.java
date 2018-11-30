@@ -83,6 +83,12 @@ public interface ManageCommunitiesView extends IsWidget,
          * @return the list of collaborators selected to be admins to this community
          */
         List<Subject> getCommunityAdmins();
+
+        /**
+         * Sets the view's debug ID
+         * @param baseID
+         */
+        void setViewDebugId(String baseID);
     }
 
     /**

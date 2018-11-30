@@ -164,6 +164,16 @@ public class CommunitiesViewDefaultAppearance implements AdminCommunitiesView.Ap
     }
 
     @Override
+    public String retagAppsConfirmationTitle() {
+        return displayStrings.retagAppsConfirmationTitle();
+    }
+
+    @Override
+    public String retagAppsCommunityMessage(String name) {
+        return displayStrings.retagAppsCommunityMessage(name);
+    }
+
+    @Override
     public String searchFieldWidth() {
         return "200px";
     }

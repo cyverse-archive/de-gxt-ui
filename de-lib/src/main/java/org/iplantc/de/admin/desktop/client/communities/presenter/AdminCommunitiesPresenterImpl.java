@@ -15,6 +15,7 @@ import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.DeleteCommunityConfirmationDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.EditCommunityDialog;
+import org.iplantc.de.admin.desktop.client.communities.views.dialogs.RetagAppsConfirmationDialog;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
@@ -27,6 +28,7 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
@@ -41,6 +43,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -79,6 +82,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Inject AsyncProviderWrapper<EditCommunityDialog> editCommunityDlgProvider;
     @Inject AsyncProviderWrapper<AppCommunityListEditorDialog> communityEditorDlgProvider;
     @Inject AsyncProviderWrapper<DeleteCommunityConfirmationDialog> deleteCommunityDlgProvider;
+    @Inject AsyncProviderWrapper<RetagAppsConfirmationDialog> retagAppsConfirmationDlgProvider;
     OntologyUtil ontologyUtil;
     AppSearchRpcProxy proxy;
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
@@ -432,19 +436,29 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 result.show(community, ManageCommunitiesView.MODE.EDIT);
                 result.addOkButtonSelectHandler(event -> {
                     Group updatedCommunity = result.getUpdatedCommunity();
-                    updateCommunity(originalCommunityName, updatedCommunity);
+                    updateCommunity(originalCommunityName, updatedCommunity, false, result);
+                });
+                result.addCancelButtonSelectHandler(event -> {
+                    // EditorDriver will have updated the community name, revert it back
+                    Group updatedGroup = communityTreeStore.findModelWithKey(community.getId());
+                    updatedGroup.setName(originalCommunityName);
+                    result.hide();
                 });
             }
         });
     }
 
-    void updateCommunity(String originalCommunity, Group updatedCommunity) {
-        view.maskCommunities();
-        serviceFacade.updateCommunity(originalCommunity, updatedCommunity, new AsyncCallback<Group>() {
+    void updateCommunity(String originalCommunity, Group updatedCommunity, boolean retagApps, IPlantDialog dlg) {
+        dlg.mask(appearance.loadingMask());
+        serviceFacade.updateCommunity(originalCommunity, updatedCommunity, retagApps, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-                view.unmaskCommunities();
+                if (ServiceErrorCode.ERR_EXISTS.toString().equals(ErrorHandler.getServiceError(caught))) {
+                    confirmReTagApps(originalCommunity, updatedCommunity, dlg);
+                } else {
+                    ErrorHandler.post(caught);
+                    dlg.unmask();
+                }
             }
 
             @Override
@@ -452,7 +466,26 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                 communityTreeStore.update(result);
                 communityTreeStore.applySort(false);
                 view.selectCommunity(result);
-                view.unmaskCommunities();
+                dlg.hide();
+            }
+        });
+    }
+
+    void confirmReTagApps(String originalCommunity, Group updatedCommunity, IPlantDialog dlg) {
+        retagAppsConfirmationDlgProvider.get(new AsyncCallback<RetagAppsConfirmationDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(RetagAppsConfirmationDialog result) {
+                result.show(originalCommunity);
+                result.addDialogHideHandler(event -> {
+                    if (Dialog.PredefinedButton.YES.equals(event.getHideButton())) {
+                        updateCommunity(originalCommunity, updatedCommunity, true, dlg);
+                    } else {
+                        dlg.unmask();
+                    }
+                });
             }
         });
     }
