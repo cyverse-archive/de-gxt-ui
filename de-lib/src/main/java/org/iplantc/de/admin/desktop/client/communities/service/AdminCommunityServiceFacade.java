@@ -33,8 +33,9 @@ public interface AdminCommunityServiceFacade {
      * @param originalCommunity
      * @param updatedCommunity
      * @param communityCallback
+     * @param retagApps
      */
-    void updateCommunity(String originalCommunity, Group updatedCommunity, AsyncCallback<Group> communityCallback);
+    void updateCommunity(String originalCommunity, Group updatedCommunity, boolean retagApps, AsyncCallback<Group> communityCallback);
 
     /**
      * Delete a community
