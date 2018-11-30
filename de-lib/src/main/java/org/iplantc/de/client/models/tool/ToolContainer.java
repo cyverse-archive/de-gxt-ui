@@ -30,6 +30,12 @@ public interface ToolContainer extends HasName {
     @PropertyName("memory_limit")
     void setMemoryLimit(Integer memoryLimit);
 
+    @PropertyName("min_memory_limit")
+    Integer getMinMemoryLimit();
+
+    @PropertyName("min_memory_limit")
+    void setMinMemoryLimit(Integer memoryLimit);
+
     @PropertyName("cpu_shares")
     Integer getCpuShares();
 
@@ -71,4 +77,28 @@ public interface ToolContainer extends HasName {
 
     @PropertyName("pids_limit")
     Integer getPidsLimit();
+
+    @PropertyName("max_cpu_cores")
+    Integer getMaxCPUCores();
+
+    @PropertyName("max_cpu_cores")
+    void setMaxCPUCores(Integer cores);
+
+    @PropertyName("min_cpu_cores")
+    Integer getMinCPUCores();
+
+    @PropertyName("min_cpu_cores")
+    void setMinCPUCores(Integer cores);
+
+    @PropertyName("skip_tmp_mount")
+    Boolean isSkipTmpMount();
+
+    @PropertyName("skip_tmp_mount")
+    void setSkipTmpMount(Boolean skip);
+
+    @PropertyName("min_disk_space")
+    Integer getMinDiskSpace();
+
+    @PropertyName("min_disk_space")
+    void setMinDiskSpace(Integer diskSpace);
 }

@@ -69,4 +69,7 @@ public interface Tool extends HasId, HasDescription, HasName {
 
     @PropertyName("time_limit_seconds")
     void setTimeLimit(Integer limit);
+
+    Boolean isInteractive();
+    void setInteractive(Boolean interactive);
 }
