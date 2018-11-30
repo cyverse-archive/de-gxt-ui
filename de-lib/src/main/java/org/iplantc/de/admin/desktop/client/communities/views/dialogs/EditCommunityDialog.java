@@ -42,6 +42,7 @@ public class EditCommunityDialog extends IPlantDialog {
     public void show(Group community, ManageCommunitiesView.MODE mode) {
         presenter.go(this, mode);
         presenter.editCommunity(community);
+        setHideOnButtonClick(ManageCommunitiesView.MODE.CREATE == mode);
         if (community != null) {
             setHeading(appearance.editCommunity());
         } else {

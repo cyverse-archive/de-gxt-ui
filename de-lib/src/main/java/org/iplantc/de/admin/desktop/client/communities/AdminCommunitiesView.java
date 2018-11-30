@@ -98,6 +98,10 @@ public interface AdminCommunitiesView extends IsWidget,
         String communityDeleted(Group community);
 
         String failedToAddCommunityAdmin(String adminName, Group community);
+
+        String retagAppsConfirmationTitle();
+
+        String retagAppsCommunityMessage(String name);
     }
 
     interface Presenter extends CommunitySelectionChanged.CommunitySelectionChangedHandler,
