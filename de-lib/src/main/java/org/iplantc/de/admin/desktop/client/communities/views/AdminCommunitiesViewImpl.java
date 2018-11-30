@@ -196,6 +196,7 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         Group selectedCommunity = getSelectedCommunity();
         editCommunity.setEnabled(selectedCommunity != null);
         deleteButton.setEnabled(selectedCommunity != null);
+        categorize.setEnabled(targetApp != null);
     }
 
     @UiHandler("addButton")
