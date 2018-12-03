@@ -9,6 +9,9 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFac
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolList;
+import org.iplantc.de.client.models.tool.ToolType;
+import org.iplantc.de.client.models.tool.ToolTypeList;
+import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -29,6 +32,7 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
 
     private final String TOOLS = "org.iplantc.services.tools";
     private final String TOOLS_ADMIN = "org.iplantc.services.admin.tools";
+    private final String APP_ELEMENTS = "org.iplantc.services.apps.elements";
 
     @Inject
     public ToolAdminServiceFacadeImpl() {
@@ -109,6 +113,20 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
+
+    @Override
+    public void getToolTypes(AsyncCallback<List<ToolType>> callback) {
+        String address = APP_ELEMENTS + "/tool-types";
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<ToolType>>(callback) {
+            @Override
+            protected List<ToolType> convertFrom(String object) {
+                ToolTypeList typeList = AutoBeanCodex.decode(factory, ToolTypeList.class, object).as();
+                return typeList.getToolTypes();
+            }
+        });
     }
 }
 

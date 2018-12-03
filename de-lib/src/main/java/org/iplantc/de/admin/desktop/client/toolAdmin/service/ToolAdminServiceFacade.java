@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.toolAdmin.service;
 
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolList;
+import org.iplantc.de.client.models.tool.ToolType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -23,5 +24,7 @@ public interface ToolAdminServiceFacade {
     void deleteTool(String toolId, AsyncCallback<Void> callback);
 
     void publishTool(Tool tool, AsyncCallback<Void> callback);
+
+    void getToolTypes(AsyncCallback<List<ToolType>> callback);
 
 }

@@ -5,6 +5,7 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolContainer
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolImplementationEditor;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -15,12 +16,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
+import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -40,18 +45,16 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
             GWT.create(ToolAdminDetailsWindowUiBinder.class);
 
     @UiField VerticalLayoutContainer layoutContainer;
-    @Ignore
-    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel;
+    @Ignore @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel, interactiveLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
-    @UiField TextField typeEditor;
+    @UiField StringComboBox typeEditor;
     @UiField TextField attributionEditor;
     @UiField TextField versionEditor;
     @UiField TextField locationEditor;
-    @UiField
-    CheckBox restrictedEditor;
-    @UiField
-    IntegerField timeLimitEditor;
+    @UiField CheckBox restrictedEditor;
+    @UiField CheckBox interactiveEditor;
+    @UiField IntegerField timeLimitEditor;
     @UiField (provided = true) ToolImplementationEditor implementationEditor;
     @UiField (provided = true) ToolContainerEditor containerEditor;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
@@ -70,6 +73,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
         typeLabel.setHTML(appearance.toolImportTypeLabel());
         versionLabel.setHTML(appearance.toolImportVersionLabel());
         timeLimitLabel.setHTML(appearance.timeLimit());
+        typeEditor.addSelectionHandler(event -> checkForOsgType());
 
         descriptionEditor.setHeight(250);
 
@@ -78,6 +82,11 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     public void edit(Tool tool) {
         editorDriver.edit(tool);
+        checkForOsgType();
+    }
+
+    void checkForOsgType() {
+        containerEditor.setEnableOsgImagePath("osg".equals(typeEditor.getCurrentValue()));
     }
 
     public Tool getTool() {
@@ -89,6 +98,11 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
                && typeEditor.isValid() && locationEditor.isValid() && versionEditor.isValid() && timeLimitEditor.isValid();
     }
 
+    public void setToolTypes(List<String> types) {
+        typeEditor.add(types);
+        typeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+    }
+
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
@@ -97,6 +111,8 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
         typeLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_TYPE_LABEL);
         locationLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_LOCATION_LABEL);
         descriptionEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_DESCRIPTION);
+        interactiveLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_INTERACTIVE_LABEL);
+        interactiveEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_INTERACTIVE);
         nameEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_NAME);
         typeEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_TYPE);
         attributionEditor.setId(baseID + Belphegor.ToolAdminIds.TOOL_ATTRIBUTION);

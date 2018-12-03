@@ -34,6 +34,8 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<SimpleServiceError> simpleServiceError();
 
+    AutoBean<ToolTypeList> getToolTypeList();
+
     /**
      * Build a tool with default values
      *

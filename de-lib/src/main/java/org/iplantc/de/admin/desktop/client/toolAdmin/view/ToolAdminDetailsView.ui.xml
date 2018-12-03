@@ -38,9 +38,8 @@
         <container:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="typeLabel">
                 <form:widget>
-                    <form:TextField readOnly="true"
-                                    enabled="false"
-                                    ui:field="typeEditor"/>
+                    <form:StringComboBox allowBlank="false"
+                                         ui:field="typeEditor"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
@@ -88,6 +87,13 @@
             <form:FieldLabel ui:field="Restricted" text="{appearance.restricted}">
                 <form:widget>
                     <form:CheckBox ui:field="restrictedEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel ui:field="interactiveLabel" text="{appearance.interactive}">
+                <form:widget>
+                    <form:CheckBox ui:field="interactiveEditor"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>

@@ -547,4 +547,38 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
         return displayStrings.timeLimitEmptyText();
     }
 
+    @Override
+    public String interactive() {
+        return displayStrings.interactive();
+    }
+
+    @Override
+    public String maxCPUCoresLabel() {
+        return displayStrings.maxCPUCoresLabel();
+    }
+
+    @Override
+    public String minMemoryLimitLabel() {
+        return displayStrings.minMemoryLimitLabel();
+    }
+
+    @Override
+    public String minCPUCoresLabel() {
+        return displayStrings.minCPUCoresLabel();
+    }
+
+    @Override
+    public String skipTmpMountLabel() {
+        return displayStrings.skipTmpMountLabel();
+    }
+
+    @Override
+    public String minDiskSpaceLabel() {
+        return displayStrings.minDiskSpaceLabel();
+    }
+
+    @Override
+    public SafeHtml osgImagePathLabel() {
+        return templates.requiredFieldLabel(displayStrings.osgImagePathLabel());
+    }
 }

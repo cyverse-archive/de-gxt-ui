@@ -17,11 +17,13 @@ import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolList;
+import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -70,6 +72,19 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
 
     @Override
     public void go(HasOneWidget container) {
+        toolAdminServiceFacade.getToolTypes(new AsyncCallback<List<ToolType>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<ToolType> result) {
+                List<String> toolTypes = Lists.newArrayList();
+                result.forEach(toolType -> toolTypes.add(toolType.getName()));
+                view.setToolTypes(toolTypes);
+            }
+        });
         container.setWidget(view);
         updateView();
 

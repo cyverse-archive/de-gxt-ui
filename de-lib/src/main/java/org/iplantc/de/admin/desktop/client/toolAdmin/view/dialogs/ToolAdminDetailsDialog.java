@@ -25,6 +25,8 @@ import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.container.FlowLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
+import java.util.List;
+
 /**
  * @author jstroot
  * @author aramsey
@@ -71,7 +73,7 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         add(container);
     }
 
-    public void show(final Tool tool, Mode mode) {
+    public void show(final Tool tool, Mode mode, List<String> toolTypes) {
         this.mode = mode;
         addOkButtonSelectHandler(new OkSelectHandler(this, this, this.appearance, this.view, mode));
 
@@ -83,14 +85,14 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
                 getOkButton().setText(appearance.dialogWindowUpdateBtnText());
                 break;
         }
+        view.setToolTypes(toolTypes);
         view.edit(tool);
         super.show();
 
         ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
     }
 
-    @Override
-    public void show() {
+    public void show(List<String> toolTypes) {
         final ToolContainer toolContainer = factory.getContainer().as();
         toolContainer.setDeviceList(Lists.newArrayList());
         toolContainer.setContainerVolumes(Lists.newArrayList());
@@ -106,11 +108,15 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         toolImplementation.setTest(toolTestData);
 
         final Tool tool = factory.getTool().as();
-        tool.setType(appearance.toolImportTypeDefaultValue());
         tool.setContainer(toolContainer);
         tool.setImplementation(toolImplementation);
 
-        show(tool, Mode.EDIT);
+        show(tool, Mode.EDIT, toolTypes);
+    }
+
+    @Override
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This method is not supported. Use 'show(List<String)' instead.");
     }
 
     @Override

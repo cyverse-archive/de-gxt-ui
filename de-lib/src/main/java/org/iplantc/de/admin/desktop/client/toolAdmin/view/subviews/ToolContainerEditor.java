@@ -18,6 +18,7 @@ import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
@@ -38,39 +39,31 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
     @UiField TextField nameEditor;
     @UiField TextField workingDirectoryEditor;
-    @Ignore
-    @UiField HTML entryPointWarningHTML;
+    @Ignore @UiField HTML entryPointWarningHTML;
     @UiField TextField entryPointEditor;
+    @UiField IntegerField minMemoryLimitEditor;
     @UiField IntegerField memoryLimitEditor;
+    @UiField IntegerField minDiskSpaceEditor;
     @UiField IntegerField cpuSharesEditor;
-    @UiField
-    StringComboBox networkModeEditor;
-    @Ignore
-    @UiField FieldLabel containerDevicesLabel;
-    @Ignore
-    @UiField TextButton addDeviceButton;
-    @Ignore
-    @UiField TextButton deleteDeviceButton;
+    @UiField IntegerField minCPUCoresEditor;
+    @UiField IntegerField maxCPUCoresEditor;
+    @UiField StringComboBox networkModeEditor;
+    @UiField CheckBox skipTmpMountEditor;
+    @Ignore @UiField FieldLabel containerDevicesLabel;
+    @Ignore @UiField TextButton addDeviceButton;
+    @Ignore @UiField TextButton deleteDeviceButton;
     @UiField (provided = true) ToolDeviceListEditor deviceListEditor;
-    @Ignore
-    @UiField HTML toolVolumesWarningHTML;
-    @Ignore
-    @UiField FieldLabel containerVolumesLabel;
-    @Ignore
-    @UiField TextButton addVolumesButton;
-    @Ignore
-    @UiField TextButton deleteVolumesButton;
+    @Ignore @UiField HTML toolVolumesWarningHTML;
+    @Ignore @UiField FieldLabel containerVolumesLabel;
+    @Ignore @UiField TextButton addVolumesButton;
+    @Ignore @UiField TextButton deleteVolumesButton;
     @UiField (provided = true) ToolVolumeListEditor containerVolumesEditor;
-    @Ignore
-    @UiField FieldLabel containerVolumesFromLabel;
-    @Ignore
-    @UiField TextButton addVolumesFromButton;
-    @Ignore
-    @UiField TextButton deleteVolumesFromButton;
+    @Ignore @UiField FieldLabel containerVolumesFromLabel;
+    @Ignore @UiField TextButton addVolumesFromButton;
+    @Ignore @UiField TextButton deleteVolumesFromButton;
     @UiField (provided = true) ToolVolumesFromListEditor containerVolumesFromEditor;
     @UiField (provided = true) ToolImageEditor imageEditor;
-    @Ignore
-    @UiField FieldSet containerFieldSet;
+    @Ignore @UiField FieldSet containerFieldSet;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
     
     /**
@@ -103,6 +96,11 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         containerVolumesFromEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM);
         imageEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_IMAGE);
         pidsLimitEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.PIDS_LIMIT);
+        minMemoryLimitEditor.setId(baseID + Belphegor.ToolAdminIds.MIN_MEM_LIMIT);
+        maxCPUCoresEditor.setId(baseID + Belphegor.ToolAdminIds.MAX_CPU_CORES);
+        minCPUCoresEditor.setId(baseID + Belphegor.ToolAdminIds.MIN_CPU_CORES);
+        skipTmpMountEditor.setId(baseID + Belphegor.ToolAdminIds.SKIP_TMP_MOUNT);
+        minDiskSpaceEditor.setId(baseID + Belphegor.ToolAdminIds.MIN_DISK_SPACE);
     }
 
     @Inject
@@ -175,5 +173,9 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     public boolean isValid(){
         return imageEditor.isValid() && deviceListEditor.isValid()
                && containerVolumesEditor.isValid() && containerVolumesFromEditor.isValid();
+    }
+
+    public void setEnableOsgImagePath(boolean enable) {
+        imageEditor.setEnableOsgImagePath(enable);
     }
 }

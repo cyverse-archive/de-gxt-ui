@@ -27,6 +27,12 @@ public interface ToolImage extends HasName {
 
     @PropertyName("auth")
     void setAuth(String auth);
+
+    @PropertyName("osg_image_path")
+    String getOsgImagePath();
+
+    @PropertyName("osg_image_path")
+    void setOsgImagePath(String path);
 }
 
 

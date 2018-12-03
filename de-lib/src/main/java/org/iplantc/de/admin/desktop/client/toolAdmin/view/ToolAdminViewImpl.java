@@ -92,6 +92,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
 
     private final ToolProperties toolProps;
     private final NameFilter nameFilter;
+    List<String> toolTypes;
 
     @Inject
     public ToolAdminViewImpl(final ToolAdminViewAppearance appearance,
@@ -199,7 +200,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
 
             @Override
             public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show(tool, mode);
+                result.show(tool, mode, toolTypes);
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
                 result.addSaveToolSelectedEventHandler(event -> {
                     fireEvent(event);
@@ -229,7 +230,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
 
             @Override
             public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show();
+                result.show(toolTypes);
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
                 result.addSaveToolSelectedEventHandler(event1 -> {
                     AddToolSelectedEvent addToolSelectedEvent =
@@ -271,6 +272,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         ToolSelectedEvent toolSelectedEvent =
                 new ToolSelectedEvent(tool);
         fireEvent(toolSelectedEvent);
+    }
+
+    @Override
+    public void setToolTypes(List<String> toolTypes) {
+        this.toolTypes = toolTypes;
     }
 
     @UiHandler("filterField")

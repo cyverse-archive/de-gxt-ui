@@ -31,6 +31,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 
+import java.util.List;
+
 /**
  * @author aramsey
  */
@@ -44,6 +46,7 @@ public class ToolAdminViewImplTest {
     @Mock GridSelectionModel<Tool> gridSelectionModelMock;
     @Mock Tool toolMock;
     @Mock AsyncProviderWrapper<ToolAdminDetailsDialog> toolDetailsDialogMock;
+    @Mock List<String> toolTypesMock;
 
     @Captor ArgumentCaptor<AsyncCallback<ToolAdminDetailsDialog>> asyncCallbackDialogCaptor;
     @Captor ArgumentCaptor<SaveToolSelectedEvent.SaveToolSelectedEventHandler>
@@ -63,7 +66,7 @@ public class ToolAdminViewImplTest {
 
         uut.grid = toolGridMock;
         uut.toolDetailsDialog = toolDetailsDialogMock;
-
+        uut.toolTypes = toolTypesMock;
     }
 
     @Test
@@ -80,7 +83,7 @@ public class ToolAdminViewImplTest {
 
         /** CALL METHOD UNDER TEST **/
         asyncCallback.onSuccess(resultMock);
-        verify(resultMock).show(eq(toolMock), eq(ToolAdminDetailsDialog.Mode.EDIT));
+        verify(resultMock).show(eq(toolMock), eq(ToolAdminDetailsDialog.Mode.EDIT), eq(toolTypesMock));
         verify(resultMock).addSaveToolSelectedEventHandler(saveToolSelectedEventHandlerArgumentCaptor.capture());
 
         SaveToolSelectedEvent.SaveToolSelectedEventHandler saveHandlerMock =
@@ -110,7 +113,7 @@ public class ToolAdminViewImplTest {
 
         /** CALL METHOD UNDER TEST **/
         asyncCallback.onSuccess(resultMock);
-        verify(resultMock).show();
+        verify(resultMock).show(eq(toolTypesMock));
         verify(resultMock).addSaveToolSelectedEventHandler(saveToolSelectedEventHandlerArgumentCaptor.capture());
 
         SaveToolSelectedEvent.SaveToolSelectedEventHandler saveHandlerMock =

@@ -25,14 +25,13 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
     interface ToolImageEditorBinder extends UiBinder<Widget, ToolImageEditor> {
     }
 
-    @Ignore
-    @UiField
-    FieldLabel nameLabel;
+    @Ignore @UiField FieldLabel nameLabel;
     @UiField TextField nameEditor;
     @UiField TextField tagEditor;
     @UiField TextField urlEditor;
-    @UiField (provided = true)
-    ToolAdminView.ToolAdminViewAppearance appearance;
+    @Ignore @UiField FieldLabel osgImagePathLabel;
+    @UiField TextField osgImagePathEditor;
+    @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
 
     @Inject
     public ToolImageEditor(ToolAdminView.ToolAdminViewAppearance appearance) {
@@ -42,6 +41,7 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
 
         nameEditor.addValidator(new ImageNameValidator());
         nameLabel.setHTML(appearance.containerImageNameLabel());
+        osgImagePathLabel.setHTML(appearance.osgImagePathLabel());
 
         urlEditor.addValidator(new UrlValidator());
         tagEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(tagEditor));
@@ -60,5 +60,10 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
         nameEditor.setId(baseID + Belphegor.ToolAdminIds.IMAGE_NAME);
         tagEditor.setId(baseID + Belphegor.ToolAdminIds.IMAGE_TAG);
         urlEditor.setId(baseID + Belphegor.ToolAdminIds.IMAGE_URL);
+        osgImagePathEditor.setId(baseID + Belphegor.ToolAdminIds.OSG_IMAGE_PATH);
+    }
+
+    public void setEnableOsgImagePath(boolean enable) {
+        osgImagePathEditor.setEnabled(enable);
     }
 }

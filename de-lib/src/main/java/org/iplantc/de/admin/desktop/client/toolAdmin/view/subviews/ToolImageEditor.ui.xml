@@ -44,6 +44,16 @@
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
+            <container:child layoutData="{layoutData}">
+                <form:FieldLabel ui:field="osgImagePathLabel">
+                    <form:widget>
+                        <form:TextField readOnly="false"
+                                        enabled="false"
+                                        allowBlank="false"
+                                        ui:field="osgImagePathEditor"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
         </container:VerticalLayoutContainer>
     </form:FieldSet>
 </ui:UiBinder> 
