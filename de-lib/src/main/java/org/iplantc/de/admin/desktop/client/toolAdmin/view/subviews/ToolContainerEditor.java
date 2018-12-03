@@ -174,4 +174,8 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         return imageEditor.isValid() && deviceListEditor.isValid()
                && containerVolumesEditor.isValid() && containerVolumesFromEditor.isValid();
     }
+
+    public void setEnableOsgImagePath(boolean enable) {
+        imageEditor.setEnableOsgImagePath(enable);
+    }
 }

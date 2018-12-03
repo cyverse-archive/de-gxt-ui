@@ -29,6 +29,7 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
     @UiField TextField nameEditor;
     @UiField TextField tagEditor;
     @UiField TextField urlEditor;
+    @Ignore @UiField FieldLabel osgImagePathLabel;
     @UiField TextField osgImagePathEditor;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
 
@@ -40,6 +41,7 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
 
         nameEditor.addValidator(new ImageNameValidator());
         nameLabel.setHTML(appearance.containerImageNameLabel());
+        osgImagePathLabel.setHTML(appearance.osgImagePathLabel());
 
         urlEditor.addValidator(new UrlValidator());
         tagEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(tagEditor));
@@ -59,5 +61,9 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
         tagEditor.setId(baseID + Belphegor.ToolAdminIds.IMAGE_TAG);
         urlEditor.setId(baseID + Belphegor.ToolAdminIds.IMAGE_URL);
         osgImagePathEditor.setId(baseID + Belphegor.ToolAdminIds.OSG_IMAGE_PATH);
+    }
+
+    public void setEnableOsgImagePath(boolean enable) {
+        osgImagePathEditor.setEnabled(enable);
     }
 }

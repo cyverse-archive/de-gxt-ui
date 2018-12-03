@@ -45,10 +45,11 @@
                 </form:FieldLabel>
             </container:child>
             <container:child layoutData="{layoutData}">
-                <form:FieldLabel text="{appearance.osgImagePathLabel}">
+                <form:FieldLabel ui:field="osgImagePathLabel">
                     <form:widget>
                         <form:TextField readOnly="false"
-                                        enabled="true"
+                                        enabled="false"
+                                        allowBlank="false"
                                         ui:field="osgImagePathEditor"/>
                     </form:widget>
                 </form:FieldLabel>

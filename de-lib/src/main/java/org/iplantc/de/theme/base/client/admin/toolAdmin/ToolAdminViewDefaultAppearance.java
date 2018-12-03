@@ -578,7 +578,7 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
-    public String osgImagePathLabel() {
-        return displayStrings.osgImagePathLabel();
+    public SafeHtml osgImagePathLabel() {
+        return templates.requiredFieldLabel(displayStrings.osgImagePathLabel());
     }
 }

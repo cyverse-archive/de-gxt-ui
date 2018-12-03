@@ -73,6 +73,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
         typeLabel.setHTML(appearance.toolImportTypeLabel());
         versionLabel.setHTML(appearance.toolImportVersionLabel());
         timeLimitLabel.setHTML(appearance.timeLimit());
+        typeEditor.addSelectionHandler(event -> checkForOsgType());
 
         descriptionEditor.setHeight(250);
 
@@ -81,6 +82,11 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     public void edit(Tool tool) {
         editorDriver.edit(tool);
+        checkForOsgType();
+    }
+
+    void checkForOsgType() {
+        containerEditor.setEnableOsgImagePath("osg".equals(typeEditor.getCurrentValue()));
     }
 
     public Tool getTool() {
