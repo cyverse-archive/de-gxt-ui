@@ -5,6 +5,7 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolContainer
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolImplementationEditor;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -15,12 +16,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
+import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -43,7 +48,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
     @Ignore @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel, interactiveLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
-    @UiField TextField typeEditor;
+    @UiField StringComboBox typeEditor;
     @UiField TextField attributionEditor;
     @UiField TextField versionEditor;
     @UiField TextField locationEditor;
@@ -85,6 +90,11 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
     public boolean isValid() {
         return containerEditor.isValid() && implementationEditor.isValid() && nameEditor.isValid()
                && typeEditor.isValid() && locationEditor.isValid() && versionEditor.isValid() && timeLimitEditor.isValid();
+    }
+
+    public void setToolTypes(List<String> types) {
+        typeEditor.add(types);
+        typeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
     }
 
     @Override

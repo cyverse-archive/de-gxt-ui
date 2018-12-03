@@ -14,6 +14,8 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import java.util.List;
+
 /**
  * @author aramsey
  */
@@ -250,4 +252,5 @@ public interface ToolAdminView extends IsWidget,
 
     void toolSelected(Tool tool);
 
+    void setToolTypes(List<String> toolTypes);
 }

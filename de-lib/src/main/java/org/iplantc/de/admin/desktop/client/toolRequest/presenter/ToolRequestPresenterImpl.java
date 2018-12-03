@@ -9,8 +9,10 @@ import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.toolRequest.events.AdminMakeToolPublicSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
+import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
@@ -18,6 +20,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -121,10 +124,23 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
 
     @Override
     public void onAdminMakeToolPublicSelected(AdminMakeToolPublicSelectedEvent event) {
-        adminView = adminFactory.create(new ListStore<>(item -> item.getId()));
-        adminView.addPublishToolEventHandler(this);
+        toolAdminServiceFacade.getToolTypes(new AsyncCallback<List<ToolType>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
-        getToolDetails(event);
+            @Override
+            public void onSuccess(List<ToolType> result) {
+                List<String> toolTypes = Lists.newArrayList();
+                result.forEach(toolType -> toolTypes.add(toolType.getName()));
+                adminView = adminFactory.create(new ListStore<>(HasId::getId));
+                adminView.setToolTypes(toolTypes);
+                adminView.addPublishToolEventHandler(ToolRequestPresenterImpl.this);
+
+                getToolDetails(event);
+            }
+        });
     }
 
     protected void getToolDetails(AdminMakeToolPublicSelectedEvent event) {
