@@ -1,20 +1,28 @@
+/**
+ *  @author sriram
+ *
+ **/
+
 import React, { Component } from 'react';
-import MenuItem from "@material-ui/core/MenuItem";
-import FolderIcon from "@material-ui/icons/FolderOpen";
+
+import exStyles from "../style";
+import ids from "../ids";
+import build from "../../util/DebugIDUtil";
 import Color from "../../util/CyVersePalette";
 import { getMessage } from "../../util/I18NWrapper";
-import InfoIcon from "@material-ui/icons/Info";
-import ShareIcon from "@material-ui/icons/Share";
-import CancelIcon from "@material-ui/icons/Cancel";
-import DeleteIcon from "@material-ui/icons/Delete";
-import RepeatIcon from "@material-ui/icons/Repeat";
-import EditIcon from "@material-ui/icons/Edit";
-import CommentIcon from "@material-ui/icons/Comment";
-import SaveIcon from "@material-ui/icons/Save";
+
+import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
-import exStyles from "../style";
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
+
+import CancelIcon from "@material-ui/icons/Cancel";
+import CommentIcon from "@material-ui/icons/Comment";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import FolderIcon from "@material-ui/icons/FolderOpen";
+import InfoIcon from "@material-ui/icons/Info";
+import RepeatIcon from "@material-ui/icons/Repeat";
+import SaveIcon from "@material-ui/icons/Save";
+import ShareIcon from "@material-ui/icons/Share";
 
 
 class AnalysesMenu extends Component {

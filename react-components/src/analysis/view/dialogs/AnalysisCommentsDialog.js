@@ -4,16 +4,18 @@
  *
  */
 import React, { Component } from 'react';
-import Dialog from "@material-ui/core/Dialog";
+
+import intlData from "../../messages";
+import exStyles from "../../style";
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
+
+import Button from "@material-ui/core/Button/Button";
+import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField/TextField";
-import Button from "@material-ui/core/Button/Button";
-import intlData from "../../messages";
-import exStyles from "../../style";
 import { withStyles } from "@material-ui/core/styles";
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
 class AnalysisCommentsDialog extends Component {
 

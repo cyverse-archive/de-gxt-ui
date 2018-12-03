@@ -4,28 +4,32 @@
  **/
 
 import React, { Component } from 'react';
+import { injectIntl } from "react-intl";
+
+import ids from "../ids";
+import intlData from "../messages";
+import appType from "../model/appType";
+import permission from "../model/permission";
+import exStyles from "../style";
+import build from "../../util/DebugIDUtil";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+
+import AnalysesMenu from "./AnalysesMenu";
+import SearchField from "../../util/SearchField";
+
+import Button from '@material-ui/core/Button';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from "@material-ui/core/MenuItem/MenuItem";
+import Select from "@material-ui/core/Select";
 import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
-import exStyles from "../style";
-import ids from "../ids";
 import { withStyles } from "@material-ui/core/styles";
-import intlData from "../messages";
-import RefreshIcon from "@material-ui/icons/Refresh";
+
 import MenuIcon from "@material-ui/icons/Menu";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import permission from "../model/permission";
-import appType from "../model/appType";
-import AnalysesMenu from "./AnalysesMenu";
-import { injectIntl } from "react-intl";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import SearchField from "../../util/SearchField";
-import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import build from "../../util/DebugIDUtil";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
 class AnalysesToolbar extends Component {
     constructor(props) {

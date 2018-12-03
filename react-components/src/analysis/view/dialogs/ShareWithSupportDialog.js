@@ -4,23 +4,24 @@
  *
  */
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import FormControl from "@material-ui/core/FormControl/FormControl";
-import FormLabel from "@material-ui/core/FormLabel/FormLabel";
-import RadioGroup from "@material-ui/core/RadioGroup/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
-import withI18N, { formatHTMLMessage, formatMessage, getMessage } from "../../../util/I18NWrapper";
-import analysisStatus from "../../model/analysisStatus";
-import intlData from "../../messages";
-import Grid from "@material-ui/core/Grid/Grid";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import Button from "@material-ui/core/Button/Button";
-import TextField from "@material-ui/core/TextField/TextField";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import { injectIntl } from "react-intl";
 
+import intlData from "../../messages";
+import analysisStatus from "../../model/analysisStatus";
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+import withI18N, { formatHTMLMessage, formatMessage, getMessage } from "../../../util/I18NWrapper";
+
+import Button from "@material-ui/core/Button/Button";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import FormControl from "@material-ui/core/FormControl/FormControl";
+import FormLabel from "@material-ui/core/FormLabel/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
+import Grid from "@material-ui/core/Grid/Grid";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from "@material-ui/core/RadioGroup/RadioGroup";
+import TextField from "@material-ui/core/TextField/TextField";
 
 function AnalysisInfo(props) {
     const {analysis, name, email} = props;

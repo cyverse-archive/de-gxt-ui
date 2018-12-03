@@ -1,8 +1,17 @@
+/**
+ *  @author sriram
+ *
+ **/
+
 import React, { Component } from 'react';
-import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "../../../node_modules/@material-ui/icons/MoreVert";
-import Menu from "@material-ui/core/Menu";
+
 import AnalysesMenu from "./AnalysesMenu";
+
+import Menu from "@material-ui/core/Menu";
+
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+
 
 const ITEM_HEIGHT = 48;
 

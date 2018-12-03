@@ -4,38 +4,43 @@
  **/
 
 import React, { Component } from 'react';
+import { injectIntl } from "react-intl";
+
+import moment from "moment";
+
+import constants from "../../constants";
+import DotMenu from "./DotMenu";
+import intlData from "../messages";
+import ids from "../ids";
+import exStyles from "../style";
+import appType from "../model/appType";
+import permission from "../model/permission";
+import Color from "../../util/CyVersePalette";
+import build from "../../util/DebugIDUtil";
+import DEHyperLink from "../../util/hyperlink/DEHyperLink";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+
+import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
+import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
+import analysisStatus from "../model/analysisStatus";
+import AnalysesToolbar from "./AnalysesToolbar";
+import DEPromptDialog from "../../util/dialog/DEPromptDialog";
+import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
+import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
+
+import Checkbox from "@material-ui/core/Checkbox";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
-import Checkbox from "@material-ui/core/Checkbox";
-import moment from "moment";
-import constants from "../../constants";
-import ids from "../ids";
-import AnalysesToolbar from "./AnalysesToolbar";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import DotMenu from "./DotMenu";
-import analysisStatus from "../model/analysisStatus";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import Color from "../../util/CyVersePalette";
-import appType from "../model/appType";
-import permission from "../model/permission";
-import DEPromptDialog from "../../util/dialog/DEPromptDialog";
-import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
-import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
-import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
 import { withStyles } from "@material-ui/core/styles";
-import { injectIntl } from "react-intl";
-import intlData from "../messages";
-import exStyles from "../style";
+
 import LaunchIcon from "@material-ui/icons/Launch";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
-import build from "../../util/DebugIDUtil";
+import ListAltIcon from "@material-ui/icons/ListAlt";
 
 function AnalysisName(props) {
     const name = props.analysis.name;

@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
+
+import ids from "../../ids";
+import intlData from "../../messages"
+import exStyles from "../../style";
+import withI18N, { getMessage } from "../../../util/I18NWrapper";
+
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
+
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
 import Table from "@material-ui/core/Table";
-import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
-import ids from "../../ids";
-import TableRow from "@material-ui/core/TableRow";
-import intlData from "../../messages"
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
 import { withStyles } from "@material-ui/core/styles";
-import exStyles from "../../style";
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
-
 
 const columnData = [
     {name: "Job Id", numeric: false, enableSorting: false},

@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import Dialog from "@material-ui/core/Dialog";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import DialogContent from "@material-ui/core/DialogContent";
-import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
+
+import exStyles from "../../style";
 import ids from "../../ids";
-import TableBody from "@material-ui/core/TableBody";
+import intlData from "../../messages";
+import withI18N, { getMessage } from "../../../util/I18NWrapper";
+
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
+
+import Button from '@material-ui/core/Button';
+import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
-import Button from '@material-ui/core/Button';
+import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core/styles";
-import exStyles from "../../style";
-import intlData from "../../messages";
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+
 
 const ArgumentType = {
     Input: "Input",
