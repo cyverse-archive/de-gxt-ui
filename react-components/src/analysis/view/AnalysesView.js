@@ -6,26 +6,24 @@
 import React, { Component } from 'react';
 import { injectIntl } from "react-intl";
 
-import moment from "moment";
-
-import constants from "../../constants";
-import DotMenu from "./DotMenu";
 import intlData from "../messages";
 import ids from "../ids";
 import exStyles from "../style";
 import appType from "../model/appType";
 import permission from "../model/permission";
 import Color from "../../util/CyVersePalette";
+import formatDate from "../../util/DateFormatter";
 import build from "../../util/DebugIDUtil";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage } from "../../util/I18NWrapper";
 
+import DotMenu from "./DotMenu";
 import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
 import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
 import analysisStatus from "../model/analysisStatus";
 import AnalysesToolbar from "./AnalysesToolbar";
 import DEPromptDialog from "../../util/dialog/DEPromptDialog";
 import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
+import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
@@ -41,6 +39,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 import ListAltIcon from "@material-ui/icons/ListAlt";
+
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -889,16 +888,10 @@ class AnalysesView extends Component {
                                                          classes={classes}/>
                                             </TableCell>
                                             <TableCell className={classes.cellText} padding="none">
-                                                {parseInt(n.startdate, 10) ?
-                                                    moment(parseInt(n.startdate, 10), "x").format(
-                                                        constants.LONG_DATE_FORMAT) :
-                                                    getMessage("emptyValue")}
+                                                {formatDate(null, n.startdate)}
                                             </TableCell>
                                             <TableCell className={classes.cellText} padding="none">
-                                                {parseInt(n.enddate, 10) ?
-                                                    moment(parseInt(n.enddate, 10), "x").format(
-                                                        constants.LONG_DATE_FORMAT) :
-                                                    getMessage("emptyValue")}
+                                                {formatDate(null, n.enddate)}
                                             </TableCell>
                                             <TableCell id={build(gridId, id + ids.SUPPORT_CELL)}
                                                        adding="none">
