@@ -221,12 +221,32 @@ class AnalysesViewTest extends Component {
             deleteAnalyses: ()=> {
               console.log("Deleted Analysis selected!");
             },
+            onAnalysisJobInfoSelected: ()=> {
+                console.log("Job info selected!");
+            },
+            onUserSupportRequested: ()=> {
+                console.log("User support requested!");
+            }
         };
+
+        const paramPresenter = {
+            fetchAnalysisParameters: () => {
+              console.log("fetch parameters");
+            },
+            saveParamsToFile: () => {
+                console.log("save parameters to file");
+            },
+            onAnalysisParamValueSelected: () => {
+                console.log("parameter value selected");
+            }
+        };
+
 
         return (
             <AnalysesView analysesList={analysesList}
                           username="sriram@iplantcollaborative.org"
                           presenter={presenter}
+                          paramPresenter={paramPresenter}
                           email="abc@cyverse.org"
                           name="sriram srinivasan"
                           baseDebugId="AnalysesWindow"

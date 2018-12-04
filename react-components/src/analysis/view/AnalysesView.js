@@ -222,6 +222,7 @@ class AnalysesView extends Component {
         this.handleGoToOutputFolder = this.handleGoToOutputFolder.bind(this);
         this.handleViewParams = this.handleViewParams.bind(this);
         this.handleRelaunch = this.handleRelaunch.bind(this);
+        this.handleRelaunchFromMenu = this.handleRelaunchFromMenu.bind(this);
         this.handleViewInfo = this.handleViewInfo.bind(this);
         this.handleShare = this.handleShare.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -514,6 +515,10 @@ class AnalysesView extends Component {
 
     handleRelaunch(analysis) {
         this.props.presenter.onAnalysisAppSelected(analysis.id, analysis.system_id, analysis.app_id);
+    }
+
+    handleRelaunchFromMenu() {
+        this.handleRelaunch(this.findAnalysis(this.state.selected[0]));
     }
 
     handleViewInfo() {
@@ -809,7 +814,7 @@ class AnalysesView extends Component {
                                      selected={selected}
                                      handleGoToOutputFolder={this.handleGoToOutputFolder}
                                      handleViewParams={this.handleViewParams}
-                                     handleRelaunch={this.handleRelaunch}
+                                     handleRelaunch={this.handleRelaunchFromMenu}
                                      handleViewInfo={this.handleViewInfo}
                                      handleShare={this.handleShare}
                                      handleCancel={this.handleCancel}
