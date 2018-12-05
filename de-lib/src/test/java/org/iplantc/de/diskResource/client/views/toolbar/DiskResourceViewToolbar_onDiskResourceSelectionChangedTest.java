@@ -982,7 +982,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verify(mockDelete).setEnabled(true);
         verify(mockEditFile).setEnabled(false);
         verify(mockEditComments).setEnabled(false);
-        verify(mockEditInfoType).setEnabled(false);
+        verify(mockEditInfoType).setEnabled(true);
 
         //   verify(mockMetadata).setEnabled(false);
         verify(mockSavemetadatami).setEnabled(false);

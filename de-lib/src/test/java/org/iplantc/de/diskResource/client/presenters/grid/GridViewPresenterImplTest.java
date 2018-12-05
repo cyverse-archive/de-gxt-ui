@@ -79,9 +79,11 @@ import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author jstroot
@@ -258,8 +260,12 @@ public class GridViewPresenterImplTest {
     @Test
     public void testOnEditInfoTypeSelected() {
         EditInfoTypeSelected eventMock = mock(EditInfoTypeSelected.class);
+        Stream<DiskResource> mockStr = mock(Stream.class);
         when(eventMock.getSelectedDiskResources()).thenReturn(resourcesMock);
+        when(resourcesMock.get(0)).thenReturn(resourceMock);
+        when(resourceMock.getInfoType()).thenReturn("txt");
         when(infoTypeEditorDialogMock.getSelectedValue()).thenReturn(infoTypeMock);
+        when(resourcesMock.stream()).thenReturn(mockStr);
 
         /** CALL METHOD UNDER TEST **/
         uut.onEditInfoTypeSelected(eventMock);
@@ -464,7 +470,7 @@ public class GridViewPresenterImplTest {
         GridViewPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        spy.setInfoType(resourceMock, "newType");
+        spy.setInfoType(Arrays.asList(resourceMock), "newType");
         verify(diskResourceServiceMock).setFileType(eq("path"), eq("newType"), dataStringCallback.capture());
 
         dataStringCallback.getValue().onSuccess("result");
