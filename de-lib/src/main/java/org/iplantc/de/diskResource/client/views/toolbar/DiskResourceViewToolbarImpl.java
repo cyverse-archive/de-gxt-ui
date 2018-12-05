@@ -371,7 +371,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
                             && containsFile && isOwner && !isSelectionInTrash && !containsFilteredItems;
         editCommentsMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
                 && isReadable && !containsFilteredItems;
-        editInfoTypeMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
+        editInfoTypeMiEnabled = !isSelectionEmpty && !isSelectionInTrash
                                 && containsFile && isOwner && !containsFilteredItems;
         metadataMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash && !containsFilteredItems;
 

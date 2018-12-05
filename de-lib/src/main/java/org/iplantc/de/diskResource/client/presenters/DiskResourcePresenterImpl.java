@@ -49,7 +49,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceDeleteCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMoveCallback;
@@ -348,6 +347,7 @@ public class DiskResourcePresenterImpl implements
             public void onSuccess(List<InfoType> infoTypes) {
                 DiskResourcePresenterImpl.this.infoTypes = infoTypes;
                 detailsViewPresenter.getView().setInfoTypes(infoTypes);
+                gridViewPresenter.setInfoTypes(infoTypes);
             }
         });
     }

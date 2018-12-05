@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent.DiskResourceNameSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent.HasDiskResourceNameSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent.HasDiskResourcePathSelectedEventHandlers;
@@ -256,6 +257,8 @@ public interface GridView extends IsWidget,
         void setSelectedDiskResourcesById(List<? extends HasId> diskResourcesToSelect);
 
         void unRegisterHandler(EventHandler handler);
+
+        void setInfoTypes(List<InfoType> infoTypes);
 
     }
 

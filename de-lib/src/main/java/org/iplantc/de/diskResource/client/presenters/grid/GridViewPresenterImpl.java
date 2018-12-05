@@ -57,8 +57,8 @@ import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
 import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
-import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
@@ -91,7 +91,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -215,6 +214,7 @@ public class GridViewPresenterImpl implements Presenter,
     private final GridView view;
     private boolean filePreviewEnabled = true;
     private HandlerManager handlerManager;
+    List<InfoType> infoTypes;
 
     @Inject
     GridViewPresenterImpl(final GridViewFactory gridViewFactory,
@@ -261,6 +261,11 @@ public class GridViewPresenterImpl implements Presenter,
         return listStore.addStoreUpdateHandler(handler);
     }
 
+    @Override
+    public void setInfoTypes(List<InfoType> infoTypes) {
+        this.infoTypes = infoTypes;
+    }
+
     // </editor-fold>
 
     // <editor-fold desc="Event Handlers">
@@ -300,11 +305,7 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void onEditInfoTypeSelected(final EditInfoTypeSelected event) {
-        Preconditions.checkState(event.getSelectedDiskResources().size() == 1,
-                                 "Only one Disk Resource should be selected, but there are %i",
-                                 getSelectedDiskResources().size());
 
-        final String currentType = event.getSelectedDiskResources().iterator().next().getInfoType();
         infoTypeDialogProvider.get(new AsyncCallback<InfoTypeEditorDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -313,11 +314,22 @@ public class GridViewPresenterImpl implements Presenter,
             public void onSuccess(final InfoTypeEditorDialog result) {
                 result.addOkButtonSelectHandler(selectEvent -> {
                     String newType = result.getSelectedValue().toString();
-                    setInfoType(event.getSelectedDiskResources().iterator().next(), newType);
+                    setInfoType(event.getSelectedDiskResources(), newType);
                 });
-                result.setCurrentInfoType(InfoType.fromTypeString(currentType));
+                if (isAllSameInfoType()) {
+                    result.setCurrentInfoType(InfoType.fromTypeString(event.getSelectedDiskResources()
+                                                                           .get(0)
+                                                                           .getInfoType()));
+                }
                 result.show();
-                result.mask();
+                result.addInfoTypes(infoTypes);
+            }
+
+            private boolean isAllSameInfoType() {
+                String type = event.getSelectedDiskResources().get(0).getInfoType();
+                return event.getSelectedDiskResources()
+                            .stream()
+                            .allMatch((dr) -> dr.getInfoType() == type);
             }
         });
     }
@@ -544,7 +556,7 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void onSetInfoTypeSelected(SetInfoTypeSelected event) {
-        setInfoType(event.getDiskResource(), event.getInfoType());
+        setInfoType(Arrays.asList(event.getDiskResource()), event.getInfoType());
     }
 
     @Override
@@ -686,20 +698,23 @@ public class GridViewPresenterImpl implements Presenter,
 
     }
 
-    void setInfoType(final DiskResource dr, String newType) {
-        diskResourceService.setFileType(dr.getPath(), newType, new DataCallback<String>() {
+    void setInfoType(final List<DiskResource> resources, String newType) {
+        for (DiskResource dr : resources) {
+            diskResourceService.setFileType(dr.getPath(), newType, new DataCallback<String>() {
 
-            @Override
-            public void onFailure(Integer statusCode, Throwable arg0) {
-                ErrorHandler.post(arg0);
-            }
+                @Override
+                public void onFailure(Integer statusCode,
+                                      Throwable arg0) {
+                    ErrorHandler.post(arg0);
+                }
 
-            @Override
-            public void onSuccess(String arg0) {
-                // Fetching the details will update the item in the grid
-                fetchDetails(dr);
-            }
-        });
+                @Override
+                public void onSuccess(String arg0) {
+                    // Fetching the details will update the item in the grid
+                    fetchDetails(dr);
+                }
+            });
+        }
     }
 
     void updateFav(final DiskResource diskResource, boolean fav) {
