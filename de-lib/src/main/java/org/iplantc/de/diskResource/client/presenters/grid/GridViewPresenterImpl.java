@@ -305,7 +305,7 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void onEditInfoTypeSelected(final EditInfoTypeSelected event) {
-        final String currentType = event.getSelectedDiskResources().iterator().next().getInfoType();
+
         infoTypeDialogProvider.get(new AsyncCallback<InfoTypeEditorDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -316,8 +316,20 @@ public class GridViewPresenterImpl implements Presenter,
                     String newType = result.getSelectedValue().toString();
                     setInfoType(event.getSelectedDiskResources(), newType);
                 });
+                if (isAllSameInfoType()) {
+                    result.setCurrentInfoType(InfoType.fromTypeString(event.getSelectedDiskResources()
+                                                                           .get(0)
+                                                                           .getInfoType()));
+                }
                 result.show();
                 result.addInfoTypes(infoTypes);
+            }
+
+            private boolean isAllSameInfoType() {
+                String type = event.getSelectedDiskResources().get(0).getInfoType();
+                return event.getSelectedDiskResources()
+                            .stream()
+                            .allMatch((dr) -> dr.getInfoType() == type);
             }
         });
     }
