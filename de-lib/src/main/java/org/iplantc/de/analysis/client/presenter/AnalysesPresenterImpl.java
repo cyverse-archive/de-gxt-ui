@@ -12,6 +12,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.AnalysesList;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
@@ -242,7 +243,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                                      new CancelAnalysisServiceCallback(analysisName,
                                                                        callback,
                                                                        errorCallback),
-                                     "Canceled");
+                                     AnalysisExecutionStatus.CANCELED.toString());
     }
 
     @Override
@@ -253,7 +254,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         analysisService.stopAnalysis(analysisId, new CompleteAnalysisServiceCallback(analysisName,
                                                                          callback,
                                                                          errorCallback),
-                                     "Completed");
+                                     AnalysisExecutionStatus.COMPLETED.toString());
     }
 
     @Override
@@ -281,7 +282,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     @Override
     public List<Analysis> getSelectedAnalyses() {
-        //return view.getSelectedAnalyses();
         return new ArrayList<>();
     }
 
@@ -298,20 +298,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
-        if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
-            view.setPresenter(this, baseDebugId, selectedAnalyses.get(0));
-        } else {
-            view.setPresenter(this, baseDebugId, null);
-        }
         container.setWidget(view);
-        view.load();
+        if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
+            view.load(this, baseDebugId, selectedAnalyses.get(0));
+        } else {
+            view.load(this, baseDebugId, null);
+        }
     }
-
-    @Override
-    public void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
-        //  view.setPermFilterInView(permFilter, typeFilter);
-    }
-
 
     @Override
     public AnalysisPermissionFilter getCurrentPermFilter() {

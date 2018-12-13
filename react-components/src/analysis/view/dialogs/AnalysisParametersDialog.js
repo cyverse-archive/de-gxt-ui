@@ -4,6 +4,8 @@ import exStyles from "../../style";
 import ids from "../../ids";
 import intlData from "../../messages";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
+import ArgumentType from "../../../../src/apps/ArgumentType";
+
 
 import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
@@ -19,54 +21,32 @@ import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core/styles";
 
 
-const ArgumentType = {
-    Input: "Input",
-    FileInput: "FileInput",
-    FolderInput: "FolderInput",
-    MultiFileSelector: "MultiFileSelector",
-    FileFolderInput: "FileFolderInput",
-    EnvironmentVariable: "EnvironmentVariable",
-    Flag: "Flag",
-    Info: "Info",
-    MultiLineText: "MultiLineText",
-    Integer: "Integer",
-    Double: "Double",
-    Text: "Text",
-    TextSelection: "TextSelection", // For selecting from a list of string values.
-    IntegerSelection: "IntegerSelection", // For selecting from a list of integers
-    DoubleSelection: "DoubleSelection", // For selecting from a list of doubles
-    TreeSelection: "TreeSelection",
-    Output: "Output",
-    FileOutput: "FileOutput",
-    FolderOutput: "FolderOutput",
-    MultiFileOutput: "MultiFileOutput",
-    ReferenceGenome: "ReferenceGenome",
-    ReferenceSequence: "ReferenceSequence",
-    ReferenceAnnotation: "ReferenceAnnotation",
-    Selection: "Selection",
-    ValueSelection: "ValueSelection",
-    Number: "Number",
-    Group: "Group",
-};
-
 function ParameterValue(props) {
-    const {parameter, classes, diskResourceUtil, onValueClick} = props;
-    let info_type = parameter.info_type;
+    const {
+        parameter,
+        parameter: {
+            info_type,
+            param_type,
+            param_value: {value},
+        },
+        classes,
+        diskResourceUtil,
+        onValueClick,
+    } = props;
     let valid_info_type = (!(info_type === "ReferenceGenome")
         && !(info_type === "ReferenceSequence")
         && !(info_type === "ReferenceAnnotation"));
-    let displayValue = parameter.param_value.value.display ? parameter.param_value.value.display : parameter.param_value.value;
+    let displayValue = value ? (value.display ? value.display : value) : "";
 
     if (!displayValue) {
         displayValue = "";
     }
-    let type = parameter.param_type;
 
-    if ((ArgumentType.Input === (type)
-        || ArgumentType.FileInput === (type)
-        || ArgumentType.FolderInput === (type)
-        || ArgumentType.MultiFileSelector === (type) ||
-        ArgumentType.FileFolderInput === (type))
+    if ((ArgumentType.Input === (param_type)
+        || ArgumentType.FileInput === (param_type)
+        || ArgumentType.FolderInput === (param_type)
+        || ArgumentType.MultiFileSelector === (param_type) ||
+        ArgumentType.FileFolderInput === (param_type))
         && valid_info_type) {
         return (
             <span
@@ -98,10 +78,10 @@ class AnalysisParametersDialog extends Component {
     }
 
     render() {
-        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick} = this.props;
+        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick, dialogOpen} = this.props;
         const {order, orderBy} = this.state;
         return (
-            <Dialog open={this.props.dialogOpen}>
+            <Dialog open={dialogOpen}>
                 <DEDialogHeader
                     heading={getMessage("analysisParamTitle", {values: {name: analysisName}})}
                     onClose={onViewParamDialogClose}/>

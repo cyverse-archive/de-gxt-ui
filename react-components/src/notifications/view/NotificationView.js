@@ -12,10 +12,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import moment from "moment";
 import NotificationToolbar from "./NotificationToolbar";
-import constants from "../../constants";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withI18N from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
@@ -24,6 +22,7 @@ import intlData from "../messages";
 import notificationCategory from "../model/notificationCategory";
 import ids from "../ids";
 import classnames from "classnames";
+import formatDate from "../../util/DateFormatter";
 
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false,},
@@ -259,10 +258,9 @@ class NotificationView extends Component {
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell padding="none">{(n.message.timestamp) ?
-                                            moment(n.message.timestamp, "x").format(
-                                                constants.DATE_FORMAT) :
-                                            getMessage("emptyValue")} </TableCell>
+                                        <TableCell padding="none">
+                                            {formatDate(n.message.timestamp)}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}

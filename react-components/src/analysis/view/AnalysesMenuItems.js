@@ -25,14 +25,9 @@ import SaveIcon from "@material-ui/icons/Save";
 import ShareIcon from "@material-ui/icons/Share";
 
 
-class AnalysesMenu extends Component {
+class AnalysesMenuItems extends Component {
     render() {
         const {
-            onClick,
-            isDisabled,
-            isMultiSelect,
-            shouldDisableCancel,
-            isOwner,
             classes,
             handleRename,
             handleClose,
@@ -45,12 +40,22 @@ class AnalysesMenu extends Component {
             handleViewParams,
             handleViewInfo,
             handleSaveAndComplete,
-            baseDebugId
+            baseDebugId,
+            selectionCount,
+            owner,
+            sharable,
+            disableCancel,
         } = this.props;
+
+        const disableSingleSelectionMenuItem = selectionCount != 1;
+        const disableShare = !selectionCount || !owner || !sharable;
+        const noSelection = !selectionCount;
+
+
         return (
             <React.Fragment>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_GO_TO_FOLDER)}
-                          disabled={isDisabled() || isMultiSelect()}
+                          disabled={disableSingleSelectionMenuItem}
                           onClick={() => {
                               handleClose();
                               handleGoToOutputFolder();
@@ -60,7 +65,7 @@ class AnalysesMenu extends Component {
                     {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_VIEW_PARAMS)}
-                          disabled={isDisabled() || isMultiSelect()}
+                          disabled={disableSingleSelectionMenuItem}
                           onClick={() => {
                               handleClose();
                               handleViewParams();
@@ -70,7 +75,7 @@ class AnalysesMenu extends Component {
                     {getMessage("viewParam")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_RELAUNCH)}
-                          disabled={isDisabled() || isMultiSelect()}
+                          disabled={disableSingleSelectionMenuItem}
                           onClick={() => {
                               handleClose();
                               handleRelaunch();
@@ -80,7 +85,7 @@ class AnalysesMenu extends Component {
                     {getMessage("relaunch")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_VIEW_ANALYSES_INFO)}
-                          disabled={isDisabled() || isMultiSelect()}
+                          disabled={disableSingleSelectionMenuItem}
                           onClick={() => {
                               handleClose();
                               handleViewInfo();
@@ -90,7 +95,7 @@ class AnalysesMenu extends Component {
                     {getMessage("analysisInfo")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_SHARE_COLLAB)}
-                          disabled={isDisabled() || !isOwner()}
+                          disabled={disableShare}
                           onClick={()=> {
                               handleClose();
                               handleShare();
@@ -100,7 +105,7 @@ class AnalysesMenu extends Component {
                     {getMessage("share")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_COMPLETE)}
-                          disabled={shouldDisableCancel() || !isOwner()}
+                          disabled={disableCancel || !owner}
                           onClick={() => {
                               handleClose();
                               handleSaveAndComplete();
@@ -110,7 +115,7 @@ class AnalysesMenu extends Component {
                     {getMessage("completeAndSave")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_CANCEL)}
-                          disabled={shouldDisableCancel() || !isOwner()}
+                          disabled={disableCancel || !owner}
                           onClick={()=> {
                               handleClose();
                               handleCancel();
@@ -120,7 +125,7 @@ class AnalysesMenu extends Component {
                     {getMessage("cancel")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_DELETE)}
-                          disabled={isDisabled() || !isOwner()}
+                          disabled={noSelection || !owner}
                           onClick={() => {
                               handleClose();
                               handleDeleteClick();
@@ -130,7 +135,7 @@ class AnalysesMenu extends Component {
                     {getMessage("delete")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_RENAME)}
-                          disabled={isDisabled() || isMultiSelect() || !isOwner()}
+                          disabled={disableSingleSelectionMenuItem  || !owner}
                           onClick={() => {
                               handleClose();
                               handleRename();
@@ -140,7 +145,7 @@ class AnalysesMenu extends Component {
                     {getMessage("rename")}
                 </MenuItem>
                 <MenuItem id={build(baseDebugId, ids.MENUITEM_UPDATE_COMMENTS)}
-                          disabled={isDisabled() || isMultiSelect() || !isOwner()}
+                          disabled={disableSingleSelectionMenuItem  || !owner}
                           onClick={() => {
                               handleClose();
                               handleUpdateComments();
@@ -154,4 +159,4 @@ class AnalysesMenu extends Component {
     }
 }
 
-export default withStyles(exStyles)(AnalysesMenu);
+export default withStyles(exStyles)(AnalysesMenuItems);

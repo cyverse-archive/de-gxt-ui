@@ -4,12 +4,12 @@
  *
  */
 import React from 'react';
-import { injectIntl } from "react-intl";
-
-import intlData from "../../messages";
 import analysisStatus from "../../model/analysisStatus";
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 import withI18N, { formatHTMLMessage, formatMessage, getMessage } from "../../../util/I18NWrapper";
+import { injectIntl } from "react-intl";
+import intlData from "../../messages";
+
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
 import Button from "@material-ui/core/Button/Button";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
@@ -20,8 +20,11 @@ import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import Grid from "@material-ui/core/Grid/Grid";
 import Radio from '@material-ui/core/Radio';
-import RadioGroup from "@material-ui/core/RadioGroup/RadioGroup";
-import TextField from "@material-ui/core/TextField/TextField";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import TextField from "@material-ui/core/TextField";
+import PropTypes from "prop-types";
+import formatDate from "../../../util/DateFormatter";
+
 
 function AnalysisInfo(props) {
     const {analysis, name, email} = props;
@@ -44,10 +47,10 @@ function AnalysisInfo(props) {
                     {getMessage("outputFolder")} : {analysis.resultfolderid}
                 </Grid>
                 <Grid item xs={12}>
-                    {getMessage("startDate")} : {analysis.startdate}
+                    {getMessage("startDate")} : {formatDate(analysis.startdate)}
                 </Grid>
                 <Grid item xs={12}>
-                    {getMessage("endDate")} : {analysis.enddate}
+                    {getMessage("endDate")} : {formatDate(analysis.enddate)}
                 </Grid>
                 <Grid item xs={12}>
                     {getMessage("user")} : {analysis.username}
@@ -155,29 +158,19 @@ class ShareWithSupportDialog extends React.Component {
             shareWithSupport: false,
             enableSubmit: false,
             comment: "",
-            analysis: props.analysis,
         };
         this.handleConditionChange = this.handleConditionChange.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.analysis !== prevProps.analysis) {
-            this.setState({analysis: this.props.analysis});
-        }
-    }
-
     handleConditionChange(event) {
-        console.log("radio changed..." + event.target.value);
         this.setState({outputCondition: event.target.value})
     }
 
     render() {
         const {analysis, intl, name, email, onShareWithSupport} = this.props;
         const {outputCondition, shareWithSupport, enableSubmit} = this.state;
-
-        const status = analysis ? analysis.status : "";
+        const status = analysis.status;
         return (
-            <React.Fragment>
                 <Dialog open={this.props.dialogOpen}>
                     <DEDialogHeader
                         heading={analysis.name}
@@ -188,73 +181,62 @@ class ShareWithSupportDialog extends React.Component {
                             }
                         }/>
                     <DialogContent>
-                        <div style={{
-                            display: shareWithSupport ?
-                                "none" :
-                                "block"
-                        }}>
-                            <div style={{
-                                display: status === analysisStatus.COMPLETED ?
-                                    "block" :
-                                    "none"
-                            }}>
+                        {!shareWithSupport &&
+                        <React.Fragment>
+
+                            {status === analysisStatus.COMPLETED &&
+                            <React.Fragment>
                                 <CompletedStateCondition analysis={analysis}
                                                          handleConditionChange={this.handleConditionChange}
                                                          outputCondition={outputCondition}/>
-                            </div>
-                            <div style={{
-                                display: status === analysisStatus.SUBMITTED ?
-                                    "block" :
-                                    "none"
-                            }}>
-                                <SubmittedStateSupport analysis={analysis}/>
-                            </div>
-                            <div style={{
-                                display: status === analysisStatus.RUNNING ?
-                                    "block" :
-                                    "none"
-                            }}>
-                                <RunningStateSupport analysis={analysis}/>
-                            </div>
-                            <div style={{
-                                display: status === analysisStatus.FAILED ?
-                                    "block" :
-                                    "none"
-                            }}>
-                                <FailedStateSupport analysis={analysis}/>
-                            </div>
-                            <div style={{
-                                display: (outputCondition === "noOutput" && status ===
-                                    analysisStatus.COMPLETED) ?
-                                    "block" :
-                                    "none"
-                            }}>
-                                <CompletedNoOutputSupport/>
-                            </div>
+                            </React.Fragment>
+                            }
 
-                            <div style={{
-                                display: (outputCondition === "unExpectedOutput" && status ===
-                                    analysisStatus.COMPLETED) ?
-                                    "block" :
-                                    "none"
-                            }}>
+                            {status === analysisStatus.SUBMITTED &&
+                            <React.Fragment>
+                                <SubmittedStateSupport analysis={analysis}/>
+                            </React.Fragment>
+                            }
+
+                            {status === analysisStatus.RUNNING &&
+                            <React.Fragment>
+                                <RunningStateSupport analysis={analysis}/>
+                            </React.Fragment>
+                            }
+
+                            {status === analysisStatus.FAILED &&
+                            <React.Fragment>
+                                <FailedStateSupport analysis={analysis}/>
+                            </React.Fragment>
+                            }
+
+                            {outputCondition === "noOutput" && status ===
+                            analysisStatus.COMPLETED &&
+                            <React.Fragment>
+                                <CompletedNoOutputSupport/>
+                            </React.Fragment>
+                            }
+
+                            {outputCondition === "unExpectedOutput" && status ===
+                            analysisStatus.COMPLETED &&
+                            <React.Fragment>
                                 <CompletedUnExpectedOutputSupport/>
-                            </div>
+                            </React.Fragment>
+                            }
+
                             <Button variant="contained"
                                     color="primary"
                                     style={{textTransform: "none", float: "right"}}
                                     onClick={() => {
                                         this.setState({shareWithSupport: true})
                                     }}>
-                                I still need help!
+                                {getMessage("needHelp")}
                             </Button>
-                        </div>
-                        <div style={{
-                            display: shareWithSupport ?
-                                "block" :
-                                "none",
-                            flexGrow: 1
-                        }}>
+                        </React.Fragment>
+                        }
+
+                        {shareWithSupport &&
+                        <React.Fragment>
                             <AnalysisInfo analysis={analysis} name={name} email={email}/>
                             <TextField
                                 id="comments"
@@ -292,17 +274,18 @@ class ShareWithSupportDialog extends React.Component {
                                             this.state.comment,
                                             true)
                                     }
-                                    }
-                            >
+                                    }>
                                 {getMessage("submit")}
                             </Button>
-                        </div>
+                        </React.Fragment>
+                        }
                     </DialogContent>
                 </Dialog>
-            </React.Fragment>
         );
     }
 }
 
-ShareWithSupportDialog.propTypes = {};
+ShareWithSupportDialog.propTypes = {
+    analysis: PropTypes.object.isRequired,
+};
 export default withI18N(injectIntl(ShareWithSupportDialog), intlData);

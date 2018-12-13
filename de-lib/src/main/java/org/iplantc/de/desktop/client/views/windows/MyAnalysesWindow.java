@@ -91,8 +91,6 @@ public class MyAnalysesWindow extends WindowBase {
         if (config instanceof AnalysisWindowConfig) {
             AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
             presenter.setSelectedAnalyses(analysisWindowConfig.getSelectedAnalyses());
-            presenter.setFilterInView(AnalysisPermissionFilter.ALL.fromTypeString(analysisWindowConfig.getPermFilter()),
-                                      AppTypeFilter.ALL.fromTypeString(analysisWindowConfig.getTypeFilter()));
         }
     }
 

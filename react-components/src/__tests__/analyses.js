@@ -34,7 +34,7 @@ it("renders ShareWithSupportDialog without crashing", () => {
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it("renders ShareWithSupportDialog without crashing", () => {
+it("renders AnalysesView without crashing", () => {
     const div = document.createElement('div');
     ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><AnalysesViewTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);

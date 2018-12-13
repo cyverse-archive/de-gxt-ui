@@ -54,7 +54,7 @@ class EnhancedTableHead extends React.Component {
                             <TableCell
                                 key={column.name}
                                 numeric={column.numeric}
-                                padding={padding ? padding : "default"}
+                                padding={padding || "default"}
                                 sortDirection={orderBy === column.name ? order : false}
                                 className={classes.column_heading}
                                 id={build(this.props.baseId,

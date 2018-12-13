@@ -8,7 +8,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
 /**
@@ -40,10 +39,7 @@ public interface AnalysisParametersView {
     @JsType
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
 
-
-
         interface BeanFactory extends AutoBeanFactory {
-            @JsIgnore
             AutoBean<File> file();
         }
 

@@ -45,8 +45,6 @@ function AnalysisName(props) {
     const name = props.analysis.name;
     const isBatch = props.analysis.batch;
     const className = props.classes.analysisName;
-    const presenter = props.presenter;
-    const resultFolderId = props.analysis.resultfolderid;
     const handleGoToOutputFolder = props.handleGoToOutputFolder;
     const handleBatchIconClick = props.handleBatchIconClick;
     const interactiveUrls = props.analysis.interactive_urls;
@@ -83,7 +81,6 @@ function AppName(props) {
     const name = analysis.app_name;
     const isDisabled = analysis.app_disabled;
     const className = props.classes.analysisName;
-    const presenter = props.presenter;
     const handleRelaunch = props.handleRelaunch;
 
     if (!isDisabled) {
@@ -177,8 +174,6 @@ const MINE = "mine";
 
 const THEIRS = "theirs";
 
-const PARENT_ID = "parent_id";
-
 const APP_NAME = "app_name";
 
 const NAME = "name";
@@ -188,11 +183,12 @@ const ID = "id";
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
+        const {analysesList, permFilter, appTypeFilter, selectedAnalysisId} = props;
         this.state = {
-            data: this.props.analysesList ? this.props.analysesList.analyses : [],
+            data: analysesList ? analysesList.analyses : [],
             loading: true,
-            total: this.props.analysesList && this.props.analysesList.total ?
-                this.props.analysesList.total :
+            total: analysesList && analysesList.total ?
+                analysesList.total :
                 0,
             offset: 0,
             page: 0,
@@ -200,12 +196,12 @@ class AnalysesView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'enddate',
-            permFilter: this.props.permFilter,
-            typeFilter: this.props.appTypeFilter,
+            permFilter: permFilter,
+            typeFilter: appTypeFilter,
             parentId: "",
             nameFilter: "",
             appNameFilter: "",
-            idFilter: this.props.selectedAnalysisId,
+            idFilter: selectedAnalysisId,
             parameters: [],
             info: null,
             infoDialogOpen: false,
@@ -258,7 +254,7 @@ class AnalysesView extends Component {
     }
 
     fetchAnalyses() {
-        const {rowsPerPage, offset, filter, order, orderBy} = this.state;
+        const {rowsPerPage, offset, order, orderBy} = this.state;
         this.setState({loading: true});
 
         const parentFilter = this.getParentIdFilter();
@@ -386,7 +382,7 @@ class AnalysesView extends Component {
 
     handleSelectAllClick(event, checked) {
         if (checked) {
-            this.setState(state => ({selected: state.data.map(n => n.message.id)}));
+            this.setState(state => ({selected: state.data.map(n => n.id)}));
             return;
         }
         this.setState({selected: []});
@@ -418,19 +414,15 @@ class AnalysesView extends Component {
                     });
                 });
         } else {
-            this.setState({shareWithSupportDialogOpen: false});
+            this.setState({loading: false, shareWithSupportDialogOpen: false});
         }
     }
 
     handleRowClick(id) {
         this.setState((prevState, props) => {
             const {selected} = prevState;
-            const selectedIndex = selected.indexOf(id);
-            let newSelected = [];
-
-            if (selectedIndex === -1) {
-                newSelected.push(id);
-                return {selected: newSelected};
+            if (selected.indexOf(id) < 0) {
+                return {selected: [id]};
             }
         });
 
@@ -460,7 +452,7 @@ class AnalysesView extends Component {
     }
 
     handleGoToOutputFolder() {
-        this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]));
+        this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]).resultfolderid);
     }
 
     handleInteractiveUrlClick(url) {
@@ -484,15 +476,16 @@ class AnalysesView extends Component {
             });
     }
     handleParamValueClick(parameter) {
-        this.setState({viewParamsDialogOpen: false}); //have to close view params
-        // otherwise file viewer wont show up front
+        //have to close view params otherwise file viewer wont show up front
+       this.setState({viewParamsDialogOpen: false});
        this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
-        this.setState({loading: true, viewParamsDialogOpen: false});   //close view params temporarily
-        if (parameters && parameters.length > 0) {                       //so that save as dialog opens on
-            let contents = "Name\t" + "Type\t" + "Value\t\n";          // top of the screen
+        //close view params temporarily so that save as dialog opens on top of the screen
+        this.setState({loading: true, viewParamsDialogOpen: false});
+        if (parameters && parameters.length > 0) {
+            let contents = "Name\t" + "Type\t" + "Value\t\n";
             parameters.forEach(function(param){
                 contents =
                     contents.concat(param.param_name + "\t" + param.param_type + "\t" +
@@ -556,7 +549,7 @@ class AnalysesView extends Component {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
-                            reject("");
+                            reject(errorMessage);
                         });
                 });
                 promises.push(p);
@@ -587,7 +580,7 @@ class AnalysesView extends Component {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
-                            reject("");
+                            reject(errorMessage);
                         });
                 });
                 promises.push(p);
@@ -624,11 +617,11 @@ class AnalysesView extends Component {
     }
 
     handleRename() {
-        this.setState({renameDialogOpen: true, commentsDialogOpen: false});
+        this.setState({renameDialogOpen: true});
     }
 
     handleUpdateComments() {
-        this.setState({commentsDialogOpen: true, renameDialogOpen: false});
+        this.setState({commentsDialogOpen: true});
     }
 
     doRename(newName) {
@@ -662,10 +655,6 @@ class AnalysesView extends Component {
             });
     }
 
-
-    isMultiSelect = () => this.state.selected && (this.state.selected.length > 1) ? true : false;
-
-    isDisabled = () => this.state.selected && (this.state.selected.length > 0) ? false : true;
 
     isOwner() {
         let selection = this.state.selected;
@@ -704,9 +693,6 @@ class AnalysesView extends Component {
 
     shouldDisableCancel() {
         let selection = this.state.selected;
-        if (this.isDisabled(selection)) {
-            return true;
-        }
         for (let i = 0; i < selection.length; i++) {
             let found = this.findAnalysis(selection[i]);
             if (found) {
@@ -732,12 +718,6 @@ class AnalysesView extends Component {
     update(id, newName) {
         let analysis = this.findAnalysis(id);
         analysis.name = newName;
-        this.state.data.forEach(function (a) {
-            if (a.id === analysis.id) {
-                a = analysis;
-                return;
-            }
-        });
         this.setState((prevState, props) => {
             return {data: prevState.data};   // make it display the updated name
         });
@@ -801,9 +781,16 @@ class AnalysesView extends Component {
             info,
             infoDialogOpen,
         } = this.state;
+
         const selectedAnalysis = this.findAnalysis(selected[0]);
         const baseId = baseDebugId + ids.ANALYSES_VIEW;
         const gridId = baseDebugId + ids.ANALYSES_VIEW + ids.GRID;
+
+        const selectionCount = selected? selected.length : 0;
+        const owner = this.isOwner(),
+            sharable = this.isSharable(),
+            disableCancel = this.shouldDisableCancel();
+
         return (
             <React.Fragment>
                 <div id={baseId} className={classes.container}>
@@ -811,7 +798,6 @@ class AnalysesView extends Component {
                     <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                     }
                     <AnalysesToolbar baseDebugId={build(baseId, ids.TOOLBAR)}
-                                     selected={selected}
                                      handleGoToOutputFolder={this.handleGoToOutputFolder}
                                      handleViewParams={this.handleViewParams}
                                      handleRelaunch={this.handleRelaunchFromMenu}
@@ -822,11 +808,6 @@ class AnalysesView extends Component {
                                      handleRename={this.handleRename}
                                      handleUpdateComments={this.handleUpdateComments}
                                      handleSaveAndComplete={this.handleSaveAndComplete}
-                                     isDisabled={this.isDisabled}
-                                     isMultiSelect={this.isMultiSelect}
-                                     shouldDisableCancel={this.shouldDisableCancel}
-                                     isOwner={this.isOwner}
-                                     isSharable={this.isSharable}
                                      handleRefersh={this.fetchAnalyses}
                                      permFilter={permFilter}
                                      typeFilter={typeFilter}
@@ -834,6 +815,10 @@ class AnalysesView extends Component {
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
                                      searchInputValue={selectedAnalysisName}
+                                     selectionCount={selectionCount}
+                                     owner={owner}
+                                     sharable={sharable}
+                                     disableCancel={disableCancel}
                     />
                     <div className={classes.table}>
                         <Table>
@@ -851,12 +836,12 @@ class AnalysesView extends Component {
                                 padding="none"
                             />
                             <TableBody>
-                                {data.map(n => {
-                                    const id = n.id;
+                                {data.map(analysis => {
+                                    const id = analysis.id;
                                     const isSelected = this.isSelected(id);
-                                    const user = n.username.includes(IPLANT) ?
-                                        n.username.split('@')[0] :
-                                        n.username;
+                                    const user = analysis.username.includes(IPLANT) ?
+                                        analysis.username.split('@')[0] :
+                                        analysis.username;
                                     return (
                                         <TableRow onClick={() => this.handleRowClick(id)}
                                                   role="checkbox"
@@ -876,7 +861,7 @@ class AnalysesView extends Component {
                                             <TableCell id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
                                                        padding="none">
                                                 <AnalysisName classes={classes}
-                                                              analysis={n}
+                                                              analysis={analysis}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
@@ -884,24 +869,26 @@ class AnalysesView extends Component {
                                                                   id)}/>
                                             </TableCell>
                                             <TableCell className={classes.cellText}
-                                                       padding="none">{user}</TableCell>
+                                                       padding="none">
+                                                {user}
+                                            </TableCell>
                                             <TableCell id={build(gridId, id + ids.APP_NAME_CELL)}
                                                        className={classes.cellText}
                                                        padding="none">
-                                                <AppName analysis={n}
+                                                <AppName analysis={analysis}
                                                          handleRelaunch={this.handleRelaunch}
                                                          classes={classes}/>
                                             </TableCell>
                                             <TableCell className={classes.cellText} padding="none">
-                                                {formatDate(null, n.startdate)}
+                                                {formatDate(analysis.startdate)}
                                             </TableCell>
                                             <TableCell className={classes.cellText} padding="none">
-                                                {formatDate(null, n.enddate)}
+                                                {formatDate(analysis.enddate)}
                                             </TableCell>
                                             <TableCell id={build(gridId, id + ids.SUPPORT_CELL)}
                                                        adding="none">
-                                                <Status analysis={n}
-                                                        onClick={() => this.statusClick(n)}
+                                                <Status analysis={analysis}
+                                                        onClick={() => this.statusClick(analysis)}
                                                         username={username}/>
                                             </TableCell>
                                             <TableCell padding="none"
@@ -947,9 +934,14 @@ class AnalysesView extends Component {
                 <Prompt analysis={selectedAnalysis}
                         intl={intl}
                         renameDialogOpen={this.state.renameDialogOpen}
-                        commentsDialogOpen={this.state.commentsDialogOpen}
                         onRenameOkClicked={this.doRename}
                         onRenameCancelClicked={() => this.setState({renameDialogOpen: false})}
+                />
+                }
+                {selectedAnalysis &&
+                <Prompt analysis={selectedAnalysis}
+                        intl={intl}
+                        commentsDialogOpen={this.state.commentsDialogOpen}
                         onCommentsOkClicked={this.doComments}
                         onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
                 />
@@ -971,13 +963,12 @@ class AnalysesView extends Component {
                                           onSaveClick={this.handleSaveParamsToFileClick}
                 />
                 }
-                {info && selectedAnalysis &&
+                {info &&
                 <AnalysisInfoDialog info={info}
                                     dialogOpen={infoDialogOpen}
                                     onInfoDialogClose={() => this.setState({infoDialogOpen: false})}
                 />
                 }
-                {selectedAnalysis &&
                 <DEConfirmationDialog dialogOpen={confirmDeleteDialogOpen}
                                       message={formatMessage(intl, "analysesExecDeleteWarning")}
                                       heading={formatMessage(intl,"delete")}
@@ -986,7 +977,6 @@ class AnalysesView extends Component {
                                           this.setState({confirmDeleteDialogOpen: false})
                                       }}
                 />
-                }
             </React.Fragment>
         );
     }

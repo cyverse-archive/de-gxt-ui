@@ -18,11 +18,8 @@ import com.google.inject.Inject;
 public class AnalysesViewImpl implements AnalysesView {
 
     HTMLPanel panel;
-    Presenter presenter;
     AnalysisParametersView.Presenter paramPresenter;
     DiskResourceUtil diskResourceUtil;
-    String baseDebugId;
-    Analysis selectedAnalysis;
 
     @Inject
     AnalysesViewImpl(AnalysisParametersView.Presenter paramPresenter,
@@ -38,18 +35,11 @@ public class AnalysesViewImpl implements AnalysesView {
     }
 
     @Override
-    public void setPresenter(Presenter presenter,
-                             String baseDebugId,
-                             Analysis selectedAnalysis) {
-        this.presenter = presenter;
-        this.baseDebugId = baseDebugId;
-        this.selectedAnalysis = selectedAnalysis;
-    }
-
-    @Override
-    public void load() {
+    public void load(Presenter presenter,
+                     String baseDebugId,
+                     Analysis selectedAnalysis) {
         ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
-        props.presenter = this.presenter;
+        props.presenter = presenter;
         final UserInfo instance = UserInfo.getInstance();
         props.username = instance.getFullUsername();
         props.email = instance.getEmail();

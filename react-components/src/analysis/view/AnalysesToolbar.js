@@ -14,7 +14,7 @@ import exStyles from "../style";
 import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
-import AnalysesMenu from "./AnalysesMenu";
+import AnalysesMenuItems from "./AnalysesMenuItems";
 import SearchField from "../../util/SearchField";
 
 import Button from '@material-ui/core/Button';
@@ -67,11 +67,10 @@ class AnalysesToolbar extends Component {
                     </Button>
                     <Menu
                         id={analysesMenuBaseId}
-                        style={{zIndex: 888887,}}
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={this.handleClose}>
-                        <AnalysesMenu
+                        <AnalysesMenuItems
                             handleClose={this.handleClose}
                             {...this.props}/>
                     </Menu>

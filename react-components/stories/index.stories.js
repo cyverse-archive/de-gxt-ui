@@ -4,7 +4,6 @@ import { action } from "@storybook/addon-actions";
 
 import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
-import AnalysisCommentsDialogTest from "./analysis/view/dialogs/AnalysisCommentsDialog.stories";
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
 
@@ -18,10 +17,12 @@ import BasicDetailsTest from "./data/details/BasicDetails.stories";
 import InfoTypeSelectionListTest from "./data/details/InfoTypeSelectionList.stories";
 import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
+
 import QueryBuilderTest from './data/search/QueryBuilder.stories';
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
+
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
@@ -55,8 +56,6 @@ import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
     <AnalysisInfoDialogTest/>);
-storiesOf('analysis/view/dialogs', module).add('with test analysis comments', () =>
-    <AnalysisCommentsDialogTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis parameters', () =>
     <AnalysisParametersDialogTest/>);
 storiesOf('analysis/view/dialogs', module)

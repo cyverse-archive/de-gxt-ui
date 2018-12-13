@@ -3,6 +3,7 @@ var intlData = {
     "messages": {
         "okBtnText": "OK",
         "cancelBtnText": "Cancel",
+        "more": "More",
     }
 };
 

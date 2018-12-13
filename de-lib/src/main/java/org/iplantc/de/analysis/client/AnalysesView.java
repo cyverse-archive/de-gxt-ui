@@ -98,9 +98,6 @@ public interface AnalysesView extends IsWidget {
         @JsIgnore
         AppTypeFilter getCurrentTypeFilter();
 
-        @JsIgnore
-        void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter);
-
         void getAnalyses(int limit,
                          int offset,
                          Splittable filters,
@@ -150,9 +147,7 @@ public interface AnalysesView extends IsWidget {
 
     }
 
-    void setPresenter(Presenter presenter,
-                      String baseDebugId,
-                      Analysis selectedAnalysis);
-
-    void load();
+    void load(Presenter presenter,
+              String baseDebugId,
+              Analysis selectedAnalysis);
 }

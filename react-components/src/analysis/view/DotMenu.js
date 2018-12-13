@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react';
 
-import AnalysesMenu from "./AnalysesMenu";
+import AnalysesMenuItems from "./AnalysesMenuItems";
 
 import Menu from "@material-ui/core/Menu";
 
@@ -57,7 +57,7 @@ class DotMenu extends Component {
                         },
                     }}
                 >
-                    <AnalysesMenu handleClose={this.handleDotMenuClose}
+                    <AnalysesMenuItems handleClose={this.handleDotMenuClose}
                                   {...this.props} />
                 </Menu>
             </div>

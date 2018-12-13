@@ -21,30 +21,33 @@ class DEPromptDialog extends Component {
         super(props);
         this.state = {
             error: false,
-            value: props.initialValue ? props.initialValue : "",
-            dialogOpen: props.dialogOpen,
-            disableOkBtn: (props.isRequired && !props.initialValue) ? true : false,
+            value: props.initialValue || "",
+            disableOkBtn: (props.isRequired && !props.initialValue),
         }
     }
 
     onChange = (event) => {
         let val = event.target.value;
-        if ((!val || val.length === 0) && this.props.isRequired) {
-            this.setState({error: true, disableOkBtn: true, value: val});
-        } else {
-            this.setState({error: false, disableOkBtn: false, value: val});
-        }
+        const valid = (val || !this.props.isRequired);
+        this.setState({error: true, disableOkBtn: !valid, value: val});
     };
 
     render() {
-        const {heading, prompt, multiline, isRequired, onOkBtnClick, onCancelBtnClick} = this.props;
-        const {dialogOpen, value, error, disableOkBtn} = this.state;
+        const {
+            heading,
+            prompt,
+            multiline,
+            isRequired,
+            onOkBtnClick,
+            onCancelBtnClick,
+            dialogOpen
+        } = this.props;
+        const {value, error, disableOkBtn} = this.state;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
                     heading={heading}
                     onClose={() => {
-                        this.setState({dialogOpen: false});
                         if (onCancelBtnClick) {
                             onCancelBtnClick();
                         }
@@ -53,7 +56,7 @@ class DEPromptDialog extends Component {
                     <TextField
                         id="multiline-static"
                         helperText={prompt}
-                        multiline={multiline ? multiline : false}
+                        multiline={multiline}
                         rows={multiline? 4 : 1}
                         margin="normal"
                         value={value}
@@ -66,7 +69,6 @@ class DEPromptDialog extends Component {
                 <DialogActions>
                     <Button
                         onClick={() => {
-                            this.setState({dialogOpen: false});
                             if (onCancelBtnClick) {
                                 onCancelBtnClick();
                             }
@@ -76,7 +78,6 @@ class DEPromptDialog extends Component {
                     </Button>
                     <Button
                         onClick={() => {
-                            this.setState({dialogOpen: false});
                             onOkBtnClick(value);
                         }}
                         disabled={disableOkBtn}
