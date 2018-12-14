@@ -111,4 +111,39 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     public String entryPoint() {
         return toolMessages.entryPoint();
     }
+
+    @Override
+    public String interactiveLabel() {
+        return toolMessages.interactiveLabel();
+    }
+
+    @Override
+    public String skipTmpMountLabel() {
+        return toolMessages.skipTmpMountLabel();
+    }
+
+    @Override
+    public String osgImagePathLabel() {
+        return toolMessages.osgImagePathLabel();
+    }
+
+    @Override
+    public String maxCPUCoresLabel() {
+        return toolMessages.maxCPUCoresLabel();
+    }
+
+    @Override
+    public String minCPUCoresLabel() {
+        return toolMessages.minCPUCoresLabel();
+    }
+
+    @Override
+    public String minMemoryLimitLabel() {
+        return toolMessages.minMemoryLimitLabel();
+    }
+
+    @Override
+    public String minDiskSpaceLabel() {
+        return toolMessages.minDiskSpaceLabel();
+    }
 }

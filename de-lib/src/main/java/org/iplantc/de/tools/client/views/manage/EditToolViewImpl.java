@@ -17,10 +17,13 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
+import com.sencha.gxt.widget.core.client.form.CheckBox;
+import com.sencha.gxt.widget.core.client.form.DoubleField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.IsField;
+import com.sencha.gxt.widget.core.client.form.LongField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
@@ -70,21 +73,51 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     FieldLabel imgLbl;
 
-    @Ignore
+    @Path("container.image.osgImagePath")
+    @UiField
+    TextField osgImagePathEditor;
+
+    @UiField
+    CheckBox interactiveEditor;
+
+    @Path("container.skipTmpMount")
+    @UiField
+    CheckBox skipTmpMountEditor;
+
+    @Path("container.maxCPUCores")
+    @UiField
+    DoubleField maxCPUCoresEditor;
+
+    @Path("container.minCPUCores")
+    @UiField
+    DoubleField minCPUCoresEditor;
+
+    @Path("container.minMemoryLimit")
+    @UiField
+    LongField minMemoryLimitEditor;
+
+    @Path("container.minDiskSpace")
+    @UiField
+    LongField minDiskSpaceEditor;
+
+    @Path("container.pidsLimit")
     @UiField
     IntegerField pidsLimit;
 
-    @Ignore
+    @Path("container.memoryLimit")
     @UiField
-    IntegerField memory;
+    LongField memory;
 
-    @Ignore
+    @Path("container.networkMode")
     @UiField
     TextField network;
 
-    @Ignore
+    @Path("timeLimit")
     @UiField
     IntegerField time;
+
+    @UiField
+    FramedPanel restrictions;
 
     /**
      * Entrypoint for a tool container
@@ -125,7 +158,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
             return null;
         }
 
-        return appearance.buildRequiredFieldLabel(label); //$NON-NLS-1$
+        return appearance.buildRequiredFieldLabel(label);
     }
 
     @Override
@@ -165,6 +198,12 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         memory.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_MEM);
         network.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NW);
         time.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TIME);
+        osgImagePathEditor.setId(baseID + ToolsModule.EditToolIds.OSG_IMAGE_PATH);
+        minMemoryLimitEditor.setId(baseID + ToolsModule.EditToolIds.MIN_MEM_LIMIT);
+        maxCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MAX_CPU_CORES);
+        minCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MIN_CPU_CORES);
+        skipTmpMountEditor.setId(baseID + ToolsModule.EditToolIds.SKIP_TMP_MOUNT);
+        minDiskSpaceEditor.setId(baseID + ToolsModule.EditToolIds.MIN_DISK_SPACE);
     }
 
 }

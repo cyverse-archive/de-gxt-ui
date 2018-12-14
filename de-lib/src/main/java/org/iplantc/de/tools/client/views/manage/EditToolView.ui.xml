@@ -14,7 +14,12 @@
     </ui:with>
 
     <ui:with field="margins" type="com.sencha.gxt.core.client.util.Margins">
-        <ui:attributes top="15" right="15" bottom="0" left="15"/>
+        <ui:attributes top="2" right="15" bottom="0" left="0"/>
+    </ui:with>
+
+    <ui:with field="layoutData"
+             type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData">
+        <ui:attributes flex="1" margins="{margins}"/>
     </ui:with>
 
     <ui:with field="marginData" type="com.sencha.gxt.widget.core.client.container.MarginData">
@@ -27,8 +32,8 @@
     <container:VBoxLayoutContainer ui:field="container" VBoxLayoutAlign="STRETCH">
         <container:child layoutData="{outerLayout}">
             <c:FramedPanel ui:field="form" heading="{appearance.toolInfo}">
-                <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH" layoutData="{margins}">
-                    <container:child>
+                <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel ui:field="nameLbl" text="{appearance.toolName}">
                             <form:widget>
                                 <form:TextField ui:field="name" allowBlank="false"/>
@@ -36,7 +41,7 @@
                         </form:FieldLabel>
                     </container:child>
 
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.description}">
                             <form:widget>
                                 <form:TextArea ui:field="description" allowBlank="true"/>
@@ -44,7 +49,7 @@
                         </form:FieldLabel>
                     </container:child>
 
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel ui:field="versionLbl" text="{appearance.version}">
                             <form:widget>
                                 <form:TextField ui:field="version" allowBlank="false"
@@ -53,7 +58,7 @@
                         </form:FieldLabel>
                     </container:child>
 
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel ui:field="imgLbl" text="{appearance.imgName}">
                             <form:widget>
                                 <form:TextField ui:field="imgName" allowBlank="false"/>
@@ -61,31 +66,95 @@
                         </form:FieldLabel>
                     </container:child>
 
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.tag}">
                             <form:widget>
                                 <form:TextField ui:field="tag" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.entryPoint}">
                             <form:widget>
                                 <form:TextField ui:field="entryPoint" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.dockerUrl}">
                             <form:widget>
                                 <form:TextField ui:field="url" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.osgImagePathLabel}">
+                            <form:widget>
+                                <form:TextField ui:field="osgImagePathEditor"
+                                                allowBlank="true"
+                                                enabled="false"
+                                />
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.interactiveLabel}">
+                            <form:widget>
+                                <form:CheckBox ui:field="interactiveEditor"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.skipTmpMountLabel}">
+                            <form:widget>
+                                <form:CheckBox ui:field="skipTmpMountEditor"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.maxCPUCoresLabel}">
+                            <form:widget>
+                                <form:DoubleField ui:field="maxCPUCoresEditor"
+                                                  allowBlank="true"
+                                                  enabled="true"
+                                />
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.minCPUCoresLabel}">
+                            <form:widget>
+                                <form:DoubleField ui:field="minCPUCoresEditor"
+                                                  allowBlank="true"
+                                                  enabled="true"
+                                />
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.minMemoryLimitLabel}">
+                            <form:widget>
+                                <form:LongField ui:field="minMemoryLimitEditor"
+                                                allowBlank="true"
+                                                enabled="true"
+                                />
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <form:FieldLabel text="{appearance.minDiskSpaceLabel}">
+                            <form:widget>
+                                <form:LongField ui:field="minDiskSpaceEditor"
+                                                allowBlank="true"
+                                                enabled="true"
+                                />
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
                 </container:VBoxLayoutContainer>
             </c:FramedPanel>
         </container:child>
-        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}" visible="false">
+        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}" visible="true">
             <form:FieldSet ui:field="fieldSet" heading="{appearance.restrictions}" collapsible="true"
                            layoutData="{marginData}">
                 <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
@@ -96,7 +165,7 @@
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.memLimit}">
                         <form:widget>
-                            <form:IntegerField ui:field="memory" allowBlank="true" enabled="false"/>
+                            <form:LongField ui:field="memory" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.nwMode}">

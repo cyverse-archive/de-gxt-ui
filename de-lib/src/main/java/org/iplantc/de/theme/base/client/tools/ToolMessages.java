@@ -102,6 +102,20 @@ public interface ToolMessages extends Messages {
     SafeHtml fileExists(String dupeFiles);
 
     String toolInfoError();
+
+    String interactiveLabel();
+
+    String skipTmpMountLabel();
+
+    String osgImagePathLabel();
+
+    String maxCPUCoresLabel();
+
+    String minCPUCoresLabel();
+
+    String minMemoryLimitLabel();
+
+    String minDiskSpaceLabel();
 }
 
 

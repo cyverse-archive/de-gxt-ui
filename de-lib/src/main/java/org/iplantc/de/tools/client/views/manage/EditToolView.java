@@ -51,6 +51,20 @@ public interface EditToolView extends IsWidget{
          * @return  label for entrypoint field
          */
         String entryPoint();
+
+        String interactiveLabel();
+
+        String skipTmpMountLabel();
+
+        String osgImagePathLabel();
+
+        String maxCPUCoresLabel();
+
+        String minCPUCoresLabel();
+
+        String minMemoryLimitLabel();
+
+        String minDiskSpaceLabel();
     }
 
     boolean validate();

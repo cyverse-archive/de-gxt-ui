@@ -68,27 +68,27 @@
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.minMemoryLimitLabel}">
                             <form:widget>
-                                <form:IntegerField readOnly="false"
-                                                   enabled="true"
-                                                   ui:field="minMemoryLimitEditor"/>
+                                <form:LongField readOnly="false"
+                                                enabled="true"
+                                                ui:field="minMemoryLimitEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.containerMemoryLimitLabel}">
                             <form:widget>
-                                <form:IntegerField readOnly="false"
-                                                   enabled="true"
-                                                   ui:field="memoryLimitEditor"/>
+                                <form:LongField readOnly="false"
+                                                enabled="true"
+                                                ui:field="memoryLimitEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.minDiskSpaceLabel}">
                             <form:widget>
-                                <form:IntegerField readOnly="false"
-                                                   enabled="true"
-                                                   ui:field="minDiskSpaceEditor"/>
+                                <form:LongField readOnly="false"
+                                                enabled="true"
+                                                ui:field="minDiskSpaceEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -104,18 +104,18 @@
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.minCPUCoresLabel}">
                             <form:widget>
-                                <form:IntegerField readOnly="false"
-                                                   enabled="true"
-                                                   ui:field="minCPUCoresEditor"/>
+                                <form:DoubleField readOnly="false"
+                                                  enabled="true"
+                                                  ui:field="minCPUCoresEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.maxCPUCoresLabel}">
                             <form:widget>
-                                <form:IntegerField readOnly="false"
-                                                   enabled="true"
-                                                   ui:field="maxCPUCoresEditor"/>
+                                <form:DoubleField readOnly="false"
+                                                  enabled="true"
+                                                  ui:field="maxCPUCoresEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
