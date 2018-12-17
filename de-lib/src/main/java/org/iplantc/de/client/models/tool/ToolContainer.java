@@ -107,4 +107,10 @@ public interface ToolContainer extends HasName {
 
     @PropertyName("container_ports")
     void setContainerPorts(List<ToolContainerPort> ports);
+
+    @PropertyName("interactive_apps")
+    InteractiveApp getInteractiveApps();
+
+    @PropertyName("interactive_apps")
+    void setInteractiveApps(InteractiveApp app);
 }
