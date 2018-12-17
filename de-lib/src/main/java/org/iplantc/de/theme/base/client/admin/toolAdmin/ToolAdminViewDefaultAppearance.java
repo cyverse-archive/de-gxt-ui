@@ -581,4 +581,44 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     public SafeHtml osgImagePathLabel() {
         return templates.requiredFieldLabel(displayStrings.osgImagePathLabel());
     }
+
+    @Override
+    public String delete() {
+        return displayStrings.delete();
+    }
+
+    @Override
+    public String containerPortsLabel() {
+        return displayStrings.containerPortsLabel();
+    }
+
+    @Override
+    public int containerHostPortWidth() {
+        return 200;
+    }
+
+    @Override
+    public String containerHostPortLabel() {
+        return displayStrings.containerHostPortLabel();
+    }
+
+    @Override
+    public int containerPortWidth() {
+        return 200;
+    }
+
+    @Override
+    public String containerPortLabel() {
+        return displayStrings.containerPortLabel();
+    }
+
+    @Override
+    public int containerBindToHostWidth() {
+        return 100;
+    }
+
+    @Override
+    public String containerBindToHostLabel() {
+        return displayStrings.containerBindToHostLabel();
+    }
 }

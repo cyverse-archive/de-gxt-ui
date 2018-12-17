@@ -42,6 +42,9 @@ public class ToolCallbackConverter extends AsyncCallbackConverter<String, Tool> 
         if (tool.getContainer().getDeviceList() == null) {
             tool.getContainer().setDeviceList(Lists.<ToolDevice>newArrayList());
         }
+        if (tool.getContainer().getContainerPorts() == null) {
+            tool.getContainer().setContainerPorts(Lists.newArrayList());
+        }
         return tool;
     }
 }

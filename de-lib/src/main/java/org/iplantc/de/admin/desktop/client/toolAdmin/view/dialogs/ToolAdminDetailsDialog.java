@@ -97,6 +97,7 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         toolContainer.setDeviceList(Lists.newArrayList());
         toolContainer.setContainerVolumes(Lists.newArrayList());
         toolContainer.setContainerVolumesFrom(Lists.newArrayList());
+        toolContainer.setContainerPorts(Lists.newArrayList());
         ToolImage image = factory.getImage().as();
         image.setName(appearance.defaultImgPrefix());
         toolContainer.setImage(image);

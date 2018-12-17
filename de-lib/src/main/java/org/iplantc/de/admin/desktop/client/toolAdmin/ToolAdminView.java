@@ -239,6 +239,22 @@ public interface ToolAdminView extends IsWidget,
         String minDiskSpaceLabel();
 
         SafeHtml osgImagePathLabel();
+
+        String delete();
+
+        String containerPortsLabel();
+
+        int containerHostPortWidth();
+
+        String containerHostPortLabel();
+
+        int containerPortWidth();
+
+        String containerPortLabel();
+
+        int containerBindToHostWidth();
+
+        String containerBindToHostLabel();
     }
 
     interface Presenter {
