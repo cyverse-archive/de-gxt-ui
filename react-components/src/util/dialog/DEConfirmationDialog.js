@@ -36,7 +36,9 @@ class DEConfirmationDialog extends Component {
                     }} color="primary">
                         {getMessage("cancel")}
                     </Button>
-                    <Button onClick={onOkBtnClick} color="primary">
+                    <Button variant="contained"
+                            onClick={onOkBtnClick}
+                            color="primary">
                         {getMessage("ok")}
                     </Button>
                 </DialogActions>

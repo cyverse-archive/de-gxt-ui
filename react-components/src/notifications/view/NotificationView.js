@@ -23,6 +23,7 @@ import notificationCategory from "../model/notificationCategory";
 import ids from "../ids";
 import classnames from "classnames";
 import formatDate from "../../util/DateFormatter";
+import constants from "../../constants";
 
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false,},
@@ -35,7 +36,7 @@ function Message(props) {
     const {message, seen, presenter, classes} = props;
     let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
     return (
-        <TableCell padding="none"
+        <TableCell
             className={className}>
             <div
                 onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
@@ -235,7 +236,7 @@ class NotificationView extends Component {
                             columnData={columnData}
                             baseId={baseId}
                             ids={ids}
-                            padding="none"
+
                         />
                         <TableBody>
                             {data.map(n => {
@@ -248,18 +249,18 @@ class NotificationView extends Component {
                                               selected={isSelected}
                                               hover
                                               key={n.message.id}>
-                                        <TableCell padding="none">
+                                        <TableCell>
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell padding="none">{notificationCategory[n.type.replace(
+                                        <TableCell>{notificationCategory[n.type.replace(
                                             /\s/g,
                                             "_").toLowerCase()]}</TableCell>
                                         <Message message={n.message}
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell padding="none">
-                                            {formatDate(n.message.timestamp)}
+                                        <TableCell>
+                                            {formatDate(n.message.timestamp, constants.DATE_FORMAT)}
                                         </TableCell>
                                     </TableRow>
                                 );

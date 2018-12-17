@@ -185,43 +185,31 @@ class ShareWithSupportDialog extends React.Component {
                         <React.Fragment>
 
                             {status === analysisStatus.COMPLETED &&
-                            <React.Fragment>
                                 <CompletedStateCondition analysis={analysis}
                                                          handleConditionChange={this.handleConditionChange}
                                                          outputCondition={outputCondition}/>
-                            </React.Fragment>
                             }
 
                             {status === analysisStatus.SUBMITTED &&
-                            <React.Fragment>
                                 <SubmittedStateSupport analysis={analysis}/>
-                            </React.Fragment>
                             }
 
                             {status === analysisStatus.RUNNING &&
-                            <React.Fragment>
                                 <RunningStateSupport analysis={analysis}/>
-                            </React.Fragment>
                             }
 
                             {status === analysisStatus.FAILED &&
-                            <React.Fragment>
                                 <FailedStateSupport analysis={analysis}/>
-                            </React.Fragment>
                             }
 
                             {outputCondition === "noOutput" && status ===
                             analysisStatus.COMPLETED &&
-                            <React.Fragment>
                                 <CompletedNoOutputSupport/>
-                            </React.Fragment>
                             }
 
                             {outputCondition === "unExpectedOutput" && status ===
                             analysisStatus.COMPLETED &&
-                            <React.Fragment>
                                 <CompletedUnExpectedOutputSupport/>
-                            </React.Fragment>
                             }
 
                             <Button variant="contained"

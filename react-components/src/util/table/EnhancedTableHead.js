@@ -53,6 +53,7 @@ class EnhancedTableHead extends React.Component {
                         return (
                             <TableCell
                                 key={column.name}
+                                variant="head"
                                 numeric={column.numeric}
                                 padding={padding || "default"}
                                 sortDirection={orderBy === column.name ? order : false}

@@ -110,43 +110,6 @@ function Status(props) {
     }
 }
 
-function Prompt(props) {
-    const analysis = props.analysis;
-    const renameDialogOpen = props.renameDialogOpen;
-    const commentsDialogOpen = props.commentsDialogOpen;
-    const onRenameOkClicked = props.onRenameOkClicked;
-    const onRenameCancelClicked = props.onRenameCancelClicked;
-    const onCommentsOkClicked = props.onCommentsOkClicked;
-    const onCommentsCancelClicked = props.onCommentsCancelClicked;
-    const intl = props.intl;
-
-    if (renameDialogOpen) {
-        return (
-            <DEPromptDialog multiline={false}
-                            initialValue={analysis.name}
-                            isRequired={true}
-                            heading={formatMessage(intl, "renameDlgHeader")}
-                            prompt={formatMessage(intl, "renamePrompt")}
-                            onOkBtnClick={onRenameOkClicked}
-                            onCancelBtnClick={onRenameCancelClicked}
-                            dialogOpen={renameDialogOpen}/>
-        );
-    } else if (commentsDialogOpen) {
-        return (
-            <DEPromptDialog multiline={true}
-                            initialValue={analysis.description}
-                            isRequired={true}
-                            heading={formatMessage(intl, "commentsDlgHeader")}
-                            prompt={formatMessage(intl, "commentsPrompt")}
-                            onOkBtnClick={onCommentsOkClicked}
-                            onCancelBtnClick={onCommentsCancelClicked}
-                            dialogOpen={commentsDialogOpen}/>
-        );
-    } else {
-        return (null);
-    }
-}
-
 const columnData = [
     {name: "Name", numeric: false, enableSorting: true},
     {name: "Owner", numeric: false, enableSorting: true},
@@ -886,7 +849,7 @@ class AnalysesView extends Component {
                                                 {formatDate(analysis.enddate)}
                                             </TableCell>
                                             <TableCell id={build(gridId, id + ids.SUPPORT_CELL)}
-                                                       adding="none">
+                                                       padding="none">
                                                 <Status analysis={analysis}
                                                         onClick={() => this.statusClick(analysis)}
                                                         username={username}/>
@@ -931,20 +894,25 @@ class AnalysesView extends Component {
                     />
                 </div>
                 {selectedAnalysis &&
-                <Prompt analysis={selectedAnalysis}
-                        intl={intl}
-                        renameDialogOpen={this.state.renameDialogOpen}
-                        onRenameOkClicked={this.doRename}
-                        onRenameCancelClicked={() => this.setState({renameDialogOpen: false})}
-                />
+                <DEPromptDialog multiline={false}
+                                initialValue={selectedAnalysis.name}
+                                isRequired={true}
+                                heading={formatMessage(intl, "renameDlgHeader")}
+                                prompt={formatMessage(intl, "renamePrompt")}
+                                onOkBtnClick={this.doRename}
+                                onCancelBtnClick={() => this.setState({renameDialogOpen: false})}
+                                dialogOpen={this.state.renameDialogOpen}/>
+
                 }
                 {selectedAnalysis &&
-                <Prompt analysis={selectedAnalysis}
-                        intl={intl}
-                        commentsDialogOpen={this.state.commentsDialogOpen}
-                        onCommentsOkClicked={this.doComments}
-                        onCommentsCancelClicked={() => this.setState({commentsDialogOpen: false})}
-                />
+                <DEPromptDialog multiline={true}
+                                initialValue={selectedAnalysis.description}
+                                isRequired={true}
+                                heading={formatMessage(intl, "commentsDlgHeader")}
+                                prompt={formatMessage(intl, "commentsPrompt")}
+                                onOkBtnClick={this.doComments}
+                                onCancelBtnClick={() => this.setState({commentsDialogOpen: false})}
+                                dialogOpen={this.state.commentsDialogOpen}/>
                 }
                 {selectedAnalysis &&
                 <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}

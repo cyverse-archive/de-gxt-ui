@@ -29,7 +29,7 @@ class DEPromptDialog extends Component {
     onChange = (event) => {
         let val = event.target.value;
         const valid = (val || !this.props.isRequired);
-        this.setState({error: true, disableOkBtn: !valid, value: val});
+        this.setState({error: !valid, disableOkBtn: !valid, value: val});
     };
 
     render() {
@@ -73,10 +73,12 @@ class DEPromptDialog extends Component {
                                 onCancelBtnClick();
                             }
                         }}
+                        
                         color="primary">
                         {getMessage("cancelBtnText")}
                     </Button>
                     <Button
+                        variant="contained"
                         onClick={() => {
                             onOkBtnClick(value);
                         }}

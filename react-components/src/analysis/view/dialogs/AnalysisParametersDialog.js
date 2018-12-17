@@ -38,10 +38,6 @@ function ParameterValue(props) {
         && !(info_type === "ReferenceAnnotation"));
     let displayValue = value ? (value.display ? value.display : value) : "";
 
-    if (!displayValue) {
-        displayValue = "";
-    }
-
     if ((ArgumentType.Input === (param_type)
         || ArgumentType.FileInput === (param_type)
         || ArgumentType.FolderInput === (param_type)
