@@ -38,6 +38,8 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<ToolContainerPort> getToolContainerPort();
 
+    AutoBean<InteractiveApp> getInteractiveApp();
+
     /**
      * Build a tool with default values
      *
@@ -46,9 +48,11 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
     default AutoBean<Tool> getDefaultTool() {
         Tool tool = getTool().as();
         ToolImage image = getImage().as();
+        InteractiveApp interactiveApp = getInteractiveApp().as();
         ToolContainer container = getContainer().as();
 
         container.setImage(image);
+        container.setInteractiveApps(interactiveApp);
         tool.setContainer(container);
 
         return AutoBeanUtils.getAutoBean(tool);

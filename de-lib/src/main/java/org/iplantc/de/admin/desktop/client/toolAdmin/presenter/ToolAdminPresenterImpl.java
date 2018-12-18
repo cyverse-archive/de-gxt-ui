@@ -14,6 +14,7 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetai
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
+import org.iplantc.de.client.models.tool.InteractiveApp;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolList;
@@ -22,6 +23,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -50,6 +52,7 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
     private final ToolAdminView.ToolAdminViewAppearance appearance;
     private final ListStore<Tool> listStore;
     @Inject IplantAnnouncer announcer;
+    @Inject DEProperties deProperties;
     @Inject AsyncProviderWrapper<OverwriteToolDialog> overwriteAppDialog;
     @Inject AsyncProviderWrapper<DeleteToolDialog> deleteAppDialog;
 
@@ -105,9 +108,11 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
     public void onAddToolSelected(AddToolSelectedEvent event) {
         //The UI handles creating a single tool request, but the admin/tools POST endpoint requires
         // an array of requests.  Wrapping the request inside an array.
+        Tool tool = event.getTool();
+        checkForViceTool(tool);
         ToolList toolList = factory.getToolList().as();
         List<Tool> listTool = new ArrayList<>();
-        listTool.add(event.getTool());
+        listTool.add(tool);
         toolList.setToolList(listTool);
 
         toolAdminServiceFacade.addTool(toolList, new AsyncCallback<Void>() {
@@ -179,6 +184,7 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
     }
 
     void updateTool(final Tool tool, final boolean overwrite) {
+        checkForViceTool(tool);
         toolAdminServiceFacade.updateTool(tool, overwrite, new AsyncCallback<Void>() {
             @Override
             public void onFailure(final Throwable caught) {
@@ -214,6 +220,22 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
                 updateView();
             }
         });
+    }
+
+    void checkForViceTool(Tool tool) {
+        if ("interactive".equals(tool.getType()) && tool.getContainer().getInteractiveApps() == null) {
+            appendDefaultInteractiveAppValues(tool);
+        }
+    }
+
+    void appendDefaultInteractiveAppValues(Tool tool) {
+        InteractiveApp interactiveApp = factory.getInteractiveApp().as();
+        interactiveApp.setImage(deProperties.getDefaultViceImage());
+        interactiveApp.setName(deProperties.getDefaultViceName());
+        interactiveApp.setCasUrl(deProperties.getDefaultViceCasUrl());
+        interactiveApp.setCasValidate(deProperties.getDefaultViceCasValidate());
+
+        tool.getContainer().setInteractiveApps(interactiveApp);
     }
 
     String getServiceError(Throwable caught) {

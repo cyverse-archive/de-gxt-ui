@@ -294,6 +294,10 @@ public class ToolAdminPresenterImplTest {
             String getServiceError(Throwable caught) {
                 return "ERR_NOT_WRITEABLE";
             }
+
+            @Override
+            void checkForViceTool(Tool tool) {
+            }
         };
         uuti.overwriteAppDialog = overwriteAppDialogMock;
 
