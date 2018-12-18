@@ -238,4 +238,14 @@ public interface ToolAdminDisplayStrings extends Messages {
     String minDiskSpaceLabel();
 
     String osgImagePathLabel();
+
+    String delete();
+
+    String containerPortsLabel();
+
+    String containerHostPortLabel();
+
+    String containerPortLabel();
+
+    String containerBindToHostLabel();
 }

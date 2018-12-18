@@ -33,6 +33,7 @@ public class ToolContainerEditorTest {
     @Mock FieldLabel containerDevicesLabelMock;
     @Mock FieldLabel containerVolumesLabelMock;
     @Mock FieldLabel containerVolumesFromLabelMock;
+    @Mock ToolContainerPortsListEditor containerPortsListEditor;
 
     private ToolContainerEditor uut;
 
@@ -46,7 +47,8 @@ public class ToolContainerEditorTest {
                                       toolDeviceListEditorMock,
                                       toolVolumeListEditorMock,
                                       toolVolumesFromListEditorMock,
-                                      toolImageEditorMock) {
+                                      toolImageEditorMock,
+                                      containerPortsListEditor) {
             @Override
             void setUpLabelToolTips() {}
         };

@@ -36,6 +36,8 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<ToolTypeList> getToolTypeList();
 
+    AutoBean<ToolContainerPort> getToolContainerPort();
+
     /**
      * Build a tool with default values
      *

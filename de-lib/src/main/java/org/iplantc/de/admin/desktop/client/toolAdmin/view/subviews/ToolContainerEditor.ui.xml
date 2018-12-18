@@ -144,6 +144,23 @@
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
+                        <form:FieldLabel ui:field="containerPortsLabel"
+                                         labelAlign="TOP"/>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <toolbar:ToolBar title="">
+                            <button:TextButton ui:field="addPortsButton"
+                                               text="{appearance.add}"
+                                               icon="{appearance.addIcon}"/>
+                            <button:TextButton ui:field="deletePortsButton"
+                                               text="{appearance.delete}"
+                                               icon="{appearance.deleteIcon}"/>
+                        </toolbar:ToolBar>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
+                        <d:ToolContainerPortsListEditor ui:field="containerPortsEditor"/>
+                    </container:child>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel ui:field="containerDevicesLabel"
                                          labelAlign="TOP"/>
                     </container:child>

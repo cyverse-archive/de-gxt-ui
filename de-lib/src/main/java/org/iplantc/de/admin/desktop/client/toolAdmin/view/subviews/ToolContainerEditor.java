@@ -49,6 +49,10 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     @UiField IntegerField maxCPUCoresEditor;
     @UiField StringComboBox networkModeEditor;
     @UiField CheckBox skipTmpMountEditor;
+    @Ignore @UiField FieldLabel containerPortsLabel;
+    @Ignore @UiField TextButton addPortsButton;
+    @Ignore @UiField TextButton deletePortsButton;
+    @UiField (provided = true) ToolContainerPortsListEditor containerPortsEditor;
     @Ignore @UiField FieldLabel containerDevicesLabel;
     @Ignore @UiField TextButton addDeviceButton;
     @Ignore @UiField TextButton deleteDeviceButton;
@@ -90,8 +94,12 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         containerVolumesFromLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM_LABEL);
         addVolumesFromButton.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM_ADD);
         deleteVolumesFromButton.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM_DELETE);
+        containerPortsLabel.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_PORTS_LABEL);
+        addPortsButton.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_PORTS_ADD);
+        deletePortsButton.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_PORTS_DELETE);
 
         deviceListEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_DEVICES);
+        containerPortsEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_PORTS);
         containerVolumesEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES);
         containerVolumesFromEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM);
         imageEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_IMAGE);
@@ -108,13 +116,15 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
                                ToolDeviceListEditor deviceListEditor,
                                ToolVolumeListEditor containerVolumesEditor,
                                ToolVolumesFromListEditor containerVolumesFromEditor,
-                               ToolImageEditor toolImageEditor) {
+                               ToolImageEditor toolImageEditor,
+                               ToolContainerPortsListEditor containerPortsEditor) {
 
         this.appearance = appearance;
         this.deviceListEditor = deviceListEditor;
         this.containerVolumesEditor = containerVolumesEditor;
         this.containerVolumesFromEditor = containerVolumesFromEditor;
         this.imageEditor = toolImageEditor;
+        this.containerPortsEditor = containerPortsEditor;
         initWidget(uiBinder.createAndBindUi(this));
 
         networkModeEditor.add(NetworkMode.None.toString().toLowerCase());
@@ -123,6 +133,7 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
         entryPointWarningHTML.setHTML(appearance.toolEntryPointWarning());
         toolVolumesWarningHTML.setHTML(appearance.toolVolumeWarning());
+        containerPortsLabel.setHTML(appearance.containerPortsLabel());
         containerDevicesLabel.setHTML(appearance.containerDevicesLabel());
         containerVolumesLabel.setHTML(appearance.containerVolumesLabel());
         containerVolumesFromLabel.setHTML(appearance.containerVolumesFromLabel());
@@ -168,6 +179,16 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     @UiHandler("deleteVolumesFromButton")
     void onDeleteVolumesFromButtonClicked(SelectEvent event) {
         containerVolumesFromEditor.deleteVolumesFrom();
+    }
+
+    @UiHandler("addPortsButton")
+    void onAddPortsButtonClicked(SelectEvent event) {
+        containerPortsEditor.addContainerPorts();
+    }
+
+    @UiHandler("deletePortsButton")
+    void onDeletePortsButtonClicked(SelectEvent event) {
+        containerPortsEditor.deleteContainerPorts();
     }
 
     public boolean isValid(){

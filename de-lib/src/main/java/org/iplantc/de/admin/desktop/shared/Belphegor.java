@@ -204,6 +204,11 @@ public interface Belphegor {
         String SKIP_TMP_MOUNT = ".skipTmpMount";
         String MIN_DISK_SPACE = ".minDiskSpace";
         String OSG_IMAGE_PATH = ".osgImagePath";
+        String CONTAINER_PORTS_GRID = ".portsGrid";
+        String CONTAINER_PORTS_LABEL = ".portsLabel";
+        String CONTAINER_PORTS_ADD = ".portsAddBtn";
+        String CONTAINER_PORTS_DELETE = ".portsDeleteBtn";
+        String CONTAINER_PORTS = ".toolContainerPorts";
     }
 
     interface WorkshopAdminIds {
