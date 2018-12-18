@@ -85,6 +85,14 @@ public class DEProperties {
      */
     private static final String DEFAULT_HPC_CATEGORY_ID = WORKSPACE_PREFIX + "defaultHpcAppCategoryId";
 
+    /**
+     * Properties keys for the default {@link org.iplantc.de.client.models.tool.InteractiveApp}
+     */
+
+    private static final String DEFAULT_VICE_IMAGE = "org.iplantc.discoveryenvironment.tools.interactiveApps.defaultImage";
+    private static final String DEFAULT_VICE_NAME = "org.iplantc.discoveryenvironment.tools.interactiveApps.defaultName";
+    private static final String DEFAULT_VICE_CAS_URL = "org.iplantc.discoveryenvironment.tools.interactiveApps.defaultCasUrl";
+    private static final String DEFAULT_VICE_CAS_VALIDATE = "org.iplantc.discoveryenvironment.tools.interactiveApps.defaultCasValidate";
 
     /**
      * Properties key for the support service URL
@@ -276,6 +284,14 @@ public class DEProperties {
 
     private boolean intercomEnabled;
 
+    private String defaultViceImage;
+
+    private String defaultViceName;
+
+    private String defaultViceCasUrl;
+
+    private String defaultViceCasValidate;
+
 
     /**
      * Force the constructor to be private.
@@ -337,6 +353,10 @@ public class DEProperties {
         keys.add(INTERCOM_COMPANY_ID);
         keys.add(INTERCOM_COMPANY_NAME);
         keys.add(INTERCOM_ENABLED);
+        keys.add(DEFAULT_VICE_IMAGE);
+        keys.add(DEFAULT_VICE_NAME);
+        keys.add(DEFAULT_VICE_CAS_URL);
+        keys.add(DEFAULT_VICE_CAS_VALIDATE);
         return keys;
     }
 
@@ -381,6 +401,10 @@ public class DEProperties {
         companyId = properties.get(INTERCOM_COMPANY_ID);
         companyName = properties.get(INTERCOM_COMPANY_NAME);
         intercomEnabled = getBoolean(properties, INTERCOM_ENABLED, false);
+        defaultViceImage = properties.get(DEFAULT_VICE_IMAGE);
+        defaultViceName = properties.get(DEFAULT_VICE_NAME);
+        defaultViceCasUrl = properties.get(DEFAULT_VICE_CAS_URL);
+        defaultViceCasValidate = properties.get(DEFAULT_VICE_CAS_VALIDATE);
     }
 
     /**
@@ -577,5 +601,21 @@ public class DEProperties {
 
     public String getMultiInputPathListFileIdentifier() {
         return multiInputPathListFileIdentifier;
+    }
+
+    public String getDefaultViceImage() {
+        return defaultViceImage;
+    }
+
+    public String getDefaultViceName() {
+        return defaultViceName;
+    }
+
+    public String getDefaultViceCasUrl() {
+        return defaultViceCasUrl;
+    }
+
+    public String getDefaultViceCasValidate() {
+        return defaultViceCasValidate;
     }
 }
