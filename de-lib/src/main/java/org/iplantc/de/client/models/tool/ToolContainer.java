@@ -101,4 +101,10 @@ public interface ToolContainer extends HasName {
 
     @PropertyName("min_disk_space")
     void setMinDiskSpace(Integer diskSpace);
+
+    @PropertyName("container_ports")
+    List<ToolContainerPort> getContainerPorts();
+
+    @PropertyName("container_ports")
+    void setContainerPorts(List<ToolContainerPort> ports);
 }
