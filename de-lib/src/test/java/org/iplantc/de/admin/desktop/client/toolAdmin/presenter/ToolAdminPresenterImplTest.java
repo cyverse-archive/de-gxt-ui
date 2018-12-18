@@ -88,7 +88,10 @@ public class ToolAdminPresenterImplTest {
                                          toolAdminServiceFacadeMock,
                                          toolAutoBeanFactoryMock,
                                          toolPropertiesMock,
-                                         toolAdminViewAppearanceMock);
+                                         toolAdminViewAppearanceMock){
+            @Override
+            void checkForViceTool(Tool tool) {}
+        };
         uut.announcer = iplantAnnouncerMock;
         uut.overwriteAppDialog = overwriteAppDialogMock;
         uut.deleteAppDialog = deleteAppDialogMock;
