@@ -44,9 +44,9 @@ public interface ToolsModule {
         String MIN_MEM_LIMIT = ".minMemLimit";
         String MAX_CPU_CORES = ".maxCPUCores";
         String MIN_CPU_CORES = ".minCPUCores";
-        String SKIP_TMP_MOUNT = ".skipTmpMount";
         String MIN_DISK_SPACE = ".minDiskSpace";
         String OSG_IMAGE_PATH = ".osgImagePath";
+        String TOOL_TYPE = ".toolType";
     }
 
     interface RequestToolIds {

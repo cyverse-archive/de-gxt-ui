@@ -7,6 +7,8 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolType;
+import org.iplantc.de.client.models.tool.ToolTypeList;
 import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingAutoBeanFactory;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
@@ -43,6 +45,7 @@ import java.util.List;
 public class ToolServicesImpl implements ToolServices {
 
     private final String TOOLS = "org.iplantc.services.tools";
+    private static final String APP_ELEMENTS = "org.iplantc.services.apps.elements";
     private final ToolAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
 
@@ -188,6 +191,20 @@ public class ToolServicesImpl implements ToolServices {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.GET, address);
 
         deServiceFacade.getServiceData(wrapper, callbackCnvt);
+    }
+
+    @Override
+    public void getToolTypes(AppsCallback<List<ToolType>> callback) {
+        String address = APP_ELEMENTS + "/tool-types";
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<ToolType>>(callback) {
+            @Override
+            protected List<ToolType> convertFrom(String object) {
+                ToolTypeList typeList = AutoBeanCodex.decode(factory, ToolTypeList.class, object).as();
+                return typeList.getToolTypes();
+            }
+        });
     }
 
 }

@@ -88,26 +88,21 @@
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
-                        <form:FieldLabel text="{appearance.osgImagePathLabel}">
+                        <form:FieldLabel ui:field="typeLabel" text="{appearance.typeLabel}">
                             <form:widget>
-                                <form:TextField ui:field="osgImagePathEditor"
-                                                allowBlank="true"
-                                                enabled="false"
+                                <form:StringComboBox ui:field="typeEditor"
+                                                     allowBlank="false"
                                 />
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
-                        <form:FieldLabel text="{appearance.interactiveLabel}">
+                        <form:FieldLabel ui:field="osgImagePathLabel" text="{appearance.osgImagePathLabel}">
                             <form:widget>
-                                <form:CheckBox ui:field="interactiveEditor"/>
-                            </form:widget>
-                        </form:FieldLabel>
-                    </container:child>
-                    <container:child layoutData="{layoutData}">
-                        <form:FieldLabel text="{appearance.skipTmpMountLabel}">
-                            <form:widget>
-                                <form:CheckBox ui:field="skipTmpMountEditor"/>
+                                <form:TextField ui:field="osgImagePathEditor"
+                                                allowBlank="true"
+                                                enabled="false"
+                                />
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>

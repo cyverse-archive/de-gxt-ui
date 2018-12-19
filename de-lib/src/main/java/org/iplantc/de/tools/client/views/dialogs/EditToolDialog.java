@@ -61,6 +61,8 @@ public class EditToolDialog extends IPlantDialog {
     public void show(ManageToolsView.Presenter presenter) {
         this.presenter = presenter;
 
+        editToolView.setToolTypes(presenter.getToolTypes());
+
         FlowLayoutContainer container = new FlowLayoutContainer();
         container.getScrollSupport().setScrollMode(ScrollSupport.ScrollMode.AUTO);
         container.add(editToolView);

@@ -15,15 +15,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
-import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.DoubleField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.LongField;
+import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
@@ -73,16 +74,20 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     FieldLabel imgLbl;
 
+    @Ignore
+    @UiField
+    FieldLabel typeLabel;
+
+    @Ignore
+    @UiField
+    FieldLabel osgImagePathLabel;
+
+    @UiField
+    StringComboBox typeEditor;
+
     @Path("container.image.osgImagePath")
     @UiField
     TextField osgImagePathEditor;
-
-    @UiField
-    CheckBox interactiveEditor;
-
-    @Path("container.skipTmpMount")
-    @UiField
-    CheckBox skipTmpMountEditor;
 
     @Path("container.maxCPUCores")
     @UiField
@@ -146,11 +151,30 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @Inject
     public EditToolViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
+
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
         versionLbl.setHTML(buildRequiredFieldLabel(versionLbl.getText()));
+
         imgLbl.setHTML(buildRequiredFieldLabel(imgLbl.getText()));
         imgName.addValidator(new ImageNameValidator());
+
+        typeLabel.setHTML(buildRequiredFieldLabel(typeLabel.getText()));
+        typeEditor.addSelectionHandler(event -> onTypeChanged());
+
+        osgImagePathLabel.setHTML(buildRequiredFieldLabel(osgImagePathLabel.getText()));
+
         editorDriver.initialize(this);
+    }
+
+    private void onTypeChanged() {
+        final boolean osgType = "osg".equals(typeEditor.getCurrentValue());
+        osgImagePathEditor.setEnabled(osgType);
+    }
+
+    @Override
+    public void setToolTypes(List<String> types) {
+        typeEditor.add(types);
+        typeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
     }
 
     private SafeHtml buildRequiredFieldLabel(final String label) {
@@ -168,6 +192,8 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Override
     public void editTool(Tool t) {
+        final boolean osgType = "osg".equals(t.getType());
+        osgImagePathEditor.setEnabled(osgType);
         editorDriver.edit(t);
     }
 
@@ -202,8 +228,8 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         minMemoryLimitEditor.setId(baseID + ToolsModule.EditToolIds.MIN_MEM_LIMIT);
         maxCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MAX_CPU_CORES);
         minCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MIN_CPU_CORES);
-        skipTmpMountEditor.setId(baseID + ToolsModule.EditToolIds.SKIP_TMP_MOUNT);
         minDiskSpaceEditor.setId(baseID + ToolsModule.EditToolIds.MIN_DISK_SPACE);
+        typeEditor.setId(baseID + ToolsModule.EditToolIds.TOOL_TYPE);
     }
 
 }

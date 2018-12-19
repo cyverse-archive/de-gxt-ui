@@ -147,6 +147,10 @@ public class ManageToolsViewPresenterTest {
             void displayInfoMessage(String title, String message) {
                 //do nothing
             }
+
+            @Override
+            void checkForViceTool(Tool tool) {
+            }
         };
         uut.toolsView = toolsViewMock;
         uut.announcer = announcerMock;

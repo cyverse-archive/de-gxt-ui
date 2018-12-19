@@ -5,6 +5,8 @@ import org.iplantc.de.client.models.tool.Tool;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import java.util.List;
+
 /**
  * Created by sriram on 4/27/17.
  */
@@ -13,6 +15,8 @@ public interface EditToolView extends IsWidget{
     Tool getTool();
 
     void editTool(Tool t);
+
+    void setToolTypes(List<String> toolTypes);
 
     interface EditToolViewAppearance {
         String toolName();
@@ -52,10 +56,6 @@ public interface EditToolView extends IsWidget{
          */
         String entryPoint();
 
-        String interactiveLabel();
-
-        String skipTmpMountLabel();
-
         String osgImagePathLabel();
 
         String maxCPUCoresLabel();
@@ -65,6 +65,8 @@ public interface EditToolView extends IsWidget{
         String minMemoryLimitLabel();
 
         String minDiskSpaceLabel();
+
+        String typeLabel();
     }
 
     boolean validate();

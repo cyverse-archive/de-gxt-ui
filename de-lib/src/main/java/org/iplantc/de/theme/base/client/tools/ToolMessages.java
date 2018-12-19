@@ -103,10 +103,6 @@ public interface ToolMessages extends Messages {
 
     String toolInfoError();
 
-    String interactiveLabel();
-
-    String skipTmpMountLabel();
-
     String osgImagePathLabel();
 
     String maxCPUCoresLabel();
@@ -116,6 +112,8 @@ public interface ToolMessages extends Messages {
     String minMemoryLimitLabel();
 
     String minDiskSpaceLabel();
+
+    String toolImportTypeLabel();
 }
 
 

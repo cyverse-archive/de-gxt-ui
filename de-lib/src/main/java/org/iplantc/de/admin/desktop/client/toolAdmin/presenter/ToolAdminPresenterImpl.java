@@ -14,7 +14,6 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetai
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
-import org.iplantc.de.client.models.tool.InteractiveApp;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolList;
@@ -224,18 +223,8 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
 
     void checkForViceTool(Tool tool) {
         if ("interactive".equals(tool.getType()) && tool.getContainer().getInteractiveApps() == null) {
-            appendDefaultInteractiveAppValues(tool);
+            factory.appendDefaultInteractiveAppValues(tool, deProperties);
         }
-    }
-
-    void appendDefaultInteractiveAppValues(Tool tool) {
-        InteractiveApp interactiveApp = factory.getInteractiveApp().as();
-        interactiveApp.setImage(deProperties.getDefaultViceImage());
-        interactiveApp.setName(deProperties.getDefaultViceName());
-        interactiveApp.setCasUrl(deProperties.getDefaultViceCasUrl());
-        interactiveApp.setCasValidate(deProperties.getDefaultViceCasValidate());
-
-        tool.getContainer().setInteractiveApps(interactiveApp);
     }
 
     String getServiceError(Throwable caught) {

@@ -4,6 +4,7 @@
 package org.iplantc.de.client.models.tool;
 
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -58,4 +59,13 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
         return AutoBeanUtils.getAutoBean(tool);
     }
 
+    default void appendDefaultInteractiveAppValues(Tool tool, DEProperties deProperties) {
+        InteractiveApp interactiveApp = getInteractiveApp().as();
+        interactiveApp.setImage(deProperties.getDefaultViceImage());
+        interactiveApp.setName(deProperties.getDefaultViceName());
+        interactiveApp.setCasUrl(deProperties.getDefaultViceCasUrl());
+        interactiveApp.setCasValidate(deProperties.getDefaultViceCasValidate());
+
+        tool.getContainer().setInteractiveApps(interactiveApp);
+    }
 }

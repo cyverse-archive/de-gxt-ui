@@ -113,16 +113,6 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     }
 
     @Override
-    public String interactiveLabel() {
-        return toolMessages.interactiveLabel();
-    }
-
-    @Override
-    public String skipTmpMountLabel() {
-        return toolMessages.skipTmpMountLabel();
-    }
-
-    @Override
     public String osgImagePathLabel() {
         return toolMessages.osgImagePathLabel();
     }
@@ -145,5 +135,10 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     @Override
     public String minDiskSpaceLabel() {
         return toolMessages.minDiskSpaceLabel();
+    }
+
+    @Override
+    public String typeLabel() {
+        return toolMessages.toolImportTypeLabel();
     }
 }
