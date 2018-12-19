@@ -25,6 +25,9 @@ const intlData = {
         "toolVersionLabel": "Version",
         "toolAttributionLabel": "Attribution",
         "sort": "Sort",
+        "privateToolTip": "This is a private app you created or a private app someone shared with you.",
+        "disabledToolTip": "This app is temporarily unavailable.",
+        "betaToolTip": "This app is currently in the Beta phase and has not yet been reviewed by the CyVerse science team.",
     }
 };
 
