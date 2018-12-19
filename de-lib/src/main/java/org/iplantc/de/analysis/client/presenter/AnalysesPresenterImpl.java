@@ -280,16 +280,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         });
     }
 
-    @Override
-    public List<Analysis> getSelectedAnalyses() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void setSelectedAnalyses(final List<Analysis> selectedAnalyses) {
-
-    }
-
     ArrayList<Analysis> getNewAnalysisList() {
         return Lists.newArrayList();
     }

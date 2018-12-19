@@ -37,7 +37,7 @@ public interface AnalysisParametersView {
     }
 
     @JsType
-    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    interface Presenter {
 
         interface BeanFactory extends AutoBeanFactory {
             AutoBean<File> file();

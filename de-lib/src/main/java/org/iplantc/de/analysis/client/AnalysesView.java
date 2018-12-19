@@ -80,15 +80,9 @@ public interface AnalysesView extends IsWidget {
         }
 
         @JsIgnore
-        List<Analysis> getSelectedAnalyses();
-
-        @JsIgnore
         void go(final HasOneWidget container,
                 String baseDebugId,
                 final List<Analysis> selectedAnalyses);
-
-        @JsIgnore
-        void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);
 

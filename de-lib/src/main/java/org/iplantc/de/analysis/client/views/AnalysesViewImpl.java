@@ -20,13 +20,16 @@ public class AnalysesViewImpl implements AnalysesView {
     HTMLPanel panel;
     AnalysisParametersView.Presenter paramPresenter;
     DiskResourceUtil diskResourceUtil;
+    UserInfo userInfo;
 
     @Inject
     AnalysesViewImpl(AnalysisParametersView.Presenter paramPresenter,
-                     DiskResourceUtil diskResourceUtil) {
+                     DiskResourceUtil diskResourceUtil,
+                     UserInfo userInfo) {
         panel = new HTMLPanel("<div></div>");
         this.paramPresenter = paramPresenter;
         this.diskResourceUtil = diskResourceUtil;
+        this.userInfo = userInfo;
     }
 
     @Override
@@ -40,10 +43,9 @@ public class AnalysesViewImpl implements AnalysesView {
                      Analysis selectedAnalysis) {
         ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
         props.presenter = presenter;
-        final UserInfo instance = UserInfo.getInstance();
-        props.username = instance.getFullUsername();
-        props.email = instance.getEmail();
-        props.name = instance.getFirstName() + " " + instance.getLastName();
+        props.username = userInfo.getFullUsername();
+        props.email = userInfo.getEmail();
+        props.name = userInfo.getFirstName() + " " + userInfo.getLastName();
         props.paramPresenter = paramPresenter;
         props.diskResourceUtil = diskResourceUtil;
         props.baseDebugId = baseDebugId;

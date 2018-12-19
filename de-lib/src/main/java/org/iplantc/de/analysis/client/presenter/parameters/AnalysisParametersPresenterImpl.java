@@ -38,12 +38,10 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -185,11 +183,6 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     @Inject
     AnalysisParametersPresenterImpl(final AnalysisParametersView.Appearance appearance) {
         this.appearance = appearance;
-    }
-
-    @Override
-    public void go(HasOneWidget container) {
-
     }
 
     @Override

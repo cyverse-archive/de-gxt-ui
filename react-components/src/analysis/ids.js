@@ -9,7 +9,7 @@ export default ({
     PARAMETERS: "parameters",
     TYPE:"type",
     VALUE:"value",
-    JOB_ID:"job_id",
+    JOB_ID:"jobId",
     ANALYSES_VIEW : ".analysesView",
 
     MENUITEM_ANALYSES : ".analyses",
@@ -38,4 +38,9 @@ export default ({
     ANALYSIS_NAME_CELL : ".nameCell",
     APP_NAME_CELL : ".appNameCell",
     SUPPORT_CELL : ".supportCell",
+    SHARE_WITH_SUPPORT: "shareWithSupport",
+    COMMENTS: "comments",
+
+    PERMISSIONS: "permissions",
+    APP_TYPE: "appType",
 });

@@ -4,10 +4,13 @@
  *
  */
 import React from 'react';
+import ids from "../../ids";
 import analysisStatus from "../../model/analysisStatus";
 import withI18N, { formatHTMLMessage, formatMessage, getMessage } from "../../../util/I18NWrapper";
 import { injectIntl } from "react-intl";
 import intlData from "../../messages";
+import build from "../../../util/DebugIDUtil";
+import formatDate from "../../../util/DateFormatter";
 
 import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
@@ -23,7 +26,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
-import formatDate from "../../../util/DateFormatter";
+
 
 
 function AnalysisInfo(props) {
@@ -167,9 +170,10 @@ class ShareWithSupportDialog extends React.Component {
     }
 
     render() {
-        const {analysis, intl, name, email, onShareWithSupport} = this.props;
+        const {analysis, intl, name, email, onShareWithSupport, baseId} = this.props;
         const {outputCondition, shareWithSupport, enableSubmit} = this.state;
         const status = analysis.status;
+        const baseDebugID = build(baseId, ids.SHARE_WITH_SUPPORT);
         return (
                 <Dialog open={this.props.dialogOpen}>
                     <DEDialogHeader
@@ -227,7 +231,7 @@ class ShareWithSupportDialog extends React.Component {
                         <React.Fragment>
                             <AnalysisInfo analysis={analysis} name={name} email={email}/>
                             <TextField
-                                id="comments"
+                                id={build(baseDebugID, ids.COMMENTS)}
                                 placeholder={formatMessage(intl, "comments")}
                                 style={{margin: 8}}
                                 fullWidth

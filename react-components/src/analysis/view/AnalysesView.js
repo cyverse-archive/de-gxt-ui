@@ -4,6 +4,7 @@
  **/
 
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import intlData from "../messages";
@@ -14,7 +15,7 @@ import permission from "../model/permission";
 import Color from "../../util/CyVersePalette";
 import formatDate from "../../util/DateFormatter";
 import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
 import DotMenu from "./DotMenu";
 import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
@@ -35,10 +36,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 import ListAltIcon from "@material-ui/icons/ListAlt";
+
 
 
 function AnalysisName(props) {
@@ -59,7 +62,8 @@ function AnalysisName(props) {
                 <sup>{name}</sup>
             </span>
         );
-    } else if (status === analysisStatus.RUNNING && interactiveUrls && interactiveUrls.length > 0) {
+    } else if ((status === analysisStatus.SUBMITTED || status === analysisStatus.RUNNING) &&
+        interactiveUrls && interactiveUrls.length > 0) {
         return (
             <span className={className} onClick={handleGoToOutputFolder}>
                 <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
@@ -754,6 +758,7 @@ class AnalysesView extends Component {
             sharable = this.isSharable(),
             disableCancel = this.shouldDisableCancel();
 
+        const hasData = data && data.length;
         return (
             <React.Fragment>
                 <div id={baseId} className={classes.container}>
@@ -771,7 +776,7 @@ class AnalysesView extends Component {
                                      handleRename={this.handleRename}
                                      handleUpdateComments={this.handleUpdateComments}
                                      handleSaveAndComplete={this.handleSaveAndComplete}
-                                     handleRefersh={this.fetchAnalyses}
+                                     handleRefresh={this.fetchAnalyses}
                                      permFilter={permFilter}
                                      typeFilter={typeFilter}
                                      onPermissionsFilterChange={this.onPermissionsFilterChange}
@@ -802,7 +807,7 @@ class AnalysesView extends Component {
                                 {data.map(analysis => {
                                     const id = analysis.id;
                                     const isSelected = this.isSelected(id);
-                                    const user = analysis.username.includes(IPLANT) ?
+                                    const user = analysis.username && analysis.username.includes(IPLANT) ?
                                         analysis.username.split('@')[0] :
                                         analysis.username;
                                     return (
@@ -821,8 +826,9 @@ class AnalysesView extends Component {
                                                         id)}
                                                     checked={isSelected}/>
                                             </TableCell>
-                                            <TableCell id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
-                                                       padding="none">
+                                            <TableCell
+                                                id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
+                                                padding="none">
                                                 <AnalysisName classes={classes}
                                                               analysis={analysis}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
@@ -855,9 +861,11 @@ class AnalysesView extends Component {
                                                         username={username}/>
                                             </TableCell>
                                             <TableCell padding="none"
-                                                       id={build(gridId, id + ids.ANALYSIS_DOT_MENU)}>
+                                                       id={build(gridId,
+                                                           id + ids.ANALYSIS_DOT_MENU)}>
                                                 <DotMenu
-                                                    baseDebugId={build(gridId, id + ids.ANALYSIS_DOT_MENU)}
+                                                    baseDebugId={build(gridId,
+                                                        id + ids.ANALYSIS_DOT_MENU)}
                                                     handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                     handleViewParams={this.handleViewParams}
                                                     handleRelaunch={this.handleRelaunch}
@@ -877,9 +885,19 @@ class AnalysesView extends Component {
                                             </TableCell>
                                         </TableRow>
                                     );
-                                })}
+                                })
+
+                                }
                             </TableBody>
                         </Table>
+                        {
+                            !hasData &&
+                            <Typography style={{margin: '0, auto, 0, auto', width: 600}}
+                                        align="center"
+                                        variant="subtitle2">
+                                {getMessage("noAnalysis")}
+                            </Typography>
+                        }
                     </div>
                     <TablePagination style={{height: 50}}
                                      colSpan={3}
@@ -919,7 +937,8 @@ class AnalysesView extends Component {
                                         analysis={selectedAnalysis}
                                         name={name}
                                         email={email}
-                                        onShareWithSupport={this.onShareWithSupport}/>
+                                        onShareWithSupport={this.onShareWithSupport}
+                                        baseId={baseId}/>
                 }
                 {selectedAnalysis &&
                 <AnalysisParametersDialog dialogOpen={viewParamsDialogOpen}
@@ -950,6 +969,18 @@ class AnalysesView extends Component {
     }
 }
 
-AnalysesView.propTypes = {};
+AnalysesView.propTypes = {
+    presenter: PropTypes.object.isRequired,
+    username: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    paramPresenter: PropTypes.object.isRequired,
+    diskResourceUtil: PropTypes.object.isRequired,
+    baseDebugId: PropTypes.string.isRequired,
+    selectedAnalysisId: PropTypes.string.isRequired,
+    selectedAnalysisName: PropTypes.string.isRequired,
+    permFilter: PropTypes.string.isRequired,
+    appTypeFilter: PropTypes.string.isRequired,
+};
 
 export default withStyles(exStyles)(withI18N(injectIntl(AnalysesView), intlData));

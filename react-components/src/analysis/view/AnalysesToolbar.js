@@ -4,6 +4,7 @@
  **/
 
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import ids from "../ids";
@@ -52,7 +53,7 @@ class AnalysesToolbar extends Component {
     render() {
         const {classes, baseDebugId, intl, searchInputValue} = this.props;
         const {anchorEl} = this.state;
-         const analysesMenuBaseId = build(baseDebugId, ids.MENUITEM_ANALYSES);
+        const analysesMenuBaseId = build(baseDebugId, ids.MENUITEM_ANALYSES);
         return (
             <Toolbar className={classes.toolbar}>
                 <ToolbarGroup style={{paddingLeft: 0}}>
@@ -79,7 +80,7 @@ class AnalysesToolbar extends Component {
                         variant="raised"
                         size="small"
                         className={classes.toolbarButton}
-                        onClick={this.props.handleRefersh}>
+                        onClick={this.props.handleRefresh}>
                         <RefreshIcon className={classes.toolbarItemColor}/>
                         {getMessage("refresh")}
                     </Button>
@@ -92,7 +93,8 @@ class AnalysesToolbar extends Component {
                                 value={this.props.permFilter}
                                 onChange={(e) => this.props.onPermissionsFilterChange(e.target.value)}
                                 input={
-                                    <OutlinedInput name="permission" id="permission"/>
+                                    <OutlinedInput name="permission"
+                                                   id={build(analysesMenuBaseId, ids.PERMISSIONS)}/>
                                 }
                                 style={{minWidth: 200}}>
                                 <MenuItem
@@ -111,7 +113,8 @@ class AnalysesToolbar extends Component {
                                 value={this.props.typeFilter}
                                 onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
                                 input={
-                                    <OutlinedInput name="type" id="appType"/>
+                                    <OutlinedInput name="type"
+                                                   id={build(analysesMenuBaseId, ids.APP_TYPE)}/>
                                 } style={{minWidth: 120}}>
                                 <MenuItem
                                     value={"All"}>{appType.all}</MenuItem>
@@ -140,6 +143,29 @@ class AnalysesToolbar extends Component {
     }
 }
 
-AnalysesToolbar.propTypes = {};
+AnalysesToolbar.propTypes = {
+    baseDebugId: PropTypes.string.isRequired,
+    handleGoToOutputFolder: PropTypes.func.isRequired,
+    handleViewParams: PropTypes.func.isRequired,
+    handleRelaunch: PropTypes.func.isRequired,
+    handleViewInfo: PropTypes.func.isRequired,
+    handleShare: PropTypes.func.isRequired,
+    handleCancel: PropTypes.func.isRequired,
+    handleDeleteClick: PropTypes.func.isRequired,
+    handleRename: PropTypes.func.isRequired,
+    handleUpdateComments: PropTypes.func.isRequired,
+    handleSaveAndComplete: PropTypes.func.isRequired,
+    handleRefresh: PropTypes.func.isRequired,
+    permFilter: PropTypes.string.isRequired,
+    typeFilter: PropTypes.string.isRequired,
+    onPermissionsFilterChange: PropTypes.func.isRequired,
+    onTypeFilterChange: PropTypes.func.isRequired,
+    onSearch: PropTypes.func.isRequired,
+    searchInputValue: PropTypes.string.isRequired,
+    selectionCount: PropTypes.number.isRequired,
+    owner: PropTypes.string.isRequired,
+    sharable: PropTypes.bool.isRequired,
+    disableCancel: PropTypes.bool.isRequired,
+};
 
 export default withStyles(exStyles)(withI18N(injectIntl(AnalysesToolbar), intlData));
