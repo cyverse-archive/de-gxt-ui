@@ -2,6 +2,7 @@ package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
@@ -9,6 +10,7 @@ import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Composite;
@@ -23,7 +25,7 @@ import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.IsField;
-import com.sencha.gxt.widget.core.client.form.LongField;
+import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -95,11 +97,11 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Path("container.minMemoryLimit")
     @UiField
-    LongField minMemoryLimitEditor;
+    SimpleComboBox<Long> minMemoryLimitEditor;
 
     @Path("container.minDiskSpace")
     @UiField
-    LongField minDiskSpaceEditor;
+    SimpleComboBox<Long> minDiskSpaceEditor;
 
     @Path("container.pidsLimit")
     @UiField
@@ -107,7 +109,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Path("container.memoryLimit")
     @UiField
-    LongField memory;
+    SimpleComboBox<Long> memory;
 
     @Path("container.networkMode")
     @UiField
@@ -145,7 +147,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     private static  final  EditToolViewUiBinder uiBinder = GWT.create(EditToolViewUiBinder.class);
 
     @Inject
-    public EditToolViewImpl() {
+    public EditToolViewImpl(DEProperties deProperties) {
         initWidget(uiBinder.createAndBindUi(this));
 
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
@@ -160,6 +162,31 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         osgImagePathLabel.setHTML(buildRequiredFieldLabel(osgImagePathLabel.getText()));
 
         editorDriver.initialize(this);
+
+        long oneGB = (long)(1024 * 1024 * 1024);
+        long resourceLimit = oneGB * 2;
+        minMemoryLimitEditor.add((long)0);
+        minMemoryLimitEditor.add(resourceLimit);
+        while (resourceLimit < deProperties.getToolsMaxMemLimit()) {
+            resourceLimit *= 2;
+            minMemoryLimitEditor.add(resourceLimit);
+        }
+
+        resourceLimit = oneGB * 2;
+        memory.add((long)0);
+        memory.add(resourceLimit);
+        while (resourceLimit < deProperties.getToolsMaxMemLimit()) {
+            resourceLimit *= 2;
+            memory.add(resourceLimit);
+        }
+
+        resourceLimit = oneGB;
+        minDiskSpaceEditor.add((long)0);
+        minDiskSpaceEditor.add(resourceLimit);
+        while (resourceLimit < deProperties.getToolsMaxDiskLimit()) {
+            resourceLimit *= 2;
+            minDiskSpaceEditor.add(resourceLimit);
+        }
     }
 
     private void onTypeChanged() {
@@ -179,6 +206,19 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         }
 
         return appearance.buildRequiredFieldLabel(label);
+    }
+
+    @Ignore
+    @UiFactory
+    SimpleComboBox<Long> createComboBox() {
+        final SimpleComboBox<Long> resourceSizeSimpleComboBox =
+                new SimpleComboBox<>(size -> Math.round((float)(size * 10 / (1024 * 1024 * 1024))) / 10 + " GB");
+
+        resourceSizeSimpleComboBox.setEditable(false);
+        resourceSizeSimpleComboBox.setAllowBlank(true);
+        resourceSizeSimpleComboBox.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+
+        return resourceSizeSimpleComboBox;
     }
 
     @Override

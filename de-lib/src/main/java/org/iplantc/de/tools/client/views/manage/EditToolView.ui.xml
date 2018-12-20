@@ -119,20 +119,14 @@
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.minMemoryLimitLabel}">
                             <form:widget>
-                                <form:LongField ui:field="minMemoryLimitEditor"
-                                                allowBlank="true"
-                                                enabled="true"
-                                />
+                                <form:SimpleComboBox ui:field="minMemoryLimitEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.minDiskSpaceLabel}">
                             <form:widget>
-                                <form:LongField ui:field="minDiskSpaceEditor"
-                                                allowBlank="true"
-                                                enabled="true"
-                                />
+                                <form:SimpleComboBox ui:field="minDiskSpaceEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -150,7 +144,7 @@
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.memLimit}">
                         <form:widget>
-                            <form:LongField ui:field="memory" allowBlank="true" enabled="false"/>
+                            <form:SimpleComboBox ui:field="memory" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.nwMode}">
