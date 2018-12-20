@@ -93,10 +93,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     DoubleField maxCPUCoresEditor;
 
-    @Path("container.minCPUCores")
-    @UiField
-    DoubleField minCPUCoresEditor;
-
     @Path("container.minMemoryLimit")
     @UiField
     LongField minMemoryLimitEditor;
@@ -227,7 +223,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         osgImagePathEditor.setId(baseID + ToolsModule.EditToolIds.OSG_IMAGE_PATH);
         minMemoryLimitEditor.setId(baseID + ToolsModule.EditToolIds.MIN_MEM_LIMIT);
         maxCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MAX_CPU_CORES);
-        minCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MIN_CPU_CORES);
         minDiskSpaceEditor.setId(baseID + ToolsModule.EditToolIds.MIN_DISK_SPACE);
         typeEditor.setId(baseID + ToolsModule.EditToolIds.TOOL_TYPE);
     }

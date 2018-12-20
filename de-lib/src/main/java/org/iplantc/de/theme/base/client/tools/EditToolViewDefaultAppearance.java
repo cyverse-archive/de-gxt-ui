@@ -123,11 +123,6 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     }
 
     @Override
-    public String minCPUCoresLabel() {
-        return toolMessages.minCPUCoresLabel();
-    }
-
-    @Override
     public String minMemoryLimitLabel() {
         return toolMessages.minMemoryLimitLabel();
     }
