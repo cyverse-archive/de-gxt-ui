@@ -1,5 +1,6 @@
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
+import { getSorting, stableSort } from "../../util/table/TableSort";
 import ids from "../ids";
 
 import PropTypes from "prop-types";
@@ -23,6 +24,18 @@ class CommunityListing extends Component {
             order: "desc",
             orderBy: "Name",
         };
+
+        this.onRequestSort = this.onRequestSort.bind(this);
+    }
+
+    onRequestSort(event, property) {
+        const orderBy = property;
+        let order = 'desc';
+
+        if (this.state.orderBy === property && this.state.order === 'desc') {
+            order = 'asc';
+        }
+        this.setState({order, orderBy});
     }
 
     render() {
@@ -47,9 +60,10 @@ class CommunityListing extends Component {
                                    baseId={parentId}
                                    ids={ids.TABLE_HEADER}
                                    columnData={tableColumns}
+                                   onRequestSort={this.onRequestSort}
                 />
                 <TableBody>
-                    {data && data.map(community => {
+                    {data && stableSort(data, getSorting(order, orderBy)).map(community => {
                         return (
                             <TableRow tabIndex={-1}
                                       hover

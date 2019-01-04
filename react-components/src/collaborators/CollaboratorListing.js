@@ -1,4 +1,5 @@
 import EnhancedTableHead from "../util/table/EnhancedTableHead";
+import { getSorting, stableSort } from "../util/table/TableSort";
 import ids from "./ids";
 
 import PropTypes from "prop-types";
@@ -32,8 +33,8 @@ class CollaboratorListing extends Component {
             'isSelected',
             'handleRowClick',
             'handleSelectAllClick',
+            'onRequestSort',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
-
     }
 
     isSelected(subject) {
@@ -69,6 +70,16 @@ class CollaboratorListing extends Component {
         this.setState({selected: newSelected});
     };
 
+    onRequestSort(event, property) {
+        const orderBy = property;
+        let order = 'desc';
+
+        if (this.state.orderBy === property && this.state.order === 'desc') {
+            order = 'asc';
+        }
+        this.setState({order, orderBy});
+    }
+
     render() {
         const {
             selected,
@@ -95,10 +106,11 @@ class CollaboratorListing extends Component {
                                    baseId={parentId}
                                    ids={ids.TABLE_HEADER}
                                    columnData={getTableColumns(deletable)}
+                                   onRequestSort={this.onRequestSort}
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
-                    {data.map(subject => {
+                    {data && stableSort(data, getSorting(order, orderBy)).map(subject => {
                         const isSelected = this.isSelected(subject);
                         return (
                             <TableRow role="checkbox"

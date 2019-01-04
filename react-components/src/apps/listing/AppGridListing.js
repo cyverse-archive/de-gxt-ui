@@ -1,6 +1,7 @@
 import AppStatusIcon from "./AppStatusIcon";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
+import { getSorting, stableSort } from "../../util/table/TableSort";
 import ids from "./ids";
 
 import PropTypes from "prop-types";
@@ -31,8 +32,19 @@ class AppGridListing extends Component {
             'isSelected',
             'handleRowClick',
             'handleSelectAllClick',
+            'onRequestSort',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
 
+    }
+
+    onRequestSort(event, property) {
+        const orderBy = property;
+        let order = 'desc';
+
+        if (this.state.orderBy === property && this.state.order === 'desc') {
+            order = 'asc';
+        }
+        this.setState({order, orderBy});
     }
 
     isSelected(app) {
@@ -93,10 +105,11 @@ class AppGridListing extends Component {
                                    baseId={parentId}
                                    ids={ids.TABLE_HEADER}
                                    columnData={getTableColumns(deletable)}
+                                   onRequestSort={this.onRequestSort}
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
-                    {data.map(app => {
+                    {data && stableSort(data, getSorting(order, orderBy)).map(app => {
                         const isSelected = this.isSelected(app);
                         return (
                             <TableRow role="checkbox"
@@ -141,8 +154,8 @@ function getTableColumns(deletable) {
     let tableColumns = [
         {name: "",              numeric: false, enableSorting: false, key: "status"},
         {name: "Name",          numeric: false, enableSorting: true,},
-        {name: "Integrated By", numeric: false, enableSorting: true,},
-        {name: "System",        numeric: false, enableSorting: true,},
+        {name: "Integrated By", numeric: false, enableSorting: true, key: "integrator_name"},
+        {name: "System",        numeric: false, enableSorting: true, key: "system_id"},
     ];
 
     if (deletable) {
