@@ -143,9 +143,9 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
         groupNameLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME_LABEL);
         groupDescLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC_LABEL);
-        nameEditor.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME);
-        descriptionEditor.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC);
-        searchField.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.SEARCH_LIST);
+        nameEditor.setId(baseID + CollaboratorsModule.Ids.GROUP_NAME);
+        descriptionEditor.setId(baseID + CollaboratorsModule.Ids.GROUP_DESC);
+        searchField.setViewDebugId(baseID + CollaboratorsModule.Ids.SEARCH_LIST);
         toolbar.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_TOOLBAR);
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DELETE_BTN);
         grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_GRID);

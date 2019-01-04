@@ -175,7 +175,7 @@ public class UserSearchField implements IsWidget,
     }
 
     public void setViewDebugId(String debugId) {
-        view.ensureDebugId(debugId);
+        combo.setId(debugId);
     }
 
     @Override
