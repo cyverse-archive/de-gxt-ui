@@ -7,6 +7,7 @@ var intlData = {
         "preferences": "Preferences",
         "collaborators"  : "Collaborators",
         "teams": "Teams",
+        "communities": "Communities",
         "documentation" : "User Manual",
         "introduction" : "Introduction",
         "about": "About",

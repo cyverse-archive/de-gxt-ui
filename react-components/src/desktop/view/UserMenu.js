@@ -77,7 +77,14 @@ class UserMenu extends Component {
                               }}>
                         <DEHyperlink text={getMessage("teams")}/>
                     </MenuItem>
-                      <Divider />
+                    <MenuItem id={build(ids.DESKTOP, ids.COMMUNITIES_LINK)}
+                              onClick={() => {
+                                  presenter.onCommunitiesClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("communities")}/>
+                    </MenuItem>
+                    <Divider/>
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
                               onClick={() => {
                                   presenter.onDocumentationClick();
@@ -85,13 +92,13 @@ class UserMenu extends Component {
                               }}>
                         <DEHyperlink text={getMessage("documentation")}/>
                     </MenuItem>
-                     <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                               onClick={() => {
-                                   doIntro();
-                                   this.handleClose();
-                               }}>
+                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
+                              onClick={() => {
+                                  doIntro();
+                                  this.handleClose();
+                              }}>
                         <DEHyperlink text={getMessage("introduction")}/>
-                     </MenuItem>
+                    </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
                               onClick={() => {
                                   presenter.onAboutClick();
@@ -99,7 +106,7 @@ class UserMenu extends Component {
                               }}>
                         <DEHyperlink text={getMessage("about")}/>
                     </MenuItem>
-                     <Divider />
+                    <Divider/>
                     <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
                               onClick={() => {
                                   presenter.doLogout(false);
