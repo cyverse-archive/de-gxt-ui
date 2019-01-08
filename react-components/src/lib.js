@@ -1,6 +1,7 @@
 import * as analysis from "./analysis";
 import * as apps from "./apps";
 import * as collaborators from "./collaborators";
+import * as communities from "./communities";
 import * as data from "./data";
 import * as desktop from "./desktop";
 import * as fileViewers from "./fileViewers";
@@ -45,6 +46,7 @@ export {
     analysis,
     apps,
     collaborators,
+    communities,
     data,
     desktop,
     fileViewers,
