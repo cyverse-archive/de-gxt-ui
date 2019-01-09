@@ -433,6 +433,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
+    public void onCommunitiesClick() {
+        desktopWindowManager.show(WindowType.COMMUNITIES);
+    }
+
+    @Override
     public void onPreferencesClick() {
         preferencesDialogProvider.get(new AsyncCallback<PreferencesDialog>() {
             @Override

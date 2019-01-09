@@ -34,6 +34,7 @@
     <inherits name="org.iplantc.de.collaborators.Collaborators" />
     <inherits name="org.iplantc.de.preferences.Preferences"/>
     <inherits name="org.iplantc.de.teams.Teams"/>
+    <inherits name="org.iplantc.de.communities.Communities"/>
 
     <source path="client"/>
     <source path="shared"/>

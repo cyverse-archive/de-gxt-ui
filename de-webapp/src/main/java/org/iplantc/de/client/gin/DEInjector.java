@@ -7,6 +7,7 @@ import org.iplantc.de.apps.widgets.client.gin.AppLaunchGinModule;
 import org.iplantc.de.collaborators.client.gin.CollaboratorsGinModule;
 import org.iplantc.de.commons.client.comments.gin.CommentsGinModule;
 import org.iplantc.de.commons.client.gin.CommonsGinModule;
+import org.iplantc.de.communities.client.gin.CommunitiesGinModule;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.gin.DEGinModule;
 import org.iplantc.de.diskResource.client.gin.DiskResourceGinModule;
@@ -36,6 +37,7 @@ import com.google.gwt.inject.client.Ginjector;
               TagsGinModule.class,
               FileViewerGinModule.class,
               CollaboratorsGinModule.class,
+              CommunitiesGinModule.class,
               TeamsGinModule.class,
               NotificationGinModule.class,
               PreferencesGinModule.class,

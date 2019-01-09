@@ -69,5 +69,6 @@ public interface DeModule {
         String COLLABORATORS_WINDOW = "collaboratorsWindow";
         String FILE_VIEWER = "fileViewerWindow";
         String TEAMS_WINDOW = "teamsWindow";
+        String COMMUNITIES_WINDOW = "communitiesWindow";
     }
 }

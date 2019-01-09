@@ -139,6 +139,8 @@ public interface DesktopView extends IsWidget {
 
         void onAppsWinBtnSelect();
 
+        void onCommunitiesClick();
+
         void onDataWinBtnSelect();
 
         void onForumsBtnSelect();
