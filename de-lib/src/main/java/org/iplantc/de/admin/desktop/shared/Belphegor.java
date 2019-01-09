@@ -157,6 +157,7 @@ public interface Belphegor {
         String OUTPUT_FILES_GRID = ".grid";
         String CONTAINER_NAME = ".name";
         String CONTAINER_WORKING_DIR = ".workingDir";
+        String CONTAINER_UID = ".uid";
         String CONTAINER_ENTRY_POINT = ".entryPoint";
         String CONTAINER_MEMORY = ".memory";
         String CONTAINER_CPU = ".cpu";

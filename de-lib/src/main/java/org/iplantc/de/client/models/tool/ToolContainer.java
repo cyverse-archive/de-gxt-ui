@@ -24,6 +24,12 @@ public interface ToolContainer extends HasName {
     @PropertyName("entrypoint")
     void setEntryPoint(String entryPoint);
 
+    @PropertyName("uid")
+    void setUID(Integer uid);
+
+    @PropertyName("uid")
+    Integer getUID();
+
     @PropertyName("memory_limit")
     Long getMemoryLimit();
 

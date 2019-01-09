@@ -112,6 +112,10 @@ public interface ToolMessages extends Messages {
     String minDiskSpaceLabel();
 
     String toolImportTypeLabel();
+
+    String workingDir();
+
+    String userID();
 }
 
 

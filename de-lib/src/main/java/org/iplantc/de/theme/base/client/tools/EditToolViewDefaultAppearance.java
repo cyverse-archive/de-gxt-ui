@@ -136,4 +136,14 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     public String typeLabel() {
         return toolMessages.toolImportTypeLabel();
     }
+
+    @Override
+    public String workingDir() {
+        return toolMessages.workingDir();
+    }
+
+    @Override
+    public String userID() {
+        return toolMessages.userID();
+    }
 }

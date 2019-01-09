@@ -41,6 +41,7 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
     @UiField TextField nameEditor;
     @UiField TextField workingDirectoryEditor;
+    @UiField @Path("UID") IntegerField uidEditor;
     @Ignore @UiField HTML entryPointWarningHTML;
     @UiField TextField entryPointEditor;
     @UiField LongField minMemoryLimitEditor;
@@ -83,6 +84,7 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
         nameEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_NAME);
         workingDirectoryEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_WORKING_DIR);
+        uidEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_UID);
         entryPointEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_ENTRY_POINT);
         memoryLimitEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_MEMORY);
         cpuSharesEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_CPU);

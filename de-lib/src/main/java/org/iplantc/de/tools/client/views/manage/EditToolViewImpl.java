@@ -129,6 +129,17 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     TextField entryPoint;
 
+    /**
+     * Working Directory inside the tool's container
+     */
+    @Path("container.workingDirectory")
+    @UiField
+    TextField workingDir;
+
+    @Path("container.UID")
+    @UiField
+    IntegerField uidEditor;
+
     @UiField
     EditToolView.EditToolViewAppearance appearance;
 
@@ -164,28 +175,19 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         editorDriver.initialize(this);
 
         long oneGB = (long)(1024 * 1024 * 1024);
-        long resourceLimit = oneGB * 2;
-        minMemoryLimitEditor.add((long)0);
-        minMemoryLimitEditor.add(resourceLimit);
-        while (resourceLimit < deProperties.getToolsMaxMemLimit()) {
-            resourceLimit *= 2;
-            minMemoryLimitEditor.add(resourceLimit);
-        }
 
-        resourceLimit = oneGB * 2;
-        memory.add((long)0);
-        memory.add(resourceLimit);
-        while (resourceLimit < deProperties.getToolsMaxMemLimit()) {
-            resourceLimit *= 2;
-            memory.add(resourceLimit);
-        }
+        buildResourceLimitList(minMemoryLimitEditor, 2 * oneGB, deProperties.getToolsMaxMemLimit());
+        buildResourceLimitList(memory, 2 * oneGB, deProperties.getToolsMaxMemLimit());
+        buildResourceLimitList(minDiskSpaceEditor, oneGB, deProperties.getToolsMaxDiskLimit());
+    }
 
-        resourceLimit = oneGB;
-        minDiskSpaceEditor.add((long)0);
-        minDiskSpaceEditor.add(resourceLimit);
-        while (resourceLimit < deProperties.getToolsMaxDiskLimit()) {
+    private void buildResourceLimitList(SimpleComboBox<Long> limitSelectionList, long resourceLimit, long maxLimit) {
+        limitSelectionList.add((long)0);
+        limitSelectionList.add(resourceLimit);
+
+        while (resourceLimit < maxLimit) {
             resourceLimit *= 2;
-            minDiskSpaceEditor.add(resourceLimit);
+            limitSelectionList.add(resourceLimit);
         }
     }
 
@@ -265,6 +267,8 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         maxCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MAX_CPU_CORES);
         minDiskSpaceEditor.setId(baseID + ToolsModule.EditToolIds.MIN_DISK_SPACE);
         typeEditor.setId(baseID + ToolsModule.EditToolIds.TOOL_TYPE);
+        workingDir.setId(baseID + ToolsModule.EditToolIds.CONTAINER_WORKING_DIR);
+        uidEditor.setId(baseID + ToolsModule.EditToolIds.CONTAINER_UID);
     }
 
 }

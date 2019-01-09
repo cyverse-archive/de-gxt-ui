@@ -65,6 +65,10 @@ public interface EditToolView extends IsWidget{
         String minDiskSpaceLabel();
 
         String typeLabel();
+
+        String workingDir();
+
+        String userID();
     }
 
     boolean validate();

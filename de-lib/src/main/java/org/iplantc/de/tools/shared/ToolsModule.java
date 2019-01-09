@@ -46,6 +46,8 @@ public interface ToolsModule {
         String MIN_DISK_SPACE = ".minDiskSpace";
         String OSG_IMAGE_PATH = ".osgImagePath";
         String TOOL_TYPE = ".toolType";
+        String CONTAINER_WORKING_DIR = ".workingDir";
+        String CONTAINER_UID = ".uid";
     }
 
     interface RequestToolIds {

@@ -60,6 +60,9 @@ public interface ToolAdminDisplayStrings extends Messages {
     @Key("containerWorkingDirLabel")
     String containerWorkingDirLabel();
 
+    @Key("containerUIDLabel")
+    String containerUIDLabel();
+
     @Key("containerEntryPointLabel")
     String containerEntryPointLabel();
 
