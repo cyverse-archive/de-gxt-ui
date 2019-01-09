@@ -1,27 +1,46 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
+
+import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
+import org.iplantc.de.client.models.avu.AvuList;
+import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
 import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
 public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
 
+    private final String APPS = "org.iplantc.services.apps";
+
     @Inject DEProperties deProps;
     @Inject DiscEnvApiService deServiceFacade;
+    private AvuAutoBeanFactory avuAutoBeanFactory;
+    private DEProperties deProperties;
 
     @Inject
-    public AppMetadataServiceFacadeImpl() {
+    public AppMetadataServiceFacadeImpl(AvuAutoBeanFactory avuAutoBeanFactory,
+                                        DEProperties deProperties) {
+        this.avuAutoBeanFactory = avuAutoBeanFactory;
+        this.deProperties = deProperties;
     }
 
     /**
@@ -58,7 +77,7 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
         String address = getAppsMetadataAddress(UUID) + "/comments";
         JSONObject obj = new JSONObject();
         obj.put("comment", new JSONString(comment));
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.POST, address, obj.toString());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, obj.toString());
         callService(wrapper, callback);
     }
 
@@ -107,4 +126,45 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
+    @Override
+    public void updateAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback) {
+        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(community)));
+
+        String address = APPS + "/" + app.getId() + "/communities";
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(avuList));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        callService(wrapper, new SplittableCallbackConverter(callback));
+    }
+
+    @Override
+    public void deleteAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback) {
+        AvuList avuList = avuAutoBeanFactory.getAvuList().as();
+        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(community)));
+
+        String address = APPS + "/" + app.getId() + "/communities";
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(avuList));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, encode.getPayload());
+        callService(wrapper, new SplittableCallbackConverter(callback));
+    }
+
+    List<Avu> getCommunityAvuList(List<Group> communities) {
+        List<Avu> avuList = Lists.newArrayList();
+        for (Group community : communities) {
+            Avu avu = getCommunityAvu(community);
+            avuList.add(avu);
+        }
+        return avuList;
+    }
+
+    Avu getCommunityAvu(Group community) {
+        Avu avu = avuAutoBeanFactory.getAvu().as();
+        avu.setAttribute(deProperties.getCommunityAttr());
+        avu.setValue(community.getDisplayName());
+        avu.setUnit("");
+
+        return avu;
+    }
 }

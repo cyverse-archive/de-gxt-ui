@@ -14,6 +14,7 @@ import org.iplantc.de.shared.DECallback;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.SortDir;
 
@@ -76,5 +77,5 @@ public interface AppServiceFacade {
      * @param filter
      * @param callback
      */
-    void getCommunityApps(Group community, AppTypeFilter filter, DECallback<List<App>> callback);
+    void getCommunityApps(Group community, AppTypeFilter filter, DECallback<Splittable> callback);
 }
