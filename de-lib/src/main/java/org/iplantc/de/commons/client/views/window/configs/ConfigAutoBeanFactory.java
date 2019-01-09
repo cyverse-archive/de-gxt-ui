@@ -41,4 +41,6 @@ public interface ConfigAutoBeanFactory extends AutoBeanFactory {
     AutoBean<SavedWindowConfig> savedWindowConfig();
 
     AutoBean<TeamsWindowConfig> teamsWindowConfig();
+
+    AutoBean<CommunitiesWindowConfig> communitiesWindowConfig();
 }
