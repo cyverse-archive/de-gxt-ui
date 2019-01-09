@@ -99,7 +99,7 @@ class AppGridListing extends Component {
             <Table>
                 <EnhancedTableHead selectable={selectable}
                                    numSelected={selected.length}
-                                   rowCount={data.length}
+                                   rowCount={data ? data.length : 0}
                                    order={order}
                                    orderBy={orderBy}
                                    baseId={parentId}
@@ -109,7 +109,7 @@ class AppGridListing extends Component {
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
-                    {data && stableSort(data, getSorting(order, orderBy)).map(app => {
+                    {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(app => {
                         const isSelected = this.isSelected(app);
                         return (
                             <TableRow role="checkbox"

@@ -100,7 +100,7 @@ class CollaboratorListing extends Component {
             <Table>
                 <EnhancedTableHead selectable={selectable}
                                    numSelected={selected.length}
-                                   rowCount={data.length}
+                                   rowCount={data ? data.length : 0}
                                    order={order}
                                    orderBy={orderBy}
                                    baseId={parentId}
@@ -110,7 +110,7 @@ class CollaboratorListing extends Component {
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
-                    {data && stableSort(data, getSorting(order, orderBy)).map(subject => {
+                    {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(subject => {
                         const isSelected = this.isSelected(subject);
                         return (
                             <TableRow role="checkbox"

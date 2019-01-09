@@ -54,7 +54,7 @@ class CommunityListing extends Component {
         return (
             <Table>
                 <EnhancedTableHead selectable={false}
-                                   rowCount={data.length}
+                                   rowCount={data ? data.length : 0}
                                    order={order}
                                    orderBy={orderBy}
                                    baseId={parentId}
@@ -63,7 +63,7 @@ class CommunityListing extends Component {
                                    onRequestSort={this.onRequestSort}
                 />
                 <TableBody>
-                    {data && stableSort(data, getSorting(order, orderBy)).map(community => {
+                    {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(community => {
                         return (
                             <TableRow tabIndex={-1}
                                       hover
