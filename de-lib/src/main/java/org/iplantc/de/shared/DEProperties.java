@@ -100,9 +100,12 @@ public class DEProperties {
      */
     private static final String TOOLS_MAX_MEM_LIMIT = "org.iplantc.discoveryenvironment.tools.maxMemoryLimitValue";
     private static final String TOOLS_MAX_DISK_LIMIT = "org.iplantc.discoveryenvironment.tools.maxDiskLimitValue";
+    private static final String TOOLS_MAX_CPU_LIMIT = "org.iplantc.discoveryenvironment.tools.maxCPULimitValue";
 
-    private static final Long DEFAULT_TOOLS_MAX_MEM_LIMIT = (long)(1024 * 1024 * 1024) * 16;    //  16GB
-    private static final Long DEFAULT_TOOLS_MAX_DISK_LIMIT = (long)(1024 * 1024 * 1024) * 512;  // 512GB
+    private static final Long ONE_GB = (long)(1024 * 1024 * 1024);
+    private static final Long DEFAULT_TOOLS_MAX_MEM_LIMIT = 16 * ONE_GB;    //  16GB
+    private static final Long DEFAULT_TOOLS_MAX_DISK_LIMIT = 512 * ONE_GB;  // 512GB
+    private static final Double DEFAULT_TOOLS_MAX_CPU_LIMIT = (double)8;
 
     /**
      * Properties key for the support service URL
@@ -306,6 +309,8 @@ public class DEProperties {
 
     private Long toolsMaxDiskLimit;
 
+    private Double toolsMaxCPULimit;
+
     /**
      * Force the constructor to be private.
      */
@@ -372,6 +377,7 @@ public class DEProperties {
         keys.add(DEFAULT_VICE_CAS_VALIDATE);
         keys.add(TOOLS_MAX_MEM_LIMIT);
         keys.add(TOOLS_MAX_DISK_LIMIT);
+        keys.add(TOOLS_MAX_CPU_LIMIT);
         return keys;
     }
 
@@ -422,6 +428,7 @@ public class DEProperties {
         defaultViceCasValidate = properties.get(DEFAULT_VICE_CAS_VALIDATE);
         toolsMaxMemLimit = getLong(properties, TOOLS_MAX_MEM_LIMIT, DEFAULT_TOOLS_MAX_MEM_LIMIT);
         toolsMaxDiskLimit = getLong(properties, TOOLS_MAX_DISK_LIMIT, DEFAULT_TOOLS_MAX_DISK_LIMIT);
+        toolsMaxCPULimit = getDouble(properties, TOOLS_MAX_CPU_LIMIT, DEFAULT_TOOLS_MAX_CPU_LIMIT);
     }
 
     /**
@@ -469,6 +476,23 @@ public class DEProperties {
             return Long.parseLong(properties.get(name));
         } catch (Exception e) {
             GWT.log("DEProps could not parse Long: " + properties.get(name));
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Obtains a Double property value.
+     *
+     * @param properties   the property map.
+     * @param name         the name of the property.
+     * @param defaultValue the default value to use.
+     * @return the property value or its default value.
+     */
+    private Double getDouble(Map<String, String> properties, String name, Double defaultValue) {
+        try {
+            return Double.parseDouble(properties.get(name));
+        } catch (Exception e) {
+            GWT.log("DEProps could not parse Double: " + properties.get(name));
             return defaultValue;
         }
     }
@@ -659,5 +683,9 @@ public class DEProperties {
 
     public Long getToolsMaxDiskLimit() {
         return toolsMaxDiskLimit;
+    }
+
+    public Double getToolsMaxCPULimit() {
+        return toolsMaxCPULimit;
     }
 }

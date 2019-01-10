@@ -148,10 +148,7 @@
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.maxCPUCoresLabel}">
                             <form:widget>
-                                <form:DoubleField ui:field="maxCPUCoresEditor"
-                                                  allowBlank="true"
-                                                  enabled="true"
-                                />
+                                <form:SimpleComboBox ui:field="maxCPUCoresEditor"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>

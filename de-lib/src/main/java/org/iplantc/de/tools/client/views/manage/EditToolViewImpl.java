@@ -13,7 +13,6 @@ import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
@@ -26,7 +25,6 @@ import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.form.DoubleField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
@@ -43,6 +41,8 @@ import java.util.List;
  * Created by sriram on 4/27/17.
  */
 public class EditToolViewImpl extends Composite implements EditToolView, Editor<Tool> {
+
+    private static final long ONE_GB = (long)(1024 * 1024 * 1024);
 
     @UiField
     VBoxLayoutContainer container;
@@ -99,15 +99,15 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     TextField osgImagePathEditor;
 
     @Path("container.maxCPUCores")
-    @UiField
-    DoubleField maxCPUCoresEditor;
+    @UiField (provided = true)
+    SimpleComboBox<Double> maxCPUCoresEditor;
 
     @Path("container.minMemoryLimit")
-    @UiField
+    @UiField (provided = true)
     SimpleComboBox<Long> minMemoryLimitEditor;
 
     @Path("container.minDiskSpace")
-    @UiField
+    @UiField (provided = true)
     SimpleComboBox<Long> minDiskSpaceEditor;
 
     @Path("container.pidsLimit")
@@ -115,7 +115,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     IntegerField pidsLimit;
 
     @Path("container.memoryLimit")
-    @UiField
+    @UiField (provided = true)
     SimpleComboBox<Long> memory;
 
     @Path("container.networkMode")
@@ -184,6 +184,16 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     public EditToolViewImpl(DEProperties deProperties, ToolContainerPortsListEditor containerPortsEditor) {
         this.containerPortsEditor = containerPortsEditor;
 
+        minMemoryLimitEditor = createDataSizeComboBox();
+        minDiskSpaceEditor = createDataSizeComboBox();
+        memory = createDataSizeComboBox();
+        maxCPUCoresEditor = createDoubleComboBox();
+
+        buildResourceSizeLimitList(minMemoryLimitEditor, 2 * ONE_GB, deProperties.getToolsMaxMemLimit());
+        buildResourceSizeLimitList(memory, 2 * ONE_GB, deProperties.getToolsMaxMemLimit());
+        buildResourceSizeLimitList(minDiskSpaceEditor, ONE_GB, deProperties.getToolsMaxDiskLimit());
+        buildResourceDoubleLimitList(maxCPUCoresEditor, 1, deProperties.getToolsMaxCPULimit());
+
         initWidget(uiBinder.createAndBindUi(this));
 
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
@@ -198,16 +208,20 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         osgImagePathLabel.setHTML(buildRequiredFieldLabel(osgImagePathLabel.getText()));
 
         editorDriver.initialize(this);
-
-        long oneGB = (long)(1024 * 1024 * 1024);
-
-        buildResourceLimitList(minMemoryLimitEditor, 2 * oneGB, deProperties.getToolsMaxMemLimit());
-        buildResourceLimitList(memory, 2 * oneGB, deProperties.getToolsMaxMemLimit());
-        buildResourceLimitList(minDiskSpaceEditor, oneGB, deProperties.getToolsMaxDiskLimit());
     }
 
-    private void buildResourceLimitList(SimpleComboBox<Long> limitSelectionList, long resourceLimit, long maxLimit) {
+    private void buildResourceSizeLimitList(SimpleComboBox<Long> limitSelectionList, long resourceLimit, long maxLimit) {
         limitSelectionList.add((long)0);
+        limitSelectionList.add(resourceLimit);
+
+        while (resourceLimit < maxLimit) {
+            resourceLimit *= 2;
+            limitSelectionList.add(resourceLimit);
+        }
+    }
+
+    private void buildResourceDoubleLimitList(SimpleComboBox<Double> limitSelectionList, double resourceLimit, double maxLimit) {
+        limitSelectionList.add((double)0);
         limitSelectionList.add(resourceLimit);
 
         while (resourceLimit < maxLimit) {
@@ -239,11 +253,19 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         return appearance.buildRequiredFieldLabel(label);
     }
 
-    @Ignore
-    @UiFactory
-    SimpleComboBox<Long> createComboBox() {
+    private SimpleComboBox<Long> createDataSizeComboBox() {
         final SimpleComboBox<Long> resourceSizeSimpleComboBox =
-                new SimpleComboBox<>(size -> Math.round((float)(size * 10 / (1024 * 1024 * 1024))) / 10 + " GB");
+                new SimpleComboBox<>(size -> Math.round((float)(size * 10 / ONE_GB)) / 10 + " GB");
+
+        resourceSizeSimpleComboBox.setEditable(false);
+        resourceSizeSimpleComboBox.setAllowBlank(true);
+        resourceSizeSimpleComboBox.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+
+        return resourceSizeSimpleComboBox;
+    }
+
+    private SimpleComboBox<Double> createDoubleComboBox() {
+        final SimpleComboBox<Double> resourceSizeSimpleComboBox = new SimpleComboBox<>(Object::toString);
 
         resourceSizeSimpleComboBox.setEditable(false);
         resourceSizeSimpleComboBox.setAllowBlank(true);
