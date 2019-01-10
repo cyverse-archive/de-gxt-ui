@@ -1,7 +1,10 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:c="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
-             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+             xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:subviews="urn:import:org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews">
 
 
     <ui:with field="outerMargins" type="com.sencha.gxt.core.client.util.Margins">
@@ -99,6 +102,28 @@
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
+                    <form:FieldSet ui:field="containerPortsFieldSet"
+                                   heading="{appearance.containerPorts}"
+                                   collapsible="true"
+                    >
+                        <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
+                            <container:child layoutData="{layoutData}">
+                                <toolbar:ToolBar title="">
+                                    <button:TextButton ui:field="addPortsButton"
+                                                       text="{appearance.add}"
+                                                       icon="{appearance.addIcon}"
+                                    />
+                                    <button:TextButton ui:field="deletePortsButton"
+                                                       text="{appearance.delete}"
+                                                       icon="{appearance.deleteIcon}"
+                                    />
+                                </toolbar:ToolBar>
+                            </container:child>
+                            <container:child layoutData="{layoutData}">
+                                <subviews:ToolContainerPortsListEditor ui:field="containerPortsEditor"/>
+                            </container:child>
+                        </container:VBoxLayoutContainer>
+                    </form:FieldSet>
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.entryPoint}">
                             <form:widget>

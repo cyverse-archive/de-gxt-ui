@@ -1,10 +1,13 @@
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolContainerPortsListEditor;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.tools.shared.ToolsModule;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -12,6 +15,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,9 +23,12 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.DoubleField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.IsField;
@@ -140,6 +147,22 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     IntegerField uidEditor;
 
+    @Ignore
+    @UiField
+    FieldSet containerPortsFieldSet;
+
+    @Path("container.containerPorts")
+    @UiField (provided = true)
+    ToolContainerPortsListEditor containerPortsEditor;
+
+    @Ignore
+    @UiField
+    TextButton addPortsButton;
+
+    @Ignore
+    @UiField
+    TextButton deletePortsButton;
+
     @UiField
     EditToolView.EditToolViewAppearance appearance;
 
@@ -158,7 +181,9 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     private static  final  EditToolViewUiBinder uiBinder = GWT.create(EditToolViewUiBinder.class);
 
     @Inject
-    public EditToolViewImpl(DEProperties deProperties) {
+    public EditToolViewImpl(DEProperties deProperties, ToolContainerPortsListEditor containerPortsEditor) {
+        this.containerPortsEditor = containerPortsEditor;
+
         initWidget(uiBinder.createAndBindUi(this));
 
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
@@ -192,8 +217,12 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     }
 
     private void onTypeChanged() {
-        final boolean osgType = "osg".equals(typeEditor.getCurrentValue());
+        final String typeValue = typeEditor.getCurrentValue();
+        final boolean osgType = ToolType.Types.osg.toString().equals(typeValue);
+        final boolean interactiveType = ToolType.Types.interactive.toString().equals(typeValue);
+
         osgImagePathEditor.setEnabled(osgType);
+        containerPortsFieldSet.setEnabled(interactiveType);
     }
 
     @Override
@@ -230,8 +259,16 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Override
     public void editTool(Tool t) {
-        final boolean osgType = "osg".equals(t.getType());
+        if (t.getContainer().getContainerPorts() == null) {
+            t.getContainer().setContainerPorts(Lists.newArrayList());
+        }
+
+        final boolean interactiveType = ToolType.Types.interactive.toString().equals(t.getType());
+        containerPortsFieldSet.setEnabled(interactiveType);
+
+        final boolean osgType = ToolType.Types.osg.toString().equals(t.getType());
         osgImagePathEditor.setEnabled(osgType);
+
         editorDriver.edit(t);
     }
 
@@ -269,6 +306,18 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         typeEditor.setId(baseID + ToolsModule.EditToolIds.TOOL_TYPE);
         workingDir.setId(baseID + ToolsModule.EditToolIds.CONTAINER_WORKING_DIR);
         uidEditor.setId(baseID + ToolsModule.EditToolIds.CONTAINER_UID);
+        addPortsButton.ensureDebugId(baseID + ToolsModule.EditToolIds.CONTAINER_PORTS_ADD);
+        deletePortsButton.ensureDebugId(baseID + ToolsModule.EditToolIds.CONTAINER_PORTS_DELETE);
+    }
+
+    @UiHandler("addPortsButton")
+    void onAddPortsButtonClicked(SelectEvent event) {
+        containerPortsEditor.addContainerPorts();
+    }
+
+    @UiHandler("deletePortsButton")
+    void onDeletePortsButtonClicked(SelectEvent event) {
+        containerPortsEditor.deleteContainerPorts();
     }
 
 }

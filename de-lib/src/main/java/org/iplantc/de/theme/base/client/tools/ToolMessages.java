@@ -116,6 +116,6 @@ public interface ToolMessages extends Messages {
     String workingDir();
 
     String userID();
+
+    String containerPorts();
 }
-
-

@@ -209,11 +209,13 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         boolean skipTmpMount = false;
         String networkMode = tool.getContainer().getNetworkMode();
 
-        if (tool.getType().equals("interactive")) {
+        if (tool.getType().equals(ToolType.Types.interactive.toString())) {
             factory.appendDefaultInteractiveAppValues(tool, deProperties);
             skipTmpMount = true;
             interactive = true;
             networkMode = "bridge";
+        } else {
+            tool.getContainer().setContainerPorts(null);
         }
 
         tool.setInteractive(interactive);

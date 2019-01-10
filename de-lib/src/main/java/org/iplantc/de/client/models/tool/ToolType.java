@@ -11,6 +11,10 @@ import com.google.gwt.user.client.ui.HasName;
  * The autobean representation of a tool type i.e. executable, interactive, osg, etc.
  */
 public interface ToolType extends HasId, HasDescription, HasName {
+    enum Types {
+        interactive,
+        osg,
+    }
 
     void setLabel(String label);
     String getLabel();

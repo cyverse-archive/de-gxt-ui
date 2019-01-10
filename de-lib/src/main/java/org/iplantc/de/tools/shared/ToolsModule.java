@@ -48,6 +48,8 @@ public interface ToolsModule {
         String TOOL_TYPE = ".toolType";
         String CONTAINER_WORKING_DIR = ".workingDir";
         String CONTAINER_UID = ".uid";
+        String CONTAINER_PORTS_ADD = ".portsAddBtn";
+        String CONTAINER_PORTS_DELETE = ".portsDeleteBtn";
     }
 
     interface RequestToolIds {
