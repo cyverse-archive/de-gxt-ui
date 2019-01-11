@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasName;
  */
 public interface ToolType extends HasId, HasDescription, HasName {
     enum Types {
+        executable,
         interactive,
         osg,
     }

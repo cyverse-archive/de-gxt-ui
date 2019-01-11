@@ -125,7 +125,11 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(List<ToolType> result) {
-                result.forEach(toolType -> toolTypes.add(toolType.getName()));
+                result.forEach(toolType -> {
+                    if (!toolType.getName().equals("fAPI") && !toolType.getName().equals("internal")) {
+                        toolTypes.add(toolType.getName());
+                    }
+                });
                 toolsView.unmask();
                 loadTools(null);
             }

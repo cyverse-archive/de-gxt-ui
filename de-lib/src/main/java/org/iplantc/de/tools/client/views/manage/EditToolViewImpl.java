@@ -4,9 +4,11 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolContainer
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
+import org.iplantc.de.commons.client.widgets.EmptyStringValueChangeHandler;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.tools.shared.ToolsModule;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -207,6 +209,12 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
         osgImagePathLabel.setHTML(buildRequiredFieldLabel(osgImagePathLabel.getText()));
 
+        tag.addValueChangeHandler(new EmptyStringValueChangeHandler(tag));
+        url.addValueChangeHandler(new EmptyStringValueChangeHandler(url));
+        osgImagePathEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(osgImagePathEditor));
+        entryPoint.addValueChangeHandler(new EmptyStringValueChangeHandler(entryPoint));
+        workingDir.addValueChangeHandler(new EmptyStringValueChangeHandler(workingDir));
+
         editorDriver.initialize(this);
     }
 
@@ -281,6 +289,14 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Override
     public void editTool(Tool t) {
+        if (Strings.isNullOrEmpty(t.getType())) {
+            t.setType(ToolType.Types.executable.toString());
+        }
+
+         // If you try to edit a Tool that was created without a ContainerPorts list,
+         // then this field will be omitted in the encoded JSON on save,
+         // even when items are added in the UI by the Editor.
+         // Add an empty list here as a workaround.
         if (t.getContainer().getContainerPorts() == null) {
             t.getContainer().setContainerPorts(Lists.newArrayList());
         }
