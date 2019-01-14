@@ -96,11 +96,11 @@ public class DEProperties {
     private static final String DEFAULT_VICE_CAS_VALIDATE = "org.iplantc.discoveryenvironment.tools.interactiveApps.defaultCasValidate";
 
     /**
-     * Properties keys for the max values for {@link org.iplantc.de.client.models.tool.ToolContainer} settings
+     * Properties keys for the max values for private {@link org.iplantc.de.client.models.tool.ToolContainer} settings
      */
-    private static final String TOOLS_MAX_MEM_LIMIT = "org.iplantc.discoveryenvironment.tools.maxMemoryLimitValue";
-    private static final String TOOLS_MAX_DISK_LIMIT = "org.iplantc.discoveryenvironment.tools.maxDiskLimitValue";
-    private static final String TOOLS_MAX_CPU_LIMIT = "org.iplantc.discoveryenvironment.tools.maxCPULimitValue";
+    private static final String TOOLS_MAX_MEM_LIMIT = "org.iplantc.discoveryenvironment.tools.private.maxMemoryLimitValue";
+    private static final String TOOLS_MAX_DISK_LIMIT = "org.iplantc.discoveryenvironment.tools.private.maxDiskLimitValue";
+    private static final String TOOLS_MAX_CPU_LIMIT = "org.iplantc.discoveryenvironment.tools.private.maxCPULimitValue";
 
     private static final Long ONE_GB = (long)(1024 * 1024 * 1024);
     private static final Long DEFAULT_TOOLS_MAX_MEM_LIMIT = 16 * ONE_GB;    //  16GB
