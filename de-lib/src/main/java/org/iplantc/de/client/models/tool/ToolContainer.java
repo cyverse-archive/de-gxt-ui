@@ -12,6 +12,10 @@ import java.util.List;
 
 public interface ToolContainer extends HasName {
 
+    enum NetworkMode {
+        none, bridge;
+    }
+
     @PropertyName("working_directory")
     String getWorkingDirectory();
 

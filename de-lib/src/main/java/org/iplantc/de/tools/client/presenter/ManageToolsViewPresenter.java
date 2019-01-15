@@ -6,6 +6,7 @@ import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -217,8 +218,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             factory.appendDefaultInteractiveAppValues(tool, deProperties);
             skipTmpMount = true;
             interactive = true;
-            networkMode = "bridge";
+            networkMode = ToolContainer.NetworkMode.bridge.toString();
         } else {
+            tool.getContainer().setInteractiveApps(null);
             tool.getContainer().setContainerPorts(null);
         }
 

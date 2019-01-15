@@ -35,10 +35,6 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
     private static ToolContainerEditorBinder uiBinder = GWT.create(ToolContainerEditorBinder.class);
 
-    public enum NetworkMode {
-        None, Bridge;
-    }
-
     @UiField TextField nameEditor;
     @UiField TextField workingDirectoryEditor;
     @UiField @Path("UID") IntegerField uidEditor;
@@ -131,8 +127,8 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         this.containerPortsEditor = containerPortsEditor;
         initWidget(uiBinder.createAndBindUi(this));
 
-        networkModeEditor.add(NetworkMode.None.toString().toLowerCase());
-        networkModeEditor.add(NetworkMode.Bridge.toString().toLowerCase());
+        networkModeEditor.add(ToolContainer.NetworkMode.none.toString());
+        networkModeEditor.add(ToolContainer.NetworkMode.bridge.toString());
         networkModeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
         entryPointWarningHTML.setHTML(appearance.toolEntryPointWarning());
