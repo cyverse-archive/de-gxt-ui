@@ -104,9 +104,9 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField (provided = true)
     SimpleComboBox<Double> maxCPUCoresEditor;
 
-    @Path("container.minMemoryLimit")
+    @Path("container.memoryLimit")
     @UiField (provided = true)
-    SimpleComboBox<Long> minMemoryLimitEditor;
+    SimpleComboBox<Long> memory;
 
     @Path("container.minDiskSpace")
     @UiField (provided = true)
@@ -115,10 +115,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @Path("container.pidsLimit")
     @UiField
     IntegerField pidsLimit;
-
-    @Path("container.memoryLimit")
-    @UiField (provided = true)
-    SimpleComboBox<Long> memory;
 
     @Path("container.networkMode")
     @UiField
@@ -186,12 +182,10 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     public EditToolViewImpl(DEProperties deProperties, ToolContainerPortsListEditor containerPortsEditor) {
         this.containerPortsEditor = containerPortsEditor;
 
-        minMemoryLimitEditor = createDataSizeComboBox();
         minDiskSpaceEditor = createDataSizeComboBox();
         memory = createDataSizeComboBox();
         maxCPUCoresEditor = createDoubleComboBox();
 
-        buildResourceSizeLimitList(minMemoryLimitEditor, 2 * ONE_GB, deProperties.getToolsMaxMemLimit());
         buildResourceSizeLimitList(memory, 2 * ONE_GB, deProperties.getToolsMaxMemLimit());
         buildResourceSizeLimitList(minDiskSpaceEditor, ONE_GB, deProperties.getToolsMaxDiskLimit());
         buildResourceDoubleLimitList(maxCPUCoresEditor, 1, deProperties.getToolsMaxCPULimit());
@@ -338,7 +332,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         network.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NW);
         time.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TIME);
         osgImagePathEditor.setId(baseID + ToolsModule.EditToolIds.OSG_IMAGE_PATH);
-        minMemoryLimitEditor.setId(baseID + ToolsModule.EditToolIds.MIN_MEM_LIMIT);
         maxCPUCoresEditor.setId(baseID + ToolsModule.EditToolIds.MAX_CPU_CORES);
         minDiskSpaceEditor.setId(baseID + ToolsModule.EditToolIds.MIN_DISK_SPACE);
         typeEditor.setId(baseID + ToolsModule.EditToolIds.TOOL_TYPE);

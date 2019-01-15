@@ -153,9 +153,9 @@
                         </form:FieldLabel>
                     </container:child>
                     <container:child layoutData="{layoutData}">
-                        <form:FieldLabel text="{appearance.minMemoryLimitLabel}">
+                        <form:FieldLabel text="{appearance.memLimit}">
                             <form:widget>
-                                <form:SimpleComboBox ui:field="minMemoryLimitEditor"/>
+                                <form:SimpleComboBox ui:field="memory"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -176,11 +176,6 @@
                     <form:FieldLabel text="{appearance.pidsLimit}">
                         <form:widget>
                             <form:IntegerField ui:field="pidsLimit" allowBlank="true" enabled="false"/>
-                        </form:widget>
-                    </form:FieldLabel>
-                    <form:FieldLabel text="{appearance.memLimit}">
-                        <form:widget>
-                            <form:SimpleComboBox ui:field="memory" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.nwMode}">

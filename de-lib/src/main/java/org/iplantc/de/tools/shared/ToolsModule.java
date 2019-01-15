@@ -41,7 +41,6 @@ public interface ToolsModule {
         String TOOL_MEM = ".idToolMem";
         String TOOL_NW = ".idToolNw";
         String TOOL_TIME = ".idToolTime";
-        String MIN_MEM_LIMIT = ".minMemLimit";
         String MAX_CPU_CORES = ".maxCPUCores";
         String MIN_DISK_SPACE = ".minDiskSpace";
         String OSG_IMAGE_PATH = ".osgImagePath";

@@ -107,8 +107,6 @@ public interface ToolMessages extends Messages {
 
     String maxCPUCoresLabel();
 
-    String minMemoryLimitLabel();
-
     String minDiskSpaceLabel();
 
     String toolImportTypeLabel();

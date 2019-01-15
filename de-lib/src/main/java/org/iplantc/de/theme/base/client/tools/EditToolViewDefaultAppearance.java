@@ -124,11 +124,6 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     }
 
     @Override
-    public String minMemoryLimitLabel() {
-        return toolMessages.minMemoryLimitLabel();
-    }
-
-    @Override
     public String minDiskSpaceLabel() {
         return toolMessages.minDiskSpaceLabel();
     }

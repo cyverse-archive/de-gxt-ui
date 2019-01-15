@@ -61,8 +61,6 @@ public interface EditToolView extends IsWidget{
 
         String maxCPUCoresLabel();
 
-        String minMemoryLimitLabel();
-
         String minDiskSpaceLabel();
 
         String typeLabel();
