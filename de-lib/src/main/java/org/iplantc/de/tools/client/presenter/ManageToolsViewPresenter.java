@@ -363,6 +363,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                     @Override
                     public void onFailure(Integer statusCode, Throwable exception) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
+                        etd.hide();
                     }
 
                     @Override
