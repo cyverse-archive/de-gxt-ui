@@ -42,6 +42,7 @@ import SearchFieldTest from "./util/SearchField.stories";
 import AutocompleteTest from "./util/Autocomplete.stories";
 import CopyTextAreaTest from "./util/CopyTextArea.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
+import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
@@ -87,6 +88,7 @@ storiesOf('notifications/view/dialogs', module).add('with test RequestHistoryDia
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
+storiesOf('util', module).add('ErrorHandler', () => <ErrorHandlerTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
 

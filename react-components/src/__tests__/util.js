@@ -5,6 +5,7 @@ import {getDefaultTheme, MuiThemeProvider} from "../lib";
 
 import AutocompleteTest from "../../stories/util/Autocomplete.stories";
 import CopyTextAreaTest from "../../stories/util/CopyTextArea.stories";
+import ErrorHandlerTest from "../../stories/util/ErrorHandler.stories";
 import SearchFieldTest from "../../stories/util/SearchField.stories";
 import TriggerFieldTest from "../../stories/util/TriggerField.stories";
 
@@ -17,6 +18,12 @@ it('renders Autocomplete without crashing', () => {
 it('renders CopyTextArea without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><CopyTextAreaTest /></MuiThemeProvider>, div);
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders ErrorHandler without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><ErrorHandlerTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
 
