@@ -2,6 +2,7 @@ package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews.ToolContainerPortsListEditor;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
 import org.iplantc.de.commons.client.widgets.EmptyStringValueChangeHandler;
@@ -239,6 +240,14 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
         osgImagePathEditor.setEnabled(osgType);
         containerPortsFieldSet.setEnabled(interactiveType);
+
+        // Set Network Mode to "bridge" for interactive types.
+        // The private tool endpoint will auto-set this value, so this is only for display purposes.
+        if (interactiveType) {
+            network.setValue(ToolContainer.NetworkMode.bridge.toString());
+        } else {
+            network.setValue(ToolContainer.NetworkMode.none.toString());
+        }
     }
 
     @Override
