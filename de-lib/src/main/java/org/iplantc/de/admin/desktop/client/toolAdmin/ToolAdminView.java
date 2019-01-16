@@ -81,6 +81,8 @@ public interface ToolAdminView extends IsWidget,
 
         String containerWorkingDirLabel();
 
+        String containerUIDLabel();
+
         String containerEntryPointLabel();
 
         String containerMemoryLimitLabel();

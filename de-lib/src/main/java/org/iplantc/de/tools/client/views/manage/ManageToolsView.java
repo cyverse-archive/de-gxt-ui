@@ -127,6 +127,8 @@ public interface ManageToolsView extends IsWidget,
 
         Tool getSelectedTool();
 
+        List<String> getToolTypes();
+
         HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
     }
 }

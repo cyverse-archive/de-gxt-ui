@@ -9,6 +9,8 @@ import org.iplantc.de.tools.shared.ToolsModule;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.dom.ScrollSupport;
+import com.sencha.gxt.widget.core.client.container.FlowLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
@@ -27,6 +29,7 @@ public class EditToolDialog extends IPlantDialog {
        this.appearance = appearance;
        setHeading(appearance.create());
        setHideOnButtonClick(false);
+
        getOkButton().addSelectHandler(new SelectEvent.SelectHandler() {
            @Override
            public void onSelect(SelectEvent event) {
@@ -49,7 +52,6 @@ public class EditToolDialog extends IPlantDialog {
                EditToolDialog.this.hide();
            }
        });
-
     }
 
     public void editTool(Tool t) {
@@ -58,7 +60,14 @@ public class EditToolDialog extends IPlantDialog {
 
     public void show(ManageToolsView.Presenter presenter) {
         this.presenter = presenter;
-        add(editToolView);
+
+        editToolView.setToolTypes(presenter.getToolTypes());
+
+        FlowLayoutContainer container = new FlowLayoutContainer();
+        container.getScrollSupport().setScrollMode(ScrollSupport.ScrollMode.AUTO);
+        container.add(editToolView);
+        add(container);
+
         super.show();
         ensureDebugId(ToolsModule.EditToolIds.EDIT_DIALOG);
     }

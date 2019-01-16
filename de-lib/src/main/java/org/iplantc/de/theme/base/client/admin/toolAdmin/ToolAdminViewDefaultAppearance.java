@@ -192,6 +192,11 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
+    public String containerUIDLabel() {
+        return displayStrings.containerUIDLabel();
+    }
+
+    @Override
     public String containerEntryPointLabel() {
         return displayStrings.containerEntryPointLabel();
     }

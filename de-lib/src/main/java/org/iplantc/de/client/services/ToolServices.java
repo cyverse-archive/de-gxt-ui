@@ -2,6 +2,7 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
 import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.shared.AppsCallback;
@@ -29,4 +30,6 @@ public interface ToolServices {
     void getAppsForTool(String toolId, AppsCallback<List<App>> appsCallback);
 
     void getToolInfo(String toolId, AppsCallback<Tool> appsCallback);
+
+    void getToolTypes(AppsCallback<List<ToolType>> callback);
 }

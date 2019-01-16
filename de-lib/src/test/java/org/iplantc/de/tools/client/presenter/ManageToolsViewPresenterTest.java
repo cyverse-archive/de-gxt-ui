@@ -147,6 +147,10 @@ public class ManageToolsViewPresenterTest {
             void displayInfoMessage(String title, String message) {
                 //do nothing
             }
+
+            @Override
+            void checkForViceTool(Tool tool) {
+            }
         };
         uut.toolsView = toolsViewMock;
         uut.announcer = announcerMock;
@@ -316,6 +320,10 @@ public class ManageToolsViewPresenterTest {
 
         verify(editDialogProviderMock).get(editDialogCaptor.capture());
         editDialogCaptor.getValue().onSuccess(editToolDialogMock);
+
+        verify(toolServicesMock).getToolInfo(eq(t1Mock.getId()), toolCaptor.capture());
+        toolCaptor.getValue().onSuccess(t1Mock);
+
         verify(editToolDialogMock).editTool(eq(t1Mock));
         verify(editToolDialogMock).show(eq(uut));
     }

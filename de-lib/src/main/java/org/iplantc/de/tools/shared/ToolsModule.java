@@ -41,6 +41,14 @@ public interface ToolsModule {
         String TOOL_MEM = ".idToolMem";
         String TOOL_NW = ".idToolNw";
         String TOOL_TIME = ".idToolTime";
+        String MAX_CPU_CORES = ".maxCPUCores";
+        String MIN_DISK_SPACE = ".minDiskSpace";
+        String OSG_IMAGE_PATH = ".osgImagePath";
+        String TOOL_TYPE = ".toolType";
+        String CONTAINER_WORKING_DIR = ".workingDir";
+        String CONTAINER_UID = ".uid";
+        String CONTAINER_PORTS_ADD = ".portsAddBtn";
+        String CONTAINER_PORTS_DELETE = ".portsDeleteBtn";
     }
 
     interface RequestToolIds {

@@ -6,6 +6,8 @@ import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolContainer;
+import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -14,6 +16,7 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
@@ -82,7 +85,12 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Inject
     ToolAutoBeanFactory factory;
 
+    @Inject
+    DEProperties deProperties;
+
     protected List<Tool> currentSelection = Lists.newArrayList();
+
+    private List<String> toolTypes = Lists.newArrayList();
 
     @Inject
     public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance,
@@ -106,7 +114,27 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         toolsView.getToolbar().addEditToolSelectedHandler(this);
         toolsView.getToolbar().addRequestToMakeToolPublicSelectedHandler(this);
         toolsView.addShowToolInfoEventHandlers(this);
-        loadTools(null);
+
+        toolsView.mask(appearance.mask());
+
+        toolServices.getToolTypes(new AppsCallback<List<ToolType>>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(exception);
+                toolsView.unmask();
+            }
+
+            @Override
+            public void onSuccess(List<ToolType> result) {
+                result.forEach(toolType -> {
+                    if (!toolType.getName().equals("fAPI") && !toolType.getName().equals("internal")) {
+                        toolTypes.add(toolType.getName());
+                    }
+                });
+                toolsView.unmask();
+                loadTools(null);
+            }
+        });
     }
 
     @Override
@@ -139,6 +167,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void addTool(final Tool tool, final Command dialogCallbackCommand) {
+        checkForViceTool(tool);
+
         toolServices.addTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -160,6 +190,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void updateTool(final Tool tool, final Command dialogCallbackCommand) {
+        checkForViceTool(tool);
+
         toolServices.updateTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -177,9 +209,34 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         });
     }
 
+    void checkForViceTool(Tool tool) {
+        boolean interactive = false;
+        boolean skipTmpMount = false;
+        String networkMode = tool.getContainer().getNetworkMode();
+
+        if (tool.getType().equals(ToolType.Types.interactive.toString())) {
+            factory.appendDefaultInteractiveAppValues(tool, deProperties);
+            skipTmpMount = true;
+            interactive = true;
+            networkMode = ToolContainer.NetworkMode.bridge.toString();
+        } else {
+            tool.getContainer().setInteractiveApps(null);
+            tool.getContainer().setContainerPorts(null);
+        }
+
+        tool.setInteractive(interactive);
+        tool.getContainer().setSkipTmpMount(skipTmpMount);
+        tool.getContainer().setNetworkMode(networkMode);
+    }
+
     @Override
     public Tool getSelectedTool() {
         return currentSelection.get(0);
+    }
+
+    @Override
+    public List<String> getToolTypes() {
+        return toolTypes;
     }
 
     @Override
@@ -299,8 +356,22 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(EditToolDialog etd) {
                 etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
-                etd.editTool(getSelectedTool());
                 etd.show(ManageToolsViewPresenter.this);
+                etd.mask();
+
+                toolServices.getToolInfo(getSelectedTool().getId(), new AppsCallback<Tool>() {
+                    @Override
+                    public void onFailure(Integer statusCode, Throwable exception) {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
+                        etd.hide();
+                    }
+
+                    @Override
+                    public void onSuccess(Tool result) {
+                        etd.editTool(result);
+                        etd.unmask();
+                    }
+                });
             }
         });
     }

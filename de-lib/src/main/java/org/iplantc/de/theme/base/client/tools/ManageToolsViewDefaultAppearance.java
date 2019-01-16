@@ -145,12 +145,12 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
 
     @Override
     public String editDialogWidth() {
-        return "600px";
+        return "640px";
     }
 
     @Override
     public String editDialogHeight() {
-        return "300px";
+        return "480px";
     }
 
     @Override

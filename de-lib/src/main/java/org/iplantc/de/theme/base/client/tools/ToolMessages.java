@@ -102,6 +102,18 @@ public interface ToolMessages extends Messages {
     SafeHtml fileExists(String dupeFiles);
 
     String toolInfoError();
+
+    String osgImagePathLabel();
+
+    String maxCPUCoresLabel();
+
+    String minDiskSpaceLabel();
+
+    String toolImportTypeLabel();
+
+    String workingDir();
+
+    String userID();
+
+    String containerPorts();
 }
-
-

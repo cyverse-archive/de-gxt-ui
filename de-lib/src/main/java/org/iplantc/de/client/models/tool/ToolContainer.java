@@ -12,6 +12,10 @@ import java.util.List;
 
 public interface ToolContainer extends HasName {
 
+    enum NetworkMode {
+        none, bridge;
+    }
+
     @PropertyName("working_directory")
     String getWorkingDirectory();
 
@@ -24,17 +28,23 @@ public interface ToolContainer extends HasName {
     @PropertyName("entrypoint")
     void setEntryPoint(String entryPoint);
 
-    @PropertyName("memory_limit")
-    Integer getMemoryLimit();
+    @PropertyName("uid")
+    void setUID(Integer uid);
+
+    @PropertyName("uid")
+    Integer getUID();
 
     @PropertyName("memory_limit")
-    void setMemoryLimit(Integer memoryLimit);
+    Long getMemoryLimit();
+
+    @PropertyName("memory_limit")
+    void setMemoryLimit(Long memoryLimit);
 
     @PropertyName("min_memory_limit")
-    Integer getMinMemoryLimit();
+    Long getMinMemoryLimit();
 
     @PropertyName("min_memory_limit")
-    void setMinMemoryLimit(Integer memoryLimit);
+    void setMinMemoryLimit(Long memoryLimit);
 
     @PropertyName("cpu_shares")
     Integer getCpuShares();
@@ -79,16 +89,16 @@ public interface ToolContainer extends HasName {
     Integer getPidsLimit();
 
     @PropertyName("max_cpu_cores")
-    Integer getMaxCPUCores();
+    Double getMaxCPUCores();
 
     @PropertyName("max_cpu_cores")
-    void setMaxCPUCores(Integer cores);
+    void setMaxCPUCores(Double cores);
 
     @PropertyName("min_cpu_cores")
-    Integer getMinCPUCores();
+    Double getMinCPUCores();
 
     @PropertyName("min_cpu_cores")
-    void setMinCPUCores(Integer cores);
+    void setMinCPUCores(Double cores);
 
     @PropertyName("skip_tmp_mount")
     Boolean isSkipTmpMount();
@@ -97,10 +107,10 @@ public interface ToolContainer extends HasName {
     void setSkipTmpMount(Boolean skip);
 
     @PropertyName("min_disk_space")
-    Integer getMinDiskSpace();
+    Long getMinDiskSpace();
 
     @PropertyName("min_disk_space")
-    void setMinDiskSpace(Integer diskSpace);
+    void setMinDiskSpace(Long diskSpace);
 
     @PropertyName("container_ports")
     List<ToolContainerPort> getContainerPorts();

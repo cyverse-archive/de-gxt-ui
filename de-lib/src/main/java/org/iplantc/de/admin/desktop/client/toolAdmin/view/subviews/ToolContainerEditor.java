@@ -19,9 +19,11 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
+import com.sencha.gxt.widget.core.client.form.DoubleField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
+import com.sencha.gxt.widget.core.client.form.LongField;
 import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
@@ -33,20 +35,17 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
     private static ToolContainerEditorBinder uiBinder = GWT.create(ToolContainerEditorBinder.class);
 
-    public enum NetworkMode {
-        None, Bridge;
-    }
-
     @UiField TextField nameEditor;
     @UiField TextField workingDirectoryEditor;
+    @UiField @Path("UID") IntegerField uidEditor;
     @Ignore @UiField HTML entryPointWarningHTML;
     @UiField TextField entryPointEditor;
-    @UiField IntegerField minMemoryLimitEditor;
-    @UiField IntegerField memoryLimitEditor;
-    @UiField IntegerField minDiskSpaceEditor;
+    @UiField LongField minMemoryLimitEditor;
+    @UiField LongField memoryLimitEditor;
+    @UiField LongField minDiskSpaceEditor;
     @UiField IntegerField cpuSharesEditor;
-    @UiField IntegerField minCPUCoresEditor;
-    @UiField IntegerField maxCPUCoresEditor;
+    @UiField DoubleField minCPUCoresEditor;
+    @UiField DoubleField maxCPUCoresEditor;
     @UiField StringComboBox networkModeEditor;
     @UiField CheckBox skipTmpMountEditor;
     @Ignore @UiField FieldLabel containerPortsLabel;
@@ -81,6 +80,7 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
         nameEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_NAME);
         workingDirectoryEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_WORKING_DIR);
+        uidEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_UID);
         entryPointEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_ENTRY_POINT);
         memoryLimitEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_MEMORY);
         cpuSharesEditor.setId(baseID + Belphegor.ToolAdminIds.CONTAINER_CPU);
@@ -127,8 +127,8 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         this.containerPortsEditor = containerPortsEditor;
         initWidget(uiBinder.createAndBindUi(this));
 
-        networkModeEditor.add(NetworkMode.None.toString().toLowerCase());
-        networkModeEditor.add(NetworkMode.Bridge.toString().toLowerCase());
+        networkModeEditor.add(ToolContainer.NetworkMode.none.toString());
+        networkModeEditor.add(ToolContainer.NetworkMode.bridge.toString());
         networkModeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
         entryPointWarningHTML.setHTML(appearance.toolEntryPointWarning());
