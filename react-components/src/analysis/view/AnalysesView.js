@@ -53,10 +53,13 @@ function AnalysisName(props) {
     const interactiveUrls = props.analysis.interactive_urls;
     const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
     const status = props.analysis.status;
+    const intl = props.intl;
 
     if (isBatch) {
         return (
-            <span className={className} onClick={handleGoToOutputFolder}>
+            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                  className={className}
+                  onClick={handleGoToOutputFolder}>
                 <ListAltIcon onClick={handleBatchIconClick}
                              style={{color: Color.darkGreen}}/>
                 <sup>{name}</sup>
@@ -65,7 +68,9 @@ function AnalysisName(props) {
     } else if ((status === analysisStatus.SUBMITTED || status === analysisStatus.RUNNING) &&
         interactiveUrls && interactiveUrls.length > 0) {
         return (
-            <span className={className} onClick={handleGoToOutputFolder}>
+            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                  className={className}
+                  onClick={handleGoToOutputFolder}>
                 <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
                             style={{color: Color.darkBlue}}/>
                 <sup>{name}</sup>
@@ -73,7 +78,9 @@ function AnalysisName(props) {
         )
     } else {
         return (
-            <span className={className} onClick={handleGoToOutputFolder}>
+            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                  className={className}
+                  onClick={handleGoToOutputFolder}>
                 {name}
             </span>
         );
@@ -752,6 +759,7 @@ class AnalysesView extends Component {
         const selectedAnalysis = this.findAnalysis(selected[0]);
         const baseId = baseDebugId + ids.ANALYSES_VIEW;
         const gridId = baseDebugId + ids.ANALYSES_VIEW + ids.GRID;
+        const toolbarId = build(baseId, ids.TOOLBAR);
 
         const selectionCount = selected? selected.length : 0;
         const owner = this.isOwner(),
@@ -765,7 +773,8 @@ class AnalysesView extends Component {
                     {this.state.loading &&
                     <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                     }
-                    <AnalysesToolbar baseDebugId={build(baseId, ids.TOOLBAR)}
+                    <AnalysesToolbar baseDebugId={build(toolbarId, ids.MENUITEM_ANALYSES)}
+                                     baseToolbarId={toolbarId}
                                      handleGoToOutputFolder={this.handleGoToOutputFolder}
                                      handleViewParams={this.handleViewParams}
                                      handleRelaunch={this.handleRelaunchFromMenu}
@@ -818,9 +827,11 @@ class AnalysesView extends Component {
                                                   selected={isSelected}
                                                   hover
                                                   key={id}
+                                                  title={analysis.name}
                                         >
                                             <TableCell padding="none">
                                                 <Checkbox
+                                                    id={build(gridId, id + ids.CHECKBOX)}
                                                     onClick={(event, n) => this.handleCheckBoxClick(
                                                         event,
                                                         id)}
@@ -830,6 +841,7 @@ class AnalysesView extends Component {
                                                 id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
                                                 padding="none">
                                                 <AnalysisName classes={classes}
+                                                              intl={intl}
                                                               analysis={analysis}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
@@ -861,8 +873,7 @@ class AnalysesView extends Component {
                                                         username={username}/>
                                             </TableCell>
                                             <TableCell padding="none"
-                                                       id={build(gridId,
-                                                           id + ids.ANALYSIS_DOT_MENU)}>
+                                                       >
                                                 <DotMenu
                                                     baseDebugId={build(gridId,
                                                         id + ids.ANALYSIS_DOT_MENU)}
@@ -881,6 +892,10 @@ class AnalysesView extends Component {
                                                     isOwner={this.isOwner}
                                                     isSharable={this.isSharable}
                                                     handleSaveAndComplete={this.handleSaveAndComplete}
+                                                    selectionCount={selectionCount}
+                                                    owner={owner}
+                                                    sharable={sharable}
+                                                    disableCancel={disableCancel}
                                                 />
                                             </TableCell>
                                         </TableRow>
@@ -956,7 +971,8 @@ class AnalysesView extends Component {
                                     onInfoDialogClose={() => this.setState({infoDialogOpen: false})}
                 />
                 }
-                <DEConfirmationDialog dialogOpen={confirmDeleteDialogOpen}
+                <DEConfirmationDialog debugId={build(baseId, ids.MENUITEM_DELETE)}
+                                      dialogOpen={confirmDeleteDialogOpen}
                                       message={formatMessage(intl, "analysesExecDeleteWarning")}
                                       heading={formatMessage(intl,"delete")}
                                       onOkBtnClick={this.handleDelete}

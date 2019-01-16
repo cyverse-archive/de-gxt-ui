@@ -5,6 +5,7 @@ var intlData = {
     "messages": {
         "emptyValue": "-",
         "goOutputFolder": "Go to output folder",
+        "goOutputFolderOf": "Go to output folder of",
         "viewParam": "View Parameters",
         "relaunch": "Relaunch...",
         "analysisInfo": "View Analysis Info",

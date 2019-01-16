@@ -18,6 +18,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import { withStyles } from "@material-ui/core/styles";
 
+import { injectIntl } from "react-intl";
+
 const columnData = [
     {name: "Job Id", numeric: false, enableSorting: false},
     {name: "Type", numeric: false, enableSorting: false},
@@ -29,11 +31,11 @@ class AnalysisInfoDialog extends Component {
     }
 
     render() {
-        const {info, classes, dialogOpen, onInfoDialogClose} = this.props;
+        const {info, classes, dialogOpen, onInfoDialogClose, intl} = this.props;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
-                    heading={getMessage("analysisInfo")}
+                    heading={intl.formatMessage({id:"analysisInfo"})}
                     onClose={onInfoDialogClose}/>
                 <DialogContent>
                     <Table>
@@ -66,4 +68,4 @@ class AnalysisInfoDialog extends Component {
     }
 }
 
-export default withStyles(exStyles)(withI18N(AnalysisInfoDialog, intlData));
+export default withStyles(exStyles)(withI18N(injectIntl(AnalysisInfoDialog), intlData));

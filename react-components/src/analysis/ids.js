@@ -1,18 +1,19 @@
 export default ({
+    CHECKBOX: ".checkbox",
     NAME: "name",
     OWNER: "owner",
     APP: "app",
     START_DATE: "start_date",
     END_DATE: "end_date",
     STATUS: "status",
-    TOOLBAR: "toolbar",
+    TOOLBAR: "menuBar",
     PARAMETERS: "parameters",
     TYPE:"type",
     VALUE:"value",
     JOB_ID:"jobId",
     ANALYSES_VIEW : ".analysesView",
 
-    MENUITEM_ANALYSES : ".analyses",
+    MENUITEM_ANALYSES : "analyses",
     MENUITEM_GO_TO_FOLDER : "goToFolder",
     MENUITEM_VIEW_PARAMS : "viewParams",
     MENUITEM_VIEW_ANALYSES_INFO : "viewInfo",
@@ -43,4 +44,13 @@ export default ({
 
     PERMISSIONS: "permissions",
     APP_TYPE: "appType",
+
+    ALL:".all",
+    MINE:".mine",
+    THEIRS:".theirs",
+
+    AGAVE: ".agave",
+    DE: ".de",
+    INTERACTIVE: ".interactive",
+    OSG: ".osg",
 });

@@ -39,6 +39,7 @@ class DotMenu extends Component {
         return (
             <div>
                 <IconButton
+                    id={this.props.baseDebugId}
                     aria-label="More"
                     aria-owns={open ? 'long-menu' : null}
                     aria-haspopup="true"
@@ -47,6 +48,7 @@ class DotMenu extends Component {
                     <MoreVertIcon/>
                 </IconButton>
                 <Menu
+                    id={this.props.baseDebugId + ".menu"}
                     anchorEl={anchorEl}
                     open={open}
                     onClose={this.handleDotMenuClose}

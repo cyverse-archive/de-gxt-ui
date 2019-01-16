@@ -20,6 +20,8 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core/styles";
 
+import { injectIntl } from "react-intl";
+
 
 function ParameterValue(props) {
     const {
@@ -74,12 +76,12 @@ class AnalysisParametersDialog extends Component {
     }
 
     render() {
-        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick, dialogOpen} = this.props;
+        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick, dialogOpen, intl} = this.props;
         const {order, orderBy} = this.state;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
-                    heading={getMessage("analysisParamTitle", {values: {name: analysisName}})}
+                    heading={intl.formatMessage({id:"analysisParamTitle",  name: analysisName})}
                     onClose={onViewParamDialogClose}/>
                 <DialogContent>
                     <Table>
@@ -131,4 +133,4 @@ class AnalysisParametersDialog extends Component {
     }
 }
 
-export default withStyles(exStyles)(withI18N(AnalysisParametersDialog, intlData));
+export default withStyles(exStyles)(withI18N(injectIntl(AnalysisParametersDialog), intlData));

@@ -60,7 +60,8 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleGoToOutputFolder();
                           }}
-                          className={classes.menuItem}>
+                          className={classes.menuItem}
+                          data-disabled={disableSingleSelectionMenuItem}>
                     <FolderIcon style={{color: Color.darkBlue}}/>
                     {getMessage("goOutputFolder")}
                 </MenuItem>
@@ -70,7 +71,8 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleViewParams();
                           }}
-                          className={classes.menuItem}>
+                          className={classes.menuItem}
+                          data-disabled={disableSingleSelectionMenuItem}>
                     <FolderIcon className={classes.toolbarItemColor}/>
                     {getMessage("viewParam")}
                 </MenuItem>
@@ -80,7 +82,8 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleRelaunch();
                           }}
-                          className={classes.menuItem}>
+                          className={classes.menuItem}
+                          data-disabled={disableSingleSelectionMenuItem}>
                     <RepeatIcon className={classes.toolbarItemColor}/>
                     {getMessage("relaunch")}
                 </MenuItem>
@@ -90,7 +93,8 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleViewInfo();
                           }}
-                          className={classes.menuItem}>
+                          className={classes.menuItem}
+                          data-disabled={disableSingleSelectionMenuItem}>
                     <InfoIcon className={classes.toolbarItemColor}/>
                     {getMessage("analysisInfo")}
                 </MenuItem>
@@ -100,6 +104,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleShare();
                           }}
+                          data-disabled={disableShare}
                           className={classes.menuItem}>
                     <ShareIcon className={classes.toolbarItemColor}/>
                     {getMessage("share")}
@@ -110,6 +115,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleSaveAndComplete();
                           }}
+                          data-disabled={disableCancel || !owner}
                           className={classes.menuItem}>
                     <SaveIcon className={classes.toolbarItemColor}/>
                     {getMessage("completeAndSave")}
@@ -120,6 +126,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleCancel();
                           }}
+                          data-disabled={disableCancel || !owner}
                           className={classes.menuItem}>
                     <CancelIcon className={classes.toolbarItemColor}/>
                     {getMessage("cancel")}
@@ -130,6 +137,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleDeleteClick();
                           }}
+                          data-disabled={noSelection || !owner}
                           className={classes.menuItem}>
                     <DeleteIcon className={classes.toolbarItemColor}/>
                     {getMessage("delete")}
@@ -140,6 +148,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleRename();
                           }}
+                          data-disabled={disableSingleSelectionMenuItem  || !owner}
                           className={classes.menuItem}>
                     <EditIcon className={classes.toolbarItemColor}/>
                     {getMessage("rename")}
@@ -150,6 +159,7 @@ class AnalysesMenuItems extends Component {
                               handleClose();
                               handleUpdateComments();
                           }}
+                          data-disabled={disableSingleSelectionMenuItem  || !owner}
                           className={classes.menuItem}>
                     <CommentIcon className={classes.toolbarItemColor}/>
                     {getMessage("updateComments")}

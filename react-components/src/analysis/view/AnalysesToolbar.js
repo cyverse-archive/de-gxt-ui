@@ -51,13 +51,13 @@ class AnalysesToolbar extends Component {
 
 
     render() {
-        const {classes, baseDebugId, intl, searchInputValue} = this.props;
+        const {classes, baseDebugId, baseToolbarId, intl, searchInputValue} = this.props;
         const {anchorEl} = this.state;
-        const analysesMenuBaseId = build(baseDebugId, ids.MENUITEM_ANALYSES);
         return (
             <Toolbar className={classes.toolbar}>
                 <ToolbarGroup style={{paddingLeft: 0}}>
                     <Button
+                        id={baseDebugId}
                         aria-owns={anchorEl ? 'simple-menu' : null}
                         aria-haspopup="true"
                         onClick={this.handleClick}
@@ -67,7 +67,7 @@ class AnalysesToolbar extends Component {
                         {getMessage("analyses")}
                     </Button>
                     <Menu
-                        id={analysesMenuBaseId}
+                        id={baseDebugId}
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={this.handleClose}>
@@ -76,7 +76,7 @@ class AnalysesToolbar extends Component {
                             {...this.props}/>
                     </Menu>
                     <Button
-                        id={build(baseDebugId, ids.BUTTON_REFRESH)}
+                        id={build(baseToolbarId, ids.BUTTON_REFRESH)}
                         variant="raised"
                         size="small"
                         className={classes.toolbarButton}
@@ -86,22 +86,27 @@ class AnalysesToolbar extends Component {
                     </Button>
                     <form autoComplete="off">
                         <FormControl
+                            id={build(baseToolbarId, ids.PERMISSIONS)}
                             className={classes.toolbarMargins}
                             style={{margin: 5}}>
-                            <InputLabel style={{paddingLeft: 5}}>{getMessage("permission")}</InputLabel>
+                            <InputLabel  style={{paddingLeft: 5}}>
+                                {getMessage("permission")}
+                            </InputLabel>
                             <Select
                                 value={this.props.permFilter}
                                 onChange={(e) => this.props.onPermissionsFilterChange(e.target.value)}
                                 input={
-                                    <OutlinedInput name="permission"
-                                                   id={build(analysesMenuBaseId, ids.PERMISSIONS)}/>
+                                    <OutlinedInput name="permission"/>
                                 }
                                 style={{minWidth: 200}}>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.ALL)}
                                     value={permission.all}>{permission.all}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.MINE)}
                                     value={permission.mine}>{permission.mine}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.THEIRS)}
                                     value={permission.theirs}>{permission.theirs}</MenuItem>
                             </Select>
                         </FormControl>
@@ -114,22 +119,27 @@ class AnalysesToolbar extends Component {
                                 onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
                                 input={
                                     <OutlinedInput name="type"
-                                                   id={build(analysesMenuBaseId, ids.APP_TYPE)}/>
+                                                   id={build(baseToolbarId, ids.APP_TYPE)}/>
                                 } style={{minWidth: 120}}>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.TYPE + ids.ALL)}
                                     value={"All"}>{appType.all}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.TYPE + ids.AGAVE)}
                                     value={"Agave"}>{appType.agave}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.TYPE + ids.DE)}
                                     value={"DE"}>{appType.de}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.TYPE + ids.INTERACTIVE)}
                                     value={"Interactive"}>{appType.interactive}</MenuItem>
                                 <MenuItem
+                                    id={build(baseToolbarId, ids.TYPE + ids.OSG)}
                                     value={"OSG"}>{appType.osg}</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.toolbarMargins} style={{margin: 5}}>
-                            <SearchField id={build(baseDebugId, ids.FIELD_SEARCH)}
+                            <SearchField id={build(baseToolbarId, ids.FIELD_SEARCH)}
                                          handleSearch={this.props.onSearch}
                                          value={searchInputValue}
                                          placeholder={formatMessage(intl, "search")}/>
