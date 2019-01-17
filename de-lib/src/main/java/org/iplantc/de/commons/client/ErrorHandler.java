@@ -4,6 +4,8 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.errorHandling.ServiceError;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
+import org.iplantc.de.commons.client.views.ReactUtilComponents;
 import org.iplantc.de.commons.client.views.dialogs.ErrorDialog;
 
 import com.google.common.base.Strings;
@@ -13,6 +15,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.client.GXT;
@@ -93,6 +96,10 @@ public class ErrorHandler {
         post(Lists.newArrayList(caught));
     }
 
+    public static void postReact(Throwable caught) {
+        postReact(SafeHtmlUtils.fromString(appearance.error()), Lists.newArrayList(caught));
+    }
+
     /**
      * Post a message box with error styles with a general error message summary and the given list of caught
      * with additional error details.
@@ -121,6 +128,18 @@ public class ErrorHandler {
         post(SafeHtmlUtils.fromString(errorSummary), caught);
     }
 
+    public static void postReact(String errorSummary, Throwable caught) {
+        postReact(errorSummary, Lists.newArrayList(caught));
+    }
+
+    public static void postReact(String errorSummary, List<Throwable> caught) {
+        if (Strings.isNullOrEmpty(errorSummary)) {
+            errorSummary = appearance.error();
+        }
+
+        postReact(SafeHtmlUtils.fromTrustedString(errorSummary), caught);
+    }
+
     /**
      * Post a message box with error styles with the given error message summary and optional caught with
      * additional error details.
@@ -129,7 +148,28 @@ public class ErrorHandler {
      * @param caughtList
      */
     public static void post(final SafeHtml errorSummary, List<Throwable> caughtList) {
+        String errorDetails = getErrorDetails(errorSummary, caughtList);
+
+        ErrorDialog ed3 = new ErrorDialog(errorSummary, errorDetails);
+        ed3.show();
+    }
+
+    public static void postReact(final SafeHtml errorSummary, List<Throwable> caughtList) {
+        HTMLPanel panel = new HTMLPanel("<div></div>");
+        String errorDetails = getErrorDetails(errorSummary, caughtList);
+
+        ReactUtilComponents.ErrorHandlerProps props = new ReactUtilComponents.ErrorHandlerProps();
+        props.errorSummary = errorSummary.asString();
+        props.errorDetails = errorDetails;
+
+        CyVerseReactComponents.render(ReactUtilComponents.ErrorHandler,
+                                      props,
+                                      panel.getElement());
+    }
+
+    private static String getErrorDetails(final SafeHtml errorSummary, List<Throwable> caughtList) {
         String systemDesc = getSystemDescription();
+
         final StringBuilder errorDetails = new StringBuilder();
 
         if (caughtList != null && !caughtList.isEmpty()) {
@@ -142,8 +182,7 @@ public class ErrorHandler {
             errorDetails.append(NEWLINE + systemDesc);
         }
 
-        ErrorDialog ed3 = new ErrorDialog(errorSummary, errorDetails.toString());
-        ed3.show();
+        return errorDetails.toString();
     }
 
     /**
