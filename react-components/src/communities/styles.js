@@ -16,6 +16,18 @@ const styles = theme => ({
 
     toolbarItem: {
         marginRight: "15px",
+    },
+
+    wrapper: {
+        width: "100%",
+        height: "100%",
+    },
+
+    loading: {
+        position: 'absolute',
+        top: '25%',
+        left: '50%',
+        color: '#DB6619',
     }
 });
 

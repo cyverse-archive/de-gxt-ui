@@ -318,9 +318,21 @@ class CommunitiesViewTest extends Component {
         };
 
         const presenter = {
-            fetchMyCommunities: (callback) => callback(myCommunities),
-            fetchAllCommunities: (callback) => callback(allCommunities),
-            fetchCommunityAdmins: (community, resolve, reject) => resolve(adminListing),
+            fetchMyCommunities: (callback) => {
+                setTimeout(() => {
+                    callback(myCommunities)
+                }, 1000);
+            },
+            fetchAllCommunities: (callback) => {
+                setTimeout(() => {
+                    callback(allCommunities)
+                }, 1000);
+            },
+            fetchCommunityAdmins: (community, resolve, reject) => {
+                setTimeout(() => {
+                    resolve(adminListing)
+                }, 1000);
+            },
             fetchCommunityApps: (community, resolve, reject) => resolve(appListing),
             searchCollaborators: (input, fn) => {
                 fn(collaborators);
@@ -330,17 +342,29 @@ class CommunitiesViewTest extends Component {
                 let isMember = isAdmin;
                 callback(isAdmin, isMember)
             },
-            removeCommunityApps: (community, app, callback) => callback(appListing.apps.filter((value) => value !== app)),
-            removeCommunityAdmins: (community, admin, callback) => {
-                callback(adminListing.members.filter((value) => value !== admin))
+            removeCommunityApps: (community, app, callback) => {
+                setTimeout(() => {
+                    callback(appListing.apps.filter((value) => value !== app))
+                }, 1000);
             },
-            addCommunityAdmin: (community, subject, callback) => callback(),
+            removeCommunityAdmins: (community, admin, callback) => {
+                setTimeout(() => {
+                    callback(adminListing.members.filter((value) => value !== admin))
+                }, 1000);
+            },
+            addCommunityAdmin: (community, subject, callback) => {
+                setTimeout(() => {
+                    callback();
+                }, 1000);
+            },
             onAddCommunityAppsClicked: (callback) => {
                 communityAppsClickedLogger();
                 callback(newApp)
             },
             addAppToCommunity: (app, community, callback) => {
-                callback();
+                setTimeout(() => {
+                    callback()
+                }, 1000);
             },
             deleteCommunity: (community, callback) => {
                 confirmedDialogAction("Delete", community);

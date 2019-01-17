@@ -9,6 +9,7 @@ import styles from "../styles";
 import SubjectSearchField from "../../collaborators/SubjectSearchField";
 import withI18N from "../../util/I18NWrapper";
 
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
@@ -34,6 +35,7 @@ class EditCommunity extends Component {
             description: "",
             admins: [],
             apps: [],
+            loading: false,
         };
 
         [
@@ -73,6 +75,7 @@ class EditCommunity extends Component {
         } = this.props;
 
         if (community) {
+            this.setState({loading: true});
             let promises = [];
 
             let fetchAdminsPromise = new Promise((resolve, reject) => {
@@ -95,10 +98,12 @@ class EditCommunity extends Component {
                         description: community.description,
                         admins: value[0].members,
                         apps: value[1].apps,
+                        loading: false,
                     })
                 })
                 .catch(error => {
                     console.log(error);
+                    this.setState({loading: false});
                 });
         } else {
             this.setState({
@@ -138,8 +143,10 @@ class EditCommunity extends Component {
         this.props.presenter.onAddCommunityAppsClicked((app) => {
             if (app && !this.isDuplicateApp(app)) {
                 if (community) {
+                    this.setState({loading: true});
                     this.props.presenter.addAppToCommunity(app, community, () => {
-                        this.addApp(app)
+                        this.addApp(app);
+                        this.setState({loading: false});
                     })
                 } else {
                     this.addApp(app)
@@ -157,8 +164,10 @@ class EditCommunity extends Component {
         const {community} = this.props;
 
         if (community) {
+            this.setState({loading: true});
             this.props.presenter.removeCommunityAdmins(community, subject, () => {
-                this.removeAdmin(subject)
+                this.removeAdmin(subject);
+                this.setState({loading: false});
             })
         } else {
             this.removeAdmin(subject)
@@ -175,8 +184,10 @@ class EditCommunity extends Component {
     handleRemoveApp(app) {
         const {community} = this.props;
         if (community) {
+            this.setState({loading: true});
             this.props.presenter.removeCommunityApps(community, app, () => {
-                this.removeApp(app)
+                this.removeApp(app);
+                this.setState({loading: false});
             })
         } else {
             this.removeApp(app)
@@ -210,7 +221,11 @@ class EditCommunity extends Component {
 
         if (!this.isDuplicateAdmin(subject)) {
             if (community) {
-                this.props.presenter.addCommunityAdmin(community, subject, () => this.addAdmin(subject));
+                this.setState({loading: true});
+                this.props.presenter.addCommunityAdmin(community, subject, () => {
+                    this.addAdmin(subject);
+                    this.setState({loading: false});
+                });
             } else {
                 this.addAdmin(subject);
             }
@@ -242,6 +257,7 @@ class EditCommunity extends Component {
             apps,
             name,
             errors,
+            loading,
         } = this.state;
 
         const {
@@ -255,55 +271,60 @@ class EditCommunity extends Component {
         const toolbarId = build(parentId, ids.EDIT.TOOLBAR);
 
         return (
-            <form className={classes.column}>
-                <TextField id={build(parentId, ids.EDIT.NAME)}
-                           error={this.isInvalid()}
-                           required
-                           label={getMessage('nameField')}
-                           value={name}
-                           className={classes.formItem}
-                           disabled={!isCommunityAdmin}
-                           helperText={errors.text}
-                           onChange={this.handleNameChange}/>
-                <TextField id={build(parentId, ids.EDIT.DESCRIPTION)}
-                           multiline
-                           label={getMessage('descriptionField')}
-                           value={this.state.description}
-                           className={classes.formItem}
-                           disabled={!isCommunityAdmin}
-                           onChange={this.handleDescChange}/>
-                <fieldset className={classes.formItem}>
-                    <legend>{getMessage('communityAdmins')}</legend>
-                    {isCommunityAdmin &&
-                    <Toolbar>
-                        <div className={classes.subjectSearch}>
-                            <SubjectSearchField collaboratorsUtil={collaboratorsUtil}
-                                                presenter={presenter}
-                                                parentId={parentId}
-                                                onSelect={this.onAdminSelected}/>
-                        </div>
-                    </Toolbar>
+            <div className={classes.wrapper}>
+                <form className={classes.column}>
+                    {loading &&
+                    <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
                     }
-                    <CollaboratorListing parentId={parentId}
-                                         collaboratorsUtil={collaboratorsUtil}
-                                         data={admins}
-                                         deletable={isCommunityAdmin}
-                                         onDeleteCollaborator={this.handleRemoveAdmin}/>
-                </fieldset>
-                <fieldset className={classes.formItem}>
-                    <legend>{getMessage('apps')}</legend>
-                    {isCommunityAdmin &&
-                    <Toolbar id={toolbarId}>
-                        <AddBtn onClick={this.onAddCommunityAppsClicked}/>
-                    </Toolbar>
-                    }
-                    <AppGridListing parentId={parentId}
-                                    data={apps}
-                                    selectable={false}
-                                    deletable={isCommunityAdmin}
-                                    onRemoveApp={this.handleRemoveApp}/>
-                </fieldset>
-            </form>
+                    <TextField id={build(parentId, ids.EDIT.NAME)}
+                               error={this.isInvalid()}
+                               required
+                               label={getMessage('nameField')}
+                               value={name}
+                               className={classes.formItem}
+                               disabled={!isCommunityAdmin}
+                               helperText={errors.text}
+                               onChange={this.handleNameChange}/>
+                    <TextField id={build(parentId, ids.EDIT.DESCRIPTION)}
+                               multiline
+                               label={getMessage('descriptionField')}
+                               value={this.state.description}
+                               className={classes.formItem}
+                               disabled={!isCommunityAdmin}
+                               onChange={this.handleDescChange}/>
+                    <fieldset className={classes.formItem}>
+                        <legend>{getMessage('communityAdmins')}</legend>
+                        {isCommunityAdmin &&
+                        <Toolbar>
+                            <div className={classes.subjectSearch}>
+                                <SubjectSearchField collaboratorsUtil={collaboratorsUtil}
+                                                    presenter={presenter}
+                                                    parentId={parentId}
+                                                    onSelect={this.onAdminSelected}/>
+                            </div>
+                        </Toolbar>
+                        }
+                        <CollaboratorListing parentId={parentId}
+                                             collaboratorsUtil={collaboratorsUtil}
+                                             data={admins}
+                                             deletable={isCommunityAdmin}
+                                             onDeleteCollaborator={this.handleRemoveAdmin}/>
+                    </fieldset>
+                    <fieldset className={classes.formItem}>
+                        <legend>{getMessage('apps')}</legend>
+                        {isCommunityAdmin &&
+                        <Toolbar id={toolbarId}>
+                            <AddBtn onClick={this.onAddCommunityAppsClicked}/>
+                        </Toolbar>
+                        }
+                        <AppGridListing parentId={parentId}
+                                        data={apps}
+                                        selectable={false}
+                                        deletable={isCommunityAdmin}
+                                        onRemoveApp={this.handleRemoveApp}/>
+                    </fieldset>
+                </form>
+            </div>
         )
     }
 }

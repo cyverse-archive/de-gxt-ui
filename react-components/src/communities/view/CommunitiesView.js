@@ -16,6 +16,7 @@ class CommunitiesView extends Component {
         super(props);
 
         this.state = {
+            loadingListing: false,
             communityType: "MyCommunities",
             communitiesList: [],
             editDlgOpen: false,
@@ -37,12 +38,21 @@ class CommunitiesView extends Component {
     }
 
     handleCommunityFilterChange(selection) {
-        this.setState({communityType: selection});
+        this.setState({
+            communityType: selection,
+            loadingListing: true,
+        });
 
         if (selection === "MyCommunities") {
-            this.props.presenter.fetchMyCommunities((listing) => {this.setState({communitiesList: listing.groups})});
+            this.props.presenter.fetchMyCommunities((listing) => {this.setState({
+                communitiesList: listing.groups,
+                loadingListing: false,
+            })});
         } else {
-            this.props.presenter.fetchAllCommunities((listing) => this.setState({communitiesList: listing.groups}));
+            this.props.presenter.fetchAllCommunities((listing) => this.setState({
+                communitiesList: listing.groups,
+                loadingListing: false,
+            }));
         }
     }
 
@@ -74,7 +84,8 @@ class CommunitiesView extends Component {
             editDlgOpen,
             isCommunityAdmin,
             isCommunityMember,
-            selectedCommunity
+            selectedCommunity,
+            loadingListing,
         } = this.state;
 
         const {
@@ -92,6 +103,7 @@ class CommunitiesView extends Component {
                 <CommunityListing collaboratorsUtil={collaboratorsUtil}
                                   parentId={parentId}
                                   data={communitiesList}
+                                  loading={loadingListing}
                                   onCommunityClicked={this.onCommunityClicked}/>
                 <EditCommunityDialog open={editDlgOpen}
                                      collaboratorsUtil={collaboratorsUtil}
