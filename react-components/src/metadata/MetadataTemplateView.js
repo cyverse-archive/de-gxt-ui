@@ -78,12 +78,33 @@ const newAVU = attrTemplate => {
 };
 
 class MetadataTemplateAttributeView extends Component {
+    constructor(props) {
+        super(props);
+
+        const { avus } = props;
+        const expanded = {};
+
+        // Set all attrs as expanded in the state,
+        // even if there is no matching attribute name in the template
+        // and no expansion panel will be rendered for that attr.
+        avus && avus.forEach(avu => expanded[avu.attr] = true);
+
+        this.state = { expanded };
+    }
+
+    onAttrExpandedChange(prevExpanded, attr, attrExpanded) {
+        const expanded = { ...prevExpanded };
+        expanded[attr] = attrExpanded;
+        this.setState({ expanded });
+    }
+
     onAddAVU(arrayHelpers, attribute) {
         const avu = newAVU(attribute);
-
         this.addSubAVUs(attribute, avu);
 
         arrayHelpers.push(avu);
+
+        this.onAttrExpandedChange(this.state.expanded, attribute.name, true);
     }
 
     addSubAVUs(attribute, avu) {
@@ -102,6 +123,8 @@ class MetadataTemplateAttributeView extends Component {
 
     render() {
         const { classes, intl, field, touched, errors, attributes, avus, presenter, writable } = this.props;
+        const { expanded } = this.state;
+
         return (
             <FieldArray name={`${field}.avus`}
                         render={(arrayHelpers) => {
@@ -236,7 +259,10 @@ class MetadataTemplateAttributeView extends Component {
                                 const hasAVUs = avuFields && avuFields.filter(avuField => avuField).length > 0;
 
                                 return ((writable || hasAVUs) &&
-                                    <ExpansionPanel key={attribute.name} defaultExpanded={hasAVUs}>
+                                    <ExpansionPanel key={attribute.name}
+                                                    expanded={!!expanded[attribute.name]}
+                                                    onChange={(event, attrExpanded) => this.onAttrExpandedChange(expanded, attribute.name, attrExpanded)}
+                                    >
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
                                             {writable &&
                                             <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
