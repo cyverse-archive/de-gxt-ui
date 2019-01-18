@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import { getMessage } from "../util/I18NWrapper";
-import { FormikSearchField } from "../util/FormField";
+import { FormSearchField } from "../util/FormField";
 
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from "@material-ui/core/MenuItem";
@@ -66,14 +66,14 @@ class OntologyLookupServiceSearchField extends Component {
         const { attrTemplate, presenter, ...props } = this.props;
 
         return (
-            <FormikSearchField loadOptions={this.loadOptions}
-                               variant="asyncCreatable"
-                               labelKey="label"
-                               valueKey="label"
-                               CustomOption={OLSOption}
-                               formatCreateLabel={this.formatCreateLabel}
-                               styles={customStyles}
-                               {...props}
+            <FormSearchField loadOptions={this.loadOptions}
+                             variant="asyncCreatable"
+                             labelKey="label"
+                             valueKey="label"
+                             CustomOption={OLSOption}
+                             formatCreateLabel={this.formatCreateLabel}
+                             styles={customStyles}
+                             {...props}
             />
         );
     }

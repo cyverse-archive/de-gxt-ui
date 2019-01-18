@@ -18,21 +18,21 @@ import Select from "@material-ui/core/Select";
 import TableCell from "@material-ui/core/TableCell";
 import TextField from "@material-ui/core/TextField";
 
-const getFormikError = (name, touched, errors) => {
+const getFormError = (name, touched, errors) => {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
 
     return touch && error ? error : null;
 };
 
-const FormikTextField = ({
+const FormTextField = ({
     field,
     label,
     required,
     form: { touched, errors },
     ...custom
 }) => {
-    const errorMsg = getFormikError(field.name, touched, errors);
+    const errorMsg = getFormError(field.name, touched, errors);
     return (
         <TextField
             label={label}
@@ -46,14 +46,14 @@ const FormikTextField = ({
     )
 };
 
-const FormikSearchField = ({
+const FormSearchField = ({
     field: { value, onBlur, onChange, ...field },
     label,
     required,
     form: { touched, errors, setFieldTouched, setFieldValue },
     ...props
 }) => {
-    const errorMsg = getFormikError(field.name, touched, errors);
+    const errorMsg = getFormError(field.name, touched, errors);
     const onOptionSelected = option => {
         setFieldValue(field.name, option ? option[props.valueKey] : "");
     };
@@ -83,7 +83,7 @@ const onCheckboxChange = (setFieldValue, fieldName) => (event, checked) => {
     setFieldValue(fieldName, checked);
 };
 
-const FormikCheckbox = ({
+const FormCheckbox = ({
     label,
     field: { value, onChange, ...field },
     form: { setFieldValue },
@@ -99,6 +99,21 @@ const FormikCheckbox = ({
         }
         label={label}
     />
+);
+
+const FormCheckboxTableCell = ({
+    field: { value, onChange, ...field },
+    form: { setFieldValue },
+    ...custom
+}) => (
+    <TableCell padding="checkbox">
+        <Checkbox color="primary"
+                  checked={!!value}
+                  onClick={event => event.stopPropagation()}
+                  onChange={onCheckboxChange(setFieldValue, field.name)}
+                  {...custom}
+        />
+    </TableCell>
 );
 
 const onNumberChange = onChange => (event) => {
@@ -117,34 +132,34 @@ const onIntegerChange = onChange => (event) => {
     }
 };
 
-const FormikNumberField = ({
+const FormNumberField = ({
     field: { onChange, ...field },
     ...props
 }) => (
-    <FormikTextField type="number"
-                     step="any"
-                     onChange={onNumberChange(onChange)}
-                     field={field}
-                     {...props}
+    <FormTextField type="number"
+                   step="any"
+                   onChange={onNumberChange(onChange)}
+                   field={field}
+                   {...props}
     />
 );
 
-const FormikIntegerField = ({
+const FormIntegerField = ({
     field: { onChange, ...field },
     ...props
 }) => (
-    <FormikTextField type="number"
-                     step={1}
-                     onChange={onIntegerChange(onChange)}
-                     field={field}
-                     {...props}
+    <FormTextField type="number"
+                   step={1}
+                   onChange={onIntegerChange(onChange)}
+                   field={field}
+                   {...props}
     />
 );
 
 const FormMultilineTextField = (props) => (
-    <FormikTextField multiline
-                     rows={3}
-                     {...props}
+    <FormTextField multiline
+                   rows={3}
+                   {...props}
     />
 );
 
@@ -172,7 +187,7 @@ const FormTimestampField = ({
     form: { touched, errors, setFieldValue },
     ...custom
 }) => {
-    const errorMsg = getFormikError(field.name, touched, errors);
+    const errorMsg = getFormError(field.name, touched, errors);
     const date = value && Date.parse(value);
 
     return (
@@ -201,7 +216,7 @@ const FormTimestampField = ({
     )
 };
 
-const FormikSelectField = ({
+const FormSelectField = ({
     id,
     field: { value, ...field },
     label,
@@ -210,7 +225,7 @@ const FormikSelectField = ({
     children,
     ...custom,
 }) => {
-    const errorMsg = getFormikError(field.name, touched, errors);
+    const errorMsg = getFormError(field.name, touched, errors);
     return (
         <FormControl fullWidth error={!!errorMsg}>
             <InputLabel htmlFor={id}
@@ -230,78 +245,15 @@ const FormikSelectField = ({
     )
 };
 
-const FormTextField = ({
-    input,
-    label,
-    required,
-    meta: { touched, error },
-    ...custom
-}) => (
-    <TextField
-        label={label}
-        error={touched && !!error}
-        helperText={touched && error}
-        required={required}
-        fullWidth
-        {...input}
-        {...custom}
-    />
-);
-
-const FormCheckbox = ({ input, label, ...custom }) => (
-    <FormControlLabel
-        control={
-            <Checkbox checked={!!input.value}
-                      onChange={input.onChange}
-                      {...custom}
-            />
-        }
-        label={label}
-    />
-);
-
-const FormCheckboxTableCell = ({ input, ...custom }) => (
-    <TableCell padding="checkbox">
-        <Checkbox color="primary"
-                  checked={!!input.value}
-                  onClick={event => event.stopPropagation()}
-                  onChange={input.onChange}
-                  {...custom}
-        />
-    </TableCell>
-);
-
-const FormSelectField = ({
-    input,
-    label,
-    id,
-    children,
-    ...custom
-}) => (
-    <FormControl fullWidth>
-        <InputLabel htmlFor={id}>{label}</InputLabel>
-        <Select id={id}
-                value={input.value || ""}
-                {...input}
-                {...custom}
-        >
-            {children}
-        </Select>
-    </FormControl>
-);
-
 export {
     FormCheckbox,
     FormCheckboxTableCell,
+    FormIntegerField,
+    FormMultilineTextField,
+    FormNumberField,
+    FormSearchField,
     FormSelectField,
     FormTextField,
-    FormikCheckbox,
-    FormikIntegerField,
-    FormMultilineTextField,
-    FormikNumberField,
-    FormikSearchField,
-    FormikSelectField,
-    FormikTextField,
     FormTimestampField,
-    getFormikError,
+    getFormError,
 };

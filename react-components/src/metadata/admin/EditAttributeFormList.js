@@ -3,8 +3,8 @@
  */
 import React, { Component } from "react";
 
+import { FastField, FieldArray, getIn } from 'formik';
 import PropTypes from "prop-types";
-import { Field, FieldArray, FormSection } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -13,7 +13,7 @@ import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import { FormCheckbox, FormSelectField, FormTextField } from "../../util/FormField";
+import { FormCheckbox, FormSelectField, FormTextField, getFormError } from "../../util/FormField";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
 
@@ -81,10 +81,10 @@ class EditAttribute extends Component {
     };
 
     normalizeType(type) {
-        const { change, field, attribute: { settings } } = this.props;
+        const { setFieldValue, field, attribute: { settings } } = this.props;
 
         if (type === "OLS Ontology Term" && (!settings || !settings.type)) {
-            change(`${field}.settings`, {...settings, type: "CLASS"});
+            setFieldValue(`${field}.settings`, {...settings, type: "CLASS"});
         }
 
         return type;
@@ -100,12 +100,13 @@ class EditAttribute extends Component {
             moveUpDisabled,
             moveDownDisabled,
             attribute: { name, description, type },
-            // from redux-form
-            change, field, error,
+            field, touched, errors,
         } = this.props;
 
-        const formID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
+        const formID = build(ids.METADATA_TEMPLATE_FORM, field);
         const dialogTitleID = build(formID, ids.TITLE);
+        const attrErrors = getFormError(field, touched, errors);
+        const error = attrErrors && attrErrors.error;
 
         return (
             <ExpansionPanel aria-labelledby={dialogTitleID}>
@@ -175,39 +176,48 @@ class EditAttribute extends Component {
                     >
 
                         <Grid item>
-                            <Field name={`${field}.name`}
-                                   label={getMessage("attrNameLabel")}
-                                   id={build(formID, ids.ATTR_NAME)}
-                                   required={true}
-                                   margin="dense"
-                                   component={FormTextField}
+                            <FastField name={`${field}.name`}
+                                       label={getMessage("attrNameLabel")}
+                                       id={build(formID, ids.ATTR_NAME)}
+                                       required={true}
+                                       margin="dense"
+                                       component={FormTextField}
                             />
                         </Grid>
                         <Grid item>
-                            <Field name={`${field}.description`}
-                                   label={getMessage("description")}
-                                   id={build(formID, ids.ATTR_DESCRIPTION)}
-                                   component={FormTextField}
+                            <FastField name={`${field}.description`}
+                                       label={getMessage("description")}
+                                       id={build(formID, ids.ATTR_DESCRIPTION)}
+                                       component={FormTextField}
                             />
                         </Grid>
                         <Grid item>
 
-                            <Field name={`${field}.type`}
-                                   label={getMessage("attrTypeLabel")}
-                                   id={build(formID, ids.ATTR_TYPE)}
-                                   component={FormSelectField}
-                                   normalize={this.normalizeType}
-                            >
-                                {AttributeTypeMenuItems}
-                            </Field>
+                            <FastField name={`${field}.type`}
+                                       label={getMessage("attrTypeLabel")}
+                                       id={build(formID, ids.ATTR_TYPE)}
+                                       render={({ field: { onChange, ...field }, ...props }) => (
+                                           <FormSelectField
+                                               {...props}
+                                               field={field}
+                                               onChange={event => {
+                                                   this.normalizeType(event.target.value);
+                                                   onChange(event);
+                                               }}
+                                           >
+                                               {AttributeTypeMenuItems}
+                                           </FormSelectField>
+                                       )}
+
+                            />
                         </Grid>
                         <Grid item>
 
-                            <Field name={`${field}.required`}
-                                   label={getMessage("attrRequiredLabel")}
-                                   id={build(formID, ids.ATTR_REQUIRED)}
-                                   color="primary"
-                                   component={FormCheckbox}
+                            <FastField name={`${field}.required`}
+                                       label={getMessage("attrRequiredLabel")}
+                                       id={build(formID, ids.ATTR_REQUIRED)}
+                                       color="primary"
+                                       component={FormCheckbox}
                             />
                         </Grid>
                         <Grid item>
@@ -223,9 +233,12 @@ class EditAttribute extends Component {
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <FieldArray name={`${field}.values`}
-                                                component={AttributeEnumEditGrid}
-                                                parentID={formID}
-                                                change={change}
+                                                render={arrayHelpers => (
+                                                    <AttributeEnumEditGrid
+                                                        {...arrayHelpers}
+                                                        parentID={formID}
+                                                    />
+                                                )}
                                     />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -239,9 +252,8 @@ class EditAttribute extends Component {
                                     <Typography className={classes.heading}>{getMessage("olsQueryParams")}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
-                                    <FormSection name={`${field}.settings`}
-                                                 component={OntologyLookupServiceSettings}
-                                                 parentID={formID}
+                                    <OntologyLookupServiceSettings field={`${field}.settings`}
+                                                                   parentID={formID}
                                     />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -251,7 +263,6 @@ class EditAttribute extends Component {
                         <Grid item>
                             <FieldArray name={`${field}.attributes`}
                                         component={EditAttributeFormList}
-                                        change={change}
                             />
                         </Grid>
                     </Grid>
@@ -279,18 +290,18 @@ class EditAttributeFormList extends Component {
     }
 
     onAddAttribute() {
-        const fields = this.props.fields;
-        const attributes = fields.getAll() || [];
+        const { form, name, unshift } = this.props;
+        const attributes = getIn(form.values, name) || [];
 
-        let name = this.newAttrName();
+        let newName = this.newAttrName();
 
-        const namesMatch = attr => (attr.name === name);
+        const namesMatch = attr => (attr.name === newName);
         while (attributes.findIndex(namesMatch) > -1) {
-            name = this.newAttrName();
+            newName = this.newAttrName();
         }
 
-        fields.unshift({
-            name: name,
+        unshift({
+            name: newName,
             description: "",
             type: "String",
             required: false,
@@ -298,7 +309,7 @@ class EditAttributeFormList extends Component {
     }
 
     onAttributeRemoved(index) {
-        this.props.fields.remove(index);
+        this.props.remove(index);
     }
 
     moveUp(index) {
@@ -310,20 +321,32 @@ class EditAttributeFormList extends Component {
     }
 
     moveSelectedAttr(index, offset) {
-        this.props.fields.move(index, index + offset);
+        this.props.move(index, index + offset);
     }
 
     render () {
-        const { classes, intl, fields, change, meta: { error } } = this.props;
+        const {
+            classes,
+            intl,
+            name,
+            form: {
+                touched,
+                errors,
+                values,
+                setFieldValue,
+            },
+        } = this.props;
+
+        const attributes = getIn(values, name);
 
         return (
-            <ExpansionPanel defaultExpanded={fields && fields.length > 0}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(fields.name, ids.BUTTONS.EXPAND, ids.ATTR_GRID)} />}>
+            <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(name, ids.BUTTONS.EXPAND, ids.ATTR_GRID)} />}>
                     <div className={classes.actions}>
                         <Button variant="fab"
                                 mini
                                 color="primary"
-                                id={build(fields.name, ids.BUTTONS.ADD)}
+                                id={build(name, ids.BUTTONS.ADD)}
                                 aria-label={formatMessage(intl, "addRow")}
                                 onClick={(event) => {
                                     event.stopPropagation();
@@ -342,21 +365,25 @@ class EditAttributeFormList extends Component {
                           justify="flex-start"
                           alignItems="stretch"
                     >
-                        {fields.map((field, index) => (
-                            <Grid item key={field}>
-                                <EditAttribute field={field}
-                                               change={change}
-                                               error={error && error[index]}
-                                               attribute={fields.get(index)}
-                                               onAddAttribute={this.onAddAttribute}
-                                               onAttributeRemoved={() => this.onAttributeRemoved(index)}
-                                               moveUp={() => this.moveUp(index)}
-                                               moveUpDisabled={index <= 0}
-                                               moveDown={() => this.moveDown(index)}
-                                               moveDownDisabled={index < 0 || (fields.length - 1) <= index}
-                                />
-                            </Grid>
-                        ))}
+                        {attributes && attributes.map((attribute, index) => {
+                            const attrFieldName = `${name}[${index}]`;
+                            return (
+                                <Grid item key={attrFieldName}>
+                                    <EditAttribute field={attrFieldName}
+                                                   setFieldValue={setFieldValue}
+                                                   touched={touched}
+                                                   errors={errors}
+                                                   attribute={attribute}
+                                                   onAddAttribute={this.onAddAttribute}
+                                                   onAttributeRemoved={() => this.onAttributeRemoved(index)}
+                                                   moveUp={() => this.moveUp(index)}
+                                                   moveUpDisabled={index <= 0}
+                                                   moveDown={() => this.moveDown(index)}
+                                                   moveDownDisabled={index < 0 || (attributes.length - 1) <= index}
+                                    />
+                                </Grid>
+                            )
+                        })}
                     </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>

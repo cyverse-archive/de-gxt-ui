@@ -22,7 +22,7 @@ public class EditMetadataTemplateViewImpl implements EditMetadataTemplateView {
     public void edit(EditMetadataTemplateView.Presenter presenter, Splittable metadataTemplate) {
         Scheduler.get().scheduleFinally(() -> {
             props.presenter = presenter;
-            props.initialValues = metadataTemplate;
+            props.template = metadataTemplate;
             props.open = true;
 
             CyVerseReactComponents.render(ReactMetadataAdminViews.EditMetadataTemplate, props, container.getElement());

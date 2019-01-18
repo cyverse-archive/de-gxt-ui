@@ -2,7 +2,8 @@
  * @author psarando
  */
 import React, { Component } from "react";
-import { Field } from "redux-form";
+import { FastField, Field, getIn } from "formik";
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -11,7 +12,7 @@ import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import { FormCheckbox, FormCheckboxTableCell, FormTextField } from "../../util/FormField";
+import { FormCheckbox, FormCheckboxTableCell, FormTextField, getFormError } from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";
@@ -29,14 +30,16 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
-import PropTypes from "prop-types";
 
-const normalizeDefault = (fields, change, is_default) => {
+const normalizeDefault = (enumValues, replace) => event => {
+    event.stopPropagation();
+
+    const is_default = event.target.checked;
+
     if (is_default) {
-        fields.forEach((field, index) => {
-            let attrEnum = fields.get(index);
+        enumValues.forEach((attrEnum, index) => {
             if (attrEnum.is_default) {
-                change(field, {...attrEnum, is_default: false});
+                replace(index, {...attrEnum, is_default: false});
             }
         });
     }
@@ -45,25 +48,12 @@ const normalizeDefault = (fields, change, is_default) => {
 };
 
 class AttributeEnumEditDialog extends Component {
-    constructor(props) {
-        super(props);
-
-        [
-            "normalizeDefaultField",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
-    }
-
     static propTypes = {
         onClose: PropTypes.func.isRequired,
     };
 
-    normalizeDefaultField(is_default) {
-        const { fields, change } = this.props;
-        return normalizeDefault(fields, change, is_default);
-    }
-
     render() {
-        const { open, intl, field, error, onClose } = this.props;
+        const { open, intl, field, error, replace, enumValues, onClose } = this.props;
 
         const dialogID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
         const dialogTitleID = build(dialogID, ids.TITLE);
@@ -77,20 +67,20 @@ class AttributeEnumEditDialog extends Component {
             >
                 <DialogTitle id={dialogTitleID}>{getMessage("dialogTitleEditEnumValue")}</DialogTitle>
                 <DialogContent>
-                    <Field name={`${field}.value`}
-                           label={formatMessage(intl, "value")}
-                           id={build(dialogID, ids.ENUM_VALUE)}
-                           required={true}
-                           autoFocus
-                           margin="dense"
-                           component={FormTextField}
+                    <FastField name={`${field}.value`}
+                               label={formatMessage(intl, "value")}
+                               id={build(dialogID, ids.ENUM_VALUE)}
+                               required={true}
+                               autoFocus
+                               margin="dense"
+                               component={FormTextField}
                     />
                     <Field name={`${field}.is_default`}
                            label={formatMessage(intl, "enumDefaultLabel")}
                            id={build(dialogID, ids.ENUM_VALUE_DEFAULT)}
                            color="primary"
                            component={FormCheckbox}
-                           normalize={this.normalizeDefaultField}
+                           onClick={normalizeDefault(enumValues, replace)}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -122,7 +112,6 @@ class AttributeEnumEditGrid extends Component {
             "onAddEnum",
             "moveUp",
             "moveDown",
-            "normalizeDefaultField",
         ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
@@ -131,9 +120,10 @@ class AttributeEnumEditGrid extends Component {
     }
 
     onAddEnum() {
+        const { name, form } = this.props;
+        const attributeEnums = getIn(form.values, name) || [];
+
         let value = this.newEnumValue();
-        const fields = this.props.fields;
-        const attributeEnums = fields.getAll() || [];
 
         const valuesMatch = attrEnum => (attrEnum.value === value);
         while (attributeEnums.findIndex(valuesMatch) > -1) {
@@ -142,7 +132,7 @@ class AttributeEnumEditGrid extends Component {
 
         this.setState({selected: 0});
 
-        this.props.fields.unshift({
+        this.props.unshift({
             value,
             is_default: false,
         });
@@ -160,7 +150,7 @@ class AttributeEnumEditGrid extends Component {
 
         this.setState({selected});
 
-        this.props.fields.remove(index);
+        this.props.remove(index);
     }
 
     handleSelect(index) {
@@ -181,17 +171,26 @@ class AttributeEnumEditGrid extends Component {
 
         this.setState({selected: selected + offset});
 
-        this.props.fields.move(selected, selected + offset);
-    }
-
-    normalizeDefaultField(is_default) {
-        const { fields, change } = this.props;
-        return normalizeDefault(fields, change, is_default);
+        this.props.move(selected, selected + offset);
     }
 
     render() {
-        const { classes, intl, parentID, fields, change, meta: { error } } = this.props;
+        const {
+            classes,
+            intl,
+            parentID,
+            name,
+            replace,
+            form: {
+                touched,
+                errors,
+                values,
+            },
+        } = this.props;
         const { selected, editingEnumIndex } = this.state;
+        const attributeEnums = getIn(values, name);
+        const attrErrors = getIn(errors, name);
+        const error = Array.isArray(attrErrors) ? null : attrErrors;
 
         const tableID = build(parentID, ids.ENUM_VALUES_GRID);
 
@@ -205,17 +204,15 @@ class AttributeEnumEditGrid extends Component {
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
                                     moveDown={this.moveDown}
-                                    moveDownDisabled={selected < 0 || (fields.length - 1) <= selected}
+                                    moveDownDisabled={!attributeEnums || selected < 0 || (attributeEnums.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
-                            {fields && fields.map((field, index) => {
+                            {attributeEnums && attributeEnums.map(({ value }, index) => {
                                 const isSelected = (index === selected);
-                                const {
-                                    value,
-                                } = fields.get(index);
+                                const field = `${name}[${index}]`;
 
                                 const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
 
@@ -233,7 +230,7 @@ class AttributeEnumEditGrid extends Component {
                                         <Field name={`${field}.is_default`}
                                                id={build(rowID, ids.ENUM_VALUE_DEFAULT)}
                                                component={FormCheckboxTableCell}
-                                               normalize={this.normalizeDefaultField}
+                                               onClick={normalizeDefault(attributeEnums, replace)}
                                         />
                                         <TableCell padding="none">
                                             <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
@@ -271,16 +268,23 @@ class AttributeEnumEditGrid extends Component {
                     </Table>
                 </div>
 
-                {fields && fields.map((field, index) =>
-                    <AttributeEnumEditDialog key={field}
-                                             open={editingEnumIndex === index}
-                                             change={change}
-                                             fields={fields}
-                                             field={field}
-                                             error={error}
-                                             intl={intl}
-                                             onClose={() => this.setState({editingEnumIndex: -1})}
-                    />
+                {attributeEnums && attributeEnums.map((value, index) => {
+                    const field = `${name}[${index}]`;
+                    const attrEnumError = getFormError(field, touched, errors);
+                    const error = attrEnumError && attrEnumError.error;
+
+                    return (
+                        <AttributeEnumEditDialog key={field}
+                                                 open={editingEnumIndex === index}
+                                                 field={field}
+                                                 error={error}
+                                                 replace={replace}
+                                                 enumValues={attributeEnums}
+                                                 intl={intl}
+                                                 onClose={() => this.setState({ editingEnumIndex: -1 })}
+                        />
+                    );
+                    }
                 )
                 }
             </div>
