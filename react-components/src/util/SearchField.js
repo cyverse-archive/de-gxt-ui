@@ -16,7 +16,7 @@ class SearchField extends Component {
         super(props);
 
         this.state = {
-            inputValue: ''
+            inputValue: this.props.value
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -30,8 +30,22 @@ class SearchField extends Component {
         this.keyPressTimer = null;
     }
 
+    componentDidUpdate(prevProps) {
+       if(this.props.value !== prevProps.value) {
+           this.setState({inputValue: this.props.value});
+       }
+    }
+
     handleChange(event) {
-        this.setState({inputValue: event.target.value});
+        const inputValue = event.target.value;
+        if (!inputValue) {
+            //handlekeypress not called on backspace. So when the search field is cleared,
+            //parent components should be notified.
+            this.setState({inputValue: inputValue}, this.handleSearch);
+        } else {
+            this.setState({inputValue});
+        }
+
     }
 
     handleKeyPress(event) {
@@ -59,7 +73,9 @@ class SearchField extends Component {
     render() {
         let { inputValue } = this.state;
         let {
+            id,
             label,
+            placeholder,
             startAdornment,
             endAdornment,
             children,
@@ -68,18 +84,19 @@ class SearchField extends Component {
 
         return (
             <div>
-                <TextField
-                    label={label}
-                    value={inputValue}
-                    onKeyPress={this.handleKeyPress}
-                    onChange={this.handleChange}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: startAdornment,
-                        endAdornment: endAdornment,
-                        className: classes.searchInput
-                    }}
-                >
+                <TextField id={id}
+                           variant="outlined"
+                           label={label}
+                           placeholder={placeholder}
+                           value={inputValue}
+                           onKeyPress={this.handleKeyPress}
+                           onChange={this.handleChange}
+                           InputProps={{
+                               disableUnderline: true,
+                               startAdornment: startAdornment,
+                               endAdornment: endAdornment,
+                               className: classes.searchInput
+                           }}>
                 </TextField>
                 {children}
             </div>
@@ -88,15 +105,19 @@ class SearchField extends Component {
 }
 
 SearchField.propTypes = {
+    id: PropTypes.any,
     handleSearch: PropTypes.func.isRequired,
     label: PropTypes.any,
+    placeholder: PropTypes.any,
     startAdornment: PropTypes.object,
     endAdornment: PropTypes.object,
-    keyPressTimer: PropTypes.number
+    keyPressTimer: PropTypes.number,
+    value: PropTypes.string,
 };
 
 SearchField.defaultProps = {
     label: '',
+    helperText: "",
     keyPressTimer: 1000,
     startAdornment: <InputAdornment position='start'><Search/></InputAdornment>,
     endAdornment: null

@@ -3,7 +3,7 @@ import Color from "../util/CyVersePalette";
 export default (theme) => ({
     table: {
         overflow: "auto",
-        height: "70%",
+        height: "75%",
     },
     tableHead: {
         backgroundColor: "#e2e2e2",

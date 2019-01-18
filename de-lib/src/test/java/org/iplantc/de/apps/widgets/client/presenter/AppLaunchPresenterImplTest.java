@@ -144,13 +144,13 @@ public class AppLaunchPresenterImplTest {
         when(configMock.getAppTemplate()).thenReturn(null);
         when(configMock.isRelaunchAnalysis()).thenReturn(true);
         when(configMock.getAppId()).thenReturn("id");
-        when(configMock.getAnalysisId()).thenReturn(hasIdMock);
+        when(configMock.getAnalysisId()).thenReturn("test_id");
         when(appTemplateMock.isAppDisabled()).thenReturn(false);
 
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock, configMock);
         verify(configMock).getAppTemplate();
-        verify(atServicesMock).rerunAnalysis(eq(hasIdMock),
+        verify(atServicesMock).rerunAnalysis(eq("test_id"),
                                              eq("id"),
                                              appTemplateCaptor.capture());
 
@@ -164,7 +164,7 @@ public class AppLaunchPresenterImplTest {
         when(configMock.getAppTemplate()).thenReturn(null);
         when(configMock.isRelaunchAnalysis()).thenReturn(false);
         when(configMock.getAppId()).thenReturn("id");
-        when(configMock.getAnalysisId()).thenReturn(hasIdMock);
+        when(configMock.getAnalysisId()).thenReturn("test_id");
         when(appTemplateMock.isAppDisabled()).thenReturn(false);
 
         /** CALL METHOD UNDER TEST **/

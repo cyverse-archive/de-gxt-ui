@@ -15,4 +15,7 @@ public interface AnalysisParametersList {
 
     @PropertyName("parameters")
     List<AnalysisParameter> getParameterList();
+
+    @PropertyName("parameters")
+    void setParametersList(List<AnalysisParameter> parametersList);
 }

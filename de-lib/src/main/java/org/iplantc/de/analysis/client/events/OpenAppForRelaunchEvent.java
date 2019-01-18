@@ -1,7 +1,5 @@
 package org.iplantc.de.analysis.client.events;
 
-import org.iplantc.de.client.models.analysis.Analysis;
-
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -9,19 +7,31 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author jstroot
  */
 public class OpenAppForRelaunchEvent extends GwtEvent<OpenAppForRelaunchEvent.OpenAppForRelaunchEventHandler> {
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAnalysisId() {
+        return analysisId;
+    }
+
     public interface OpenAppForRelaunchEventHandler extends EventHandler {
         void onRequestOpenAppForRelaunch(OpenAppForRelaunchEvent event);
     }
 
     public static final Type<OpenAppForRelaunchEventHandler> TYPE = new Type<>();
-    private final Analysis analysisForRelaunch;
+    private final String systemId;
+    private final String appId;
+    private final String analysisId;
 
-    public OpenAppForRelaunchEvent(Analysis analysis) {
-        this.analysisForRelaunch = analysis;
-    }
-
-    public Analysis getAnalysisForRelaunch() {
-        return analysisForRelaunch;
+    public OpenAppForRelaunchEvent(String analysisId, String systemId, String appId) {
+        this.systemId = systemId;
+        this.appId = appId;
+        this.analysisId = analysisId;
     }
 
     @Override

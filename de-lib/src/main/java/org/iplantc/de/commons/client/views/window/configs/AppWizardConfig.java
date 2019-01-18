@@ -1,7 +1,5 @@
 package org.iplantc.de.commons.client.views.window.configs;
 
-import org.iplantc.de.client.models.HasId;
-
 import com.google.web.bindery.autobean.shared.Splittable;
 
 public interface AppWizardConfig extends WindowConfig {
@@ -22,9 +20,9 @@ public interface AppWizardConfig extends WindowConfig {
 
     void setRelaunchAnalysis(boolean relaunchAnalysis);
 
-    HasId getAnalysisId();
+    String getAnalysisId();
 
-    void setAnalysisId(HasId analysisId);
+    void setAnalysisId(String analysisId);
 
 }
 

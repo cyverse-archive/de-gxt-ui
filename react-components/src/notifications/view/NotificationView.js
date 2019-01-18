@@ -12,10 +12,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import moment from "moment";
 import NotificationToolbar from "./NotificationToolbar";
-import constants from "../../constants";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withI18N from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
@@ -24,6 +22,8 @@ import intlData from "../messages";
 import notificationCategory from "../model/notificationCategory";
 import ids from "../ids";
 import classnames from "classnames";
+import formatDate from "../../util/DateFormatter";
+import constants from "../../constants";
 
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false,},
@@ -36,7 +36,7 @@ function Message(props) {
     const {message, seen, presenter, classes} = props;
     let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
     return (
-        <TableCell padding="none"
+        <TableCell
             className={className}>
             <div
                 onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
@@ -236,6 +236,7 @@ class NotificationView extends Component {
                             columnData={columnData}
                             baseId={baseId}
                             ids={ids}
+
                         />
                         <TableBody>
                             {data.map(n => {
@@ -248,17 +249,19 @@ class NotificationView extends Component {
                                               selected={isSelected}
                                               hover
                                               key={n.message.id}>
-                                        <TableCell padding="checkbox">
+                                        <TableCell>
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell>{notificationCategory[n.type.replace(/\s/g, "_").toLowerCase()]}</TableCell>
+                                        <TableCell>{notificationCategory[n.type.replace(
+                                            /\s/g,
+                                            "_").toLowerCase()]}</TableCell>
                                         <Message message={n.message}
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
-                                                constants.DATE_FORMAT) :
-                                            getMessage("emptyValue")} </TableCell>
+                                        <TableCell>
+                                            {formatDate(n.message.timestamp, constants.DATE_FORMAT)}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}

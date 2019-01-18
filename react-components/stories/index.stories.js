@@ -2,6 +2,11 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
+import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
+import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
+import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
+import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
+
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
@@ -12,10 +17,11 @@ import BasicDetailsTest from "./data/details/BasicDetails.stories";
 import InfoTypeSelectionListTest from "./data/details/InfoTypeSelectionList.stories";
 import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
+
 import QueryBuilderTest from './data/search/QueryBuilder.stories';
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
-import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
+import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
@@ -44,6 +50,16 @@ import CopyTextAreaTest from "./util/CopyTextArea.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
+import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
+
+
+storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
+    <AnalysisInfoDialogTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis parameters', () =>
+    <AnalysisParametersDialogTest/>);
+storiesOf('analysis/view/dialogs', module)
+    .add('with test analysis support', () => <ShareWithSupportDialogTest/>);
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -91,4 +107,7 @@ storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('ErrorHandler', () => <ErrorHandlerTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
+storiesOf('util', module).add('DEPromptDialog', () => <DEPromptDialogTest/>)
+
+
 

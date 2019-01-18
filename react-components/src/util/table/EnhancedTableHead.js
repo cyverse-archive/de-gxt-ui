@@ -30,14 +30,15 @@ class EnhancedTableHead extends React.Component {
             rowCount,
             columnData,
             selectable,
-            classes
+            classes,
+            padding,
         } = this.props;
 
         return (
             <TableHead>
                 <TableRow>
                     {selectable && (
-                        <TableCell padding="checkbox"
+                        <TableCell padding={padding ? padding : "default"}
                                    className={classes.checkbox_cell}>
                             <Checkbox
                                 indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -52,11 +53,13 @@ class EnhancedTableHead extends React.Component {
                         return (
                             <TableCell
                                 key={column.name}
+                                variant="head"
                                 numeric={column.numeric}
-                                padding={column.disablePadding ? 'none' : 'default'}
+                                padding={padding || "default"}
                                 sortDirection={orderBy === column.name ? order : false}
                                 className={classes.column_heading}
-                                id={build(this.props.baseId, this.props.ids[column.name.toUpperCase()])}
+                                id={build(this.props.baseId,
+                                    this.props.ids[column.name.replace(/\s/g, "_").toUpperCase()])}
                             >
                                 {column.enableSorting ? (
                                         <Tooltip
@@ -101,6 +104,7 @@ EnhancedTableHead.propTypes = {
             numeric: PropTypes.bool,
             enableSorting: PropTypes.bool,
         })),
+    padding: PropTypes.string,
 };
 
 EnhancedTableHead.defaultProps = {

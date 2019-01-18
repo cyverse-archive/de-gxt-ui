@@ -1,23 +1,21 @@
 package org.iplantc.de.analysis.client;
 
-import org.iplantc.de.analysis.client.events.SaveAnalysisParametersEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisParamValueSelectedEvent;
-import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.web.bindery.autobean.shared.Splittable;
+
+import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/23/15.
  * @author jstroot
  */
-public interface AnalysisParametersView extends IsWidget,
-                                                IsMaskable,
-                                                SaveAnalysisParametersEvent.HasSaveAnalysisParametersEventHandlers,
-                                                AnalysisParamValueSelectedEvent.HasAnalysisParamValueSelectedEventHandlers {
+@JsType
+public interface AnalysisParametersView {
 
     interface Appearance {
 
@@ -38,12 +36,21 @@ public interface AnalysisParametersView extends IsWidget,
         String parametersDialogHeight();
     }
 
-    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    @JsType
+    interface Presenter {
 
         interface BeanFactory extends AutoBeanFactory {
             AutoBean<File> file();
         }
 
-        void fetchAnalysisParameters(Analysis analysis);
+        void fetchAnalysisParameters(String analysis_id,
+                                            ReactSuccessCallback callback,
+                                            ReactErrorCallback errorCallback);
+
+        void onAnalysisParamValueSelected(Splittable param);
+
+        void saveParamsToFile(String contents,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
     }
 }

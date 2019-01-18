@@ -4,8 +4,9 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.analysis.client.models.FilterBean;
+import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
-import org.iplantc.de.client.models.analysis.AnalysesList;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
 import org.iplantc.de.client.models.analysis.AnalysisParametersList;
@@ -19,6 +20,7 @@ import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -39,13 +41,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.SortInfo;
-import com.sencha.gxt.data.shared.loader.FilterConfig;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -165,50 +162,34 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
         this.appTemplateUtils = appTemplateUtils;
         this.diskResourceUtil = diskResourceUtil;
     }
-
-    /**
-     * FIXME move service call into service facade.
-     * @param loadConfig optional remote paging and sorting configs.
-     * @param callback executed when RPC call completes.
-     */
     @Override
-    public void getAnalyses(final FilterPagingLoadConfig loadConfig, DECallback<PagingLoadResultBean<Analysis>> callback) {
+    public void getAnalyses(int limit,
+                            int offSet,
+                            FilterBeanList filters,
+                            String sortField,
+                            String sortDir,
+                            DECallback<String> callback) {
         StringBuilder address = new StringBuilder(ANALYSES);
+        address.append("?limit=" + limit); //$NON-NLS-1$
+        address.append("&offset=" + offSet); //$NON-NLS-1$
 
+        if (!Strings.isNullOrEmpty(sortField)) {
+            address.append("&sort-field="); //$NON-NLS-1$
+            address.append(sortField);
+        }
 
-        if (loadConfig != null) {
-            address.append("?limit="); //$NON-NLS-1$
-            address.append(loadConfig.getLimit());
+        if (!Strings.isNullOrEmpty(sortDir)) {
+            address.append("&sort-dir="); //$NON-NLS-1$
+            address.append(sortDir);
+        }
 
-            address.append("&offset="); //$NON-NLS-1$
-            address.append(loadConfig.getOffset());
-
-            List<? extends SortInfo> sortInfoList = loadConfig.getSortInfo();
-            if (sortInfoList != null && !sortInfoList.isEmpty()) {
-                SortInfo sortInfo = sortInfoList.get(0);
-
-                String sortField = sortInfo.getSortField();
-                if (!Strings.isNullOrEmpty(sortField)) {
-                    address.append("&sort-field="); //$NON-NLS-1$
-                    address.append(sortField);
-                }
-
-                SortDir sortDir = sortInfo.getSortDir();
-                if (sortDir == SortDir.ASC || sortDir == SortDir.DESC) {
-                    address.append("&sort-dir="); //$NON-NLS-1$
-                    address.append(sortDir.toString());
-                }
-            }
-
-            List<FilterConfig> filters = loadConfig.getFilters();
-            if (filters != null && !filters.isEmpty()) {
-                JSONArray jsonFilters = new JSONArray();
-                int filterIndex = 0;
-
-                for (FilterConfig filter : filters) {
-                    String field = filter.getField();
-                    String value = filter.getValue();
-
+        if (filters != null && filters.getFilters().size() > 0) {
+            int filterIndex = 0;
+            JSONArray jsonFilters = new JSONArray();
+            for (FilterBean fb : filters.getFilters()) {
+                if (fb != null) {
+                    String field = fb.getField();
+                    String value = fb.getValue();
                     if (!Strings.isNullOrEmpty(field) && value != null) {
                         JSONObject jsonFilter = new JSONObject();
 
@@ -218,30 +199,22 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
                         jsonFilters.set(filterIndex++, jsonFilter);
                     }
                 }
-
-                if (jsonFilters.size() > 0) {
-                    address.append("&filter="); //$NON-NLS-1$
-                    address.append(URL.encodeQueryString(jsonFilters.toString()));
-                }
+            }
+            if (jsonFilters.size() > 0) {
+                address.append("&filter="); //$NON-NLS-1$
+                address.append(URL.encodeQueryString(jsonFilters.toString()));
             }
         }
-
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address.toString());
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, PagingLoadResultBean<Analysis>>(callback) {
-
-            @Override
-            protected PagingLoadResultBean<Analysis> convertFrom(String object) {
-                AnalysesList ret = AutoBeanCodex.decode(factory, AnalysesList.class, object).as();
-                return new PagingLoadResultBean<>(ret.getAnalysisList(), ret.getTotal(), loadConfig.getOffset());
-            }
-
-        });
+        deServiceFacade.getServiceData(wrapper, callback);
     }
 
+
     @Override
-    public void deleteAnalyses(List<Analysis> analysesToBeDeleted, DECallback<String> callback) {
+    public void deleteAnalyses(String[] analysesToDelete, DECallback<String> callback) {
         String address = ANALYSES + "/shredder"; //$NON-NLS-1$ //$NON-NLS-2$
-        final Splittable stringIdListSplittable = diskResourceUtil.createStringIdListSplittable(analysesToBeDeleted);
+        final String jArr = JsonUtil.getInstance().buildJsonArrayString(Arrays.asList(analysesToDelete));
+        final Splittable stringIdListSplittable = StringQuoter.split(jArr);
         final Splittable payload = StringQuoter.createSplittable();
         stringIdListSplittable.assign(payload, "analyses");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
@@ -250,8 +223,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void renameAnalysis(Analysis analysis, String newName, DECallback<Void> callback) {
-        String address = ANALYSES + "/" + analysis.getId();
+    public void renameAnalysis(String id, String newName, DECallback<Void> callback) {
+        String address = ANALYSES + "/" + id;
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newName).assign(body, "name");
 
@@ -266,8 +239,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
 
     // TODO: Change status to use AnalysisExecutionStatus instead of a string
     @Override
-    public void stopAnalysis(Analysis analysis, DECallback<String> callback, String status) {
-        String address = ANALYSES + "/" + analysis.getId() + "/stop?job_status=" + status;
+    public void stopAnalysis(String analysisId, DECallback<String> callback, String status) {
+        String address = ANALYSES + "/" + analysisId + "/stop?job_status=" + status;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
 
@@ -275,16 +248,16 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback) {
-        String address = ANALYSES + "/" + analysis.getId() + "/parameters";
+    public void getAnalysisParams(String analysis_id, DECallback<List<AnalysisParameter>> callback) {
+        String address = ANALYSES + "/" + analysis_id + "/parameters";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
         deServiceFacade.getServiceData(wrapper, new StringListAsyncCallbackConverter(callback, factory));
     }
 
     @Override
-    public void updateAnalysisComments(final Analysis analysis, final String newComment, DECallback<Void> callback) {
-        String address = ANALYSES + "/" + analysis.getId();
+    public void updateAnalysisComments(final String id, final String newComment, DECallback<Void> callback) {
+        String address = ANALYSES + "/" + id;
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newComment).assign(body, "description");
 
@@ -298,8 +271,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getAnalysisSteps(Analysis analysis, DECallback<AnalysisStepsInfo> callback) {
-        String address = ANALYSES + "/" + analysis.getId() + "/steps";
+    public void getAnalysisSteps(String id, DECallback<AnalysisStepsInfo> callback) {
+        String address = ANALYSES + "/" + id + "/steps";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, new StringAnalaysisStepInfoConverter(callback, factory));
 

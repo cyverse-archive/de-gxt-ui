@@ -2,7 +2,7 @@
  @author sriram
  */
 import React from "react";
-import { FormattedMessage, IntlProvider } from "react-intl";
+import { FormattedHTMLMessage, FormattedMessage, IntlProvider } from "react-intl";
 
 const withI18N = (WrappedComponent, intlData) => {
     return class extends React.Component {
@@ -31,9 +31,14 @@ const formatMessage = (intl, id, values) => {
     return intl.formatMessage({id}, values);
 };
 
+const formatHTMLMessage = (id, html) => {
+    return <FormattedHTMLMessage id={id} defaultMessage={html}/>
+};
+
 export default withI18N;
 
 export {
     getMessage,
     formatMessage,
+    formatHTMLMessage,
 };
