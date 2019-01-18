@@ -43,7 +43,6 @@ import LaunchIcon from "@material-ui/icons/Launch";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 
 
-
 function AnalysisName(props) {
     const name = props.analysis.name;
     const isBatch = props.analysis.batch;
@@ -54,12 +53,13 @@ function AnalysisName(props) {
     const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
     const status = props.analysis.status;
     const intl = props.intl;
+    const analysis = props.analysis;
 
     if (isBatch) {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
-                  onClick={handleGoToOutputFolder}>
+                  onClick={() => handleGoToOutputFolder(analysis)}>
                 <ListAltIcon onClick={handleBatchIconClick}
                              style={{color: Color.darkGreen}}/>
                 <sup>{name}</sup>
@@ -70,7 +70,7 @@ function AnalysisName(props) {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
-                  onClick={handleGoToOutputFolder}>
+                  onClick={() => handleGoToOutputFolder(analysis)}>
                 <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
                             style={{color: Color.darkBlue}}/>
                 <sup>{name}</sup>
@@ -80,7 +80,7 @@ function AnalysisName(props) {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
-                  onClick={handleGoToOutputFolder}>
+                  onClick={() => handleGoToOutputFolder(analysis)}>
                 {name}
             </span>
         );
@@ -425,8 +425,12 @@ class AnalysesView extends Component {
         event.stopPropagation();
     }
 
-    handleGoToOutputFolder() {
-        this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]).resultfolderid);
+    handleGoToOutputFolder(analysis) {
+        if (analysis) {
+            this.props.presenter.onAnalysisNameSelected(analysis.resultfolderid);
+        } else {
+            this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]).resultfolderid);
+        }
     }
 
     handleInteractiveUrlClick(url) {
