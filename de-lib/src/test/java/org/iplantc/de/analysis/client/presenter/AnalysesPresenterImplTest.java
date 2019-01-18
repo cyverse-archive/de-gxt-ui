@@ -35,10 +35,8 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
@@ -211,18 +209,6 @@ public class AnalysesPresenterImplTest {
 
         stringCallbackCaptor.getValue().onSuccess("result");
         verify(reactSuccessCallbackMock).onSuccess(null);
-    }
-
-    @Test
-    public void go() {
-        AnalysesPresenterImpl spy = spy(uut);
-        HasOneWidget containerMock = mock(HasOneWidget.class);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.go(containerMock,"baseId", analysisListMock);
-
-        verify(viewMock).setPresenter(spy, "baseId", analysisListMock);
-        verify(viewMock).load();
     }
 
     @Test
