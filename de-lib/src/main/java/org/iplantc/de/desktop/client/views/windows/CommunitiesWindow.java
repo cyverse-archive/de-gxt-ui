@@ -32,6 +32,7 @@ public class CommunitiesWindow extends WindowBase {
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setHeading(appearance.windowHeading());
+        setBodyStyleName(appearance.windowBackground());
 
         ContextualHelpToolButton contextualHelpToolButton = new ContextualHelpToolButton();
         contextualHelpToolButton.setHelp(new HTML(appearance.communitiesHelp()));

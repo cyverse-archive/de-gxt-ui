@@ -28,6 +28,8 @@ public interface CommunitiesView extends IsWidget {
         String windowWidth();
 
         String windowHeight();
+
+        String windowBackground();
     }
 
     @JsType
