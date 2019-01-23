@@ -56,9 +56,8 @@ class EditCommunityDialog extends Component {
         this.props.presenter[[dialogName]](community, () => {
             this.closeDialog([dialogName]);
             this.setState({loading: false});
+            this.handleCloseEditDialog();
         });
-
-        this.handleCloseEditDialog();
     }
 
     handleCloseEditDialog() {
@@ -78,6 +77,7 @@ class EditCommunityDialog extends Component {
             open,
             collaboratorsUtil,
             presenter,
+            onCommunitySaved,
             classes,
         } = this.props;
 
@@ -107,7 +107,8 @@ class EditCommunityDialog extends Component {
                                        collaboratorsUtil={collaboratorsUtil}
                                        presenter={presenter}
                                        saveCommunity={saveCommunity}
-                                       onCommunitySaved={this.handleCloseEditDialog}/>
+                                       onCommunitySaved={onCommunitySaved}
+                                       onSaveComplete={this.handleCloseEditDialog}/>
                     </DialogContent>
                     <DialogActions>
                         {community && isCommunityAdmin &&
@@ -238,6 +239,7 @@ EditCommunityDialog.propTypes = {
     collaboratorsUtil: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    onCommunitySaved: PropTypes.func.isRequired,
     presenter: PropTypes.shape({
         deleteCommunity: PropTypes.func.isRequired,
         joinCommunity: PropTypes.func.isRequired,

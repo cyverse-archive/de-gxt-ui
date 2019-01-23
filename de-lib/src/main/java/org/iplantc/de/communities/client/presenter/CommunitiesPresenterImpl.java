@@ -4,8 +4,11 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
+import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.collaborators.SubjectList;
 import org.iplantc.de.client.models.collaborators.SubjectMemberList;
+import org.iplantc.de.client.models.errorHandling.ServiceError;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
@@ -264,21 +267,23 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
     }
 
     @Override
-    public void addCommunityAdmin(Splittable community,
-                                  Splittable admin,
-                                  ReactSuccessCallback callback) {
+    public void addCommunityAdmins(Splittable community,
+                                   Splittable adminList,
+                                   ReactSuccessCallback successCallback,
+                                   ReactErrorCallback errorCallback) {
         Group group = getGroupFromSplittable(community);
-        Subject subject = getSubjectFromSplittable(admin);
+        List<Subject> subjectList = getSubjectListFromSplittable(adminList);
 
-        serviceFacade.addCommunityAdmins(group, Lists.newArrayList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
+        serviceFacade.addCommunityAdmins(group, subjectList, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(500, caught.getMessage());
             }
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                callback.onSuccess(null);
+                successCallback.onSuccess(null);
             }
         });
     }
@@ -294,7 +299,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
     }
 
     @Override
-    public void addAppToCommunity(Splittable appSpl, Splittable community, ReactSuccessCallback callback) {
+    public void addAppToCommunity(Splittable appSpl, Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback) {
         Group group = getGroupFromSplittable(community);
         App app = getAppFromSplittable(appSpl);
 
@@ -302,11 +307,12 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(500, caught.getMessage());
             }
 
             @Override
             public void onSuccess(Splittable result) {
-                callback.onSuccess(null);
+                successCallback.onSuccess(null);
             }
         });
     }
@@ -373,8 +379,6 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
     public void saveCommunity(Splittable originalCommunity,
                               String name,
                               String description,
-                              Splittable admins,
-                              Splittable apps,
                               ReactSuccessCallback callback) {
         Group newCommunity = factory.getGroup().as();
         newCommunity.setName(name);
@@ -390,7 +394,8 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
 
                 @Override
                 public void onSuccess(Group result) {
-                    callback.onSuccess(null);
+                    Splittable newCommunity = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
+                    callback.onSuccess(newCommunity);
                 }
             });
         } else {
@@ -410,14 +415,33 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
     }
 
     Group getGroupFromSplittable(Splittable community) {
-        return AutoBeanCodex.decode(factory, Group.class, community.getPayload()).as();
+        if (community != null) {
+            return AutoBeanCodex.decode(factory, Group.class, community.getPayload()).as();
+        }
+        return null;
     }
 
     Subject getSubjectFromSplittable(Splittable subject) {
-        return AutoBeanCodex.decode(factory, Group.class, subject.getPayload()).as();
+        if (subject != null) {
+            return AutoBeanCodex.decode(factory, Group.class, subject.getPayload()).as();
+        }
+        return null;
+    }
+
+    List<Subject> getSubjectListFromSplittable(Splittable subjectList) {
+        List<Subject> subjects = Lists.newArrayList();
+        if (subjectList != null && subjectList.isIndexed()) {
+            for (int index = 0; index < subjectList.size(); index ++) {
+                subjects.add(getSubjectFromSplittable(subjectList.get(index)));
+            }
+        }
+        return subjects;
     }
 
     App getAppFromSplittable(Splittable app) {
-        return AutoBeanCodex.decode(appAutoBeanFactory, App.class, app.getPayload()).as();
+        if (app != null) {
+            return AutoBeanCodex.decode(appAutoBeanFactory, App.class, app.getPayload()).as();
+        }
+        return null;
     }
 }

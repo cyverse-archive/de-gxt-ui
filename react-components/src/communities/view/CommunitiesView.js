@@ -29,7 +29,9 @@ class CommunitiesView extends Component {
             'handleCommunityFilterChange',
             'onCreateCommunityClicked',
             'handleCloseEditDlg',
-            'onCommunityClicked'
+            'onCommunityClicked',
+            'onCommunitySaved',
+            'refreshCommunityList',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
@@ -43,11 +45,21 @@ class CommunitiesView extends Component {
             loadingListing: true,
         });
 
+        this.refreshCommunityList(selection);
+    }
+
+    refreshCommunityList(selection) {
+        if (!selection) {
+            selection = this.state.communityType;
+        }
+
         if (selection === "MyCommunities") {
-            this.props.presenter.fetchMyCommunities((listing) => {this.setState({
-                communitiesList: listing.groups,
-                loadingListing: false,
-            })});
+            this.props.presenter.fetchMyCommunities((listing) => {
+                this.setState({
+                    communitiesList: listing.groups,
+                    loadingListing: false,
+                })
+            });
         } else {
             this.props.presenter.fetchAllCommunities((listing) => this.setState({
                 communitiesList: listing.groups,
@@ -74,8 +86,13 @@ class CommunitiesView extends Component {
         }));
     }
 
+    onCommunitySaved(community) {
+        this.setState({selectedCommunity: community})
+    }
+
     handleCloseEditDlg() {
-        this.setState({editDlgOpen: false})
+        this.setState({editDlgOpen: false});
+        this.refreshCommunityList();
     }
 
     render() {
@@ -111,6 +128,7 @@ class CommunitiesView extends Component {
                                      community={selectedCommunity}
                                      isCommunityAdmin={isCommunityAdmin}
                                      isMember={isCommunityMember}
+                                     onCommunitySaved={this.onCommunitySaved}
                                      onClose={this.handleCloseEditDlg}/>
             </div>
         )

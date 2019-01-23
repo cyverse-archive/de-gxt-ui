@@ -352,35 +352,44 @@ class CommunitiesViewTest extends Component {
                     callback(adminListing.members.filter((value) => value !== admin))
                 }, 1000);
             },
-            addCommunityAdmin: (community, subject, callback) => {
+            addCommunityAdmins: (community, subjectList, resolve, reject) => {
                 setTimeout(() => {
-                    callback();
+                    resolve();
                 }, 1000);
             },
             onAddCommunityAppsClicked: (callback) => {
                 communityAppsClickedLogger();
                 callback(newApp)
             },
-            addAppToCommunity: (app, community, callback) => {
+            addAppToCommunity: (app, community, resolve, reject) => {
                 setTimeout(() => {
-                    callback()
+                    resolve()
                 }, 1000);
             },
             deleteCommunity: (community, callback) => {
                 confirmedDialogAction("Delete", community);
-                callback();
+                setTimeout(() => {
+                    callback();
+                }, 1000);
             },
             joinCommunity: (community, callback) => {
                 confirmedDialogAction("Join", community);
-                callback();
+                setTimeout(() => {
+                    callback();
+                }, 1000);
             },
             leaveCommunity: (community, callback) => {
                 confirmedDialogAction("Leave", community);
-                callback();
+                setTimeout(() => {
+                    callback();
+                }, 1000);
             },
-            saveCommunity: (community, name, description, admins, apps, callback) => {
-                confirmedDialogAction("Save", community, name, description, admins, apps);
-                callback();
+            saveCommunity: (community, name, description, callback) => {
+                confirmedDialogAction("Save", community, name, description);
+                setTimeout(() => {
+                    let savedCommunity = community ? community : {name: name, description: description};
+                    callback(savedCommunity);
+                }, 1000);
             }
         };
 

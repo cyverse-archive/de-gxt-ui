@@ -53,18 +53,13 @@ class EditCommunity extends Component {
             'isInvalid',
             'isDuplicateApp',
             'isDuplicateAdmin',
+            'saveCommunity',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.saveCommunity && nextProps.saveCommunity && !this.isInvalid()) {
-            const {
-                name, description, admins, apps
-            } = this.state;
-            const {community} = this.props;
-            this.props.presenter.saveCommunity(community, name, description, admins, apps, () => {
-                this.props.onCommunitySaved();
-            })
+            this.saveCommunity();
         }
     }
 
@@ -134,8 +129,51 @@ class EditCommunity extends Component {
     }
 
     isInvalid() {
-        const { errors } = this.state;
+        const {errors} = this.state;
         return errors.emptyName || errors.invalidName;
+    }
+
+    saveCommunity() {
+        const {
+            name, description, admins, apps
+        } = this.state;
+        const {
+            community,
+            onCommunitySaved
+        } = this.props;
+        this.setState({loading: true});
+        this.props.presenter.saveCommunity(community, name, description, (savedCommunity) => {
+            if (!community) {
+                onCommunitySaved(savedCommunity);
+                let promises = [];
+
+                let saveAdminsPromise = new Promise((resolve, reject) => {
+                        this.props.presenter.addCommunityAdmins(savedCommunity, admins, resolve, reject);
+                    }
+                );
+                promises.push(saveAdminsPromise);
+
+                apps.forEach((app) => {
+                    let saveAppPromise = new Promise((resolve, reject) => {
+                        this.props.presenter.addAppToCommunity(app, savedCommunity, resolve, reject);
+                    });
+                    promises.push(saveAppPromise);
+                });
+
+                Promise.all(promises)
+                    .then(value => {
+                        this.setState({loading: false});
+                        this.props.onSaveComplete();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.setState({loading: false});
+                    });
+            } else {
+                this.setState({loading: false});
+                this.props.onSaveComplete();
+            }
+        })
     }
 
     onAddCommunityAppsClicked() {
@@ -222,7 +260,7 @@ class EditCommunity extends Component {
         if (!this.isDuplicateAdmin(subject)) {
             if (community) {
                 this.setState({loading: true});
-                this.props.presenter.addCommunityAdmin(community, subject, () => {
+                this.props.presenter.addCommunityAdmins(community, [subject], () => {
                     this.addAdmin(subject);
                     this.setState({loading: false});
                 });
@@ -336,6 +374,7 @@ EditCommunity.propTypes = {
     isCommunityAdmin: PropTypes.bool.isRequired,
     saveCommunity: PropTypes.bool.isRequired,
     onCommunitySaved: PropTypes.func.isRequired,
+    onSaveComplete: PropTypes.func.isRequired,
     presenter: PropTypes.shape({
         fetchCommunityAdmins: PropTypes.func.isRequired,
         fetchCommunityApps: PropTypes.func.isRequired,
@@ -343,8 +382,8 @@ EditCommunity.propTypes = {
         removeCommunityApps: PropTypes.func.isRequired,
         removeCommunityAdmins: PropTypes.func.isRequired,
         onAddCommunityAppsClicked: PropTypes.func.isRequired,
-        addCommunityAdmin: PropTypes.func.isRequired,
-        addAppToCommunity: PropTypes.func.isRequired,
+        addCommunityAdmins: PropTypes.func.isRequired,
+        addAppsToCommunity: PropTypes.func.isRequired,
     })
 };
 

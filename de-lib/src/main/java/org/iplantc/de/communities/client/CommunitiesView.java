@@ -62,12 +62,12 @@ public interface CommunitiesView extends IsWidget {
         void removeCommunityAdmins(Splittable community, Splittable subject, ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void addCommunityAdmin(Splittable community, Splittable admin, ReactSuccessCallback callback);
+        void addCommunityAdmins(Splittable community, Splittable adminList, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
         void onAddCommunityAppsClicked(ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void addAppToCommunity(Splittable app, Splittable community, ReactSuccessCallback callback);
+        void addAppToCommunity(Splittable app, Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
         void deleteCommunity(Splittable community, ReactSuccessCallback callback);
@@ -79,7 +79,7 @@ public interface CommunitiesView extends IsWidget {
         void leaveCommunity(Splittable community, ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void saveCommunity(Splittable originalCommunity, String name, String description, Splittable admins, Splittable apps, ReactSuccessCallback callback);
+        void saveCommunity(Splittable originalCommunity, String name, String description, ReactSuccessCallback callback);
 
         @JsIgnore
         void go(HasOneWidget container, String baseID);
