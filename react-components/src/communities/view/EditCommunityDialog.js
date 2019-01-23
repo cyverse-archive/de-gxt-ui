@@ -77,6 +77,7 @@ class EditCommunityDialog extends Component {
             open,
             collaboratorsUtil,
             presenter,
+            currentUser,
             onCommunitySaved,
             classes,
         } = this.props;
@@ -105,6 +106,7 @@ class EditCommunityDialog extends Component {
                                        community={community}
                                        isCommunityAdmin={isCommunityAdmin}
                                        collaboratorsUtil={collaboratorsUtil}
+                                       currentUser={currentUser}
                                        presenter={presenter}
                                        saveCommunity={saveCommunity}
                                        onCommunitySaved={onCommunitySaved}
@@ -244,6 +246,10 @@ EditCommunityDialog.propTypes = {
         deleteCommunity: PropTypes.func.isRequired,
         joinCommunity: PropTypes.func.isRequired,
         leaveCommunity: PropTypes.func.isRequired,
+    }),
+    currentUser: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
     }),
     community: PropTypes.object,
     isCommunityAdmin: PropTypes.bool.isRequired,

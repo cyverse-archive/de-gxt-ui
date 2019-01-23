@@ -66,6 +66,7 @@ class EditCommunity extends Component {
     componentDidMount() {
         const {
             community,
+            currentUser,
             collaboratorsUtil,
         } = this.props;
 
@@ -103,6 +104,7 @@ class EditCommunity extends Component {
         } else {
             this.setState({
                 errors: this.validate(null),
+                admins: [currentUser]
             });
         }
     }
@@ -375,6 +377,10 @@ EditCommunity.propTypes = {
     saveCommunity: PropTypes.bool.isRequired,
     onCommunitySaved: PropTypes.func.isRequired,
     onSaveComplete: PropTypes.func.isRequired,
+    currentUser: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+    }),
     presenter: PropTypes.shape({
         fetchCommunityAdmins: PropTypes.func.isRequired,
         fetchCommunityApps: PropTypes.func.isRequired,

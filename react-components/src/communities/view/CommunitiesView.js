@@ -108,7 +108,8 @@ class CommunitiesView extends Component {
         const {
             parentId,
             collaboratorsUtil,
-            presenter
+            presenter,
+            currentUser,
         } = this.props;
 
         return (
@@ -125,6 +126,7 @@ class CommunitiesView extends Component {
                 <EditCommunityDialog open={editDlgOpen}
                                      collaboratorsUtil={collaboratorsUtil}
                                      presenter={presenter}
+                                     currentUser={currentUser}
                                      community={selectedCommunity}
                                      isCommunityAdmin={isCommunityAdmin}
                                      isMember={isCommunityMember}
@@ -138,6 +140,10 @@ class CommunitiesView extends Component {
 CommunitiesView.propTypes = {
     parentId: PropTypes.string,
     collaboratorsUtil: PropTypes.object.isRequired,
+    currentUser: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+    }),
     presenter: PropTypes.shape({
         fetchMyCommunities: PropTypes.func.isRequired,
         fetchAllCommunities: PropTypes.func.isRequired,

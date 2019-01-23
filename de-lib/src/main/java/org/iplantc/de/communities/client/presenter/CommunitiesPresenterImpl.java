@@ -26,7 +26,9 @@ import org.iplantc.de.communities.client.views.ReactCommunities;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
 import org.iplantc.de.shared.AppsCallback;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -35,7 +37,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import org.eclipse.jetty.server.Response;
 
 import java.util.List;
 
@@ -80,14 +81,35 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
 
     @Override
     public void go(HasOneWidget container, String baseId) {
+        Subject selfSubject = getSelfSubject();
+        Splittable subjectSpl = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(selfSubject));
+
         ReactCommunities.CommunitiesProps props = new ReactCommunities.CommunitiesProps();
         props.parentId = baseId;
         props.presenter = this;
         props.collaboratorsUtil = collaboratorsUtil;
+        props.currentUser = subjectSpl;
 
         view.show(props);
 
         container.setWidget(view);
+    }
+
+    Subject getSelfSubject() {
+        Subject subject = factory.getSubject().as();
+        subject.setName(getFullName());
+        subject.setId(userInfo.getUsername());
+        subject.setDisplayName(subject.getName());
+
+        return subject;
+    }
+
+    String getFullName() {
+        String firstName = userInfo.getFirstName();
+        String lastName = userInfo.getLastName();
+        String name = Strings.isNullOrEmpty(firstName) ? "" : firstName;
+        name += Strings.isNullOrEmpty(lastName) ? "" : " " + lastName;
+        return name;
     }
 
     @Override

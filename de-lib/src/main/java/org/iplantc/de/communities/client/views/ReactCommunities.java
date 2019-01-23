@@ -1,6 +1,9 @@
 package org.iplantc.de.communities.client.views;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import gwt.react.client.components.ReactClass;
 import gwt.react.client.proptypes.BaseProps;
@@ -19,5 +22,6 @@ public class ReactCommunities {
         public String parentId;
         public org.iplantc.de.communities.client.CommunitiesView.Presenter presenter;
         public CollaboratorsUtil collaboratorsUtil;
+        public Splittable currentUser;
     }
 }

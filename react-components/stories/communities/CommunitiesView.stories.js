@@ -317,6 +317,12 @@ class CommunitiesViewTest extends Component {
             }
         };
 
+        const currentUser = {
+            name: "Ashley Ramsey",
+            display_name: "Ashley Ramsey",
+            id: "aramsey@cyverse.org",
+        };
+
         const presenter = {
             fetchMyCommunities: (callback) => {
                 setTimeout(() => {
@@ -396,7 +402,8 @@ class CommunitiesViewTest extends Component {
         return (
             <CommunitiesView parentId={parentId}
                              presenter={presenter}
-                             collaboratorsUtil={collaboratorsUtil}/>
+                             collaboratorsUtil={collaboratorsUtil}
+                             currentUser={currentUser}/>
         )
     }
 }
