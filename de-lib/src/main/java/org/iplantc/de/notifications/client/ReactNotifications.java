@@ -5,7 +5,7 @@ import org.iplantc.de.notifications.client.views.NotificationView.Presenter;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -18,7 +18,7 @@ import jsinterop.annotations.JsType;
 public class ReactNotifications {
 
     @JsProperty
-    public static ReactClass<NotificationsProps> NotificationView;
+    public static ComponentConstructorFn<NotificationsProps> NotificationView;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class NotificationsProps extends BaseProps {
@@ -28,7 +28,7 @@ public class ReactNotifications {
     }
 
     @JsProperty
-    public static ReactClass<JoinTeamProps> JoinTeamRequestDialog;
+    public static ComponentConstructorFn<JoinTeamProps> JoinTeamRequestDialog;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class JoinTeamProps extends BaseProps {
@@ -39,7 +39,7 @@ public class ReactNotifications {
 
 
     @JsProperty
-    public static ReactClass<DenyTeamProps> DenyJoinRequestDetailsDialog;
+    public static ComponentConstructorFn<DenyTeamProps> DenyJoinRequestDetailsDialog;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class DenyTeamProps extends BaseProps {
@@ -49,7 +49,7 @@ public class ReactNotifications {
     }
 
     @JsProperty
-    public static ReactClass<HistoryProps> RequestHistoryDialog;
+    public static ComponentConstructorFn<HistoryProps> RequestHistoryDialog;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class HistoryProps extends BaseProps {

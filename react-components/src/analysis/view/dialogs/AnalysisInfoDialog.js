@@ -26,12 +26,8 @@ const columnData = [
 ];
 
 class AnalysisInfoDialog extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        const {info, classes, dialogOpen, onInfoDialogClose, intl} = this.props;
+        const {info, dialogOpen, onInfoDialogClose, intl} = this.props;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader

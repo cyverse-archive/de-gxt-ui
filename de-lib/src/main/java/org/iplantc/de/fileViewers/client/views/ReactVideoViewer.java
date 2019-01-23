@@ -1,9 +1,8 @@
 package org.iplantc.de.fileViewers.client.views;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
-import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 /**
@@ -13,7 +12,7 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = "CyVerseReactComponents", name = "fileViewers")
 public class ReactVideoViewer {
 
-    public static ReactClass<VideoViewerProps> VideoViewer;
+    public static ComponentConstructorFn<VideoViewerProps> VideoViewer;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class VideoViewerProps extends BaseProps {

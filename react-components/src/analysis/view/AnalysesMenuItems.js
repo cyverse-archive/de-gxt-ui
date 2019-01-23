@@ -47,7 +47,7 @@ class AnalysesMenuItems extends Component {
             disableCancel,
         } = this.props;
 
-        const disableSingleSelectionMenuItem = selectionCount != 1;
+        const disableSingleSelectionMenuItem = selectionCount !== 1;
         const disableShare = !selectionCount || !owner || !sharable;
         const noSelection = !selectionCount;
 

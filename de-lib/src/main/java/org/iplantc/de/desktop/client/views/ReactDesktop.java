@@ -5,7 +5,7 @@ import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -17,8 +17,8 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
 public class ReactDesktop {
 
-    @JsProperty(namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
-    public static ReactClass<DesktopProps> desktopProps;
+    @JsProperty
+    public static ComponentConstructorFn<DesktopProps> desktopProps;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class DesktopProps extends BaseProps {
@@ -31,3 +31,4 @@ public class ReactDesktop {
     }
 
 }
+

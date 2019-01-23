@@ -9,7 +9,7 @@ class DEHyperLink extends Component {
     render() {
         const {classes, text, onClick} = this.props;
         return (
-            <a onClick={onClick} className={classes.normal}>{text}</a>
+            <span onClick={onClick} className={classes.normal}>{text}</span>
         );
     }
 

@@ -3,7 +3,7 @@ package org.iplantc.de.analysis.client;
 
 import org.iplantc.de.client.util.DiskResourceUtil;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -16,7 +16,7 @@ import jsinterop.annotations.JsType;
 public class ReactAnalyses {
 
     @JsProperty
-    public static ReactClass<AnalysesProps> AnalysesView;
+    public static ComponentConstructorFn<AnalysesProps> AnalysesView;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class AnalysesProps extends BaseProps {

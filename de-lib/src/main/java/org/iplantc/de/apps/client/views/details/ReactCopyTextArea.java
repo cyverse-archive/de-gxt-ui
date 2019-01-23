@@ -1,6 +1,6 @@
 package org.iplantc.de.apps.client.views.details;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -13,7 +13,7 @@ import jsinterop.annotations.JsType;
 public class ReactCopyTextArea {
 
     @JsProperty(namespace = "CyVerseReactComponents.apps.details", name = "CopyTextArea")
-    public static ReactClass<CopyProps> CopyTextArea;
+    public static ComponentConstructorFn<CopyProps> CopyTextArea;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class CopyProps extends BaseProps {

@@ -100,7 +100,8 @@ function InteractiveAnalysisUrl(props) {
         <span>
             {getMessage("dot")}
             <a href={props.notification.payload.access_url}
-               target="_blank">
+               target="_blank"
+               rel="noopener noreferrer">
                 {getMessage("interactiveAnalysisUrl")}
             </a>
         </span>
