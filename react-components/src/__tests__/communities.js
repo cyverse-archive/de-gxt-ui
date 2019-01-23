@@ -3,10 +3,10 @@ import ReactDOM from "react-dom";
 
 import {getDefaultTheme, MuiThemeProvider} from "../lib";
 
-import CommunitiesViewTest from "../../stories/communities/CommunitiesView.stories";
+import ManageCommunitiesViewTest from "../../stories/communities/ManageCommunitiesView.stories";
 
-it('renders CommunitiesView without crashing', () => {
+it('renders ManageCommunitiesView without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><CommunitiesViewTest /></MuiThemeProvider>, div);
+    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><ManageCommunitiesViewTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });

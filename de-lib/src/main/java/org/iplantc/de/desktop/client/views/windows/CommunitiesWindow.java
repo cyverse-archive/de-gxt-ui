@@ -4,7 +4,7 @@ import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.widgets.ContextualHelpToolButton;
-import org.iplantc.de.communities.client.CommunitiesView;
+import org.iplantc.de.communities.client.ManageCommunitiesView;
 import org.iplantc.de.communities.shared.CommunitiesModule;
 import org.iplantc.de.desktop.shared.DeModule;
 
@@ -20,12 +20,12 @@ import com.sencha.gxt.core.shared.FastMap;
 public class CommunitiesWindow extends WindowBase {
 
     public static final String COMMUNITIES = "#communities";
-    private final CommunitiesView.Presenter presenter;
-    private CommunitiesView.Appearance appearance;
+    private final ManageCommunitiesView.Presenter presenter;
+    private ManageCommunitiesView.Appearance appearance;
 
     @Inject
-    CommunitiesWindow(final CommunitiesView.Presenter presenter,
-                      CommunitiesView.Appearance appearance) {
+    CommunitiesWindow(final ManageCommunitiesView.Presenter presenter,
+                      ManageCommunitiesView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
 

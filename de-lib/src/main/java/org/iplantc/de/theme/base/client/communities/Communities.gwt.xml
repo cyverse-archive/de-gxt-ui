@@ -4,7 +4,7 @@
 <module>
     <inherits name="org.iplantc.de.communities.Communities"/>
 
-    <replace-with class="org.iplantc.de.theme.base.client.communities.CommunitiesViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.communities.client.CommunitiesView.Appearance" />
+    <replace-with class="org.iplantc.de.theme.base.client.communities.ManageCommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.communities.client.ManageCommunitiesView.Appearance" />
     </replace-with>
 </module>

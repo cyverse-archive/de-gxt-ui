@@ -1,5 +1,5 @@
-import CommunitiesView from "./view/CommunitiesView";
+import ManageCommunitiesView from "./view/ManageCommunitiesView";
 
 export {
-    CommunitiesView,
+    ManageCommunitiesView,
 }

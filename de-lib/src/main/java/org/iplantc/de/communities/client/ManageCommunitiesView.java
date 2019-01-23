@@ -12,7 +12,7 @@ import jsinterop.annotations.JsFunction;
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
-public interface CommunitiesView extends IsWidget {
+public interface ManageCommunitiesView extends IsWidget {
 
     void show(ReactCommunities.CommunitiesProps props);
 

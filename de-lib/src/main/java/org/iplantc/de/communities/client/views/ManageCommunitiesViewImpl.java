@@ -1,18 +1,18 @@
 package org.iplantc.de.communities.client.views;
 
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
-import org.iplantc.de.communities.client.CommunitiesView;
+import org.iplantc.de.communities.client.ManageCommunitiesView;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class CommunitiesViewImpl implements CommunitiesView {
+public class ManageCommunitiesViewImpl implements ManageCommunitiesView {
 
     HTMLPanel panel;
 
     @Inject
-    public CommunitiesViewImpl() {
+    public ManageCommunitiesViewImpl() {
         panel = new HTMLPanel("<div></div>");
     }
 

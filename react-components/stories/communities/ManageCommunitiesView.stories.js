@@ -1,4 +1,4 @@
-import CommunitiesView from "../../src/communities/view/CommunitiesView";
+import ManageCommunitiesView from "../../src/communities/view/ManageCommunitiesView";
 
 import React, { Component } from "react";
 
@@ -400,10 +400,10 @@ class CommunitiesViewTest extends Component {
         };
 
         return (
-            <CommunitiesView parentId={parentId}
-                             presenter={presenter}
-                             collaboratorsUtil={collaboratorsUtil}
-                             currentUser={currentUser}/>
+            <ManageCommunitiesView parentId={parentId}
+                                   presenter={presenter}
+                                   collaboratorsUtil={collaboratorsUtil}
+                                   currentUser={currentUser}/>
         )
     }
 }

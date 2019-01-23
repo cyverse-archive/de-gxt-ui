@@ -11,7 +11,7 @@ import EditCommunityDialog from "./EditCommunityDialog";
  * A component that displays communities so a user can manage the communities they belong to
  * and view all communities
  */
-class CommunitiesView extends Component {
+class ManageCommunitiesView extends Component {
     constructor(props) {
         super(props);
 
@@ -137,7 +137,7 @@ class CommunitiesView extends Component {
     }
 }
 
-CommunitiesView.propTypes = {
+ManageCommunitiesView.propTypes = {
     parentId: PropTypes.string,
     collaboratorsUtil: PropTypes.object.isRequired,
     currentUser: PropTypes.shape({
@@ -154,4 +154,4 @@ CommunitiesView.propTypes = {
     })
 };
 
-export default CommunitiesView;
+export default ManageCommunitiesView;

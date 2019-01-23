@@ -1,8 +1,8 @@
 package org.iplantc.de.communities.client.gin;
 
-import org.iplantc.de.communities.client.CommunitiesView;
-import org.iplantc.de.communities.client.presenter.CommunitiesPresenterImpl;
-import org.iplantc.de.communities.client.views.CommunitiesViewImpl;
+import org.iplantc.de.communities.client.ManageCommunitiesView;
+import org.iplantc.de.communities.client.presenter.ManageCommunitiesPresenterImpl;
+import org.iplantc.de.communities.client.views.ManageCommunitiesViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 
@@ -12,7 +12,7 @@ import com.google.gwt.inject.client.AbstractGinModule;
 public class CommunitiesGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
-        bind(CommunitiesView.class).to(CommunitiesViewImpl.class);
-        bind(CommunitiesView.Presenter.class).to(CommunitiesPresenterImpl.class);
+        bind(ManageCommunitiesView.class).to(ManageCommunitiesViewImpl.class);
+        bind(ManageCommunitiesView.Presenter.class).to(ManageCommunitiesPresenterImpl.class);
     }
 }

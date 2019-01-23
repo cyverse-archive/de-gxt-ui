@@ -13,7 +13,7 @@ import AppStatsTest from "./apps/admin/AppStats.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
-import CommunitiesViewTest from "./communities/CommunitiesView.stories";
+import ManageCommunitiesViewTest from "./communities/ManageCommunitiesView.stories";
 
 import BasicDetailsTest from "./data/details/BasicDetails.stories";
 import InfoTypeSelectionListTest from "./data/details/InfoTypeSelectionList.stories";
@@ -69,7 +69,7 @@ storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 
 storiesOf('collaborators', module).add('Subject Search Field', () => <SubjectSearchFieldTest logger={action('Selected Subject')}/>);
 
-storiesOf('communities', module).add("Communities View", () => <CommunitiesViewTest communityAppsClickedLogger={action("Add apps to community clicked")} confirmedDialogAction={action("Confirmed dialog action")}/>);
+storiesOf('communities', module).add("Manage Communities View", () => <ManageCommunitiesViewTest communityAppsClickedLogger={action("Add apps to community clicked")} confirmedDialogAction={action("Confirmed dialog action")}/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);

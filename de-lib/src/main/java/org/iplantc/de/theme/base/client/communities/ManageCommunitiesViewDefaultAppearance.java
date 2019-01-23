@@ -1,12 +1,12 @@
 package org.iplantc.de.theme.base.client.communities;
 
-import org.iplantc.de.communities.client.CommunitiesView;
+import org.iplantc.de.communities.client.ManageCommunitiesView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-public class CommunitiesViewDefaultAppearance implements CommunitiesView.Appearance {
+public class ManageCommunitiesViewDefaultAppearance implements ManageCommunitiesView.Appearance {
 
     public interface Resources extends ClientBundle {
 
@@ -21,13 +21,13 @@ public class CommunitiesViewDefaultAppearance implements CommunitiesView.Appeara
     private CommunitiesDisplayStrings displayStrings;
     private final Resources.Style style;
 
-    public CommunitiesViewDefaultAppearance() {
+    public ManageCommunitiesViewDefaultAppearance() {
         this(GWT.create(CommunitiesDisplayStrings.class),
              GWT.create(Resources.class));
     }
 
-    public CommunitiesViewDefaultAppearance(CommunitiesDisplayStrings displayStrings,
-                                            Resources resources) {
+    public ManageCommunitiesViewDefaultAppearance(CommunitiesDisplayStrings displayStrings,
+                                                  Resources resources) {
         this.displayStrings = displayStrings;
         this.style = resources.style();
         style.ensureInjected();

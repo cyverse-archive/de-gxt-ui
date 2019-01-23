@@ -4,11 +4,8 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.collaborators.Subject;
-import org.iplantc.de.client.models.collaborators.SubjectList;
 import org.iplantc.de.client.models.collaborators.SubjectMemberList;
-import org.iplantc.de.client.models.errorHandling.ServiceError;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
@@ -21,7 +18,7 @@ import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.communities.client.CommunitiesView;
+import org.iplantc.de.communities.client.ManageCommunitiesView;
 import org.iplantc.de.communities.client.views.ReactCommunities;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
 import org.iplantc.de.shared.AppsCallback;
@@ -40,8 +37,8 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.List;
 
-public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
-                                                 AppSelectionDialog.Presenter {
+public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Presenter,
+                                                       AppSelectionDialog.Presenter {
 
     private GroupServiceFacade serviceFacade;
     private AppUserServiceFacade appUserServiceFacade;
@@ -51,22 +48,22 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter,
     private AppAutoBeanFactory appAutoBeanFactory;
     private UserInfo userInfo;
     private CollaboratorsUtil collaboratorsUtil;
-    private CommunitiesView view;
+    private ManageCommunitiesView view;
     private AppSelectionDialog appSelectView;
     private AppsView.Presenter appsPresenter;
     private ReactSuccessCallback selectAppsCallback;
 
     @Inject
-    public CommunitiesPresenterImpl(GroupServiceFacade serviceFacade,
-                                    AppUserServiceFacade appUserServiceFacade,
-                                    CollaboratorsServiceFacade collaboratorsServiceFacade,
-                                    GroupAutoBeanFactory factory,
-                                    AppMetadataServiceFacade metadataServiceFacade,
-                                    AppAutoBeanFactory appAutoBeanFactory,
-                                    UserInfo userInfo,
-                                    CollaboratorsUtil collaboratorsUtil,
-                                    CommunitiesView view,
-                                    AppsView.Presenter appsPresenter) {
+    public ManageCommunitiesPresenterImpl(GroupServiceFacade serviceFacade,
+                                          AppUserServiceFacade appUserServiceFacade,
+                                          CollaboratorsServiceFacade collaboratorsServiceFacade,
+                                          GroupAutoBeanFactory factory,
+                                          AppMetadataServiceFacade metadataServiceFacade,
+                                          AppAutoBeanFactory appAutoBeanFactory,
+                                          UserInfo userInfo,
+                                          CollaboratorsUtil collaboratorsUtil,
+                                          ManageCommunitiesView view,
+                                          AppsView.Presenter appsPresenter) {
         this.serviceFacade = serviceFacade;
         this.appUserServiceFacade = appUserServiceFacade;
         this.collaboratorsServiceFacade = collaboratorsServiceFacade;
