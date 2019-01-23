@@ -1,6 +1,5 @@
 package org.iplantc.de.server.auth;
 
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
@@ -54,7 +53,7 @@ public interface UrlConnector {
      * @return the request.
      * @throws IOException if the connection can't be established.
      */
-    HttpDelete deleteRequest(HttpServletRequest request, String address) throws IOException;
+    HttpDeleteWithBody deleteRequest(HttpServletRequest request, String address, String body) throws IOException;
 
     /**
      * Obtains an HTTP PATCH request object.

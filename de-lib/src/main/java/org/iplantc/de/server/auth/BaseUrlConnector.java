@@ -79,8 +79,8 @@ abstract class BaseUrlConnector implements UrlConnector {
      * @param url the URL to connect to.
      * @return the request.
      */
-    protected HttpDelete createHttpDelete(String url) {
-        return disableRedirects(new HttpDelete(url));
+    protected HttpDeleteWithBody createHttpDelete(String url) {
+        return disableRedirects(new HttpDeleteWithBody(url));
     }
 
     /**
