@@ -1,4 +1,3 @@
-import AddBtn from "../../data/search/queryBuilder/AddBtn";
 import AppGridListing from "../../apps/listing/AppGridListing";
 import build from "../../util/DebugIDUtil";
 import CollaboratorListing from "../../collaborators/CollaboratorListing";
@@ -9,7 +8,9 @@ import styles from "../styles";
 import SubjectSearchField from "../../collaborators/SubjectSearchField";
 import withI18N from "../../util/I18NWrapper";
 
+import AddIcon from "@material-ui/icons/Add";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Fab from "@material-ui/core/Fab/Fab";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
@@ -358,7 +359,12 @@ class EditCommunity extends Component {
                         <legend>{getMessage('apps')}</legend>
                         {isCommunityAdmin &&
                         <Toolbar id={toolbarId}>
-                            <AddBtn onClick={this.onAddCommunityAppsClicked}/>
+                            <Fab size='small'
+                                 variant='extended'
+                                 onClick={this.onAddCommunityAppsClicked}>
+                                <AddIcon/>
+                                {getMessage('apps')}
+                            </Fab>
                         </Toolbar>
                         }
                         <AppGridListing parentId={parentId}

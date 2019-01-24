@@ -29,7 +29,7 @@ const styles = theme => ({
 
     loading: {
         position: 'absolute',
-        top: '25%',
+        top: '30%',
         left: '50%',
         color: '#DB6619',
     }
