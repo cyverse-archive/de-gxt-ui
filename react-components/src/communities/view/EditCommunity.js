@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from "@material-ui/core";
 
 /**
@@ -334,6 +335,9 @@ class EditCommunity extends Component {
                                onChange={this.handleDescChange}/>
                     <fieldset className={classes.formItem}>
                         <legend>{getMessage('communityAdmins')}</legend>
+                        <Typography component='p' className={classes.textBlurb}>
+                            {getMessage('explainCommunityAdmin')}
+                        </Typography>
                         {isCommunityAdmin &&
                         <Toolbar>
                             <div className={classes.subjectSearch}>

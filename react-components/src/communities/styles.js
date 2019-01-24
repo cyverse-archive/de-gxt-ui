@@ -18,6 +18,10 @@ const styles = theme => ({
         marginRight: "15px",
     },
 
+    textBlurb: {
+        margin: '10px',
+    },
+
     wrapper: {
         width: "100%",
         height: "100%",
