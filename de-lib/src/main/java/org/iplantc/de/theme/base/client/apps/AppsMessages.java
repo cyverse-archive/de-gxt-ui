@@ -173,4 +173,6 @@ public interface AppsMessages extends Messages {
     String failedToAddCommunityAdmin(String adminSubjectDisplayName, String communityName);
 
     String failedToRemoveCommunityAdmin(String adminSubjectDisplayName, String communityName);
+
+    String failedToLoadCommunities();
 }

@@ -10,7 +10,9 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
+import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
+import org.iplantc.de.apps.client.WorkspaceView;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 
 import com.google.common.base.Joiner;
@@ -33,6 +35,8 @@ public class AppsViewPresenterImplTest {
     @Mock AppCategoriesView.Presenter categoriesPresenterMock;
     @Mock OntologyHierarchiesView hierarchiesView;
     @Mock OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    @Mock WorkspaceView.Presenter workspacePresenterMock;
+    @Mock CommunitiesView.Presenter communitiesPresenterMock;
 
     @Mock AppsListView.Presenter listPresenterMock;
 
@@ -44,14 +48,18 @@ public class AppsViewPresenterImplTest {
     @Before public void setUp() {
         when(categoriesPresenterMock.getWorkspaceView()).thenReturn(categoriesViewMock);
         when(toolbarPresenterMock.getView()).thenReturn(toolbarViewMock);
+        when(workspacePresenterMock.getCategoriesPresenter()).thenReturn(categoriesPresenterMock);
+        when(workspacePresenterMock.getCommunitiesPresenter()).thenReturn(communitiesPresenterMock);
         uut = new AppsViewPresenterImpl(viewFactoryMock,
-                                        categoriesPresenterMock, listPresenterMock,
+                                        listPresenterMock,
                                         toolbarPresenterMock,
-                                        hierarchiesPresenter);
+                                        hierarchiesPresenter,
+                                        workspacePresenterMock);
     }
 
     @Test public void testConstructorEventHandlerWiring() {
         verify(viewFactoryMock).create(eq(categoriesPresenterMock),
+                                       eq(communitiesPresenterMock),
                                        eq(hierarchiesPresenter),
                                        eq(listPresenterMock),
                                        eq(toolbarPresenterMock));
@@ -59,13 +67,19 @@ public class AppsViewPresenterImplTest {
         // Verify categories wiring
         verify(categoriesPresenterMock).addAppCategorySelectedEventHandler(eq(listPresenterMock));
         verify(categoriesPresenterMock).addAppCategorySelectedEventHandler(eq(toolbarViewMock));
+        verify(categoriesPresenterMock).addAppCategorySelectedEventHandler(eq(communitiesPresenterMock));
 
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(listPresenterMock);
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(toolbarViewMock);
+        hierarchiesPresenter.addSelectedHierarchyNotFoundHandler(eq(categoriesPresenterMock));
 
         // Verify grid wiring
         verify(listPresenterMock).addAppSelectionChangedEventHandler(toolbarViewMock);
         verify(listPresenterMock).addAppInfoSelectedEventHandler(hierarchiesPresenter);
+
+        verify(communitiesPresenterMock).addCommunitySelectedEventHandler(eq(listPresenterMock));
+        verify(communitiesPresenterMock).addCommunitySelectedEventHandler(eq(toolbarViewMock));
+        verify(communitiesPresenterMock).addCommunitySelectedEventHandler(eq(categoriesPresenterMock));
 
         // Verify toolbar wiring
         verify(toolbarViewMock).addDeleteAppsSelectedHandler(listPresenterMock);
@@ -80,7 +94,7 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addRefreshAppsSelectedEventHandler(isA(AppsViewPresenterImpl.class));
         verify(toolbarViewMock).addManageToolsClickedEventHandler(toolbarPresenterMock);
 
-        verify(toolbarPresenterMock, times(14)).getView();
+        verify(toolbarPresenterMock, times(15)).getView();
 
 
         verifyNoMoreInteractions(viewFactoryMock,

@@ -61,4 +61,9 @@ public class CommunitiesViewDefaultAppearance implements CommunitiesView.Appeara
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
     }
+
+    @Override
+    public String failedToLoadCommunities() {
+        return appsMessages.failedToLoadCommunities();
+    }
 }

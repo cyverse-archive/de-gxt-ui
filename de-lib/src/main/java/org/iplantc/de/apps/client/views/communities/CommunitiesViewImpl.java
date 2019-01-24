@@ -56,7 +56,7 @@ public class CommunitiesViewImpl extends ContentPanel implements CommunitiesView
     public void onSelectionChanged(SelectionChangedEvent<Group> event) {
         List<Group> communities = event.getSelection();
         if(!communities.isEmpty()) {
-            fireEvent(new CommunitySelectionChangedEvent(event.getSelection(),
+            fireEvent(new CommunitySelectionChangedEvent(event.getSelection().get(0),
                                                          getCommunityPath(communities)));
         }
     }

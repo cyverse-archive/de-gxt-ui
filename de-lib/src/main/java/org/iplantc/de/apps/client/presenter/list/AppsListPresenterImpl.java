@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.client.presenter.list;
 
 import org.iplantc.de.apps.client.AppsListView;
+import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppTypeFilterChangedEvent;
@@ -28,7 +29,9 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -55,6 +58,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreAddEvent;
@@ -99,6 +104,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     AppMetadataServiceFacade metadataFacade;
     @Inject
     UserInfo userInfo;
+    @Inject AppAutoBeanFactory factory;
     OntologyServiceFacade ontologyService;
     OntologyUtil ontologyUtil;
     HandlerManager handlerManager;
@@ -310,13 +316,14 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         tileView.onCommunitySelectionChanged(event);
         gridView.onCommunitySelectionChanged(event);
 
-        List<Group> communities = event.getCommunitySelection();
+        Group selectedCommunity = event.getCommunitySelection();
 
-        if (communities.isEmpty()) {
-            return;
+        Preconditions.checkNotNull(selectedCommunity);
+        if (!selectedCommunity.getId().equals(CommunitiesView.COMMUNITIES_ROOT)) {
+            getCommunityApps(selectedCommunity);
+        } else {
+            loadApps(Lists.newArrayList());
         }
-        Preconditions.checkArgument(event.getCommunitySelection().size() == 1);
-        getCommunityApps(communities.get(0));
     }
 
     protected void disableTypeFilterForHPC() {
@@ -334,7 +341,18 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     void getCommunityApps(Group community) {
         activeView.mask(appearance.getAppsLoadingMask());
-        appService.getCommunityApps(community, filter, new AppListCallback());
+        appService.getCommunityApps(community, filter, new AppsCallback<Splittable>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                new AppListCallback().onFailure(statusCode, caught);
+            }
+
+            @Override
+            public void onSuccess(Splittable result) {
+                List<App> apps = AutoBeanCodex.decode(factory, AppList.class, result).as().getApps();
+                new AppListCallback().onSuccess(apps);
+            }
+        });
     }
 
     protected void getAppsWithSelectedCategory() {

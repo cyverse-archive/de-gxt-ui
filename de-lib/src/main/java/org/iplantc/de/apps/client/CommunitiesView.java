@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.client;
 
+import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.IsMaskable;
@@ -22,6 +23,9 @@ import java.util.List;
 public interface CommunitiesView extends IsWidget,
                                          IsMaskable,
                                          CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers {
+
+    String COMMUNITIES_ROOT = "myCommunitiesRootNode";
+
     interface Appearance {
 
         void setTreeIcons(TreeStyle style);
@@ -29,13 +33,16 @@ public interface CommunitiesView extends IsWidget,
         String communities();
 
         String loadingMask();
+
+        String failedToLoadCommunities();
     }
 
     /**
      * Handles all the logic and events for the view
      */
     interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler,
-                                CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers {
+                                CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers,
+                                AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler {
 
         /**
          * @return the community the user currently has selected
@@ -50,7 +57,7 @@ public interface CommunitiesView extends IsWidget,
         /**
          * Initialize the view and populate it with the list of communities
          * @param selectedCommunity
-         * @param appNavigationView
+         * @param deTabPanel
          */
         void go(HasId selectedCommunity,
                 DETabPanel deTabPanel);
