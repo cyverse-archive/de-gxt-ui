@@ -7,6 +7,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.iplantc.de.server.AppLoggerConstants;
+
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +47,10 @@ public class JwtUrlConnector extends BaseUrlConnector implements UrlConnector {
     }
 
     @Override
-    public HttpDelete deleteRequest(HttpServletRequest request, String address) throws IOException {
-        return addHeaders(request, createHttpDelete(addIpAddress(address, request)));
+    public HttpDeleteWithBody deleteRequest(HttpServletRequest request, String address, String body) throws IOException {
+        HttpDeleteWithBody httpDelete = addHeaders(request, createHttpDelete(addIpAddress(address, request)));
+        httpDelete.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+        return httpDelete;
     }
 
     @Override

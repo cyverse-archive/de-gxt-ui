@@ -2,6 +2,7 @@ package org.iplantc.de.server.services;
 
 import static org.iplantc.de.server.AppLoggerConstants.REQUEST_KEY;
 import static org.iplantc.de.server.AppLoggerConstants.RESPONSE_KEY;
+
 import org.iplantc.de.server.AppLoggerConstants;
 import org.iplantc.de.server.AppLoggerUtil;
 import org.iplantc.de.server.ServiceCallResolver;
@@ -38,7 +39,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -226,7 +226,7 @@ public class DEServiceImpl implements DEService,
                     break;
 
                 case DELETE:
-                    request = urlConnector.deleteRequest(getRequest(), resolvedAddress);
+                    request = urlConnector.deleteRequest(getRequest(), resolvedAddress, body);
                     break;
 
                 case PATCH:
