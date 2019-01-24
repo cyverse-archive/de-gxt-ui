@@ -127,8 +127,7 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
     public void markAllNotificationsSeen(DECallback<Void> callback) {
         String address = NOTIFICATIONS + "/mark-all-seen"; //$NON-NLS-1$
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
-                                                            userInfo.getUsername());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
 
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
             @Override
