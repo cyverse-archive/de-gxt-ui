@@ -60,8 +60,12 @@ class EditCommunity extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.saveCommunity && nextProps.saveCommunity && !this.isInvalid()) {
-            this.saveCommunity();
+        if (!this.props.saveCommunity && nextProps.saveCommunity) {
+            if (this.isInvalid()) {
+                this.props.cancelSave();
+            } else {
+                this.saveCommunity();
+            }
         }
     }
 
@@ -171,6 +175,7 @@ class EditCommunity extends Component {
                     })
                     .catch(error => {
                         console.log(error);
+                        this.props.cancelSave();
                         this.setState({loading: false});
                     });
             } else {
@@ -384,9 +389,10 @@ EditCommunity.propTypes = {
     collaboratorsUtil: PropTypes.object.isRequired,
     community: PropTypes.object,
     isCommunityAdmin: PropTypes.bool.isRequired,
-    saveCommunity: PropTypes.bool.isRequired,
-    onCommunitySaved: PropTypes.func.isRequired,
-    onSaveComplete: PropTypes.func.isRequired,
+    saveCommunity: PropTypes.bool.isRequired, // to save any new/modified Group values
+    cancelSave: PropTypes.func.isRequired,
+    onCommunitySaved: PropTypes.func.isRequired, // Group values have successfully been updated
+    onSaveComplete: PropTypes.func.isRequired, // Group, admins, and apps have been saved
     currentUser: PropTypes.shape({
         name: PropTypes.string.isRequired,
         id: PropTypes.string.isRequired,

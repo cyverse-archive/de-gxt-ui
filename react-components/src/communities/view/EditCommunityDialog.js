@@ -38,6 +38,7 @@ class EditCommunityDialog extends Component {
             'closeDialog',
             'handleDialogConfirmed',
             'handleCloseEditDialog',
+            'cancelSave',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
@@ -66,6 +67,12 @@ class EditCommunityDialog extends Component {
         });
 
         this.props.onClose();
+    }
+
+    cancelSave() {
+        this.setState({
+            saveCommunity: false,
+        });
     }
 
     render() {
@@ -109,6 +116,7 @@ class EditCommunityDialog extends Component {
                                        currentUser={currentUser}
                                        presenter={presenter}
                                        saveCommunity={saveCommunity}
+                                       cancelSave={this.cancelSave}
                                        onCommunitySaved={onCommunitySaved}
                                        onSaveComplete={this.handleCloseEditDialog}/>
                     </DialogContent>
