@@ -390,11 +390,11 @@ class CommunitiesViewTest extends Component {
                     callback();
                 }, 1000);
             },
-            saveCommunity: (community, name, description, callback) => {
+            saveCommunity: (community, name, description, retag, resolve, reject) => {
                 confirmedDialogAction("Save", community, name, description);
                 setTimeout(() => {
                     let savedCommunity = community ? community : {name: name, description: description};
-                    callback(savedCommunity);
+                    resolve(savedCommunity);
                 }, 1000);
             }
         };

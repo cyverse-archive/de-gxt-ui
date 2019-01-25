@@ -150,7 +150,10 @@ class EditCommunity extends Component {
             onCommunitySaved
         } = this.props;
         this.setState({loading: true});
-        this.props.presenter.saveCommunity(community, name, description, (savedCommunity) => {
+        let saveCommunityPromise = new Promise((resolve, reject) => {
+            this.props.presenter.saveCommunity(community, name, description, false, resolve, reject);
+        });
+        saveCommunityPromise.then(savedCommunity => {
             if (!community) {
                 onCommunitySaved(savedCommunity);
                 let promises = [];
@@ -182,8 +185,12 @@ class EditCommunity extends Component {
                 this.setState({loading: false});
                 this.props.onSaveComplete();
             }
+        }).catch(error => {
+            console.log(error);
+            this.props.cancelSave();
+            this.setState({loading: false});
         })
-    }
+    };
 
     onAddCommunityAppsClicked() {
         const {community} = this.props;

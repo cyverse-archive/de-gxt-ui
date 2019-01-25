@@ -79,7 +79,7 @@ public interface ManageCommunitiesView extends IsWidget {
         void leaveCommunity(Splittable community, ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void saveCommunity(Splittable originalCommunity, String name, String description, ReactSuccessCallback callback);
+        void saveCommunity(Splittable originalCommunity, String name, String description, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @JsIgnore
         void go(HasOneWidget container, String baseID);

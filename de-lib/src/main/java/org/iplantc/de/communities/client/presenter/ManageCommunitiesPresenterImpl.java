@@ -1,11 +1,13 @@
 package org.iplantc.de.communities.client.presenter;
 
+import org.iplantc.de.admin.desktop.client.communities.views.dialogs.RetagAppsConfirmationDialog;
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.SubjectMemberList;
+import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.PrivilegeType;
@@ -18,10 +20,12 @@ import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.communities.client.ManageCommunitiesView;
 import org.iplantc.de.communities.client.views.ReactCommunities;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -34,6 +38,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+
+import com.sencha.gxt.widget.core.client.Dialog;
 
 import java.util.List;
 
@@ -52,6 +58,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     private AppSelectionDialog appSelectView;
     private AppsView.Presenter appsPresenter;
     private ReactSuccessCallback selectAppsCallback;
+    @Inject AsyncProviderWrapper<RetagAppsConfirmationDialog> retagAppsConfirmationDlgProvider;
 
     @Inject
     public ManageCommunitiesPresenterImpl(GroupServiceFacade serviceFacade,
@@ -398,7 +405,9 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     public void saveCommunity(Splittable originalCommunity,
                               String name,
                               String description,
-                              ReactSuccessCallback callback) {
+                              boolean retagApps,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback) {
         Group newCommunity = factory.getGroup().as();
         newCommunity.setName(name);
         newCommunity.setDescription(description);
@@ -408,7 +417,8 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
             serviceFacade.addCommunity(newCommunity, publicPrivileges, new AsyncCallback<Group>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    ErrorHandler.post(caught);
+                    ErrorHandler.postReact(caught);
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
                 @Override
@@ -418,19 +428,49 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
                 }
             });
         } else {
-            Group group = getGroupFromSplittable(originalCommunity);
-            serviceFacade.updateCommunity(group.getName(), newCommunity, new AsyncCallback<Group>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    ErrorHandler.post(caught);
-                }
-
-                @Override
-                public void onSuccess(Group result) {
-                    callback.onSuccess(null);
-                }
-            });
+            Group originalGroup = getGroupFromSplittable(originalCommunity);
+            updateCommunity(originalGroup, newCommunity, retagApps, callback, errorCallback);
         }
+    }
+
+    void updateCommunity(Group originalCommunity, Group updatedCommunity, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.updateCommunity(originalCommunity.getName(), updatedCommunity, retagApps, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                if (ServiceErrorCode.ERR_EXISTS.toString().equals(ErrorHandler.getServiceError(caught))) {
+                    confirmReTagApps(originalCommunity, updatedCommunity, callback, errorCallback);
+                } else {
+                    ErrorHandler.postReact(caught);
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                Splittable newCommunity = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
+                callback.onSuccess(newCommunity);
+            }
+        });
+    }
+
+    void confirmReTagApps(Group originalCommunity, Group updatedCommunity, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        retagAppsConfirmationDlgProvider.get(new AsyncCallback<RetagAppsConfirmationDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(RetagAppsConfirmationDialog result) {
+                result.show(originalCommunity.getName());
+                result.setZIndex(1000000);
+                result.addDialogHideHandler(event -> {
+                    if (Dialog.PredefinedButton.YES.equals(event.getHideButton())) {
+                        updateCommunity(originalCommunity, updatedCommunity, true, callback, errorCallback);
+                    } else {
+                        errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, null);
+                    }
+                });
+            }
+        });
     }
 
     Group getGroupFromSplittable(Splittable community) {

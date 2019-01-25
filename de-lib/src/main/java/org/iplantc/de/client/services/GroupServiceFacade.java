@@ -187,9 +187,10 @@ public interface GroupServiceFacade {
      * Update the details of a Community
      * @param originalCommunity
      * @param updatedCommunity
+     * @param retagApps
      * @param callback
      */
-    void updateCommunity(String originalCommunity, Group updatedCommunity, AsyncCallback<Group> callback);
+    void updateCommunity(String originalCommunity, Group updatedCommunity, boolean retagApps, AsyncCallback<Group> callback);
     /**
      * Update the privileges on a Team
      * @param team
