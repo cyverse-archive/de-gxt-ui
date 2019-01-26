@@ -39,7 +39,7 @@ function AppStatusIcon(props) {
         )
     }
     return (
-        <div/>
+        null
     )
 }
 

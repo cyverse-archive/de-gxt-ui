@@ -2,6 +2,7 @@ package org.iplantc.de.communities.client.presenter;
 
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.RetagAppsConfirmationDialog;
 import org.iplantc.de.apps.client.AppsView;
+import org.iplantc.de.client.models.HasStringList;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
@@ -20,7 +21,6 @@ import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.communities.client.ManageCommunitiesView;
 import org.iplantc.de.communities.client.views.ReactCommunities;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
@@ -37,7 +37,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
 
 import com.sencha.gxt.widget.core.client.Dialog;
 
@@ -117,11 +116,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void fetchMyCommunities(ReactSuccessCallback callback) {
+    public void fetchMyCommunities(ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
         serviceFacade.getMyCommunities(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -132,11 +132,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void fetchAllCommunities(ReactSuccessCallback callback) {
+    public void fetchAllCommunities(ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
         serviceFacade.getCommunities(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -147,11 +148,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void fetchCommunityAdmins(Splittable community,
+    public void fetchCommunityAdmins(String communityName,
                                      ReactSuccessCallback successCallback,
                                      ReactErrorCallback errorCallback) {
-        Group group = getGroupFromSplittable(community);
-        serviceFacade.getCommunityAdmins(group, new AsyncCallback<Splittable>() {
+        serviceFacade.getCommunityAdmins(communityName, new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
@@ -166,12 +166,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void fetchCommunityApps(Splittable community,
+    public void fetchCommunityApps(String communityDisplayName,
                                    ReactSuccessCallback successCallback,
                                    ReactErrorCallback errorCallback) {
-        Group group = getGroupFromSplittable(community);
-
-        appUserServiceFacade.getCommunityApps(group, null, new AppsCallback<Splittable>() {
+        appUserServiceFacade.getCommunityApps(communityDisplayName, null, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.postReact(exception);
@@ -206,35 +204,36 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void fetchCommunityPrivileges(Splittable community, FetchCommunityPrivilegesCallback callback) {
-        Group group = getGroupFromSplittable(community);
-        serviceFacade.getCommunityAdmins(group, new AsyncCallback<Splittable>() {
+    public void getCommunityAdmins(String communityName, FetchCommunityPrivilegesCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.getCommunityAdmins(communityName, new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
             public void onSuccess(Splittable result) {
                 List<Subject> admins = AutoBeanCodex.decode(factory, SubjectMemberList.class, result.getPayload()).as().getSubjects();
-                fetchCommunityMembers(group, callback, admins);
+                boolean isAdmin = isAdmin(admins);
+                callback.onSuccess(isAdmin);
             }
         });
     }
 
-    void fetchCommunityMembers(Group community, FetchCommunityPrivilegesCallback callback, List<Subject> admins) {
-        serviceFacade.getCommunityMembers(community, new AsyncCallback<List<Subject>>() {
+    @Override
+    public void getCommunityMembers(String communityName, FetchCommunityPrivilegesCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.getCommunityMembers(communityName, new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
             public void onSuccess(List<Subject> members) {
-                boolean isAdmin = isAdmin(admins);
                 boolean isMember = isMember(members);
-
-                callback.onSuccess(isAdmin, isMember);
+                callback.onSuccess(isMember);
             }
         });
     }
@@ -253,16 +252,15 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void removeCommunityApps(Splittable community,
-                                    Splittable appSpl,
-                                    ReactSuccessCallback callback) {
-        Group group = getGroupFromSplittable(community);
-        App app = getAppFromSplittable(appSpl);
-
-        metadataServiceFacade.deleteAppCommunityTags(group, app, new AsyncCallback<Splittable>() {
+    public void removeCommunityApps(String communityDisplayName,
+                                    String appId,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback) {
+        metadataServiceFacade.deleteAppCommunityTags(communityDisplayName, appId, new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -273,16 +271,16 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void removeCommunityAdmins(Splittable community,
-                                      Splittable admin,
-                                      ReactSuccessCallback callback) {
-        Group group = getGroupFromSplittable(community);
-        Subject subject = getSubjectFromSplittable(admin);
-
-        serviceFacade.removeCommunityAdmins(group, Lists.newArrayList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
+    public void removeCommunityAdmins(String communityName,
+                                      Splittable adminList,
+                                      ReactSuccessCallback callback,
+                                      ReactErrorCallback errorCallback) {
+        List<String> ids = AutoBeanCodex.decode(factory, HasStringList.class, adminList).as().getList();
+        serviceFacade.removeCommunityAdmins(communityName, ids, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -293,18 +291,16 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void addCommunityAdmins(Splittable community,
-                                   Splittable adminList,
+    public void addCommunityAdmins(String communityName,
+                                   Splittable adminIds,
                                    ReactSuccessCallback successCallback,
                                    ReactErrorCallback errorCallback) {
-        Group group = getGroupFromSplittable(community);
-        List<Subject> subjectList = getSubjectListFromSplittable(adminList);
-
-        serviceFacade.addCommunityAdmins(group, subjectList, new AsyncCallback<List<UpdateMemberResult>>() {
+        List<String> ids = AutoBeanCodex.decode(factory, HasStringList.class, adminIds).as().getList();
+        serviceFacade.addCommunityAdmins(communityName, ids, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -325,15 +321,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void addAppToCommunity(Splittable appSpl, Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback) {
-        Group group = getGroupFromSplittable(community);
-        App app = getAppFromSplittable(appSpl);
-
-        metadataServiceFacade.updateAppCommunityTags(group, app, new AsyncCallback<Splittable>() {
+    public void addAppToCommunity(String appId, String communityDisplayName, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback) {
+        metadataServiceFacade.updateAppCommunityTags(communityDisplayName, appId, new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -351,13 +344,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void deleteCommunity(Splittable community, ReactSuccessCallback callback) {
-        Group group = getGroupFromSplittable(community);
-
-        serviceFacade.deleteCommunity(group, new AsyncCallback<Group>() {
+    public void deleteCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.deleteCommunity(communityName, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -368,13 +360,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void joinCommunity(Splittable community, ReactSuccessCallback callback) {
-        Group group = getGroupFromSplittable(community);
-
-        serviceFacade.joinCommunity(group, new AsyncCallback<List<UpdateMemberResult>>() {
+    public void joinCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.joinCommunity(communityName, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -385,13 +376,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void leaveCommunity(Splittable community, ReactSuccessCallback callback) {
-        Group group = getGroupFromSplittable(community);
-
-        serviceFacade.leaveCommunity(group, new AsyncCallback<List<UpdateMemberResult>>() {
+    public void leaveCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.leaveCommunity(communityName, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -402,7 +392,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void saveCommunity(Splittable originalCommunity,
+    public void saveCommunity(String originalCommunityName,
                               String name,
                               String description,
                               boolean retagApps,
@@ -412,7 +402,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         newCommunity.setName(name);
         newCommunity.setDescription(description);
 
-        if (originalCommunity == null) {
+        if (originalCommunityName == null) {
             List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
             serviceFacade.addCommunity(newCommunity, publicPrivileges, new AsyncCallback<Group>() {
                 @Override
@@ -428,17 +418,16 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
                 }
             });
         } else {
-            Group originalGroup = getGroupFromSplittable(originalCommunity);
-            updateCommunity(originalGroup, newCommunity, retagApps, callback, errorCallback);
+            updateCommunity(originalCommunityName, newCommunity, retagApps, callback, errorCallback);
         }
     }
 
-    void updateCommunity(Group originalCommunity, Group updatedCommunity, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
-        serviceFacade.updateCommunity(originalCommunity.getName(), updatedCommunity, retagApps, new AsyncCallback<Group>() {
+    void updateCommunity(String originalCommunityName, Group updatedCommunity, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        serviceFacade.updateCommunity(originalCommunityName, updatedCommunity, retagApps, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 if (ServiceErrorCode.ERR_EXISTS.toString().equals(ErrorHandler.getServiceError(caught))) {
-                    confirmReTagApps(originalCommunity, updatedCommunity, callback, errorCallback);
+                    confirmReTagApps(originalCommunityName, updatedCommunity, callback, errorCallback);
                 } else {
                     ErrorHandler.postReact(caught);
                     errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
@@ -453,54 +442,23 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         });
     }
 
-    void confirmReTagApps(Group originalCommunity, Group updatedCommunity, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+    void confirmReTagApps(String originalCommunityName, Group updatedCommunity, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
         retagAppsConfirmationDlgProvider.get(new AsyncCallback<RetagAppsConfirmationDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(RetagAppsConfirmationDialog result) {
-                result.show(originalCommunity.getName());
+                result.show(originalCommunityName);
                 result.setZIndex(1000000);
                 result.addDialogHideHandler(event -> {
                     if (Dialog.PredefinedButton.YES.equals(event.getHideButton())) {
-                        updateCommunity(originalCommunity, updatedCommunity, true, callback, errorCallback);
+                        updateCommunity(originalCommunityName, updatedCommunity, true, callback, errorCallback);
                     } else {
                         errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, null);
                     }
                 });
             }
         });
-    }
-
-    Group getGroupFromSplittable(Splittable community) {
-        if (community != null) {
-            return AutoBeanCodex.decode(factory, Group.class, community.getPayload()).as();
-        }
-        return null;
-    }
-
-    Subject getSubjectFromSplittable(Splittable subject) {
-        if (subject != null) {
-            return AutoBeanCodex.decode(factory, Group.class, subject.getPayload()).as();
-        }
-        return null;
-    }
-
-    List<Subject> getSubjectListFromSplittable(Splittable subjectList) {
-        List<Subject> subjects = Lists.newArrayList();
-        if (subjectList != null && subjectList.isIndexed()) {
-            for (int index = 0; index < subjectList.size(); index ++) {
-                subjects.add(getSubjectFromSplittable(subjectList.get(index)));
-            }
-        }
-        return subjects;
-    }
-
-    App getAppFromSplittable(Splittable app) {
-        if (app != null) {
-            return AutoBeanCodex.decode(appAutoBeanFactory, App.class, app.getPayload()).as();
-        }
-        return null;
     }
 }

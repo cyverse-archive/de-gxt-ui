@@ -1,4 +1,5 @@
 import CommunitiesToolbar from "./CommunitiesToolbar";
+import CommunityFilter from "./CommunityFilter";
 import CommunityListing from "./CommunityListing";
 
 import PropTypes from "prop-types";
@@ -36,7 +37,7 @@ class ManageCommunitiesView extends Component {
     }
 
     componentDidMount() {
-        this.handleCommunityFilterChange("MyCommunities");
+        this.handleCommunityFilterChange(CommunityFilter.MY_COMMUNITIES);
     }
 
     handleCommunityFilterChange(selection) {
@@ -53,18 +54,26 @@ class ManageCommunitiesView extends Component {
             selection = this.state.communityType;
         }
 
-        if (selection === "MyCommunities") {
-            this.props.presenter.fetchMyCommunities((listing) => {
+        if (selection === CommunityFilter.MY_COMMUNITIES) {
+            new Promise((resolve, reject) => {
+                this.props.presenter.fetchMyCommunities(resolve, reject);
+            }).then(listing => {
                 this.setState({
                     communitiesList: listing.groups,
                     loadingListing: false,
                 })
+            }).catch(() => {
+                this.setState({loadingListing: false})
             });
         } else {
-            this.props.presenter.fetchAllCommunities((listing) => this.setState({
-                communitiesList: listing.groups,
-                loadingListing: false,
-            }));
+            new Promise((resolve, reject) => {
+                this.props.presenter.fetchAllCommunities(resolve, reject);
+            }).then(listing => {
+                this.setState({
+                    communitiesList: listing.groups,
+                    loadingListing: false,
+                })
+            }).catch(() => this.setState({loadingListing: false}));
         }
     }
 
@@ -78,12 +87,24 @@ class ManageCommunitiesView extends Component {
     }
 
     onCommunityClicked(community) {
-        this.props.presenter.fetchCommunityPrivileges(community, (isCommunityAdmin, isCommunityMember) => this.setState({
-            isCommunityAdmin: isCommunityAdmin,
-            isCommunityMember: isCommunityMember,
-            editDlgOpen: true,
-            selectedCommunity: community
-        }));
+        let promises = [];
+        let fetchAdminStatus = new Promise((resolve, reject) => {
+            this.props.presenter.getCommunityAdmins(community.name, resolve, reject);
+        });
+
+        let fetchMemberStatus = new Promise((resolve, reject) => {
+            this.props.presenter.getCommunityMembers(community.name, resolve, reject);
+        });
+
+        promises.push(fetchAdminStatus, fetchMemberStatus);
+        Promise.all(promises).then(value => {
+            this.setState({
+                isCommunityAdmin: value[0],
+                isCommunityMember: value[1],
+                editDlgOpen: true,
+                selectedCommunity: community
+            })
+        }).catch(() => this.setState({loadingListing: false}));
     }
 
     onCommunitySaved(community) {
@@ -149,7 +170,8 @@ ManageCommunitiesView.propTypes = {
         fetchAllCommunities: PropTypes.func.isRequired,
         fetchCommunityAdmins: PropTypes.func.isRequired,
         fetchCommunityApps: PropTypes.func.isRequired,
-        fetchCommunityPrivileges: PropTypes.func.isRequired,
+        getCommunityAdmins: PropTypes.func.isRequired,
+        getCommunityMembers: PropTypes.func.isRequired,
         searchCollaborators: PropTypes.func.isRequired,
     })
 };

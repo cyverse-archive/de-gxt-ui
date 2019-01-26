@@ -1,5 +1,6 @@
 import build from "../../util/DebugIDUtil";
 import CreateCommunitiesBtn from "./CreateCommunitiesBtn";
+import CommunityFilter from "./CommunityFilter";
 import ids from "../ids";
 import messages from "../messages";
 import styles from "../styles";
@@ -28,14 +29,14 @@ function CommunitiesToolbar(props) {
 
     let toolbarId = build(parentId, ids.TOOLBAR);
     return (
-        <Toolbar id={toolbarId}>
+        <Toolbar id={toolbarId} classes={{root: classes.toolbar}}>
             <CreateCommunitiesBtn parentId={toolbarId}
                                   className={classes.toolbarItem}
                                   onClick={onCreateCommunityClicked}/>
             <Select value={currentCommunityType}
                     onChange={handleCommunityFilterChange}>
-                <MenuItem value={"MyCommunities"}>{getMessage('myCommunities')}</MenuItem>
-                <MenuItem value={"AllCommunities"}>{getMessage('allCommunities')}</MenuItem>
+                <MenuItem value={CommunityFilter.MY_COMMUNITIES}>{getMessage('myCommunities')}</MenuItem>
+                <MenuItem value={CommunityFilter.ALL_COMMUNITIES}>{getMessage('allCommunities')}</MenuItem>
             </Select>
         </Toolbar>
     )

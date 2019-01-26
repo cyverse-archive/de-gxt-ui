@@ -87,10 +87,10 @@ public interface GroupServiceFacade {
 
     /**
      * Delete a community
-     * @param community
+     * @param communityName
      * @param communityCallback
      */
-    void deleteCommunity(Group community, AsyncCallback<Group> communityCallback);
+    void deleteCommunity(String communityName, AsyncCallback<Group> communityCallback);
 
     /**
      * Get the list of members who belong to a Collaborator List
@@ -108,32 +108,32 @@ public interface GroupServiceFacade {
 
     /**
      * Get the list of members who belong to a Community i.e. those who have "favorited" the community
-     * @param community
+     * @param communityName
      * @param subjectListCallback
      */
-    void getCommunityMembers(Group community, AsyncCallback<List<Subject>> subjectListCallback);
+    void getCommunityMembers(String communityName, AsyncCallback<List<Subject>> subjectListCallback);
     /**
      * Get the list of admins for a Community
-     * @param community
+     * @param communityName
      * @param adminListCallback
      */
-    void getCommunityAdmins(Group community, AsyncCallback<Splittable> adminListCallback);
+    void getCommunityAdmins(String communityName, AsyncCallback<Splittable> adminListCallback);
 
     /**
      * Remove a list of admins from a community
-     * @param community
-     * @param admins
+     * @param communityName
+     * @param adminIds
      * @param updateMemberCallback
      */
-    void removeCommunityAdmins(Group community, List<Subject> admins, AsyncCallback<List<UpdateMemberResult>> updateMemberCallback);
+    void removeCommunityAdmins(String communityName, List<String> adminIds, AsyncCallback<List<UpdateMemberResult>> updateMemberCallback);
 
     /**
      * Add a list of admins to a community
-     * @param community
-     * @param admins
+     * @param communityName
+     * @param adminIds
      * @param updateMemberCallback
      */
-    void addCommunityAdmins(Group community, List<Subject> admins, AsyncCallback<List<UpdateMemberResult>> updateMemberCallback);
+    void addCommunityAdmins(String communityName, List<String> adminIds, AsyncCallback<List<UpdateMemberResult>> updateMemberCallback);
 
     /**
      * Delete members from a Collaborator List
@@ -221,10 +221,10 @@ public interface GroupServiceFacade {
 
     /**
      * Join or "favorite" a community
-     * @param community
+     * @param communityName
      * @param updatesCallback
      */
-    void joinCommunity(Group community, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void joinCommunity(String communityName, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
     /**
      * Without optin privileges, request to join the team
      * @param team
@@ -257,9 +257,9 @@ public interface GroupServiceFacade {
 
     /**
      * Leave the selected Community
-     * @param community
+     * @param communityName
      * @param updatesCallback
      */
-    void leaveCommunity(Group community, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void leaveCommunity(String communityName, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
 }

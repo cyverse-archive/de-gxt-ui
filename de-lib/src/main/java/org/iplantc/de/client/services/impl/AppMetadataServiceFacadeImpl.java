@@ -127,11 +127,11 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
     }
 
     @Override
-    public void updateAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback) {
+    public void updateAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Splittable> callback) {
         AvuList avuList = avuAutoBeanFactory.getAvuList().as();
-        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(community)));
+        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(communityDisplayName)));
 
-        String address = APPS + "/" + app.getId() + "/communities";
+        String address = APPS + "/" + appId + "/communities";
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(avuList));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
@@ -139,30 +139,30 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
     }
 
     @Override
-    public void deleteAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback) {
+    public void deleteAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Splittable> callback) {
         AvuList avuList = avuAutoBeanFactory.getAvuList().as();
-        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(community)));
+        avuList.setAvus(getCommunityAvuList(Lists.newArrayList(communityDisplayName)));
 
-        String address = APPS + "/" + app.getId() + "/communities";
+        String address = APPS + "/" + appId + "/communities";
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(avuList));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, encode.getPayload());
         callService(wrapper, new SplittableCallbackConverter(callback));
     }
 
-    List<Avu> getCommunityAvuList(List<Group> communities) {
+    List<Avu> getCommunityAvuList(List<String> communities) {
         List<Avu> avuList = Lists.newArrayList();
-        for (Group community : communities) {
-            Avu avu = getCommunityAvu(community);
+        for (String communityDisplayName : communities) {
+            Avu avu = getCommunityAvu(communityDisplayName);
             avuList.add(avu);
         }
         return avuList;
     }
 
-    Avu getCommunityAvu(Group community) {
+    Avu getCommunityAvu(String communityDisplayName) {
         Avu avu = avuAutoBeanFactory.getAvu().as();
         avu.setAttribute(deProperties.getCommunityAttr());
-        avu.setValue(community.getDisplayName());
+        avu.setValue(communityDisplayName);
         avu.setUnit("");
 
         return avu;

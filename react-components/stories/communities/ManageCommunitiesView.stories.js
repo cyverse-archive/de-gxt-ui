@@ -324,76 +324,79 @@ class CommunitiesViewTest extends Component {
         };
 
         const presenter = {
-            fetchMyCommunities: (callback) => {
+            fetchMyCommunities: (resolve, reject) => {
                 setTimeout(() => {
-                    callback(myCommunities)
+                    resolve(myCommunities)
                 }, 1000);
             },
-            fetchAllCommunities: (callback) => {
+            fetchAllCommunities: (resolve, reject) => {
                 setTimeout(() => {
-                    callback(allCommunities)
+                    resolve(allCommunities)
                 }, 1000);
             },
-            fetchCommunityAdmins: (community, resolve, reject) => {
+            fetchCommunityAdmins: (communityName, resolve, reject) => {
                 setTimeout(() => {
                     resolve(adminListing)
                 }, 1000);
             },
-            fetchCommunityApps: (community, resolve, reject) => resolve(appListing),
-            searchCollaborators: (input, fn) => {
-                fn(collaborators);
+            fetchCommunityApps: (communityDisplayName, resolve, reject) => resolve(appListing),
+            searchCollaborators: (input, resolve, reject) => {
+                resolve(collaborators);
             },
-            fetchCommunityPrivileges: (community, callback) => {
-                let isAdmin = community.name === "aramsey:Ultimate Community";
-                let isMember = isAdmin;
-                callback(isAdmin, isMember)
+            getCommunityAdmins: (communityName, resolve, reject) => {
+                let isAdmin = communityName === "aramsey:Ultimate Community";
+                resolve(isAdmin);
             },
-            removeCommunityApps: (community, app, callback) => {
+            getCommunityMembers: (communityName, resolve, reject) => {
+                let isMember = communityName === "aramsey:Ultimate Community";
+                resolve(isMember)
+            },
+            removeCommunityApps: (communityDisplayName, appId, resolve, reject) => {
                 setTimeout(() => {
-                    callback(appListing.apps.filter((value) => value !== app))
+                    resolve(appListing.apps.filter((value) => value.id !== appId))
                 }, 1000);
             },
-            removeCommunityAdmins: (community, admin, callback) => {
+            removeCommunityAdmins: (communityName, adminIds, resolve, reject) => {
                 setTimeout(() => {
-                    callback(adminListing.members.filter((value) => value !== admin))
+                    resolve(adminListing.members.filter((value) => value.id !== adminIds.list[0].id))
                 }, 1000);
             },
-            addCommunityAdmins: (community, subjectList, resolve, reject) => {
+            addCommunityAdmins: (communityName, adminIds, resolve, reject) => {
                 setTimeout(() => {
                     resolve();
                 }, 1000);
             },
-            onAddCommunityAppsClicked: (callback) => {
+            onAddCommunityAppsClicked: (resolve, reject) => {
                 communityAppsClickedLogger();
-                callback(newApp)
+                resolve(newApp)
             },
-            addAppToCommunity: (app, community, resolve, reject) => {
+            addAppToCommunity: (appId, communityDisplayName, resolve, reject) => {
                 setTimeout(() => {
                     resolve()
                 }, 1000);
             },
-            deleteCommunity: (community, callback) => {
-                confirmedDialogAction("Delete", community);
+            deleteCommunity: (communityName, resolve, reject) => {
+                confirmedDialogAction("Delete", communityName);
                 setTimeout(() => {
-                    callback();
+                    resolve();
                 }, 1000);
             },
-            joinCommunity: (community, callback) => {
-                confirmedDialogAction("Join", community);
+            joinCommunity: (communityName, resolve, reject) => {
+                confirmedDialogAction("Join", communityName);
                 setTimeout(() => {
-                    callback();
+                    resolve();
                 }, 1000);
             },
-            leaveCommunity: (community, callback) => {
-                confirmedDialogAction("Leave", community);
+            leaveCommunity: (communityName, resolve, reject) => {
+                confirmedDialogAction("Leave", communityName);
                 setTimeout(() => {
-                    callback();
+                    resolve();
                 }, 1000);
             },
-            saveCommunity: (community, name, description, retag, resolve, reject) => {
-                confirmedDialogAction("Save", community, name, description);
+            saveCommunity: (communityName, name, description, retag, resolve, reject) => {
+                confirmedDialogAction("Save", communityName, name, description);
                 setTimeout(() => {
-                    let savedCommunity = community ? community : {name: name, description: description};
+                    let savedCommunity = communityName ? name : {name: name, description: description};
                     resolve(savedCommunity);
                 }, 1000);
             }

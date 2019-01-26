@@ -154,16 +154,16 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void deleteTeam(Group group, AsyncCallback<Group> callback) {
-        deleteGroup(TEAMS, group, callback);
+        deleteGroup(TEAMS, group.getName(), callback);
     }
 
     @Override
-    public void deleteCommunity(Group community, AsyncCallback<Group> communityCallback) {
-        deleteGroup(COMMUNITIES, community, communityCallback);
+    public void deleteCommunity(String communityName, AsyncCallback<Group> communityCallback) {
+        deleteGroup(COMMUNITIES, communityName, communityCallback);
     }
 
-    private void deleteGroup(String address, Group group, AsyncCallback<Group> callback) {
-        address += "/" + URL.encodePathSegment(group.getName());
+    private void deleteGroup(String address, String groupName, AsyncCallback<Group> callback) {
+        address += "/" + URL.encodePathSegment(groupName);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
@@ -171,21 +171,20 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void getListMembers(Group group, AsyncCallback<List<Subject>> callback) {
-        getMembers(group, LISTS, callback);
+        getMembers(group.getName(), LISTS, callback);
     }
 
     @Override
     public void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback) {
-        getMembers(group, TEAMS, callback);
+        getMembers(group.getName(), TEAMS, callback);
     }
 
     @Override
-    public void getCommunityMembers(Group community, AsyncCallback<List<Subject>> subjectListCallback) {
-        getMembers(community, COMMUNITIES, subjectListCallback);
+    public void getCommunityMembers(String communityName, AsyncCallback<List<Subject>> subjectListCallback) {
+        getMembers(communityName, COMMUNITIES, subjectListCallback);
     }
 
-    void getMembers(Group group, String address, AsyncCallback<List<Subject>> callback) {
-        String groupName = group.getName();
+    void getMembers(String groupName, String address, AsyncCallback<List<Subject>> callback) {
         address += "/" + URL.encodePathSegment(groupName) + "/members";
 
 
@@ -194,18 +193,18 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getCommunityAdmins(Group community, AsyncCallback<Splittable> adminListCallback) {
-        String address = COMMUNITIES + "/" + URL.encodePathSegment(community.getName()) + "/admins";
+    public void getCommunityAdmins(String communityName, AsyncCallback<Splittable> adminListCallback) {
+        String address = COMMUNITIES + "/" + URL.encodePathSegment(communityName) + "/admins";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SplittableCallbackConverter(adminListCallback));
     }
 
     @Override
-    public void removeCommunityAdmins(Group community,
-                                      List<Subject> admins,
+    public void removeCommunityAdmins(String communityName,
+                                      List<String> admins,
                                       AsyncCallback<List<UpdateMemberResult>> updateMemberCallback) {
-        String address = COMMUNITIES + "/" + URL.encodePathSegment(community.getName()) + "/admins/deleter";
+        String address = COMMUNITIES + "/" + URL.encodePathSegment(communityName) + "/admins/deleter";
 
         UpdateMemberRequest request = getUpdateMemberRequest(admins);
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
@@ -215,12 +214,12 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addCommunityAdmins(Group community,
-                                   List<Subject> admins,
+    public void addCommunityAdmins(String communityName,
+                                   List<String> adminIds,
                                    AsyncCallback<List<UpdateMemberResult>> updateMemberCallback) {
-        String address = COMMUNITIES + "/" + URL.encodePathSegment(community.getName()) + "/admins";
+        String address = COMMUNITIES + "/" + URL.encodePathSegment(communityName) + "/admins";
 
-        UpdateMemberRequest request = getUpdateMemberRequest(admins);
+        UpdateMemberRequest request = getUpdateMemberRequest(adminIds);
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
@@ -358,16 +357,15 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void joinTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
-        joinGroup(TEAMS, team, updatesCallback);
+        joinGroup(TEAMS, team.getName(), updatesCallback);
     }
 
     @Override
-    public void joinCommunity(Group community, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
-        joinGroup(COMMUNITIES, community, updatesCallback);
+    public void joinCommunity(String communityName, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
+        joinGroup(COMMUNITIES, communityName, updatesCallback);
     }
 
-    private void joinGroup(String address, Group group, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
-        String groupName = group.getName();
+    private void joinGroup(String address, String groupName, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
         address += "/" + URL.encodePathSegment(groupName) + "/join";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
@@ -422,17 +420,15 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void leaveTeam(Group group, AsyncCallback<List<UpdateMemberResult>> callback) {
-        leaveGroup(TEAMS, group, callback);
+        leaveGroup(TEAMS, group.getName(), callback);
     }
 
     @Override
-    public void leaveCommunity(Group community, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
-        leaveGroup(COMMUNITIES, community, updatesCallback);
+    public void leaveCommunity(String communityName, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
+        leaveGroup(COMMUNITIES, communityName, updatesCallback);
     }
 
-    private void leaveGroup(String address, Group group, AsyncCallback<List<UpdateMemberResult>> callback) {
-        String groupName = group.getName();
-
+    private void leaveGroup(String address, String groupName, AsyncCallback<List<UpdateMemberResult>> callback) {
         address += "/" + URL.encodePathSegment(groupName) + "/leave";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
@@ -445,11 +441,10 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         });
     }
 
-    UpdateMemberRequest getUpdateMemberRequest(List<Subject> subjects) {
+    UpdateMemberRequest getUpdateMemberRequest(List<String> subjectIds) {
         UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
-        if (subjects != null) {
-            List<String> ids = subjects.stream().map(HasId::getId).collect(Collectors.toList());
-            request.setMembers(ids);
+        if (subjectIds != null) {
+            request.setMembers(subjectIds);
         }
         return request;
     }

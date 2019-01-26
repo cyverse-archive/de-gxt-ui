@@ -1,3 +1,5 @@
+import palette from "../util/CyVersePalette";
+
 const styles = theme => ({
     column: {
         display: "flex",
@@ -12,6 +14,10 @@ const styles = theme => ({
 
     formItem: {
         margin: "5px",
+    },
+
+    toolbar: {
+        backgroundColor: palette.lightGray,
     },
 
     toolbarItem: {
@@ -31,7 +37,7 @@ const styles = theme => ({
         position: 'absolute',
         top: '30%',
         left: '50%',
-        color: '#DB6619',
+        color: palette.orange,
     }
 });
 

@@ -15,7 +15,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
  * 
  */
 public interface AppMetadataServiceFacade extends MetadataServiceFacade {
-    void updateAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback);
+    void updateAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Splittable> callback);
 
-    void deleteAppCommunityTags(Group community, App app, AsyncCallback<Splittable> callback);
+    void deleteAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Splittable> callback);
 }

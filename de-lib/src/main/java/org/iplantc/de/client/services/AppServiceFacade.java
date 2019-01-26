@@ -73,9 +73,9 @@ public interface AppServiceFacade {
 
     /**
      * Retrieves an app listing for the specified community
-     * @param community
+     * @param communityDisplayName
      * @param filter
      * @param callback
      */
-    void getCommunityApps(Group community, AppTypeFilter filter, DECallback<Splittable> callback);
+    void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback);
 }

@@ -54,10 +54,15 @@ class EditCommunityDialog extends Component {
         const {community} = this.props;
 
         this.setState({loading: true});
-        this.props.presenter[[dialogName]](community, () => {
+
+        new Promise((resolve, reject) => {
+            this.props.presenter[[dialogName]](community.name, resolve, reject);
+        }).then(() => {
             this.closeDialog([dialogName]);
             this.setState({loading: false});
             this.handleCloseEditDialog();
+        }).catch(() => {
+            this.setState({loading: false});
         });
     }
 
@@ -167,7 +172,9 @@ class EditCommunityDialog extends Component {
                                         title={getMessage('confirmDeleteCommunityTitle', {values: {name: communityName}})}
                                         dialogContent={
                                             <div>
-                                                <Loading loading={loading} classes={classes}/>
+                                                {loading &&
+                                                <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
+                                                }
                                                 {getMessage('confirmDeleteCommunity')}
                                             </div>
                                         }/>
@@ -183,7 +190,9 @@ class EditCommunityDialog extends Component {
                                         title={getMessage('confirmJoinCommunityTitle', {values: {name: communityName}})}
                                         dialogContent={
                                             <div>
-                                                <Loading loading={loading} classes={classes}/>
+                                                {loading &&
+                                                <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
+                                                }
                                                 {getMessage('confirmJoinCommunity')}
                                             </div>
                                         }/>
@@ -199,7 +208,9 @@ class EditCommunityDialog extends Component {
                                         title={getMessage('confirmLeaveCommunityTitle', {values: {name: communityName}})}
                                         dialogContent={
                                             <div>
-                                                <Loading loading={loading} classes={classes}/>
+                                                {loading &&
+                                                <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
+                                                }
                                                 {getMessage('confirmLeaveCommunity')}
                                             </div>
                                         }/>
@@ -207,20 +218,6 @@ class EditCommunityDialog extends Component {
             </Fragment>
         )
     }
-}
-
-function Loading(props) {
-    const {
-        loading,
-        classes
-    } = props;
-    return (
-        <Fragment>
-            {loading &&
-            <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
-            }
-        </Fragment>
-    )
 }
 
 function DialogHeader(props) {

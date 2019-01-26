@@ -1,5 +1,6 @@
 package org.iplantc.de.communities.client;
 
+import org.iplantc.de.client.models.HasStringList;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.communities.client.views.ReactCommunities;
@@ -38,48 +39,51 @@ public interface ManageCommunitiesView extends IsWidget {
         @JsFunction
         @SuppressWarnings("unusable-by-js")
         interface FetchCommunityPrivilegesCallback {
-            void onSuccess(Boolean isAdmin, Boolean isMember);
+            void onSuccess(boolean privilege);
         }
-        void fetchMyCommunities(ReactSuccessCallback callback);
+        void fetchMyCommunities(ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
-        void fetchAllCommunities(ReactSuccessCallback callback);
-
-        @SuppressWarnings("unusable-by-js")
-        void fetchCommunityAdmins(Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
+        void fetchAllCommunities(ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void fetchCommunityApps(Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
+        void fetchCommunityAdmins(String communityName, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
+
+        @SuppressWarnings("unusable-by-js")
+        void fetchCommunityApps(String communityDisplayName, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
         void searchCollaborators(String searchTerm, ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void fetchCommunityPrivileges(Splittable community, FetchCommunityPrivilegesCallback callback);
+        void getCommunityAdmins(String communityName, FetchCommunityPrivilegesCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void removeCommunityApps(Splittable community, Splittable app, ReactSuccessCallback callback);
+        void getCommunityMembers(String communityName, FetchCommunityPrivilegesCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void removeCommunityAdmins(Splittable community, Splittable subject, ReactSuccessCallback callback);
+        void removeCommunityApps(String communityDisplayName, String appId, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void addCommunityAdmins(Splittable community, Splittable adminList, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
+        void removeCommunityAdmins(String communityName, Splittable adminList, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
+
+        @SuppressWarnings("unusable-by-js")
+        void addCommunityAdmins(String communityName, Splittable adminList, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
         void onAddCommunityAppsClicked(ReactSuccessCallback callback);
 
         @SuppressWarnings("unusable-by-js")
-        void addAppToCommunity(Splittable app, Splittable community, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
+        void addAppToCommunity(String appId, String communityDisplayName, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void deleteCommunity(Splittable community, ReactSuccessCallback callback);
+        void deleteCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void joinCommunity(Splittable community, ReactSuccessCallback callback);
+        void joinCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void leaveCommunity(Splittable community, ReactSuccessCallback callback);
+        void leaveCommunity(String communityName, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
-        void saveCommunity(Splittable originalCommunity, String name, String description, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
+        void saveCommunity(String originalCommunityName, String name, String description, boolean retagApps, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @JsIgnore
         void go(HasOneWidget container, String baseID);

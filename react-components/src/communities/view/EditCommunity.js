@@ -81,12 +81,12 @@ class EditCommunity extends Component {
             let promises = [];
 
             let fetchAdminsPromise = new Promise((resolve, reject) => {
-                    this.props.presenter.fetchCommunityAdmins(community, resolve, reject);
+                    this.props.presenter.fetchCommunityAdmins(community.name, resolve, reject);
                 }
             );
 
             let fetchAppsPromise = new Promise((resolve, reject) => {
-                    this.props.presenter.fetchCommunityApps(community, resolve, reject);
+                    this.props.presenter.fetchCommunityApps(community.display_name, resolve, reject);
                 }
             );
 
@@ -150,29 +150,28 @@ class EditCommunity extends Component {
             onCommunitySaved
         } = this.props;
         this.setState({loading: true});
-        let saveCommunityPromise = new Promise((resolve, reject) => {
-            this.props.presenter.saveCommunity(community, name, description, false, resolve, reject);
-        });
-        saveCommunityPromise.then(savedCommunity => {
+        new Promise((resolve, reject) => {
+            this.props.presenter.saveCommunity(community.name, name, description, false, resolve, reject);
+        }).then(savedCommunity => {
             if (!community) {
                 onCommunitySaved(savedCommunity);
                 let promises = [];
 
                 let saveAdminsPromise = new Promise((resolve, reject) => {
-                        this.props.presenter.addCommunityAdmins(savedCommunity, admins, resolve, reject);
+                        this.props.presenter.addCommunityAdmins(savedCommunity.name, {list: admins.map(subject => subject.id)}, resolve, reject);
                     }
                 );
                 promises.push(saveAdminsPromise);
 
                 apps.forEach((app) => {
                     let saveAppPromise = new Promise((resolve, reject) => {
-                        this.props.presenter.addAppToCommunity(app, savedCommunity, resolve, reject);
+                        this.props.presenter.addAppToCommunity(app.id, savedCommunity.display_name, resolve, reject);
                     });
                     promises.push(saveAppPromise);
                 });
 
                 Promise.all(promises)
-                    .then(value => {
+                    .then(() => {
                         this.setState({loading: false});
                         this.props.onSaveComplete();
                     })
@@ -194,11 +193,13 @@ class EditCommunity extends Component {
 
     onAddCommunityAppsClicked() {
         const {community} = this.props;
-        this.props.presenter.onAddCommunityAppsClicked((app) => {
+        new Promise((resolve, reject) => {
+            this.props.presenter.onAddCommunityAppsClicked(resolve, reject);
+        }).then(app => {
             if (app && !this.isDuplicateApp(app)) {
                 if (community) {
                     this.setState({loading: true});
-                    this.props.presenter.addAppToCommunity(app, community, () => {
+                    this.props.presenter.addAppToCommunity(app.id, community.display_name, () => {
                         this.addApp(app);
                         this.setState({loading: false});
                     })
@@ -206,7 +207,7 @@ class EditCommunity extends Component {
                     this.addApp(app)
                 }
             }
-        });
+        }).catch(() => this.setState({loading: false}));
     }
 
     isDuplicateApp(app) {
@@ -219,10 +220,12 @@ class EditCommunity extends Component {
 
         if (community) {
             this.setState({loading: true});
-            this.props.presenter.removeCommunityAdmins(community, subject, () => {
+            new Promise((resolve, reject) => {
+                this.props.presenter.removeCommunityAdmins(community.name, {list: [subject.id]}, resolve, reject);
+            }).then(() => {
                 this.removeAdmin(subject);
                 this.setState({loading: false});
-            })
+            }).catch(() => this.setState({loading: false}));
         } else {
             this.removeAdmin(subject)
         }
@@ -239,10 +242,12 @@ class EditCommunity extends Component {
         const {community} = this.props;
         if (community) {
             this.setState({loading: true});
-            this.props.presenter.removeCommunityApps(community, app, () => {
+            new Promise((resolve, reject) => {
+                this.props.presenter.removeCommunityApps(community.display_name, app.id, resolve, reject);
+            }).then(() => {
                 this.removeApp(app);
                 this.setState({loading: false});
-            })
+            }).catch(() => this.setState({loading: false}));
         } else {
             this.removeApp(app)
         }
@@ -276,10 +281,12 @@ class EditCommunity extends Component {
         if (!this.isDuplicateAdmin(subject)) {
             if (community) {
                 this.setState({loading: true});
-                this.props.presenter.addCommunityAdmins(community, [subject], () => {
+                new Promise((resolve, reject) => {
+                    this.props.presenter.addCommunityAdmins(community.name, {list: [subject.id]}, resolve, reject);
+                }).then(() => {
                     this.addAdmin(subject);
                     this.setState({loading: false});
-                });
+                }).catch(() => this.setState({loading: false}));
             } else {
                 this.addAdmin(subject);
             }
@@ -412,7 +419,7 @@ EditCommunity.propTypes = {
         removeCommunityAdmins: PropTypes.func.isRequired,
         onAddCommunityAppsClicked: PropTypes.func.isRequired,
         addCommunityAdmins: PropTypes.func.isRequired,
-        addAppsToCommunity: PropTypes.func.isRequired,
+        addAppToCommunity: PropTypes.func.isRequired,
     })
 };
 

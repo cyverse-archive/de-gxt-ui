@@ -122,8 +122,8 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getCommunityApps(Group community, AppTypeFilter filter, DECallback<Splittable> callback) {
-        String address = APP_COMMUNITIES + "/" + URL.encode(community.getDisplayName()) + "/apps";
+    public void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback) {
+        String address = APP_COMMUNITIES + "/" + URL.encode(communityDisplayName) + "/apps";
         if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
             address = address + "?app-type=" + filter.getFilterString();
         }
