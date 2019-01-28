@@ -17,7 +17,7 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
 public class ReactDesktop {
 
-    @JsProperty
+    @JsProperty(namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
     public static ComponentConstructorFn<DesktopProps> desktopProps;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
