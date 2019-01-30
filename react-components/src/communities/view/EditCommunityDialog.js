@@ -1,5 +1,6 @@
 import build from "../../util/DebugIDUtil";
 import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
+import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import EditCommunity from "./EditCommunity";
 import { getMessage } from "../../util/I18NWrapper";
 import ids from "../ids";
@@ -108,11 +109,12 @@ class EditCommunityDialog extends Component {
                         maxWidth='lg'
                         onClose={onClose}
                         id={ids.EDIT_DLG}>
-                    <DialogTitle>
-                        <DialogHeader community={community}
-                                      communityName={communityName}
-                                      isCommunityAdmin={isCommunityAdmin}/>
-                    </DialogTitle>
+                    <DEDialogHeader heading={<DialogHeader community={community}
+                                                           communityName={communityName}
+                                                           isCommunityAdmin={isCommunityAdmin}/>}
+                                    messages={messages.messages}
+                                    onClose={onClose}>
+                    </DEDialogHeader>
                     <DialogContent>
                         <EditCommunity parentId={ids.EDIT_DLG}
                                        community={community}
