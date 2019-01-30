@@ -122,12 +122,12 @@ function Status(props) {
 }
 
 const columnData = [
-    {name: "Name", numeric: false, enableSorting: true},
-    {name: "Owner", numeric: false, enableSorting: true},
-    {name: "App", numeric: false, enableSorting: true},
-    {name: "Start Date", numeric: false, enableSorting: true},
-    {name: "End Date", numeric: false, enableSorting: true},
-    {name: "Status", numeric: false, enableSorting: true},
+    {name: "Name", numeric: false, enableSorting: true, key: "name"},
+    {name: "Owner", numeric: false, enableSorting: false, key: "owner"},
+    {name: "App", numeric: false, enableSorting: false, key: "app"},
+    {name: "Start Date", numeric: false, enableSorting: true, key: "startdate"},
+    {name: "End Date", numeric: false, enableSorting: true, key: "enddate"},
+    {name: "Status", numeric: false, enableSorting: true, key: "status"},
     {name: "", numeric: false, enableSorting: false},
 ];
 
@@ -221,6 +221,7 @@ class AnalysesView extends Component {
         this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(this);
         this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleRequestSort = this.handleRequestSort.bind(this);
     }
 
     componentDidMount() {
@@ -266,6 +267,20 @@ class AnalysesView extends Component {
     handleBatchIconClick(event, id) {
         event.stopPropagation();
         this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses());
+    }
+
+    handleRequestSort(event, property) {
+        const orderBy = property.replace(/\s/g,"").toLowerCase();  //remove space and make it lowercase
+        let order = "desc";
+
+        if (this.state.orderBy === property && this.state.order === order) {
+            order = "asc";
+        }
+
+        this.setState({
+            order,
+            orderBy,
+        }, () => this.fetchAnalyses());
     }
 
     getParentIdFilter() {
