@@ -270,7 +270,7 @@ class AnalysesView extends Component {
     }
 
     handleRequestSort(event, property) {
-        const orderBy = property.replace(/\s/g,"").toLowerCase();  //remove space and make it lowercase
+        const orderBy = property;
         let order = "desc";
 
         if (this.state.orderBy === property && this.state.order === order) {
