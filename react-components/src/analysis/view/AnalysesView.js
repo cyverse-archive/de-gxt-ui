@@ -485,7 +485,8 @@ class AnalysesView extends Component {
     }
 
     handleRelaunch(analysis) {
-        this.props.presenter.onAnalysisAppSelected(analysis.id, analysis.system_id, analysis.app_id);
+        let selected = analysis ? analysis : this.findAnalysis(this.state.selected[0]);
+        this.props.presenter.onAnalysisAppSelected(selected.id, selected.system_id, selected.app_id);
     }
 
     handleRelaunchFromMenu() {
