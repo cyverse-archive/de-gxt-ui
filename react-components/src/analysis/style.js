@@ -4,6 +4,7 @@ export default (theme) => ({
     table: {
         overflow: "auto",
         height: "80%",
+        width: "100%"
     },
     tableHead: {
         backgroundColor: "#e2e2e2",
@@ -32,7 +33,6 @@ export default (theme) => ({
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
         paddingRight: 1,
-        width: '100%',
     },
     toolbarMargins: {
         marginLeft: theme.spacing.unit,
