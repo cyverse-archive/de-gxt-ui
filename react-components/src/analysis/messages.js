@@ -1,5 +1,3 @@
-import React from "react";
-
 var intlData = {
     "locales": "en-US",
     "messages": {

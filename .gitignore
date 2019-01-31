@@ -50,3 +50,4 @@ Dockerfile.local
 
 # ignore where jenkins puts tests
 jenkins_tests/
+*.rdb

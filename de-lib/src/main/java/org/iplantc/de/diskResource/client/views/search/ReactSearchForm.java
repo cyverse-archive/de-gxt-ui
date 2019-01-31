@@ -5,7 +5,7 @@ import org.iplantc.de.diskResource.client.SearchView;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -15,7 +15,7 @@ import jsinterop.annotations.JsType;
 public class ReactSearchForm {
 
     @JsProperty(namespace = "CyVerseReactComponents.data.search", name = "QueryBuilder")
-    public static ReactClass<SearchFormProps> SearchForm;
+    public static ComponentConstructorFn<SearchFormProps> SearchForm;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class SearchFormProps extends BaseProps {

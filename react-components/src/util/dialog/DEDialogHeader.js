@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 
 import { injectIntl } from "react-intl";
 import intlData from "./messages";
-import withI18N, { formatMessage } from "../../util/I18NWrapper";
+import withI18N from "../../util/I18NWrapper";
 import exStyles from "./style";
 
 

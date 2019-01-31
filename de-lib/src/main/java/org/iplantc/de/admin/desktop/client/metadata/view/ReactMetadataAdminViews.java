@@ -2,7 +2,7 @@ package org.iplantc.de.admin.desktop.client.metadata.view;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import gwt.react.client.components.ReactClass;
+import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -12,7 +12,7 @@ import jsinterop.annotations.JsType;
 public class ReactMetadataAdminViews {
 
     @JsProperty
-    public static ReactClass<EditMetadataTemplateProps> EditMetadataTemplate;
+    public static ComponentConstructorFn<EditMetadataTemplateProps> EditMetadataTemplate;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class EditMetadataTemplateProps extends BaseProps {
