@@ -169,7 +169,7 @@ class AnalysesView extends Component {
             rowsPerPage: 100,
             selected: [],
             order: 'desc',
-            orderBy: 'enddate',
+            orderBy: 'startdate',
             permFilter: permFilter,
             typeFilter: appTypeFilter,
             parentId: "",
