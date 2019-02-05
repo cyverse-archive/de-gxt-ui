@@ -24,7 +24,7 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
 
     @Override
     public int windowMinWidth() {
-        return 590;
+        return 950;
     }
 
     @Override
