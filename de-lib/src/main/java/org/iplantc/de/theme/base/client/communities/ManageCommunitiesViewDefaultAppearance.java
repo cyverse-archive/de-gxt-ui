@@ -55,12 +55,12 @@ public class ManageCommunitiesViewDefaultAppearance implements ManageCommunities
 
     @Override
     public String windowWidth() {
-        return "600px";
+        return "640px";
     }
 
     @Override
     public String windowHeight() {
-        return "400px";
+        return "480px";
     }
 
     @Override

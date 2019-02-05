@@ -28,7 +28,7 @@
  * @returns {*} sorted data
  */
 function stableSort(array, cmp) {
-    if (array.length > 0) {
+    if (array && array.length > 0) {
         const stabilizedThis = array.map((el, index) => [el, index]);
         stabilizedThis.sort((a, b) => {
             const order = cmp(a[0], b[0]);
@@ -58,5 +58,4 @@ function getSorting(order, orderBy) {
 export {
     stableSort,
     getSorting,
-    desc,
 }

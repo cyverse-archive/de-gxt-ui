@@ -1,4 +1,5 @@
-import betaImg from "../../resources/images/betaSymbol.svg";
+import betaPng from "../../resources/images/betaSymbol.png";
+import betaSvg from "../../resources/images/betaSymbol.svg";
 import messages from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 
@@ -70,7 +71,7 @@ function DisabledIcon(props) {
 function BetaIcon(props) {
     return (
         <ToolTip title={getMessage('betaToolTip')}>
-            <img src={betaImg}/>
+            <img src={betaSvg} alt={betaPng}/>
         </ToolTip>
     )
 }

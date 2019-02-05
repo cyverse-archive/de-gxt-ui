@@ -1,5 +1,5 @@
-import * as communities from "./communities/communities";
+import ManageCommunitiesView from "./communities/view/ManageCommunitiesView";
 
 export {
-    communities
-};
+    ManageCommunitiesView,
+}

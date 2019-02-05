@@ -43,7 +43,7 @@ class EditCommunity extends Component {
         [
             'handleDescChange',
             'handleNameChange',
-            'onAdminSelected',
+            'onAddAdmin',
             'addAdmin',
             'handleRemoveApp',
             'removeApp',
@@ -59,8 +59,8 @@ class EditCommunity extends Component {
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.saveCommunity && nextProps.saveCommunity) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.saveCommunity && this.props.saveCommunity) {
             if (this.isInvalid()) {
                 this.props.cancelSave();
             } else {
@@ -151,8 +151,9 @@ class EditCommunity extends Component {
         } = this.props;
         this.setState({loading: true});
         new Promise((resolve, reject) => {
-            this.props.presenter.saveCommunity(community.name, name, description, false, resolve, reject);
+            this.props.presenter.saveCommunity(community ? community.name : null, name, description, false, resolve, reject);
         }).then(savedCommunity => {
+            // if a new community was created
             if (!community) {
                 onCommunitySaved(savedCommunity);
                 let promises = [];
@@ -275,7 +276,7 @@ class EditCommunity extends Component {
         });
     }
 
-    onAdminSelected(subject) {
+    onAddAdmin(subject) {
         const {community} = this.props;
 
         if (!this.isDuplicateAdmin(subject)) {
@@ -299,17 +300,11 @@ class EditCommunity extends Component {
     }
 
     addAdmin(subject) {
-        let newAdmins = [];
-        this.setState({
-            admins: newAdmins.concat(this.state.admins, subject),
-        })
+        this.setState({admins: [...this.state.admins, subject]})
     }
 
     addApp(app) {
-        let newApps = [];
-        this.setState({
-            apps: newApps.concat(this.state.apps, app)
-        })
+        this.setState({apps: [...this.state.apps, app]})
     }
 
     render() {
@@ -343,7 +338,9 @@ class EditCommunity extends Component {
                                label={getMessage('nameField')}
                                value={name}
                                className={classes.formItem}
-                               disabled={!isCommunityAdmin}
+                               InputProps={{
+                                   readOnly: !isCommunityAdmin,
+                               }}
                                helperText={errors.text}
                                onChange={this.handleNameChange}/>
                     <TextField id={build(parentId, ids.EDIT.DESCRIPTION)}
@@ -351,7 +348,9 @@ class EditCommunity extends Component {
                                label={getMessage('descriptionField')}
                                value={this.state.description}
                                className={classes.formItem}
-                               disabled={!isCommunityAdmin}
+                               InputProps={{
+                                   readOnly: !isCommunityAdmin,
+                               }}
                                onChange={this.handleDescChange}/>
                     <fieldset className={classes.formItem}>
                         <legend>{getMessage('communityAdmins')}</legend>
@@ -364,7 +363,7 @@ class EditCommunity extends Component {
                                 <SubjectSearchField collaboratorsUtil={collaboratorsUtil}
                                                     presenter={presenter}
                                                     parentId={parentId}
-                                                    onSelect={this.onAdminSelected}/>
+                                                    onSelect={this.onAddAdmin}/>
                             </div>
                         </Toolbar>
                         }

@@ -19,7 +19,7 @@ public class ManageCommunitiesViewImpl implements ManageCommunitiesView {
 
     @Override
     public void show(ReactCommunities.CommunitiesProps props) {
-        CyVerseReactComponents.render(ReactCommunities.CommunitiesView,
+        CyVerseReactComponents.render(ReactCommunities.ManageCommunitiesView,
                                       props,
                                       panel.getElement());
     }

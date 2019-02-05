@@ -18,7 +18,7 @@ class ManageCommunitiesView extends Component {
 
         this.state = {
             loadingListing: false,
-            communityType: "MyCommunities",
+            communityType: CommunityFilter.MY_COMMUNITIES,
             communitiesList: [],
             editDlgOpen: false,
             isCommunityAdmin: false,
