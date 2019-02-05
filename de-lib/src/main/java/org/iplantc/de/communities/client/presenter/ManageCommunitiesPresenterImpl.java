@@ -256,7 +256,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
                                     String appId,
                                     ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback) {
-        metadataServiceFacade.deleteAppCommunityTags(communityDisplayName, appId, new AsyncCallback<Splittable>() {
+        metadataServiceFacade.deleteAppCommunityTags(communityDisplayName, appId, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
@@ -264,7 +264,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
             }
 
             @Override
-            public void onSuccess(Splittable result) {
+            public void onSuccess(Void result) {
                 callback.onSuccess(null);
             }
         });

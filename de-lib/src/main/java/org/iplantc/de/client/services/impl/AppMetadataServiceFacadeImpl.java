@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
+import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
@@ -139,7 +140,7 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
     }
 
     @Override
-    public void deleteAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Splittable> callback) {
+    public void deleteAppCommunityTags(String communityDisplayName, String appId, AsyncCallback<Void> callback) {
         AvuList avuList = avuAutoBeanFactory.getAvuList().as();
         avuList.setAvus(getCommunityAvuList(Lists.newArrayList(communityDisplayName)));
 
@@ -147,7 +148,7 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(avuList));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, encode.getPayload());
-        callService(wrapper, new SplittableCallbackConverter(callback));
+        callService(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
     List<Avu> getCommunityAvuList(List<String> communities) {
