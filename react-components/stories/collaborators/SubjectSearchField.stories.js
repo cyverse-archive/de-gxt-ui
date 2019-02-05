@@ -9,8 +9,8 @@ class SubjectSearchFieldTest extends Component {
         });
 
         const presenter = {
-            searchCollaborators: (input, fn) => {
-                fn(dataSource);
+            searchCollaborators: (input, resolve, reject) => {
+                resolve(dataSource);
             }
         };
 

@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
@@ -97,7 +98,7 @@ public interface SearchView extends IsWidget,
 
         void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback);
 
-        void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback);
+        void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback, ReactErrorCallback errorCallback);
 
         SearchView getSearchForm();
 

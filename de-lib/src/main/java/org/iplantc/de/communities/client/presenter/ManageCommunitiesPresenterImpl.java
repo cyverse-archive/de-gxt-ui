@@ -184,11 +184,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
-    public void searchCollaborators(String searchTerm, ReactSuccessCallback callback) {
+    public void searchCollaborators(String searchTerm, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
         collaboratorsServiceFacade.searchCollaborators(searchTerm, new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override

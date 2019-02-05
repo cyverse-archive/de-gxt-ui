@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -37,6 +38,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.inject.Inject;
@@ -368,11 +370,12 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback) {
+    public void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback, ReactErrorCallback errorCallback) {
         collaboratorsServiceFacade.searchCollaborators(searchTerm, new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override

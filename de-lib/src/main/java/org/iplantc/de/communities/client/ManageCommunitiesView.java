@@ -51,7 +51,7 @@ public interface ManageCommunitiesView extends IsWidget {
         @SuppressWarnings("unusable-by-js")
         void fetchCommunityApps(String communityDisplayName, ReactSuccessCallback successCallback, ReactErrorCallback errorCallback);
 
-        void searchCollaborators(String searchTerm, ReactSuccessCallback callback);
+        void searchCollaborators(String searchTerm, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
 
         @SuppressWarnings("unusable-by-js")
         void getCommunityAdmins(String communityName, FetchCommunityPrivilegesCallback callback, ReactErrorCallback errorCallback);
