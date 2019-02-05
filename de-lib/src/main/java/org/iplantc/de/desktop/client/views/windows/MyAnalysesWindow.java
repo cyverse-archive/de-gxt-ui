@@ -76,6 +76,12 @@ public class MyAnalysesWindow extends WindowBase {
     @Override
     public <C extends WindowConfig> void update(C config) {
         super.update(config);
+        AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
+        if(analysisWindowConfig != null && presenter != null) {
+            presenter.go(this,
+                         DeModule.WindowIds.ANALYSES_WINDOW,
+                         analysisWindowConfig.getSelectedAnalyses());
+        }
     }
 
     @Override
