@@ -25,7 +25,6 @@ import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Select from "@material-ui/core/Select";
-import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -54,7 +53,7 @@ class AnalysesToolbar extends Component {
         const {classes, baseDebugId, baseToolbarId, intl, searchInputValue} = this.props;
         const {anchorEl} = this.state;
         return (
-            <Toolbar className={classes.toolbar}>
+            <div className={classes.toolbar}>
                 <ToolbarGroup style={{paddingLeft: 0}}>
                     <Button
                         id={baseDebugId}
@@ -78,7 +77,6 @@ class AnalysesToolbar extends Component {
                     <Button
                         id={build(baseToolbarId, ids.BUTTON_REFRESH)}
                         variant="raised"
-                        size="small"
                         className={classes.toolbarButton}
                         onClick={this.props.handleRefresh}>
                         <RefreshIcon className={classes.toolbarItemColor}/>
@@ -87,9 +85,8 @@ class AnalysesToolbar extends Component {
                     <form autoComplete="off">
                         <FormControl
                             id={build(baseToolbarId, ids.PERMISSIONS)}
-                            className={classes.toolbarMargins}
-                            style={{margin: 5}}>
-                            <InputLabel  style={{paddingLeft: 5}}>
+                            className={classes.dropDown}>
+                            <InputLabel className={classes.dropDownLabel}>
                                 {getMessage("permission")}
                             </InputLabel>
                             <Select
@@ -111,15 +108,16 @@ class AnalysesToolbar extends Component {
                             </Select>
                         </FormControl>
                         <FormControl
-                            className={classes.toolbarMargins}
-                            style={{margin: 5}}>
-                            <InputLabel style={{paddingLeft: 5}}>{getMessage("type")}</InputLabel>
+                            id={build(baseToolbarId, ids.APP_TYPE)}
+                            className={classes.dropDown}>
+                            <InputLabel className={classes.dropDownLabel}>
+                                {getMessage("type")}
+                            </InputLabel>
                             <Select
                                 value={this.props.typeFilter}
                                 onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
                                 input={
-                                    <OutlinedInput name="type"
-                                                   id={build(baseToolbarId, ids.APP_TYPE)}/>
+                                    <OutlinedInput name="type"/>
                                 } style={{minWidth: 120}}>
                                 <MenuItem
                                     id={build(baseToolbarId, ids.TYPE + ids.ALL)}
@@ -138,7 +136,7 @@ class AnalysesToolbar extends Component {
                                     value={"OSG"}>{appType.osg}</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl className={classes.toolbarMargins} style={{margin: 5}}>
+                        <FormControl style={{margin: 5}}>
                             <SearchField id={build(baseToolbarId, ids.FIELD_SEARCH)}
                                          handleSearch={this.props.onSearch}
                                          value={searchInputValue}
@@ -148,7 +146,7 @@ class AnalysesToolbar extends Component {
                     </form>
 
                 </ToolbarGroup>
-            </Toolbar>
+            </div>
         );
     }
 }

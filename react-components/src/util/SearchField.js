@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Search from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
+import { Palette } from "@material-ui/icons";
+import CyVersePalette from "./CyVersePalette";
 
 /**
  * @author aramsey
@@ -79,12 +81,14 @@ class SearchField extends Component {
             startAdornment,
             endAdornment,
             children,
-            classes
+            classes,
+            height,
         } = this.props;
 
         return (
             <div>
                 <TextField id={id}
+                           style={{height:height}}
                            variant="outlined"
                            label={label}
                            placeholder={placeholder}
@@ -106,6 +110,7 @@ class SearchField extends Component {
 
 SearchField.propTypes = {
     id: PropTypes.any,
+    height: PropTypes.number,
     handleSearch: PropTypes.func.isRequired,
     label: PropTypes.any,
     placeholder: PropTypes.any,
@@ -117,9 +122,10 @@ SearchField.propTypes = {
 
 SearchField.defaultProps = {
     label: '',
+    height: 38,
     helperText: "",
     keyPressTimer: 1000,
-    startAdornment: <InputAdornment position='start'><Search/></InputAdornment>,
+    startAdornment: <InputAdornment position='start'><Search style={{color:CyVersePalette.darkBlue}}/></InputAdornment>,
     endAdornment: null
 };
 
