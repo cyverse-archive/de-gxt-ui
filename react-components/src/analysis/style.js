@@ -33,7 +33,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
-        height: 55,
+        height: 60,
     },
     dialogCloseButton: {
         position: 'absolute',
@@ -68,7 +68,8 @@ export default (theme) => ({
     },
     dropDown: {
         margin: 3,
-        height: 40
+        height: 40,
+        flexDirection: 'unset',
     },
     dropDownLabel: {
         paddingLeft: 5,

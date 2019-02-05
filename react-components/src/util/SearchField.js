@@ -88,7 +88,7 @@ class SearchField extends Component {
         return (
             <div>
                 <TextField id={id}
-                           style={{height:height}}
+                           style={{height:height, flexDirection: 'unset',}}
                            variant="outlined"
                            label={label}
                            placeholder={placeholder}
