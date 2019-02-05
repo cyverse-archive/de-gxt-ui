@@ -24,7 +24,7 @@ class AppGridListing extends Component {
 
         this.state = {
             selected: [],
-            order: "desc",
+            order: "asc",
             orderBy: "Name",
         };
 

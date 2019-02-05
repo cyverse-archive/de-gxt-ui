@@ -24,7 +24,7 @@ class CommunityListing extends Component {
         super(props);
 
         this.state = {
-            order: "desc",
+            order: "asc",
             orderBy: "Name",
         };
 
