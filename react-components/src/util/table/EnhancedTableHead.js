@@ -52,7 +52,7 @@ class EnhancedTableHead extends React.Component {
                     {columnData.map(column => {
                         return (
                             <TableCell
-                                key={column.name}
+                                key={column.key ? column.key : column.name}
                                 variant="head"
                                 numeric={column.numeric}
                                 padding={padding || "default"}
@@ -68,9 +68,13 @@ class EnhancedTableHead extends React.Component {
                                             enterDelay={300}
                                         >
                                             <TableSortLabel
-                                                active={orderBy === column.name}
+                                                active={column.key ?
+                                                    orderBy === column.key :
+                                                    orderBy === column.name}
                                                 direction={order.toLowerCase()}
-                                                onClick={this.createSortHandler(column.name)}
+                                                onClick={this.createSortHandler(column.key ?
+                                                    column.key :
+                                                    column.name)}
                                                 style={{color: Color.white}}
                                             >
                                                 {column.name}
@@ -103,6 +107,7 @@ EnhancedTableHead.propTypes = {
             name: PropTypes.string,
             numeric: PropTypes.bool,
             enableSorting: PropTypes.bool,
+            key: PropTypes.string
         })),
     padding: PropTypes.string,
 };

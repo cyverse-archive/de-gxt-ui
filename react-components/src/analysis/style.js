@@ -4,6 +4,7 @@ export default (theme) => ({
     table: {
         overflow: "auto",
         height: "80%",
+        width: "100%"
     },
     tableHead: {
         backgroundColor: "#e2e2e2",
@@ -23,7 +24,8 @@ export default (theme) => ({
         overflow: "auto",
     },
     toolbarButton: {
-        marginRight: 20,
+        marginRight: 10,
+        marginLeft: 10,
         textTransform: 'none',
         fontSize: 10,
     },
@@ -31,12 +33,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
-        paddingRight: 1,
-        width: '100%',
-    },
-    toolbarMargins: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
+        height: 55,
     },
     dialogCloseButton: {
         position: 'absolute',
@@ -61,14 +58,20 @@ export default (theme) => ({
     toolbarItemColor: {
         color: Color.darkBlue,
     },
-
     inputType: {
         cursor: "pointer",
         textDecoration: "underline",
         textOverflow: "ellipsis",
     },
-
     otherType: {
         whiteSpace: "pre-wrap",
+    },
+    dropDown: {
+        margin: 3,
+        height: 40
+    },
+    dropDownLabel: {
+        paddingLeft: 5,
+        fontSize:10
     }
 });
