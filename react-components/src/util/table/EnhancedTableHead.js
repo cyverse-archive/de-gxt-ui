@@ -27,13 +27,14 @@ class EnhancedTableHead extends React.Component {
             order,
             orderBy,
             numSelected,
-            rowCount,
             columnData,
             selectable,
             classes,
             padding,
+            rowInPage
         } = this.props;
 
+        let isInDeterminate = numSelected > 0 && numSelected !== rowInPage;
         return (
             <TableHead>
                 <TableRow>
@@ -41,8 +42,8 @@ class EnhancedTableHead extends React.Component {
                         <TableCell padding={padding ? padding : "default"}
                                    className={classes.checkbox_cell}>
                             <Checkbox
-                                indeterminate={numSelected > 0 && numSelected < rowCount}
-                                checked={numSelected === rowCount}
+                                indeterminate={isInDeterminate}
+                                checked={numSelected === rowInPage}
                                 onChange={onSelectAllClick}
                                 className={classes.column_heading}
                             />

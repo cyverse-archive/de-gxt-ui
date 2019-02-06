@@ -362,11 +362,13 @@ class AnalysesView extends Component {
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
-        this.setState({page: page, offset: rowsPerPage * page});
+        //reset selection between pages
+        this.setState({page: page, offset: rowsPerPage * page, selected: []},
+            () => this.fetchAnalyses());
     }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value});
+        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses());
     }
 
     handleSelectAllClick(event, checked) {
@@ -826,11 +828,11 @@ class AnalysesView extends Component {
                                 orderBy={orderBy}
                                 onSelectAllClick={this.handleSelectAllClick}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={total}
                                 columnData={columnData}
                                 baseId={baseId}
                                 ids={ids}
                                 padding="none"
+                                rowInPage={data.length}
                             />
                             <TableBody>
                                 {data.map(analysis => {
@@ -943,7 +945,7 @@ class AnalysesView extends Component {
                                      onChangePage={this.handleChangePage}
                                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                      ActionsComponent={TablePaginationActions}
-                                     rowsPerPageOptions={[100, 500, 1000]}
+                                     rowsPerPageOptions={[5, 100, 500, 1000]}
                     />
                 </div>
                 {selectedAnalysis &&
