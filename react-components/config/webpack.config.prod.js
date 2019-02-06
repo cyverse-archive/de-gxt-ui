@@ -168,6 +168,7 @@ module.exports = function(webpackEnv) {
                         .replace(/\\/g, '/')
                 : isEnvDevelopment &&
                 (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+            library: "CyVerseReactComponents",
         },
         optimization: {
             minimize: isEnvProduction,
@@ -457,7 +458,7 @@ module.exports = function(webpackEnv) {
                             // its runtime that would otherwise be processed through "file" loader.
                             // Also exclude `html` and `json` extensions so they get processed
                             // by webpacks internal loaders.
-                            exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+                            exclude: [/\.(ejs|js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
                             options: {
                                 name: 'static/media/[name].[hash:8].[ext]',
                             },
@@ -474,8 +475,9 @@ module.exports = function(webpackEnv) {
                 Object.assign(
                     {},
                     {
-                        inject: true,
+                        inject: false,
                         template: paths.appHtml,
+                        filename: "../WEB-INF/jsp/react_include.jsp",
                     },
                     isEnvProduction
                         ? {
