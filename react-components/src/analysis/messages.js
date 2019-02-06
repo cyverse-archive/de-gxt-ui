@@ -42,7 +42,7 @@ var intlData = {
         "outputConditionHeader": "Select Output condition:",
         "saveToFile": "Save to file",
         "type": "App Type",
-        "permission": "Permission",
+        "permission": "View",
         "needHelp":"I still need help!",
         "noAnalysis": "No analysis to display!",
         "analysesExecDeleteWarning" : "This will remove the selected analyses and the parameters information associated with those analyses. Outputs can still be viewed in the Data window within the folder created by these analyses.",
