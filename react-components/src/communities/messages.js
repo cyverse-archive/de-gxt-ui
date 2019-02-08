@@ -23,7 +23,9 @@ export default {
         leaveCommunity: "Leave Community",
         myCommunities: "My Communities",
         nameField: "Community Name",
-        no: 'No',
+        no: "No",
+        noAdmins: "No community admins to display",
+        noCommunities: "No communities to display",
         ok: "OK",
         yes: "Yes",
     }

@@ -1,8 +1,11 @@
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
+import EmptyTable from "../../util/table/EmptyTable";
 import { getSorting, stableSort } from "../../util/table/TableSort";
 import ids from "../ids";
+import messages from "../messages";
 import styles from "../styles";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 
 import PropTypes from "prop-types";
 import React, { Component } from "react";
@@ -72,6 +75,7 @@ class CommunityListing extends Component {
                                        onRequestSort={this.onRequestSort}
                     />
                     <TableBody>
+                        {(!data || data.length === 0) && <EmptyTable message={getMessage("noCommunities")} numColumns={tableColumns.length}/>}
                         {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(community => {
                             return (
                                 <TableRow tabIndex={-1}
@@ -107,4 +111,4 @@ CommunityListing.propTypes = {
     onCommunityClicked: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(CommunityListing);
+export default withStyles(styles)(withI18N(CommunityListing, messages));

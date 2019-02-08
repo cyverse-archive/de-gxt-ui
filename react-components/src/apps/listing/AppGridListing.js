@@ -1,8 +1,11 @@
 import AppStatusIcon from "./AppStatusIcon";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
+import EmptyTable from "../../util/table/EmptyTable";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import { getSorting, stableSort } from "../../util/table/TableSort";
 import ids from "./ids";
+import messages from "../messages";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -95,6 +98,8 @@ class AppGridListing extends Component {
             onRemoveApp,
         } = this.props;
 
+        let columnData = getTableColumns(deletable);
+
         return (
             <Table>
                 <EnhancedTableHead selectable={selectable}
@@ -104,11 +109,12 @@ class AppGridListing extends Component {
                                    orderBy={orderBy}
                                    baseId={parentId}
                                    ids={ids.TABLE_HEADER}
-                                   columnData={getTableColumns(deletable)}
+                                   columnData={columnData}
                                    onRequestSort={this.onRequestSort}
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
+                    {(!data || data.length === 0) && <EmptyTable message={getMessage("noApps")} numColumns={columnData.length}/>}
                     {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(app => {
                         const isSelected = this.isSelected(app);
                         return (
@@ -175,4 +181,4 @@ AppGridListing.propTypes = {
     onRemoveApp: PropTypes.func,
 };
 
-export default AppGridListing;
+export default withI18N(AppGridListing, messages);

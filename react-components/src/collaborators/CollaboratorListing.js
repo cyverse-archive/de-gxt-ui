@@ -1,6 +1,9 @@
+import EmptyTable from "../util/table/EmptyTable";
 import EnhancedTableHead from "../util/table/EnhancedTableHead";
 import { getSorting, stableSort } from "../util/table/TableSort";
 import ids from "./ids";
+import messages from "./messages";
+import withI18N, { getMessage } from "../util/I18NWrapper";
 
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -93,8 +96,11 @@ class CollaboratorListing extends Component {
             parentId,
             data,
             deletable,
-            onDeleteCollaborator
+            onDeleteCollaborator,
+            emptyTableMsg,
         } = this.props;
+
+        let columnData = getTableColumns(deletable);
 
         return (
             <Table>
@@ -105,11 +111,12 @@ class CollaboratorListing extends Component {
                                    orderBy={orderBy}
                                    baseId={parentId}
                                    ids={ids.TABLE_HEADER}
-                                   columnData={getTableColumns(deletable)}
+                                   columnData={columnData}
                                    onRequestSort={this.onRequestSort}
                                    onSelectAllClick={this.handleSelectAllClick}
                 />
                 <TableBody>
+                    {(!data || data.length === 0) && <EmptyTable message={emptyTableMsg} numColumns={columnData.length}/>}
                     {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(subject => {
                         const isSelected = this.isSelected(subject);
                         return (
@@ -167,6 +174,7 @@ CollaboratorListing.propTypes = {
     data: PropTypes.array.isRequired,
     onDeleteCollaborator: PropTypes.func,
     deletable: PropTypes.bool,
+    emptyTableMsg: PropTypes.string.isRequired,
 };
 
-export default CollaboratorListing;
+export default withI18N(CollaboratorListing, messages);

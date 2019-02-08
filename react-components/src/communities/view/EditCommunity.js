@@ -371,7 +371,9 @@ class EditCommunity extends Component {
                                              collaboratorsUtil={collaboratorsUtil}
                                              data={admins}
                                              deletable={isCommunityAdmin}
-                                             onDeleteCollaborator={this.handleRemoveAdmin}/>
+                                             onDeleteCollaborator={this.handleRemoveAdmin}
+                                             messages={messages.messages}
+                                             emptyTableMsg={getMessage("noAdmins")}/>
                     </fieldset>
                     <fieldset className={classes.formItem}>
                         <legend>{getMessage('apps')}</legend>
