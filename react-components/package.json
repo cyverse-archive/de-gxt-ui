@@ -43,7 +43,8 @@
   },
   "scripts": {
     "start": "npm run storybook",
-    "build": "node scripts/build.js",
+    "build": "REACT_APP_MODE=development node scripts/build.js",
+    "prod": "REACT_APP_MODE=production node scripts/build.js",
     "test": "react-scripts test --env=jsdom",
     "test:ci": "CI=true react-scripts test --env=jsdom --ci --testResultsProcessor ./node_modules/jest-junit-reporter",
     "storybook": "start-storybook -p 6006",

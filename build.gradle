@@ -71,11 +71,18 @@ task npmTest(type:Exec, dependsOn:npmInstall) {
     commandLine 'npm', 'run', 'test:ci'
 }
 
-task webpack(type:Exec, dependsOn:npmInstall) {
+task webpackDev(type:Exec, dependsOn:npmInstall) {
     group 'Build'
     description 'Builds the react-components directory.'
     workingDir 'react-components'
     commandLine 'npm', 'run', 'build'
+}
+
+task webpackProd(type:Exec, dependsOn:npmInstall) {
+    group 'Build'
+    description 'Builds the react-components directory.'
+    workingDir 'react-components'
+    commandLine 'npm', 'run', 'prod'
 }
 
 apply from: 'iplant/webapps.gradle'
