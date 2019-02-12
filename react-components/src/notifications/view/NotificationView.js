@@ -37,6 +37,7 @@ function Message(props) {
     let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
     return (
         <TableCell
+            padding="none"
             className={className}>
             <div
                 onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
@@ -232,11 +233,11 @@ class NotificationView extends Component {
                             orderBy={orderBy}
                             onSelectAllClick={this.handleSelectAllClick}
                             onRequestSort={this.handleRequestSort}
-                            rowCount={total}
                             columnData={columnData}
                             baseId={baseId}
                             ids={ids}
-
+                            rowsInPage={data.length}
+                            padding="none"
                         />
                         <TableBody>
                             {data.map(n => {
@@ -249,17 +250,17 @@ class NotificationView extends Component {
                                               selected={isSelected}
                                               hover
                                               key={n.message.id}>
-                                        <TableCell>
+                                        <TableCell padding="none">
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell>{notificationCategory[n.type.replace(
+                                        <TableCell padding="none">{notificationCategory[n.type.replace(
                                             /\s/g,
                                             "_").toLowerCase()]}</TableCell>
                                         <Message message={n.message}
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell>
+                                        <TableCell padding="none">
                                             {formatDate(n.message.timestamp, constants.DATE_FORMAT)}
                                         </TableCell>
                                     </TableRow>
@@ -277,7 +278,7 @@ class NotificationView extends Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     ActionsComponent={TablePaginationActions}
-                    rowsPerPageOptions={[100, 500, 1000]}
+                    rowsPerPageOptions={[5, 100, 500, 1000]}
                 />
             </div>
         )

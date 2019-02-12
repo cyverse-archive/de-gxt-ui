@@ -30,6 +30,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
+        height: 55,
     },
     notification: {
         textDecoration: 'underline',
@@ -37,5 +38,14 @@ export default (theme) => ({
     },
     unSeenNotificationBackground: {
         backgroundColor: Color.lightBlue,
+    },
+    dropDown: {
+        margin: 3,
+        height: 40,
+        flexDirection: 'unset',
+    },
+    dropDownLabel: {
+        paddingLeft: 5,
+        fontSize:10
     }
 });

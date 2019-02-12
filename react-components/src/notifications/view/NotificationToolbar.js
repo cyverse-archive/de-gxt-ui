@@ -4,11 +4,11 @@
  *  @author sriram
  * */
 import React, { Component } from "react";
-import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 import FormControl from "@material-ui/core/FormControl";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -28,19 +28,17 @@ class NotificationToolbar extends Component {
         const {classes, baseDebugId} = this.props;
         const baseId = baseDebugId + ids.TOOLBAR;
         return (
-            <Toolbar className={classes.toolbar}>
+            <div className={classes.toolbar}>
                 <ToolbarGroup>
                     <form autoComplete="off">
-                        <FormControl>
-                            <InputLabel htmlFor="filter-simple">Filter</InputLabel>
+                        <FormControl className={classes.dropDown}>
+                            <InputLabel
+                                className={classes.dropDownLabel}>{getMessage("filter")}</InputLabel>
                             <Select
                                 native
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
-                                inputProps={{
-                                    name: getMessage("filter"),
-                                    id: build(baseId, ids.FILTER),
-                                }}>
+                                input={<OutlinedInput name="filter"/>}>
                                 <option
                                     value={notificationCategory.new}>{notificationCategory.new}</option>
                                 <option
@@ -89,7 +87,7 @@ class NotificationToolbar extends Component {
                     </Button>
 
                 </ToolbarGroup>
-            </Toolbar>
+            </div>
 
         )
     }
