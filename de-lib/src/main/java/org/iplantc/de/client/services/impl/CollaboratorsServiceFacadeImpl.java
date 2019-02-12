@@ -1,16 +1,11 @@
-/**
- * 
- */
 package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.converters.FastMapCollaboratorCallbackConverter;
-import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -56,30 +51,6 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
         deServiceFacade.getServiceData(wrapper, new SubjectListCallbackConverter(callback, factory));
-    }
-
-    @Override
-    public void addCollaborators(List<Subject> subjects, AsyncCallback<Void> callback) {
-        JSONObject users = buildJSONModel(subjects);
-
-        String address = deProperties.getMuleServiceBaseUrl() + "collaborators"; //$NON-NLS-1$
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
-                users.toString());
-
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
-    }
-
-    @Override
-    public void removeCollaborators(List<Subject> subjects, AsyncCallback<Void> callback) {
-        JSONObject users = buildJSONModel(subjects);
-
-        String address = deProperties.getMuleServiceBaseUrl() + "remove-collaborators"; //$NON-NLS-1$
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
-                users.toString());
-
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
     @Override
