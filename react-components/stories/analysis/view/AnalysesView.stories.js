@@ -196,6 +196,7 @@ class AnalysesViewTest extends Component {
                           filter,
                           orderBy,
                           order,
+                          resetSelectedAnalyses,
                           resultCallback,
                           errorCallback) => {
                 resultCallback(analysesList);
