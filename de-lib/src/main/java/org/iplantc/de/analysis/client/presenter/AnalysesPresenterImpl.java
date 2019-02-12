@@ -62,6 +62,8 @@ import java.util.List;
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
+    private String baseDebugId;
+
     private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
         private final String analysisName;
         final ReactSuccessCallback callback;
@@ -181,6 +183,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                             Splittable filters,
                             String sortField,
                             String sortDir,
+                            boolean resetSelectedAnalyses,
                             ReactSuccessCallback callback,
                             ReactErrorCallback errorCallback) {
         AutoBean<FilterBeanList> filterList =
@@ -200,6 +203,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 if (errorCallback != null) {
                     errorCallback.onError(statusCode, exception.getMessage());
                 }
+                if(resetSelectedAnalyses) {
+                    view.load(AnalysesPresenterImpl.this, baseDebugId, null);
+                }
             }
 
             @Override
@@ -207,6 +213,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 AutoBean<AnalysesList> ret = AutoBeanCodex.decode(factory, AnalysesList.class, result);
                 if (callback != null) {
                     callback.onSuccess(AutoBeanCodex.encode(ret));
+                }
+                if(resetSelectedAnalyses) {
+                    view.load(AnalysesPresenterImpl.this, baseDebugId, null);
                 }
             }
         });
@@ -288,6 +297,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
+        this.baseDebugId = baseDebugId;
         container.setWidget(view);
         if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
             view.load(this, baseDebugId, selectedAnalyses.get(0));
