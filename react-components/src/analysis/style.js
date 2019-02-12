@@ -33,7 +33,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
-        height: 60,
+        height: 55,
     },
     dialogCloseButton: {
         position: 'absolute',

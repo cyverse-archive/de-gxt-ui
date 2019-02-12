@@ -97,6 +97,7 @@ public interface AnalysesView extends IsWidget {
                          Splittable filters,
                          String sortField,
                          String sortDir,
+                         boolean resetSelectedAnalyses,
                          ReactSuccessCallback callback,
                          ReactErrorCallback errorCallback);
 

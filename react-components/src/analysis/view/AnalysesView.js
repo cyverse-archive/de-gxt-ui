@@ -265,10 +265,33 @@ class AnalysesView extends Component {
     }
 
     componentDidMount() {
-        this.fetchAnalyses();
+        this.fetchAnalyses(false);
     }
 
-    fetchAnalyses() {
+    componentDidUpdate(prevProps) {
+        //this is bad. react recommends enclosing this in conditional statement.
+        //But if i add
+        //prevProps.selectedAnalysisId !== this.props.selectedAnalysisId
+        //check, i cannot repeat the same operation of clicking the notification to reconfigure
+        // AnalysesView. For example: Open Analyses Window, click on a notification, Analyses window will
+        // reconfigure. Repeat the same step after clearing search field, it won't work since the prop
+        // hasn't changed.
+        //Kludge - Pass a boolean to presenter which in turn resets selected analyses.
+        if (prevProps.selectedAnalysisId !== this.props.selectedAnalysisId &&
+            this.props.selectedAnalysisId) {
+            this.setState({
+                idFilter: this.props.selectedAnalysisId,
+                appNameFilter: this.props.selectedAnalysisName
+            }, () => this.fetchAnalyses(true));
+        }
+    }
+
+    /**
+     * Fetch analyses for the given configuration from state.
+     *
+     * @param resetSelectedAnalyses Boolean to reset selected analyses from notifications (Kludge)
+     */
+    fetchAnalyses(resetSelectedAnalyses) {
         const {rowsPerPage, offset, order, orderBy} = this.state;
         this.setState({loading: true});
 
@@ -288,7 +311,12 @@ class AnalysesView extends Component {
             filtersObj.filters = [parentFilter, typeFilter, permFilter];
         }
 
-        this.props.presenter.getAnalyses(rowsPerPage, offset, filtersObj, orderBy, order.toUpperCase(),
+        this.props.presenter.getAnalyses(rowsPerPage,
+            offset,
+            filtersObj,
+            orderBy,
+            order.toUpperCase(),
+            resetSelectedAnalyses,
             (analysesList) => {
                 this.setState({
                     loading: false,
@@ -306,7 +334,7 @@ class AnalysesView extends Component {
 
     handleBatchIconClick(event, id) {
         event.stopPropagation();
-        this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses());
+        this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses(false));
     }
 
     handleRequestSort(event, property) {
@@ -320,7 +348,7 @@ class AnalysesView extends Component {
         this.setState({
             order,
             orderBy,
-        }, () => this.fetchAnalyses());
+        }, () => this.fetchAnalyses(false));
     }
 
     getParentIdFilter() {
@@ -398,17 +426,17 @@ class AnalysesView extends Component {
         return searchFilters;
 
     }
-    
+
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
         //reset selection between pages
         this.setState({page: page, offset: rowsPerPage * page, selected: []},
-            () => this.fetchAnalyses());
+            () => this.fetchAnalyses(false));
     }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses());
+        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses(false));
     }
 
     handleSelectAllClick(event, checked) {
@@ -512,8 +540,8 @@ class AnalysesView extends Component {
     }
     handleParamValueClick(parameter) {
         //have to close view params otherwise file viewer wont show up front
-       this.setState({viewParamsDialogOpen: false});
-       this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
+        this.setState({viewParamsDialogOpen: false});
+        this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
@@ -594,11 +622,11 @@ class AnalysesView extends Component {
             Promise.all(promises)
                 .then(value => {
                     this.setState({loading: false});
-                    this.fetchAnalyses();
+                    this.fetchAnalyses(false);
                 })
                 .catch(error => {
                     this.setState({loading: false});
-                    this.fetchAnalyses();
+                    this.fetchAnalyses(false);
                 });
         }
     }
@@ -643,7 +671,7 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                     selected: []
-                }, () => this.fetchAnalyses());
+                }, () => this.fetchAnalyses(false));
             },
             (errorCode, errorMessage) => {
                 this.setState({
@@ -761,11 +789,11 @@ class AnalysesView extends Component {
     }
 
     onPermissionsFilterChange(permFilterVal) {
-        this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses());
+        this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses(false));
     }
 
     onTypeFilterChange(typeFilterVal) {
-        this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses());
+        this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses(false));
     }
 
     handleSearch(searchText) {
@@ -777,7 +805,7 @@ class AnalysesView extends Component {
                 idFilter:"",
                 nameFilter: searchText,
                 appNameFilter: searchText,
-            }, () => this.fetchAnalyses());
+            }, () => this.fetchAnalyses(false));
         } else {
             this.setState({
                 permFilter: permission.all,
@@ -786,7 +814,7 @@ class AnalysesView extends Component {
                 parentId: "",
                 nameFilter: "",
                 appNameFilter: "",
-            }, () => this.fetchAnalyses());
+            }, () => this.fetchAnalyses(false));
         }
     }
 
@@ -798,7 +826,6 @@ class AnalysesView extends Component {
             email,
             username,
             baseDebugId,
-            selectedAnalysisName
         } = this.props;
         const {
             rowsPerPage,
@@ -808,6 +835,7 @@ class AnalysesView extends Component {
             selected,
             total,
             data,
+            appNameFilter,
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
             confirmDeleteDialogOpen,
@@ -853,7 +881,7 @@ class AnalysesView extends Component {
                                      onPermissionsFilterChange={this.onPermissionsFilterChange}
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
-                                     searchInputValue={selectedAnalysisName}
+                                     searchInputValue={appNameFilter}
                                      selectionCount={selectionCount}
                                      owner={owner}
                                      sharable={sharable}
@@ -871,7 +899,7 @@ class AnalysesView extends Component {
                                 columnData={columnData}
                                 baseId={baseId}
                                 padding="none"
-                                rowInPage={data.length}
+                                rowsInPage={data.length}
                             />
                             <TableBody>
                                 {data.map(analysis => {
@@ -934,7 +962,7 @@ class AnalysesView extends Component {
                                                         username={username}/>
                                             </TableCell>
                                             <TableCell padding="none"
-                                                       >
+                                            >
                                                 <DotMenu
                                                     baseDebugId={build(gridId,
                                                         id + ids.ANALYSIS_DOT_MENU)}
@@ -975,7 +1003,7 @@ class AnalysesView extends Component {
                             </Typography>
                         }
                     </div>
-                    <TablePagination style={{height: 50}}
+                    <TablePagination style={{height: 40}}
                                      colSpan={3}
                                      component="div"
                                      count={total}
