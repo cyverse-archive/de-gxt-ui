@@ -29,6 +29,7 @@ class CommunityListing extends Component {
         this.state = {
             order: "asc",
             orderBy: "Name",
+            selectedCommunity: null,
         };
 
         this.onRequestSort = this.onRequestSort.bind(this);
@@ -44,10 +45,19 @@ class CommunityListing extends Component {
         this.setState({order, orderBy});
     }
 
+    handleRowClick(community) {
+        this.setState({
+            selectedCommunity: community
+        });
+
+        this.props.onCommunitySelected(community);
+    }
+
     render() {
         const {
             order,
             orderBy,
+            selectedCommunity,
         } = this.state;
 
         const {
@@ -83,6 +93,8 @@ class CommunityListing extends Component {
                                 return (
                                     <TableRow tabIndex={-1}
                                               hover
+                                              onClick={() => this.handleRowClick(community)}
+                                              selected={selectedCommunity && selectedCommunity.id === community.id}
                                               key={community.id}>
                                         <TableCell>
                                             <DEHyperLink onClick={() => onCommunityClicked(community)}
@@ -113,6 +125,7 @@ CommunityListing.propTypes = {
     parentId: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
     onCommunityClicked: PropTypes.func.isRequired,
+    onCommunitySelected: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(withI18N(CommunityListing, messages));

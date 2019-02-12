@@ -21,7 +21,7 @@ const styles = theme => ({
     },
 
     toolbarItem: {
-        marginRight: "15px",
+        marginLeft: "15px",
     },
 
     textBlurb: {

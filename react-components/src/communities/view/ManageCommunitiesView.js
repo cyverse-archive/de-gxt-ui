@@ -34,6 +34,7 @@ class ManageCommunitiesView extends Component {
             'onCreateCommunityClicked',
             'handleCloseEditDlg',
             'onCommunityClicked',
+            'onCommunitySelected',
             'onCommunitySaved',
             'refreshCommunityList',
         ].forEach((fn) => this[fn] = this[fn].bind(this));
@@ -44,10 +45,7 @@ class ManageCommunitiesView extends Component {
     }
 
     handleCommunityFilterChange(selection) {
-        this.setState({
-            communityType: selection,
-            loadingListing: true,
-        });
+        this.setState({communityType: selection});
 
         this.refreshCommunityList(selection);
     }
@@ -56,6 +54,8 @@ class ManageCommunitiesView extends Component {
         if (!selection) {
             selection = this.state.communityType;
         }
+
+        this.setState({loadingListing: true});
 
         if (selection === CommunityFilter.MY_COMMUNITIES) {
             new Promise((resolve, reject) => {
@@ -90,11 +90,21 @@ class ManageCommunitiesView extends Component {
     }
 
     onCommunityClicked(community) {
+        const privileges = community.privileges;
         this.setState({
-            isCommunityAdmin: community.privileges.includes(PrivilegeTypes.ADMIN),
+            isCommunityAdmin: privileges && privileges.includes(PrivilegeTypes.ADMIN),
             isCommunityMember: community.member,
             editDlgOpen: true,
             selectedCommunity: community
+        })
+    }
+
+    onCommunitySelected(community) {
+        const privileges = community.privileges;
+        this.setState({
+            selectedCommunity: community,
+            isCommunityAdmin: privileges && privileges.includes(PrivilegeTypes.ADMIN),
+            isCommunityMember: community.member,
         })
     }
 
@@ -128,14 +138,21 @@ class ManageCommunitiesView extends Component {
         return (
             <div className={classes.wrapper}>
                 <CommunitiesToolbar parentId={parentId}
+                                    community={selectedCommunity}
+                                    isCommunityAdmin={isCommunityAdmin}
+                                    isMember={isCommunityMember}
+                                    presenter={presenter}
+                                    collaboratorsUtil={collaboratorsUtil}
                                     currentCommunityType={this.state.communityType}
                                     onCreateCommunityClicked={this.onCreateCommunityClicked}
+                                    refreshListing={this.refreshCommunityList}
                                     handleCommunityFilterChange={(event) => this.handleCommunityFilterChange(event.target.value)}/>
                 <CommunityListing collaboratorsUtil={collaboratorsUtil}
                                   parentId={parentId}
                                   data={communitiesList}
                                   loading={loadingListing}
-                                  onCommunityClicked={this.onCommunityClicked}/>
+                                  onCommunityClicked={this.onCommunityClicked}
+                                  onCommunitySelected={this.onCommunitySelected}/>
                 <EditCommunityDialog open={editDlgOpen}
                                      collaboratorsUtil={collaboratorsUtil}
                                      presenter={presenter}
