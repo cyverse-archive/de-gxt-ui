@@ -6,14 +6,14 @@ export default (theme) => ({
         height: "75%",
     },
     tableHead: {
-        backgroundColor: "#e2e2e2",
+        backgroundColor:  Color.blue,
         position: "sticky",
         top: 0
     },
     loadingStyle: {
         position: 'absolute',
-        top: 200,
-        left: 400,
+        top: '50%',
+        left: '50%',
         color: Color.orange,
     },
     container: {
