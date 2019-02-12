@@ -19,7 +19,7 @@
     "@material-ui/core": "^3.9.0",
     "@material-ui/icons": "^3.0.2",
     "classnames": "^2.2.6",
-    "formik": "^1.0.3",
+    "formik": "^1.5.0",
     "intro.js": "^2.9.3",
     "jss": "^9.8.7",
     "moment": "^2.22.1",

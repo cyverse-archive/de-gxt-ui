@@ -2,7 +2,7 @@
  * @author psarando
  */
 import React, { Component } from "react";
-import { Field, FieldArray } from "redux-form";
+import { FastField, FieldArray } from 'formik';
 
 import build from "../../util/DebugIDUtil";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
@@ -29,7 +29,7 @@ const OLSEntityTypeMenuItems = OLSEntityTypes.map((type, index) => (<MenuItem ke
 
 class OntologyLookupServiceSettings extends Component {
     render() {
-        const { parentID } = this.props;
+        const { field, parentID } = this.props;
         const formID = build(parentID, ids.OLS_PARAMS_EDIT_DIALOG);
 
         return (
@@ -43,43 +43,52 @@ class OntologyLookupServiceSettings extends Component {
                     <fieldset>
                         <legend>{getMessage("olsSettingTypeTitle")}</legend>
 
-                        <Field name="type"
-                               id={build(formID, ids.ONTOLOGY_ENTITY_TYPE)}
-                               label={getMessage("olsSettingTypeLabel")}
-                               component={FormSelectField}
+                        <FastField name={`${field}.type`}
+                                   id={build(formID, ids.ONTOLOGY_ENTITY_TYPE)}
+                                   label={getMessage("olsSettingTypeLabel")}
+                                   component={FormSelectField}
                         >
                             {OLSEntityTypeMenuItems}
-                        </Field>
+                        </FastField>
                     </fieldset>
                 </Grid>
 
                 <Grid item>
-                    <FieldArray name="ontology"
-                                component={StringListEditor}
-                                parentID={build(formID, ids.ONTOLOGIES)}
-                                title={getMessage("olsSettingOntologyTitle")}
-                                helpLabel={getMessage("olsSettingOntologyHelpLabel")}
-                                columnLabel={getMessage("olsSettingOntologyColumnLabel")}
+                    <FieldArray name={`${field}.ontology`}
+                                render={arrayHelpers =>
+                                    <StringListEditor
+                                        {...arrayHelpers}
+                                        parentID={build(formID, ids.ONTOLOGIES)}
+                                        title={getMessage("olsSettingOntologyTitle")}
+                                        helpLabel={getMessage("olsSettingOntologyHelpLabel")}
+                                        columnLabel={getMessage("olsSettingOntologyColumnLabel")}
+                                    />}
                     />
                 </Grid>
 
                 <Grid item>
-                    <FieldArray name="childrenOf"
-                                component={StringListEditor}
-                                parentID={build(formID, ids.ONTOLOGY_CHILDREN)}
-                                title={getMessage("olsSettingChildrenOfTitle")}
-                                helpLabel={getMessage("olsSettingChildrenOfHelpLabel")}
-                                columnLabel={getMessage("olsSettingIRIColumnLabel")}
+                    <FieldArray name={`${field}.childrenOf`}
+                                render={arrayHelpers =>
+                                    <StringListEditor
+                                        {...arrayHelpers}
+                                        parentID={build(formID, ids.ONTOLOGY_CHILDREN)}
+                                        title={getMessage("olsSettingChildrenOfTitle")}
+                                        helpLabel={getMessage("olsSettingChildrenOfHelpLabel")}
+                                        columnLabel={getMessage("olsSettingIRIColumnLabel")}
+                                    />}
                     />
                 </Grid>
 
                 <Grid item>
-                    <FieldArray name="allChildrenOf"
-                                component={StringListEditor}
-                                parentID={build(formID, ids.ONTOLOGY_ALL_CHILDREN)}
-                                title={getMessage("olsSettingAllChildrenOfTitle")}
-                                helpLabel={getMessage("olsSettingAllChildrenOfHelpLabel")}
-                                columnLabel={getMessage("olsSettingIRIColumnLabel")}
+                    <FieldArray name={`${field}.allChildrenOf`}
+                                render={arrayHelpers =>
+                                    <StringListEditor
+                                        {...arrayHelpers}
+                                        parentID={build(formID, ids.ONTOLOGY_ALL_CHILDREN)}
+                                        title={getMessage("olsSettingAllChildrenOfTitle")}
+                                        helpLabel={getMessage("olsSettingAllChildrenOfHelpLabel")}
+                                        columnLabel={getMessage("olsSettingIRIColumnLabel")}
+                                    />}
                     />
                 </Grid>
             </Grid>

@@ -17,14 +17,14 @@ import styles from "./style";
 
 import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
 import {
-    FormikCheckbox,
-    FormikIntegerField,
-    FormikNumberField,
-    FormikSelectField,
-    FormikTextField,
+    FormCheckbox,
+    FormIntegerField,
     FormMultilineTextField,
+    FormNumberField,
+    FormSelectField,
+    FormTextField,
     FormTimestampField,
-    getFormikError,
+    getFormError,
 } from "../util/FormField";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
@@ -142,13 +142,13 @@ class MetadataTemplateAttributeView extends Component {
 
                                 switch (attribute.type) {
                                     case "Boolean":
-                                        FieldComponent = FormikCheckbox;
+                                        FieldComponent = FormCheckbox;
                                         break;
                                     case "Number":
-                                        FieldComponent = FormikNumberField;
+                                        FieldComponent = FormNumberField;
                                         break;
                                     case "Integer":
-                                        FieldComponent = FormikIntegerField;
+                                        FieldComponent = FormIntegerField;
                                         break;
                                     case "Multiline Text":
                                         FieldComponent = FormMultilineTextField;
@@ -158,7 +158,7 @@ class MetadataTemplateAttributeView extends Component {
                                         break;
 
                                     case "Enum":
-                                        FieldComponent = FormikSelectField;
+                                        FieldComponent = FormSelectField;
                                         fieldProps = {
                                             ...fieldProps,
                                             children: attribute.values &&
@@ -194,7 +194,7 @@ class MetadataTemplateAttributeView extends Component {
                                         break;
 
                                     default:
-                                        FieldComponent = FormikTextField;
+                                        FieldComponent = FormTextField;
                                         break;
                                 }
 
@@ -204,7 +204,7 @@ class MetadataTemplateAttributeView extends Component {
                                     }
 
                                     let avuFieldName = `${field}.avus[${index}]`;
-                                    const avuError = getFormikError(avuFieldName, touched, errors);
+                                    const avuError = getFormError(avuFieldName, touched, errors);
                                     attrErrors = attrErrors || avuError;
 
                                     const rowID = build(ids.METADATA_TEMPLATE_VIEW, avuFieldName);

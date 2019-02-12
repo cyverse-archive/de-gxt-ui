@@ -228,7 +228,7 @@ class EditNestedAttrMetadataTemplateTest extends Component {
         });
 
         return (
-            <EditMetadataTemplate open presenter={presenter(logger)} initialValues={nestedAttrMetadataTemplate} />
+            <EditMetadataTemplate open presenter={presenter(logger)} template={nestedAttrMetadataTemplate} />
         );
     }
 }
@@ -1260,7 +1260,7 @@ class EditDataCiteMetadataTemplateTest extends Component {
         });
 
         return (
-            <EditMetadataTemplate open presenter={presenter(logger)} initialValues={dataciteMetadataTemplate} />
+            <EditMetadataTemplate open presenter={presenter(logger)} template={dataciteMetadataTemplate} />
         );
     }
 }

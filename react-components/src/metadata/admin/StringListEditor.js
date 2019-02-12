@@ -3,8 +3,8 @@
  */
 import React, { Component } from "react";
 
+import { FastField, getIn } from "formik";
 import PropTypes from "prop-types";
-import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -53,12 +53,12 @@ class StringEditorDialog extends Component {
             >
                 <DialogTitle id={dialogTitleID}>{title}</DialogTitle>
                 <DialogContent>
-                    <Field name={field}
-                           component={FormTextField}
-                           id={fieldID}
-                           label={valueLabel || getMessage("value")}
-                           margin="dense"
-                           autoFocus
+                    <FastField name={field}
+                               component={FormTextField}
+                               id={fieldID}
+                               label={valueLabel || getMessage("value")}
+                               margin="dense"
+                               autoFocus
                     />
                 </DialogContent>
                 <DialogActions>
@@ -97,9 +97,10 @@ class StringListEditor extends Component {
     }
 
     onAddValue() {
+        const { name, form } = this.props;
+        const values = getIn(form.values, name) || [];
+
         let value = this.newValue();
-        const fields = this.props.fields;
-        const values = fields.getAll() || [];
 
         const valuesMatch = v => (v === value);
         while (values.findIndex(valuesMatch) > -1) {
@@ -108,7 +109,7 @@ class StringListEditor extends Component {
 
         this.setState({selected: 0});
 
-        this.props.fields.unshift(value);
+        this.props.unshift(value);
     }
 
     onValueRemoved(index) {
@@ -123,7 +124,7 @@ class StringListEditor extends Component {
 
         this.setState({selected});
 
-        this.props.fields.remove(index);
+        this.props.remove(index);
     }
 
     handleSelect(index) {
@@ -144,12 +145,25 @@ class StringListEditor extends Component {
 
         this.setState({selected: selected + offset});
 
-        this.props.fields.move(selected, selected + offset);
+        this.props.move(selected, selected + offset);
     }
 
     render() {
-        const { classes, intl, parentID, title, helpLabel, columnLabel, fields } = this.props;
+        const {
+            classes,
+            intl,
+            parentID,
+            title,
+            helpLabel,
+            columnLabel,
+            name,
+            form: {
+                values
+            },
+        } = this.props;
         const { selected, editingIndex } = this.state;
+
+        const listValues = getIn(values, name) || [];
 
         return (
             <fieldset>
@@ -163,17 +177,16 @@ class StringListEditor extends Component {
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
                                     moveDown={this.moveDown}
-                                    moveDownDisabled={selected < 0 || (fields.length - 1) <= selected}
+                                    moveDownDisabled={!listValues || selected < 0 || (listValues.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby={build(parentID, ids.TITLE)}>
                         <TableBody>
-                            {fields && fields.map((field, index) => {
+                            {listValues && listValues.map((value, index) => {
                                 const isSelected = (index === selected);
-                                const value = fields.get(index);
-
-                                const rowID = build(parentID, field);
+                                const field = `${name}[${index}]`;
+                                const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
 
                                 return (
                                     <TableRow
@@ -215,15 +228,20 @@ class StringListEditor extends Component {
                     </Table>
                 </div>
 
-                {fields && fields.map((field, index) =>
-                    <StringEditorDialog key={field}
-                                        open={editingIndex === index}
-                                        parentID={parentID}
-                                        field={field}
-                                        title={title}
-                                        valueLabel={columnLabel}
-                                        onClose={() => this.setState({editingIndex: -1})}
-                    />
+                {listValues && listValues.map((value, index) => {
+                    const field = `${name}[${index}]`;
+
+                    return (
+                        <StringEditorDialog key={field}
+                                            open={editingIndex === index}
+                                            parentID={parentID}
+                                            field={field}
+                                            title={title}
+                                            valueLabel={columnLabel}
+                                            onClose={() => this.setState({ editingIndex: -1 })}
+                        />
+                    );
+                    }
                 )}
 
             </fieldset>

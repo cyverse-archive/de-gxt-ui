@@ -17,7 +17,7 @@ public class ReactMetadataAdminViews {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class EditMetadataTemplateProps extends BaseProps {
         public EditMetadataTemplateView.Presenter presenter;
-        public Splittable initialValues;
+        public Splittable template;
         public Boolean open;
     }
 }
