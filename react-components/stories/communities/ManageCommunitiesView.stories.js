@@ -22,7 +22,14 @@ class CommunitiesViewTest extends Component {
                     id: "546d28ce4c7a45938c4a79daeb10e1b5",
                     source_id: "g:gsa",
                     creator: "Ashley Ramsey",
-                    display_name: "iplant:de:prod:community:Ultimate Community"
+                    display_name: "iplant:de:prod:community:Ultimate Community",
+                    member: true,
+                    privileges: [
+                        "optin",
+                        "admin",
+                        "read",
+                        "optout"
+                    ],
                 }
             ]
         };
@@ -35,7 +42,14 @@ class CommunitiesViewTest extends Component {
                     id: "546d28ce4c7a45938c4a79daeb10e1b4",
                     source_id: "g:gsa",
                     creator: "Ashley Ramsey",
-                    display_name: "iplant:de:prod:community:Ultimate Community"
+                    display_name: "iplant:de:prod:community:Ultimate Community",
+                    member: true,
+                    privileges: [
+                        "optin",
+                        "admin",
+                        "read",
+                        "optout"
+                    ],
                 },
 
                 {
@@ -44,7 +58,13 @@ class CommunitiesViewTest extends Component {
                     id: "546d28ce4c7a45938c4a79daeb10e1b5",
                     source_id: "g:gsa",
                     creator: "Amanda Cooksey",
-                    display_name: "iplant:de:prod:community:Legume Federation"
+                    display_name: "iplant:de:prod:community:Legume Federation",
+                    member: false,
+                    privileges: [
+                        "optin",
+                        "read",
+                        "optout"
+                    ],
                 },
             ]
         };

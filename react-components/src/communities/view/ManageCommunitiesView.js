@@ -1,6 +1,7 @@
 import CommunitiesToolbar from "./CommunitiesToolbar";
 import CommunityFilter from "./CommunityFilter";
 import CommunityListing from "./CommunityListing";
+import PrivilegeTypes from "../PrivilegeTypes";
 import styles from "../styles";
 
 import PropTypes from "prop-types";
@@ -89,24 +90,12 @@ class ManageCommunitiesView extends Component {
     }
 
     onCommunityClicked(community) {
-        let promises = [];
-        let fetchAdminStatus = new Promise((resolve, reject) => {
-            this.props.presenter.getCommunityAdmins(community.name, resolve, reject);
-        });
-
-        let fetchMemberStatus = new Promise((resolve, reject) => {
-            this.props.presenter.getCommunityMembers(community.name, resolve, reject);
-        });
-
-        promises.push(fetchAdminStatus, fetchMemberStatus);
-        Promise.all(promises).then(value => {
-            this.setState({
-                isCommunityAdmin: value[0],
-                isCommunityMember: value[1],
-                editDlgOpen: true,
-                selectedCommunity: community
-            })
-        }).catch(() => this.setState({loadingListing: false}));
+        this.setState({
+            isCommunityAdmin: community.privileges.includes(PrivilegeTypes.ADMIN),
+            isCommunityMember: community.member,
+            editDlgOpen: true,
+            selectedCommunity: community
+        })
     }
 
     onCommunitySaved(community) {
