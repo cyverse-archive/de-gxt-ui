@@ -32,7 +32,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.CollaboratorsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CommunitiesWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TeamsWindowConfig;
@@ -174,6 +174,11 @@ public class NotificationUtil {
                 msg.setContext(payload.getPayload());
                 break;
 
+            case COMMUNITY:
+                GWT.log("COMMUNITY category");
+                msg.setContext(payload.getPayload());
+                break;
+
             default:
                 break;
         }
@@ -273,6 +278,10 @@ public class NotificationUtil {
                         TeamsWindowConfig window = ConfigFactory.teamsWindowConfig();
                         eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     }
+                    break;
+                case COMMUNITY:
+                    CommunitiesWindowConfig window = ConfigFactory.communitiesWindowConfig();
+                    eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     break;
 
                 default:
