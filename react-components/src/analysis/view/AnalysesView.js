@@ -973,7 +973,7 @@ class AnalysesView extends Component {
                                      onChangePage={this.handleChangePage}
                                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                      ActionsComponent={TablePaginationActions}
-                                     rowsPerPageOptions={[5, 100, 500, 1000]}
+                                     rowsPerPageOptions={[100, 500, 1000]}
                     />
                 </div>
                 {selectedAnalysis &&
