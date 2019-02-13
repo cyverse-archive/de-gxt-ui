@@ -197,7 +197,7 @@ const ID = "id";
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
-        const {analysesList, permFilter, appTypeFilter, selectedAnalysisId} = props;
+        const {analysesList} = props;
         this.state = {
             data: analysesList ? analysesList.analyses : [],
             loading: true,
@@ -210,12 +210,6 @@ class AnalysesView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'startdate',
-            permFilter: permFilter,
-            typeFilter: appTypeFilter,
-            parentId: "",
-            nameFilter: "",
-            appNameFilter: "",
-            idFilter: selectedAnalysisId,
             parameters: [],
             info: null,
             infoDialogOpen: false,
@@ -269,29 +263,21 @@ class AnalysesView extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        //this is bad. react recommends enclosing this in conditional statement.
-        //But if i add
-        //prevProps.selectedAnalysisId !== this.props.selectedAnalysisId
-        //check, i cannot repeat the same operation of clicking the notification to reconfigure
-        // AnalysesView. For example: Open Analyses Window, click on a notification, Analyses window will
-        // reconfigure. Repeat the same step after clearing search field, it won't work since the prop
-        // hasn't changed.
-        //Kludge - Pass a boolean to presenter which in turn resets selected analyses.
-        if (prevProps.selectedAnalysisId !== this.props.selectedAnalysisId &&
-            this.props.selectedAnalysisId) {
-            this.setState({
-                idFilter: this.props.selectedAnalysisId,
-                appNameFilter: this.props.selectedAnalysisName
-            }, () => this.fetchAnalyses(true));
+        if (prevProps.permFilter !== this.props.permFilter ||
+            prevProps.appTypeFilter !== this.props.appTypeFilter ||
+            prevProps.appNameFilter !== this.props.appNameFilter ||
+            prevProps.nameFilter !== this.props.nameFilter ||
+            prevProps.parentId !== this.props.parentId ||
+            prevProps.idFilter !== this.props.idFilter) {
+            this.fetchAnalyses();
         }
     }
 
     /**
      * Fetch analyses for the given configuration from state.
      *
-     * @param resetSelectedAnalyses Boolean to reset selected analyses from notifications (Kludge)
      */
-    fetchAnalyses(resetSelectedAnalyses) {
+    fetchAnalyses() {
         const {rowsPerPage, offset, order, orderBy} = this.state;
         this.setState({loading: true});
 
@@ -316,7 +302,6 @@ class AnalysesView extends Component {
             filtersObj,
             orderBy,
             order.toUpperCase(),
-            resetSelectedAnalyses,
             (analysesList) => {
                 this.setState({
                     loading: false,
@@ -332,9 +317,9 @@ class AnalysesView extends Component {
         );
     }
 
-    handleBatchIconClick(event, id) {
+    handleBatchIconClick(event, parentId) {
         event.stopPropagation();
-        this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses(false));
+        this.props.presenter.handleBatchIconClick(parentId);
     }
 
     handleRequestSort(event, property) {
@@ -354,12 +339,12 @@ class AnalysesView extends Component {
     getParentIdFilter() {
         const idParentFilter = Object.create(filter);
         idParentFilter.field = "parent_id";
-        idParentFilter.value = this.state.parentId;
+        idParentFilter.value = this.props.parentId;
         return idParentFilter;
     }
 
     getTypeFilter() {
-        const typeFilter1 = this.state.typeFilter;
+        const typeFilter1 = this.props.appTypeFilter;
 
         if (!typeFilter1 || typeFilter1 === appType.all) {
             return null;
@@ -372,7 +357,7 @@ class AnalysesView extends Component {
     }
 
     getPermissionFilter() {
-        const permFilter1 = this.state.permFilter;
+        const permFilter1 = this.props.permFilter;
         let val = "";
 
         if (!permFilter1) {
@@ -400,7 +385,7 @@ class AnalysesView extends Component {
     }
 
     getSearchFilter() {
-        const {nameFilter, appNameFilter, idFilter} = this.state;
+        const {nameFilter, appNameFilter, idFilter} = this.props;
         const searchFilters = [];
         if (nameFilter) {
             const nameFilterObj = Object.create(filter);
@@ -420,7 +405,7 @@ class AnalysesView extends Component {
             const idFilterObj = Object.create(filter);
             idFilterObj.field = ID;
             idFilterObj.value = idFilter;
-            searchFilters.push(idFilterObj);
+            searchFilters.push(idFilterObj);           
         }
 
         return searchFilters;
@@ -788,34 +773,19 @@ class AnalysesView extends Component {
 
     }
 
-    onPermissionsFilterChange(permFilterVal) {
-        this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses(false));
+    onPermissionsFilterChange(permFilter) {
+        const {appTypeFilter, presenter} = this.props;
+        presenter.handlePermissionAndTypeFilterChange(permFilter, appTypeFilter);
     }
 
-    onTypeFilterChange(typeFilterVal) {
-        this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses(false));
+    onTypeFilterChange(appTypeFilter) {
+        const {permFilter, presenter} = this.props;
+        presenter.handlePermissionAndTypeFilterChange(permFilter, appTypeFilter);
     }
 
     handleSearch(searchText) {
-        if (searchText) {
-            this.setState({
-                permFilter: "",
-                typeFilter: "",
-                parentId: "",
-                idFilter:"",
-                nameFilter: searchText,
-                appNameFilter: searchText,
-            }, () => this.fetchAnalyses(false));
-        } else {
-            this.setState({
-                permFilter: permission.all,
-                typeFilter: appType.all,
-                idFilter: "",
-                parentId: "",
-                nameFilter: "",
-                appNameFilter: "",
-            }, () => this.fetchAnalyses(false));
-        }
+        const {presenter} = this.props;
+        presenter.handleSearch(searchText);
     }
 
     render() {
@@ -826,6 +796,9 @@ class AnalysesView extends Component {
             email,
             username,
             baseDebugId,
+            permFilter,
+            appTypeFilter,
+            nameFilter,
         } = this.props;
         const {
             rowsPerPage,
@@ -835,12 +808,9 @@ class AnalysesView extends Component {
             selected,
             total,
             data,
-            appNameFilter,
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
             confirmDeleteDialogOpen,
-            permFilter,
-            typeFilter,
             parameters,
             info,
             infoDialogOpen,
@@ -877,11 +847,11 @@ class AnalysesView extends Component {
                                      handleSaveAndComplete={this.handleSaveAndComplete}
                                      handleRefresh={this.fetchAnalyses}
                                      permFilter={permFilter}
-                                     typeFilter={typeFilter}
+                                     typeFilter={appTypeFilter}
                                      onPermissionsFilterChange={this.onPermissionsFilterChange}
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
-                                     searchInputValue={appNameFilter}
+                                     searchInputValue={nameFilter}
                                      selectionCount={selectionCount}
                                      owner={owner}
                                      sharable={sharable}
@@ -1082,10 +1052,11 @@ AnalysesView.propTypes = {
     paramPresenter: PropTypes.object.isRequired,
     diskResourceUtil: PropTypes.object.isRequired,
     baseDebugId: PropTypes.string.isRequired,
-    selectedAnalysisId: PropTypes.string.isRequired,
-    selectedAnalysisName: PropTypes.string.isRequired,
+    nameFilter: PropTypes.string,
+    appNameFilter: PropTypes.string,
     permFilter: PropTypes.string.isRequired,
     appTypeFilter: PropTypes.string.isRequired,
+    idFilter: PropTypes.string,
 };
 
 export default withStyles(exStyles)(withI18N(injectIntl(AnalysesView), intlData));

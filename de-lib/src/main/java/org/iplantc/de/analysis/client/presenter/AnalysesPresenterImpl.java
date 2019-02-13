@@ -36,6 +36,7 @@ import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -61,8 +62,6 @@ import java.util.List;
  * @author sriram, jstroot
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter {
-
-    private String baseDebugId;
 
     private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
         private final String analysisName;
@@ -167,6 +166,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Inject
     AnalysesAutoBeanFactory factory;
 
+    private String baseDebugId;
 
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
@@ -177,13 +177,32 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         currentTypeFilter = AppTypeFilter.ALL;
     }
 
+
+    @Override
+    public void handlePermissionAndTypeFilterChange(String permFilter, String appTypeFilter) {
+         view.updateFilter(permFilter, appTypeFilter, "", "", "","");
+    }
+
+    @Override
+    public void handleBatchIconClick(String parentId) {
+        view.updateFilter("", "","", "", "", parentId);
+    }
+
+    @Override
+    public void handleSearch(String searchTerm) {
+        if (Strings.isNullOrEmpty(searchTerm)) {
+            view.updateFilter("All", "All", "", "", "", "");
+       } else {
+            view.updateFilter("", "", searchTerm, searchTerm, "", "");
+        }
+    }
+
     @Override
     public void getAnalyses(int limit,
                             int offset,
                             Splittable filters,
                             String sortField,
                             String sortDir,
-                            boolean resetSelectedAnalyses,
                             ReactSuccessCallback callback,
                             ReactErrorCallback errorCallback) {
         AutoBean<FilterBeanList> filterList =
@@ -203,9 +222,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 if (errorCallback != null) {
                     errorCallback.onError(statusCode, exception.getMessage());
                 }
-                if(resetSelectedAnalyses) {
-                    view.load(AnalysesPresenterImpl.this, baseDebugId, null);
-                }
+
             }
 
             @Override
@@ -213,9 +230,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 AutoBean<AnalysesList> ret = AutoBeanCodex.decode(factory, AnalysesList.class, result);
                 if (callback != null) {
                     callback.onSuccess(AutoBeanCodex.encode(ret));
-                }
-                if(resetSelectedAnalyses) {
-                    view.load(AnalysesPresenterImpl.this, baseDebugId, null);
                 }
             }
         });
