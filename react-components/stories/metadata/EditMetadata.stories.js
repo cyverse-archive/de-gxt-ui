@@ -29,6 +29,26 @@ class EditMetadataTest extends Component {
         });
 
         const metadata = {
+            "irods-avus": [
+                {
+                    "id": "1",
+                    "attr": "iRODS Attr 1",
+                    "value": "value1",
+                    "unit": "",
+                },
+                {
+                    "id": "2",
+                    "attr": "iRODS Attr 2",
+                    "value": "value2",
+                    "unit": "",
+                },
+                {
+                    "id": "3",
+                    "attr": "iRODS Attr 3",
+                    "value": "value3",
+                    "unit": "",
+                },
+            ],
             "avus": [
                 {
                     "id": "1",
@@ -81,7 +101,7 @@ class EditMetadataTest extends Component {
                           loading={this.state.loading}
                           presenter={presenter(logger)}
                           targetName="Test Resource"
-                          initialValues={this.state.loading ? null : metadata}/>
+                          metadata={this.state.loading ? null : metadata}/>
         );
     }
 }
@@ -144,7 +164,7 @@ class ViewMetadataTest extends Component {
                           editable={false}
                           targetName="Read-Only Resource"
                           presenter={presenter(logger)}
-                          initialValues={metadata}/>
+                          metadata={metadata}/>
         );
     }
 }
@@ -415,7 +435,7 @@ class EditDataCiteMetadataTest extends Component {
                           editable
                           targetName="DataCite Resource"
                           presenter={presenter(logger)}
-                          initialValues={metadata}/>
+                          metadata={metadata}/>
         );
     }
 }

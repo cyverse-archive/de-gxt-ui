@@ -3,6 +3,7 @@
  */
 import React, { Component } from "react";
 
+import { getIn } from 'formik';
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -151,33 +152,33 @@ class MetadataList extends Component {
     }
 
     onAddAVU() {
-        const fields = this.props.fields;
-        const avus = fields.getAll() || [];
+        const { form, name, unshift } = this.props;
+        const avus = getIn(form.values, name) || [];
 
-        let name = this.newAttrName();
+        let newName = this.newAttrName();
 
-        const namesMatch = avu => (avu.attr === name);
+        const namesMatch = avu => (avu.attr === newName);
         while (avus.findIndex(namesMatch) > -1) {
-            name = this.newAttrName();
+            newName = this.newAttrName();
         }
 
-        fields.unshift({
-            attr: name,
+        unshift({
+            attr: newName,
             value: "",
             unit: "",
         });
     }
 
     handleRequestSort(event, property) {
+        const { name, form: { setFieldValue, values } } = this.props;
+        const avus = [...getIn(values, name)];
+
         const orderBy = property;
         let order = 'asc';
 
         if (this.state.orderBy === property && this.state.order === order) {
             order = 'desc';
         }
-
-        const fields = this.props.fields;
-        const avus = [...fields.getAll()];
 
         const comparator = (a, b) => (a < b ? -1 : 1);
         avus.sort((a, b) => {
@@ -194,13 +195,24 @@ class MetadataList extends Component {
 
         this.setState({ order, orderBy });
 
-        this.props.change(fields.name, avus);
+        setFieldValue(name, avus);
     }
 
     render() {
-        const { parentID, editable, classes, intl, fields } = this.props;
+        const {
+            parentID,
+            editable,
+            classes,
+            intl,
+            name,
+            form: {
+                values,
+            },
+        } = this.props;
+
         const { order, orderBy } = this.state;
 
+        const avus = getIn(values, name);
         const tableID = build(parentID, ids.AVU_GRID);
 
         return (
@@ -214,13 +226,15 @@ class MetadataList extends Component {
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
-                            {fields && fields.map((field, index) => {
+                            {avus && avus.map((avu, index) => {
                                 const {
                                     attr,
                                     value,
                                     unit,
                                     avus,
-                                } = fields.get(index);
+                                } = avu;
+
+                                const field = `${name}[${index}]`;
 
                                 const rowID = build(ids.EDIT_METADATA_FORM, field);
 
@@ -253,7 +267,7 @@ class MetadataList extends Component {
                                                         classes={{ root: classes.deleteIcon }}
                                                         onClick={event => {
                                                             event.stopPropagation();
-                                                            this.props.fields.remove(index);
+                                                            this.props.remove(index);
                                                         }}
                                             >
                                                 <ContentRemove/>
@@ -268,7 +282,7 @@ class MetadataList extends Component {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={this.handleRequestSort}
-                            rowCount={fields.length}
+                            rowCount={avus ? avus.length : 0}
                         />
                     </Table>
                 </div>

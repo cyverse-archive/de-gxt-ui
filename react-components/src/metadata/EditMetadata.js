@@ -3,13 +3,12 @@
  */
 import React, { Component, Fragment } from "react";
 
+import { FieldArray, withFormik } from 'formik';
 import PropTypes from "prop-types";
-import { FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
-import withStoreProvider from "../util/StoreProvider";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -37,10 +36,6 @@ class EditMetadata extends Component {
         this.state = {
             editingAttrIndex: -1,
         };
-
-        [
-            "onSaveMetadata",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
     static propTypes = {
@@ -51,18 +46,6 @@ class EditMetadata extends Component {
         }).isRequired,
     };
 
-    onSaveMetadata ({ avus }) {
-        return new Promise((resolve, reject) => {
-            let metadata = { ...this.props.initialValues, avus: avus };
-
-            this.props.presenter.onSaveMetadata(
-                metadata,
-                resolve,
-                (httpStatusCode, errorMessage) => reject(errorMessage),
-            );
-        });
-    }
-
     render() {
         const {
             classes,
@@ -71,8 +54,8 @@ class EditMetadata extends Component {
             editable,
             loading,
             targetName,
-            // from redux-form
-            handleSubmit, pristine, submitting, error, change,
+            // from formik
+            handleSubmit, dirty, isSubmitting, errors,
         } = this.props;
 
         const { editingAttrIndex } = this.state;
@@ -105,8 +88,8 @@ class EditMetadata extends Component {
                         </Typography>
                         {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
-                                disabled={loading || pristine || submitting || error}
-                                onClick={handleSubmit(this.onSaveMetadata)}
+                                disabled={loading || !dirty || isSubmitting || errors.error}
+                                onClick={handleSubmit}
                                 color="inherit"
                         >
                             {getMessage("save")}
@@ -120,21 +103,25 @@ class EditMetadata extends Component {
                         :
                         <Fragment>
                             <FieldArray name="avus"
-                                        component={MetadataList}
-                                        field="avus"
-                                        change={change}
-                                        editable={editable}
-                                        parentID={ids.EDIT_METADATA_FORM}
-                                        onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
+                                        render={arrayHelpers => (
+                                            <MetadataList {...arrayHelpers}
+                                                          field="avus"
+                                                          editable={editable}
+                                                          parentID={ids.EDIT_METADATA_FORM}
+                                                          onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
+                                            />
+                                        )}
                             />
 
                             <FieldArray name="avus"
-                                        component={FormDialogEditAVU}
-                                        change={change}
-                                        editable={editable}
-                                        targetName={targetName}
-                                        editingAttrIndex={editingAttrIndex}
-                                        closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
+                                        render={arrayHelpers => (
+                                            <FormDialogEditAVU {...arrayHelpers}
+                                                               editable={editable}
+                                                               targetName={targetName}
+                                                               editingAttrIndex={editingAttrIndex}
+                                                               closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
+                                            />
+                                        )}
                             />
                         </Fragment>
                     }
@@ -147,14 +134,11 @@ class EditMetadata extends Component {
 const validateAVUs = avus => {
     const avusArrayErrors = [];
 
-    // Also track AVU errors in an avusArrayErrors["_error"] key,
-    // so that dialogs can track when their AVUs have errors.
-    const _error = [];
-
     avus.forEach((avu, index) => {
         const avuErrors = {};
 
         if (!avu.attr) {
+            avuErrors.error = true;
             avuErrors.attr = getMessage("required");
             avusArrayErrors[index] = avuErrors;
         }
@@ -162,14 +146,10 @@ const validateAVUs = avus => {
         if (avu.avus && avu.avus.length > 0) {
             const subAVUErros = validateAVUs(avu.avus);
             if (subAVUErros.length > 0) {
+                avuErrors.error = true;
                 avuErrors.avus = subAVUErros;
                 avusArrayErrors[index] = avuErrors;
             }
-        }
-
-        if (avusArrayErrors[index]) {
-            _error[index] = avuErrors;
-            avusArrayErrors["_error"] = _error;
         }
     });
 
@@ -182,19 +162,38 @@ const validate = values => {
     if (values.avus && values.avus.length > 0) {
         const avusArrayErrors = validateAVUs(values.avus);
         if (avusArrayErrors.length > 0) {
+            errors.error = true;
             errors.avus = avusArrayErrors;
-            errors._error = true;
         }
     }
 
     return errors;
 };
 
-export default withStoreProvider(
-    reduxForm(
-        {
-            form: ids.EDIT_METADATA_FORM,
-            enableReinitialize: true,
-            validate,
-        }
-    )(withStyles(styles)(withI18N(injectIntl(EditMetadata), intlData))));
+const handleSubmit = ({ avus }, { props, setSubmitting, setStatus }) => {
+    const resolve = (metadata) => {
+        setSubmitting(false);
+        setStatus({ success: true, metadata });
+    };
+    const errorCallback = (httpStatusCode, errorMessage) => {
+        setSubmitting(false);
+        setStatus({ success: false, errorMessage });
+    };
+
+    let metadata = { ...props.metadata, avus: avus };
+
+    props.presenter.onSaveMetadata(
+        metadata,
+        resolve,
+        errorCallback,
+    );
+};
+
+export default withFormik(
+    {
+        enableReinitialize: true,
+        mapPropsToValues: ({ metadata }) => ({...metadata}),
+        validate,
+        handleSubmit,
+    }
+)(withStyles(styles)(withI18N(injectIntl(EditMetadata), intlData)));

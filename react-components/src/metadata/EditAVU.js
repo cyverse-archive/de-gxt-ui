@@ -3,8 +3,8 @@
  */
 import React, { Component, Fragment } from "react";
 
+import { FastField, FieldArray, getIn } from "formik";
 import PropTypes from "prop-types";
-import { Field, FieldArray } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
@@ -13,7 +13,7 @@ import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import { FormTextField } from "../util/FormField";
+import { FormTextField, getFormError } from "../util/FormField";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 
@@ -51,9 +51,22 @@ class EditAVU extends Component {
     };
 
     render() {
-        const { classes, intl, field, error, avu, open, editable, targetName } = this.props;
+        const {
+            classes,
+            intl,
+            field,
+            touched,
+            errors,
+            avu,
+            open,
+            editable,
+            targetName,
+        } = this.props;
         const { attr, avus } = avu;
         const { editingAttrIndex } = this.state;
+
+        const avuErrors = getFormError(field, touched, errors);
+        const error = avuErrors && avuErrors.error;
 
         const formID = build(ids.EDIT_METADATA_FORM, field, ids.DIALOG);
         const dialogTitleID = build(formID, ids.TITLE);
@@ -99,26 +112,26 @@ class EditAVU extends Component {
                 </AppBar>
                 <DialogContent>
 
-                    <Field name={`${field}.attr`}
-                           label={getMessage("attribute")}
-                           id={build(formID, ids.AVU_ATTR)}
-                           required={editable}
-                           autoFocus={editable}
-                           InputProps={{ readOnly: !editable }}
-                           margin="dense"
-                           component={FormTextField}
+                    <FastField name={`${field}.attr`}
+                               label={getMessage("attribute")}
+                               id={build(formID, ids.AVU_ATTR)}
+                               required={editable}
+                               autoFocus={editable}
+                               InputProps={{ readOnly: !editable }}
+                               margin="dense"
+                               component={FormTextField}
                     />
-                    <Field name={`${field}.value`}
-                           label={getMessage("value")}
-                           id={build(formID, ids.AVU_VALUE)}
-                           InputProps={{ readOnly: !editable }}
-                           component={FormTextField}
+                    <FastField name={`${field}.value`}
+                               label={getMessage("value")}
+                               id={build(formID, ids.AVU_VALUE)}
+                               InputProps={{ readOnly: !editable }}
+                               component={FormTextField}
                     />
-                    <Field name={`${field}.unit`}
-                           label={getMessage("metadataUnitLabel")}
-                           id={build(formID, ids.AVU_UNIT)}
-                           InputProps={{ readOnly: !editable }}
-                           component={FormTextField}
+                    <FastField name={`${field}.unit`}
+                               label={getMessage("metadataUnitLabel")}
+                               id={build(formID, ids.AVU_UNIT)}
+                               InputProps={{ readOnly: !editable }}
+                               component={FormTextField}
                     />
 
                     {(editable || hasChildren) &&
@@ -133,21 +146,27 @@ class EditAVU extends Component {
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <FieldArray name={`${field}.avus`}
-                                            component={MetadataList}
-                                            editable={editable}
-                                            parentID={formID}
-                                            onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
+                                            render={arrayHelpers => (
+                                                <MetadataList {...arrayHelpers}
+                                                              editable={editable}
+                                                              parentID={formID}
+                                                              onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
+                                                />
+                                            )}
                                 />
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
 
 
                         <FieldArray name={`${field}.avus`}
-                                    component={FormDialogEditAVU}
-                                    editingAttrIndex={editingAttrIndex}
-                                    editable={editable}
-                                    targetName={attr}
-                                    closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
+                                    render={arrayHelpers => (
+                                        <FormDialogEditAVU {...arrayHelpers}
+                                                           editingAttrIndex={editingAttrIndex}
+                                                           editable={editable}
+                                                           targetName={attr}
+                                                           closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
+                                        />
+                                    )}
                         />
                     </Fragment>}
                 </DialogContent>
@@ -158,22 +177,41 @@ class EditAVU extends Component {
 
 EditAVU = withStyles(styles)(withI18N(injectIntl(EditAVU), intlData));
 
-const FormDialogEditAVU = ({ fields, change, meta: { error }, editingAttrIndex, editable, targetName, closeAttrDialog }) => (
-    <Fragment>
-        {fields.map((field, index) => (
-            <EditAVU key={field}
-                     field={field}
-                     change={change}
-                     error={error && error[index]}
-                     avu={fields.get(index)}
-                     open={editingAttrIndex === index}
-                     editable={editable}
-                     targetName={targetName}
-                     closeAttrDialog={closeAttrDialog}
-            />
-        ))
-        }
-    </Fragment>
-);
+const FormDialogEditAVU = ({
+    editingAttrIndex,
+    editable,
+    targetName,
+    closeAttrDialog,
+    name,
+    form: {
+        touched,
+        errors,
+        values,
+    },
+}) => {
+    const avus = getIn(values, name);
+
+    return (
+        <Fragment>
+            {avus && avus.map((avu, index) => {
+                const field = `${name}[${index}]`;
+
+                return (
+                    <EditAVU key={field}
+                             field={field}
+                             touched={touched}
+                             errors={errors}
+                             avu={avu}
+                             open={editingAttrIndex === index}
+                             editable={editable}
+                             targetName={targetName}
+                             closeAttrDialog={closeAttrDialog}
+                    />
+                );
+            })
+            }
+        </Fragment>
+    );
+};
 
 export default FormDialogEditAVU;
