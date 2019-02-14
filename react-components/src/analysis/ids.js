@@ -44,6 +44,7 @@ export default ({
 
     PERMISSIONS: "permissions",
     APP_TYPE: "appType",
+    VIEW_FILTER: "viewFilter",
 
     ALL:".all",
     MINE:".mine",

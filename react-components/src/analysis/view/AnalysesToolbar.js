@@ -10,7 +10,7 @@ import { injectIntl } from "react-intl";
 import ids from "../ids";
 import intlData from "../messages";
 import appType from "../model/appType";
-import permission from "../model/permission";
+import viewFilter from "../model/viewFilterOptions";
 import exStyles from "../style";
 import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
@@ -84,10 +84,10 @@ class AnalysesToolbar extends Component {
                     </Button>
                     <form autoComplete="off">
                         <FormControl
-                            id={build(baseToolbarId, ids.PERMISSIONS)}
+                            id={build(baseToolbarId, ids.VIEW_FILTER)}
                             className={classes.dropDown}>
                             <InputLabel className={classes.dropDownLabel}>
-                                {getMessage("permission")}
+                                {getMessage("viewFilter")}
                             </InputLabel>
                             <Select
                                 value={this.props.permFilter}
@@ -97,14 +97,14 @@ class AnalysesToolbar extends Component {
                                 }
                                 style={{minWidth: 200}}>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.ALL)}
-                                    value={permission.all}>{permission.all}</MenuItem>
+                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.ALL)}
+                                    value={viewFilter.all}>{viewFilter.all}</MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.MINE)}
-                                    value={permission.mine}>{permission.mine}</MenuItem>
+                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.MINE)}
+                                    value={viewFilter.mine}>{viewFilter.mine}</MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.PERMISSIONS + ids.THEIRS)}
-                                    value={permission.theirs}>{permission.theirs}</MenuItem>
+                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.THEIRS)}
+                                    value={viewFilter.theirs}>{viewFilter.theirs}</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl

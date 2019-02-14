@@ -70,13 +70,13 @@ public class AnalysesViewImpl implements AnalysesView {
     }
 
     @Override
-    public void updateFilter(String permFilter,
+    public void updateFilter(String viewFilter,
                              String appTypeFilter,
                              String nameFilter,
                              String appNameFilter,
                              String idFilter,
                              String parentId) {
-        props.permFilter = permFilter;
+        props.permFilter = viewFilter;
         props.appTypeFilter = appTypeFilter;
         props.nameFilter = nameFilter;
         props.appNameFilter = appNameFilter;

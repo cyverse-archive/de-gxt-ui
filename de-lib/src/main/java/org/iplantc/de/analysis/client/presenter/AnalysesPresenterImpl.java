@@ -198,6 +198,11 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    public void handleViewAllIconClick() {
+        view.updateFilter("All", "All", "", "", "", "");
+    }
+
+    @Override
     public void getAnalyses(int limit,
                             int offset,
                             Splittable filters,

@@ -11,7 +11,7 @@ import intlData from "../messages";
 import ids from "../ids";
 import exStyles from "../style";
 import appType from "../model/appType";
-import permission from "../model/permission";
+import viewFilter from "../model/viewFilterOptions";
 import Color from "../../util/CyVersePalette";
 import formatDate from "../../util/DateFormatter";
 import build from "../../util/DebugIDUtil";
@@ -40,8 +40,11 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
-import ListAltIcon from "@material-ui/icons/ListAlt";
+import UnFoldMoreIcon from "@material-ui/icons/UnfoldMore";
+import UnFoldLessIcon from "@material-ui/icons/UnfoldLess";
 
+import SubDirRightIcon from "@material-ui/icons/SubdirectoryArrowRightSharp";
+import SubDirLeftIcon from "@material-ui/icons/SubdirectoryArrowLeftSharp";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -49,19 +52,21 @@ function AnalysisName(props) {
     const className = props.classes.analysisName;
     const handleGoToOutputFolder = props.handleGoToOutputFolder;
     const handleBatchIconClick = props.handleBatchIconClick;
+    const handleViewAllIconClick = props.handleViewAllIconClick;
     const interactiveUrls = props.analysis.interactive_urls;
     const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
     const status = props.analysis.status;
     const intl = props.intl;
     const analysis = props.analysis;
+    const parentId = props.parentId;
 
     if (isBatch) {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
-                <ListAltIcon onClick={handleBatchIconClick}
-                             style={{color: Color.darkGreen}}/>
+                <SubDirRightIcon onClick={handleBatchIconClick}
+                                style={{color: Color.darkGreen}}/>
                 <sup>{name}</sup>
             </span>
         );
@@ -76,6 +81,16 @@ function AnalysisName(props) {
                 <sup>{name}</sup>
             </span>
         )
+    } else if (parentId) {
+        return (
+            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                  className={className}
+                  onClick={() => handleGoToOutputFolder(analysis)}>
+                <SubDirLeftIcon onClick={handleViewAllIconClick}
+                                style={{color: Color.darkGreen}}/>
+                <sup>{name}</sup>
+            </span>
+        );
     } else {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
@@ -256,6 +271,7 @@ class AnalysesView extends Component {
         this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
+        this.handleViewAllIconClick = this.handleViewAllIconClick.bind(this);
     }
 
     componentDidMount() {
@@ -322,6 +338,11 @@ class AnalysesView extends Component {
         this.props.presenter.handleBatchIconClick(parentId);
     }
 
+    handleViewAllIconClick(event) {
+        event.stopPropagation();
+        this.props.presenter.handleViewAllIconClick();
+    }
+
     handleRequestSort(event, property) {
         const orderBy = property;
         let order = "desc";
@@ -365,13 +386,13 @@ class AnalysesView extends Component {
         }
 
         switch (permFilter1) {
-            case permission.all :
+            case viewFilter.all :
                 val = ALL;
                 break;
-            case permission.mine :
+            case viewFilter.mine :
                 val = MINE;
                 break;
-            case permission.theirs:
+            case viewFilter.theirs:
                 val = THEIRS;
                 break;
             default:
@@ -524,13 +545,13 @@ class AnalysesView extends Component {
             });
     }
     handleParamValueClick(parameter) {
-        //have to close view params otherwise file viewer wont show up front
+        //have to close viewFilter params otherwise file viewer wont show up front
         this.setState({viewParamsDialogOpen: false});
         this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
-        //close view params temporarily so that save as dialog opens on top of the screen
+        //close viewFilter params temporarily so that save as dialog opens on top of the screen
         this.setState({loading: true, viewParamsDialogOpen: false});
         if (parameters && parameters.length > 0) {
             let contents = "Name\t" + "Type\t" + "Value\t\n";
@@ -799,6 +820,7 @@ class AnalysesView extends Component {
             permFilter,
             appTypeFilter,
             nameFilter,
+            parentId,
         } = this.props;
         const {
             rowsPerPage,
@@ -902,11 +924,14 @@ class AnalysesView extends Component {
                                                 <AnalysisName classes={classes}
                                                               intl={intl}
                                                               analysis={analysis}
+                                                              parentId={parentId}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
                                                                   event,
-                                                                  id)}/>
+                                                                  id)}
+                                                              handleViewAllIconClick={(event) => this.handleViewAllIconClick(
+                                                                  event)}/>
                                             </TableCell>
                                             <TableCell className={classes.cellText}
                                                        padding="none">

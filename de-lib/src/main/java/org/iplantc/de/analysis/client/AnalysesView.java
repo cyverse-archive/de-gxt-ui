@@ -147,13 +147,15 @@ public interface AnalysesView extends IsWidget {
 
         void handleSearch(String searchTerm);
 
+        void handleViewAllIconClick();
+
     }
 
     void load(Presenter presenter,
               String baseDebugId,
               Analysis selectedAnalysis);
 
-    void updateFilter(String permFilter,
+    void updateFilter(String viewFilter,
                       String appTypeFilter,
                       String nameFilter,
                       String appNameFilter,
