@@ -40,9 +40,6 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
-import UnFoldMoreIcon from "@material-ui/icons/UnfoldMore";
-import UnFoldLessIcon from "@material-ui/icons/UnfoldLess";
-
 import SubDirRightIcon from "@material-ui/icons/SubdirectoryArrowRightSharp";
 import SubDirLeftIcon from "@material-ui/icons/SubdirectoryArrowLeftSharp";
 
@@ -66,7 +63,7 @@ function AnalysisName(props) {
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
                 <SubDirRightIcon onClick={handleBatchIconClick}
-                                style={{color: Color.darkGreen}}/>
+                                 style={{color: Color.darkGreen}}/>
                 <sup>{name}</sup>
             </span>
         );
@@ -254,7 +251,7 @@ class AnalysesView extends Component {
         this.fetchAnalyses = this.fetchAnalyses.bind(this);
         this.getParentIdFilter = this.getParentIdFilter.bind(this);
         this.getTypeFilter = this.getTypeFilter.bind(this);
-        this.getPermissionFilter = this.getPermissionFilter.bind(this);
+        this.getViewFilter = this.getViewFilter.bind(this);
         this.doRename = this.doRename.bind(this);
         this.doComments = this.doComments.bind(this);
         this.update = this.update.bind(this);
@@ -262,7 +259,7 @@ class AnalysesView extends Component {
         this.statusClick = this.statusClick.bind(this);
         this.handleBatchIconClick = this.handleBatchIconClick.bind(this);
         this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
-        this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
+        this.onViewFilterChange = this.onViewFilterChange.bind(this);
         this.handleParamValueClick = this.handleParamValueClick.bind(this);
         this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -279,7 +276,7 @@ class AnalysesView extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.permFilter !== this.props.permFilter ||
+        if (prevProps.viewFilter !== this.props.viewFilter ||
             prevProps.appTypeFilter !== this.props.appTypeFilter ||
             prevProps.appNameFilter !== this.props.appNameFilter ||
             prevProps.nameFilter !== this.props.nameFilter ||
@@ -299,10 +296,10 @@ class AnalysesView extends Component {
 
         const parentFilter = this.getParentIdFilter();
         const typeFilter = this.getTypeFilter();
-        const permFilter = this.getPermissionFilter();
+        const viewFilter = this.getViewFilter();
         const searchFilter = this.getSearchFilter();
 
-        if (permFilter && permFilter.value) {
+        if (viewFilter && viewFilter.value) {
             parentFilter.value = "";
         }
 
@@ -310,7 +307,7 @@ class AnalysesView extends Component {
         if (searchFilter && searchFilter.length > 0) {
             filtersObj.filters = searchFilter;
         } else {
-            filtersObj.filters = [parentFilter, typeFilter, permFilter];
+            filtersObj.filters = [parentFilter, typeFilter, viewFilter];
         }
 
         this.props.presenter.getAnalyses(rowsPerPage,
@@ -333,9 +330,9 @@ class AnalysesView extends Component {
         );
     }
 
-    handleBatchIconClick(event, parentId) {
+    handleBatchIconClick(event, parentId, analysesName) {
         event.stopPropagation();
-        this.props.presenter.handleBatchIconClick(parentId);
+        this.props.presenter.handleBatchIconClick(parentId, analysesName);
     }
 
     handleViewAllIconClick(event) {
@@ -377,15 +374,15 @@ class AnalysesView extends Component {
         return typeFilter;
     }
 
-    getPermissionFilter() {
-        const permFilter1 = this.props.permFilter;
+    getViewFilter() {
+        const viewFilter1 = this.props.viewFilter;
         let val = "";
 
-        if (!permFilter1) {
+        if (!viewFilter1) {
             return null;
         }
 
-        switch (permFilter1) {
+        switch (viewFilter1) {
             case viewFilter.all :
                 val = ALL;
                 break;
@@ -399,10 +396,10 @@ class AnalysesView extends Component {
                 val = ALL;
         }
 
-        const permFilter = Object.create(filter);
-        permFilter.field = "ownership";
-        permFilter.value = val;
-        return permFilter;
+        const vf = Object.create(filter);
+        vf.field = "ownership";
+        vf.value = val;
+        return vf;
     }
 
     getSearchFilter() {
@@ -794,14 +791,14 @@ class AnalysesView extends Component {
 
     }
 
-    onPermissionsFilterChange(permFilter) {
+    onViewFilterChange(viewFilter) {
         const {appTypeFilter, presenter} = this.props;
-        presenter.handlePermissionAndTypeFilterChange(permFilter, appTypeFilter);
+        presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     onTypeFilterChange(appTypeFilter) {
-        const {permFilter, presenter} = this.props;
-        presenter.handlePermissionAndTypeFilterChange(permFilter, appTypeFilter);
+        const {viewFilter, presenter} = this.props;
+        presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     handleSearch(searchText) {
@@ -817,7 +814,7 @@ class AnalysesView extends Component {
             email,
             username,
             baseDebugId,
-            permFilter,
+            viewFilter,
             appTypeFilter,
             nameFilter,
             parentId,
@@ -868,9 +865,9 @@ class AnalysesView extends Component {
                                      handleUpdateComments={this.handleUpdateComments}
                                      handleSaveAndComplete={this.handleSaveAndComplete}
                                      handleRefresh={this.fetchAnalyses}
-                                     permFilter={permFilter}
+                                     viewFilter={viewFilter}
                                      typeFilter={appTypeFilter}
-                                     onPermissionsFilterChange={this.onPermissionsFilterChange}
+                                     onViewFilterChange={this.onViewFilterChange}
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
                                      searchInputValue={nameFilter}
@@ -929,7 +926,7 @@ class AnalysesView extends Component {
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
                                                                   event,
-                                                                  id)}
+                                                                  id, analysis.name)}
                                                               handleViewAllIconClick={(event) => this.handleViewAllIconClick(
                                                                   event)}/>
                                             </TableCell>
@@ -1079,7 +1076,7 @@ AnalysesView.propTypes = {
     baseDebugId: PropTypes.string.isRequired,
     nameFilter: PropTypes.string,
     appNameFilter: PropTypes.string,
-    permFilter: PropTypes.string.isRequired,
+    viewFilter: PropTypes.string.isRequired,
     appTypeFilter: PropTypes.string.isRequired,
     idFilter: PropTypes.string,
 };

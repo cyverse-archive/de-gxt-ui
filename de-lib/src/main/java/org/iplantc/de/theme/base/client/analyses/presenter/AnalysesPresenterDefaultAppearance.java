@@ -123,4 +123,9 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.supportRequestSuccess();
     }
 
+    @Override
+    public String htAnalysisTitle(String analysisName) {
+        return analysesMessages.htAnalysisTitle(analysisName);
+    }
+
 }

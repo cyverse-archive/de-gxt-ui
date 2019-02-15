@@ -53,13 +53,13 @@ public class AnalysesViewImpl implements AnalysesView {
         props.baseDebugId = baseDebugId;
         if (selectedAnalysis != null) {
             props.nameFilter = "";
-            props.permFilter = "";
+            props.viewFilter = "";
             props.appTypeFilter = "";
             props.idFilter = selectedAnalysis.getId();
             props.parentId = "";
             props.appNameFilter = "";
         } else {
-            props.permFilter = "All";
+            props.viewFilter = "All";
             props.appTypeFilter = "All";
             props.appNameFilter = "";
             props.nameFilter = "";
@@ -76,7 +76,7 @@ public class AnalysesViewImpl implements AnalysesView {
                              String appNameFilter,
                              String idFilter,
                              String parentId) {
-        props.permFilter = viewFilter;
+        props.viewFilter = viewFilter;
         props.appTypeFilter = appTypeFilter;
         props.nameFilter = nameFilter;
         props.appNameFilter = appNameFilter;

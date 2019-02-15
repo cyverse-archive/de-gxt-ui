@@ -1,7 +1,9 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.analysis.client.AnalysesView;
+import org.iplantc.de.analysis.client.events.UpdateAnalysesWindowTitleEvent;
 import org.iplantc.de.analysis.shared.AnalysisModule;
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
@@ -22,19 +24,24 @@ import com.sencha.gxt.core.shared.FastMap;
 /**
  * @author sriram, jstroot
  */
-public class MyAnalysesWindow extends WindowBase {
+public class MyAnalysesWindow extends WindowBase implements UpdateAnalysesWindowTitleEvent.UpdateAnalysesWindowTitleEventHandler {
 
     public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
     private final AnalysesView.Appearance analysesAppearance;
+    private final IplantDisplayStrings displayStrings;
+    private final EventBus eventBus;
 
 
     @Inject
     MyAnalysesWindow(final AnalysesView.Presenter presenter,
                      final IplantDisplayStrings displayStrings,
-                     final AnalysesView.Appearance appearance) {
+                     final AnalysesView.Appearance appearance,
+                     final EventBus eventBus) {
+        this.eventBus = eventBus;
         this.presenter = presenter;
         this.analysesAppearance = appearance;
+        this.displayStrings = displayStrings;
 
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
@@ -42,6 +49,7 @@ public class MyAnalysesWindow extends WindowBase {
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setBodyStyle("background-color: white;");
+        this.eventBus.addHandler(UpdateAnalysesWindowTitleEvent.TYPE, this);
     }
 
     @Override
@@ -110,6 +118,16 @@ public class MyAnalysesWindow extends WindowBase {
                     (Strings.isNullOrEmpty(height)) ? analysesAppearance.windowHeight() : height);
         }
 
+    }
+
+    @Override
+    public void onUpdateAnalysesWindowTitle(UpdateAnalysesWindowTitleEvent event) {
+       String title = event.getTitle();
+       if(!Strings.isNullOrEmpty(title)) {
+           setHeading(displayStrings.analyses() + title);
+       } else {
+           setHeading(displayStrings.analyses());
+       }
     }
 }
 

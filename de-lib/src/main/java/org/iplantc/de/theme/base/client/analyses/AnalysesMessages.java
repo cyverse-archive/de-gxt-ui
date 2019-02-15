@@ -43,5 +43,7 @@ public interface AnalysesMessages extends Messages {
     String viewParameters(String name);
 
     String importRequestSubmit(String name);
+
+    String htAnalysisTitle(String analysisName);
 }
 

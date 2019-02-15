@@ -77,6 +77,8 @@ public interface AnalysesView extends IsWidget {
             String supportRequestFailed();
 
             String supportRequestSuccess();
+
+            String htAnalysisTitle(String analysisName);
         }
 
         @JsIgnore
@@ -140,10 +142,10 @@ public interface AnalysesView extends IsWidget {
                                         ReactErrorCallback errorCallback);
 
 
-        void handlePermissionAndTypeFilterChange(String permFilter,
-                                                 String appTypeFilter);
+        void handleViewAndTypeFilterChange(String permFilter,
+                                           String appTypeFilter);
 
-        void handleBatchIconClick(String parentId);
+        void handleBatchIconClick(String parentId, String analysisName);
 
         void handleSearch(String searchTerm);
 

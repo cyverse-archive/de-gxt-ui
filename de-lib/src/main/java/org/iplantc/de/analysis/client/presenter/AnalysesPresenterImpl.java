@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
+import org.iplantc.de.analysis.client.events.UpdateAnalysesWindowTitleEvent;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
@@ -166,8 +167,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Inject
     AnalysesAutoBeanFactory factory;
 
-    private String baseDebugId;
-
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -179,13 +178,18 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
 
     @Override
-    public void handlePermissionAndTypeFilterChange(String permFilter, String appTypeFilter) {
-         view.updateFilter(permFilter, appTypeFilter, "", "", "","");
+    public void handleViewAndTypeFilterChange(String viewFilter,
+                                              String appTypeFilter) {
+        view.updateFilter(viewFilter, appTypeFilter, "", "", "", "");
     }
 
     @Override
-    public void handleBatchIconClick(String parentId) {
+    public void handleBatchIconClick(String parentId,
+                                     String analysisName) {
         view.updateFilter("", "","", "", "", parentId);
+        UpdateAnalysesWindowTitleEvent event =
+                new UpdateAnalysesWindowTitleEvent(" " + appearance.htAnalysisTitle(analysisName));
+        eventBus.fireEvent(event);
     }
 
     @Override
@@ -200,6 +204,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Override
     public void handleViewAllIconClick() {
         view.updateFilter("All", "All", "", "", "", "");
+        UpdateAnalysesWindowTitleEvent event = new UpdateAnalysesWindowTitleEvent("");
+        eventBus.fireEvent(event);
     }
 
     @Override
@@ -316,7 +322,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
-        this.baseDebugId = baseDebugId;
         container.setWidget(view);
         if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
             view.load(this, baseDebugId, selectedAnalyses.get(0));

@@ -90,8 +90,8 @@ class AnalysesToolbar extends Component {
                                 {getMessage("viewFilter")}
                             </InputLabel>
                             <Select
-                                value={this.props.permFilter}
-                                onChange={(e) => this.props.onPermissionsFilterChange(e.target.value)}
+                                value={this.props.viewFilter}
+                                onChange={(e) => this.props.onViewFilterChange(e.target.value)}
                                 input={
                                     <OutlinedInput name="permission"/>
                                 }
@@ -164,7 +164,7 @@ AnalysesToolbar.propTypes = {
     handleUpdateComments: PropTypes.func.isRequired,
     handleSaveAndComplete: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
-    permFilter: PropTypes.string.isRequired,
+    viewFilter: PropTypes.string.isRequired,
     typeFilter: PropTypes.string.isRequired,
     onPermissionsFilterChange: PropTypes.func.isRequired,
     onTypeFilterChange: PropTypes.func.isRequired,
