@@ -37,6 +37,7 @@ class EditMetadataTemplate extends Component {
         this.state = { showConfirmationDialog: false };
 
         [
+            "onConfirmSaveTemplate",
             "closeMetadataTemplateDialog",
             "closeConfirmationDialog",
         ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
@@ -48,6 +49,11 @@ class EditMetadataTemplate extends Component {
             closeMetadataTemplateDialog: PropTypes.func.isRequired,
         }),
     };
+
+    onConfirmSaveTemplate() {
+        this.closeConfirmationDialog();
+        this.props.handleSubmit();
+    }
 
     closeMetadataTemplateDialog() {
         this.closeConfirmationDialog();
@@ -64,7 +70,7 @@ class EditMetadataTemplate extends Component {
             intl,
             open,
             // from formik
-            handleSubmit, dirty, isSubmitting, error,
+            handleSubmit, dirty, isSubmitting, errors,
         } = this.props;
 
         const dialogTitleID = build(ids.METADATA_TEMPLATE_FORM, ids.TITLE);
@@ -95,7 +101,7 @@ class EditMetadataTemplate extends Component {
                             {getMessage("dialogTitleEditMetadataTemplate")}
                         </Typography>
                         <Button id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.SAVE)}
-                                disabled={!dirty || isSubmitting || error}
+                                disabled={!dirty || isSubmitting || errors.error}
                                 onClick={handleSubmit}
                                 color="inherit"
                         >
@@ -135,7 +141,7 @@ class EditMetadataTemplate extends Component {
 
                 <ConfirmCloseDialog open={this.state.showConfirmationDialog}
                                     parentId={ids.METADATA_TEMPLATE_FORM}
-                                    onConfirm={handleSubmit}
+                                    onConfirm={this.onConfirmSaveTemplate}
                                     onClose={this.closeMetadataTemplateDialog}
                                     onCancel={this.closeConfirmationDialog}
                                     title={getMessage("save")}
