@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -65,6 +66,7 @@ public class DataSearchPresenterImplTest {
     @Mock CollaboratorsServiceFacade collaboratorsServiceFacade;
     @Mock CollaboratorsUtil collaboratorsUtilMock;
     @Mock ReactSuccessCallback reactCallbackMock;
+    @Mock ReactErrorCallback reactErrorCallbackMock;
     @Mock List<Subject> subjectListMock;
     @Mock Splittable subjectSplittable;
 
@@ -408,7 +410,7 @@ public class DataSearchPresenterImplTest {
     public void testSearchCollaborators() {
         String searchTerm = "search";
 
-        dsPresenter.searchCollaborators(searchTerm, reactCallbackMock);
+        dsPresenter.searchCollaborators(searchTerm, reactCallbackMock, reactErrorCallbackMock);
 
         verify(collaboratorsServiceFacade).searchCollaborators(eq(searchTerm),
                                                                subjectListCaptor.capture());
