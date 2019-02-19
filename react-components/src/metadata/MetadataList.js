@@ -13,16 +13,15 @@ import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
+import EnhancedTableHead from "../util/table/EnhancedTableHead";
+
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -69,66 +68,38 @@ MetadataGridToolbar = withStyles(styles)(withI18N(injectIntl(MetadataGridToolbar
 
 const columnData = [
     {
-        id: "attr",
-        label: getMessage("attribute"),
-        component: "th",
-        scope: "row",
+        id: build(ids.COL_HEADER, ids.AVU_ATTR),
+        key: "attr",
+        name: getMessage("attribute"),
+        enableSorting: true,
     },
-    { id: "value", label: getMessage("value") },
-    { id: "unit", label: getMessage("metadataUnitLabel") },
-    { id: "avus", label: getMessage("metadataChildrenLabel"), padding: "none", numeric: true },
+    {
+        id: build(ids.COL_HEADER, ids.AVU_VALUE),
+        key: "value",
+        name: getMessage("value"),
+        enableSorting: true,
+    },
+    {
+        id: build(ids.COL_HEADER, ids.AVU_UNIT),
+        key: "unit",
+        name: getMessage("metadataUnitLabel"),
+        enableSorting: true,
+    },
+    {
+        id: build(ids.COL_HEADER, ids.AVU_AVUS),
+        key: "avus",
+        name: getMessage("metadataChildrenLabel"),
+        enableSorting: true,
+        numeric: true,
+        padding: "none",
+    },
+    {
+        id: build(ids.COL_HEADER, ids.COL_ACTIONS),
+        key: "actions",
+        enableSorting: false,
+        padding: "none",
+    },
 ];
-
-class MetadataGridHeader extends React.Component {
-    static propTypes = {
-        onRequestSort: PropTypes.func.isRequired,
-    };
-
-    createSortHandler = property => event => {
-        this.props.onRequestSort(event, property);
-    };
-
-    render() {
-        const { parentID, classes, order, orderBy } = this.props;
-
-        return (
-            <TableHead className={classes.tableHead}>
-                <TableRow>
-                    {columnData.map(column => {
-                        return (
-                            <TableCell
-                                component={column.component}
-                                scope={column.scope}
-                                padding={column.padding ? column.padding : "default"}
-                                numeric={column.numeric}
-                                key={column.id}
-                                sortDirection={orderBy === column.id ? order : false}
-                            >
-                                <Tooltip
-                                    title={getMessage("sort")}
-                                    placement="bottom-start"
-                                    enterDelay={300}
-                                >
-                                    <TableSortLabel
-                                        id={build(parentID, ids.COL_HEADER, column.id)}
-                                        active={orderBy === column.id}
-                                        direction={order}
-                                        onClick={this.createSortHandler(column.id)}
-                                    >
-                                        {column.label}
-                                    </TableSortLabel>
-                                </Tooltip>
-                            </TableCell>
-                        );
-                    }, this)}
-                    <TableCell padding="none" />
-                </TableRow>
-            </TableHead>
-        );
-    }
-}
-
-MetadataGridHeader = withStyles(styles)(MetadataGridHeader);
 
 class MetadataList extends Component {
     constructor(props) {
@@ -277,12 +248,11 @@ class MetadataList extends Component {
                                 );
                             })}
                         </TableBody>
-                        <MetadataGridHeader
-                            parentID={tableID}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={avus ? avus.length : 0}
+                        <EnhancedTableHead baseId={tableID}
+                                           columnData={columnData}
+                                           order={order}
+                                           orderBy={orderBy}
+                                           onRequestSort={this.handleRequestSort}
                         />
                     </Table>
                 </div>

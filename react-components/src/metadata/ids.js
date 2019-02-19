@@ -6,6 +6,7 @@ export default {
     AVU_ATTR: "attr",
     AVU_VALUE: "value",
     AVU_UNIT: "unit",
+    AVU_AVUS: "avus",
     BUTTONS: {
         ADD: "addBtn",
         CLOSE: "closeBtn",
@@ -14,6 +15,7 @@ export default {
         EXPAND: "expand",
         SAVE: "saveBtn",
     },
+    COL_ACTIONS: "actions",
     COL_HEADER: "colHeader",
     DIALOG: "dialog",
     TITLE: "title",
