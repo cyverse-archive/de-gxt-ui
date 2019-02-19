@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppRefLink;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -12,6 +13,8 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.tree.Tree;
+import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
 import java.util.List;
 
@@ -93,6 +96,14 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         String testDataWarn();
 
         String warning();
+
+        String communities();
+
+        TreeStyle getTreeStyle();
+
+        String contentPanelHeight();
+
+        String publicSubmissionFormCommunities();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
@@ -101,9 +112,15 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         void go(HasOneWidget container, App selectedApp, AsyncCallback<String> callback);
     }
 
-    TreeStore<OntologyHierarchy> getTreeStore();
+    Tree<OntologyHierarchy, String> getCategoryTree();
 
-    PublishAppRequest getPublishAppRequest();
+    String getMarkDownDocs();
+
+    String getAppDescription();
+
+    List<String> getReferenceLinks();
+
+    String getAppName();
 
     App getSelectedApp();
 
@@ -112,4 +129,6 @@ public interface SubmitAppForPublicUseView extends IsWidget {
     public void loadReferences(List<AppRefLink> refs);
 
     void setSelectedApp(App selectedApp);
+
+    Tree<Group, String> getCommunityTree();
 }

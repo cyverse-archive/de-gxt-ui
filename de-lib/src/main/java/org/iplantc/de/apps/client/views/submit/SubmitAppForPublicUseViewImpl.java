@@ -1,13 +1,14 @@
 package org.iplantc.de.apps.client.views.submit;
 
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
+import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.OntologyHierarchyTreeStoreProvider;
+import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
-import org.iplantc.de.client.models.apps.PublishAppRequest;
-import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.validators.UrlValidator;
@@ -18,8 +19,6 @@ import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -65,7 +64,6 @@ import com.sencha.gxt.widget.core.client.selection.CellSelection;
 import com.sencha.gxt.widget.core.client.selection.CellSelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.selection.CellSelectionChangedEvent.CellSelectionChangedHandler;
 import com.sencha.gxt.widget.core.client.tree.Tree;
-import com.sencha.gxt.widget.core.client.tree.Tree.TreeAppearance;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,13 +88,16 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     @UiField TextField appName;
     @UiField TextArea appDesc;
     @UiField VerticalLayoutContainer container;
-    @UiField(provided = true) TreeStore<OntologyHierarchy> treeStore;
-    @UiField(provided = true) Tree<OntologyHierarchy, String> tree;
+    @UiField(provided = true) TreeStore<OntologyHierarchy> categoryTreeStore;
+    @UiField(provided = true) Tree<OntologyHierarchy, String> categoryTree;
+    @UiField(provided = true) TreeStore<Group> communityTreeStore;
+    @UiField(provided = true) Tree<Group, String> communityTree;
     @UiField Grid<AppRefLink> grid;
     @UiField ListStore<AppRefLink> listStore;
     @UiField TextButton addBtn;
     @UiField TextButton delBtn;
     @UiField ContentPanel catPanel;
+    @UiField ContentPanel communityPanel;
     @UiField ContentPanel refPanel;
     @UiField FieldLabel appField;
     @UiField FieldLabel descField;
@@ -129,6 +130,7 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         this.deProps = props;
         this.factory = factory;
         initCategoryTree();
+        initCommunityTree();
         widget = uiBinder.createAndBindUi(this);
         initGrid();
         dataFolderSelector.addValueChangeHandler(new ValueChangeHandler<Folder>() {
@@ -151,6 +153,7 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         descParamField.setHTML(appearance.describeParamLbl());
         descOutputField.setHTML(appearance.describeOutputLbl());
         catPanel.setHeading(appearance.publicCategories());
+        communityPanel.setHeading(appearance.communities());
     }
 
     @UiFactory
@@ -209,6 +212,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
 
             }
         });
+
+        // Categories Help
         final ToolButton categoriesHelp = new ToolButton(ToolButton.QUESTION);
         catPanel.getHeader().addTool(categoriesHelp);
         categoriesHelp.addSelectHandler(new SelectHandler() {
@@ -220,6 +225,15 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
                 popup.showAt(categoriesHelp.getAbsoluteLeft(), categoriesHelp.getAbsoluteTop() + 15);
 
             }
+        });
+
+        // Communities Help
+        final ToolButton communitiesHelp = new ToolButton(ToolButton.QUESTION);
+        communityPanel.getHeader().addTool(communitiesHelp);
+        communitiesHelp.addSelectHandler(event -> {
+            ContextualHelpPopup popup = new ContextualHelpPopup();
+            popup.add(new HTML(appearance.publicSubmissionFormCommunities()));
+            popup.showAt(communitiesHelp.getAbsoluteLeft(), communitiesHelp.getAbsoluteTop() + 15);
         });
     }
 
@@ -245,8 +259,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     private void initCategoryTree() {
-        treeStore = new OntologyHierarchyTreeStoreProvider().get();
-        tree = new Tree<>(treeStore, new ValueProvider<OntologyHierarchy, String>() {
+        categoryTreeStore = new OntologyHierarchyTreeStoreProvider().get();
+        categoryTree = new Tree<>(categoryTreeStore, new ValueProvider<OntologyHierarchy, String>() {
 
             @Override
             public String getValue(OntologyHierarchy object) {
@@ -264,23 +278,40 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             }
         });
 
-        setTreeIcons();
-        tree.setCheckable(true);
-        tree.setCheckStyle(Tree.CheckCascade.NONE);
-        treeStore.addSortInfo(new StoreSortInfo<>(ontologyUtil.getOntologyNameComparator(),
-                                                  SortDir.ASC));
-        tree.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
-        tree.getSelectionModel().addSelectionHandler(new SelectionHandler<OntologyHierarchy>() {
+        categoryTree.setStyle(appearance.getTreeStyle());
+        categoryTree.setCheckable(true);
+        categoryTree.setCheckStyle(Tree.CheckCascade.NONE);
+        categoryTreeStore.addSortInfo(new StoreSortInfo<>(ontologyUtil.getOntologyNameComparator(),
+                                                          SortDir.ASC));
+        categoryTree.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
+    }
+
+    private void initCommunityTree() {
+        communityTreeStore = new CommunityTreeStoreProvider().get();
+        communityTree = new Tree<>(communityTreeStore, new ValueProvider<Group, String>() {
+
             @Override
-            public void onSelection(SelectionEvent<OntologyHierarchy> event) {
-                OntologyHierarchy selectedItem = event.getSelectedItem();
-                if (tree.isChecked(selectedItem)) {
-                    tree.setChecked(selectedItem, Tree.CheckState.UNCHECKED);
-                } else {
-                    tree.setChecked(selectedItem, Tree.CheckState.CHECKED);
-                }
+            public String getValue(Group object) {
+                return object.getGroupShortName();
+            }
+
+            @Override
+            public void setValue(Group object, String value) {
+                // do nothing intentionally
+            }
+
+            @Override
+            public String getPath() {
+                return null;
             }
         });
+
+        communityTree.setStyle(appearance.getTreeStyle());
+        communityTree.setCheckable(true);
+        communityTree.setCheckStyle(Tree.CheckCascade.NONE);
+        communityTreeStore.addSortInfo(new StoreSortInfo<>(new GroupComparator(),
+                                                          SortDir.ASC));
+        communityTree.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
     }
 
     @UiFactory
@@ -340,16 +371,6 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         return field;
     }
 
-    /**
-     * FIXME JDS This needs to be implemented in an {@link TreeAppearance}
-     */
-    private void setTreeIcons() {
-        com.sencha.gxt.widget.core.client.tree.TreeStyle style = tree.getStyle();
-        style.setNodeCloseIcon(appearance.categoryIcon());
-        style.setNodeOpenIcon(appearance.categoryOpenIcon());
-        style.setLeafIcon(appearance.subCategoryIcon());
-    }
-
     @Override
     public Widget asWidget() {
         return widget;
@@ -373,8 +394,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     @Override
-    public TreeStore<OntologyHierarchy> getTreeStore() {
-        return treeStore;
+    public Tree<OntologyHierarchy, String> getCategoryTree() {
+        return categoryTree;
     }
 
     private GridEditing<AppRefLink> createGridEditing() {
@@ -396,11 +417,14 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             dataFolderSelector.setInfoErrorText(null);
         }
 
-        return appName.getCurrentValue() != null && appName.getCurrentValue().length() <= 255
-                && appDesc.getCurrentValue() != null && checkRefLinksGrid() && checkAppCategories()
-                && inputDesc.isValid() && paramDesc.isValid()
-                && outputDesc.isValid();
-
+        return appName.getCurrentValue() != null &&
+               appName.getCurrentValue().length() <= 255 &&
+               appDesc.getCurrentValue() != null &&
+               checkRefLinksGrid() &&
+               checkAppCategories() &&
+               inputDesc.isValid() &&
+               paramDesc.isValid() &&
+               outputDesc.isValid();
     }
 
     public static native String generateMarkDown(String name,
@@ -425,28 +449,25 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     ;
 
     @Override
-    public PublishAppRequest getPublishAppRequest() {
-        PublishAppRequest appRequest = factory.publishAppRequest().as();
+    public String getAppDescription() {
+        return appDesc.getValue();
+    }
 
-        appRequest.setSystemId(selectedApp.getSystemId());
-        appRequest.setId(selectedApp.getId());
-        appRequest.setName(appName.getValue());
-        appRequest.setDescription(appDesc.getValue());
-        appRequest.setAvus(getAppAvus());
-        appRequest.setReferences(getRefLinks());
+    @Override
+    public String getAppName() {
+        return appName.getValue();
+    }
 
-
-
+    @Override
+    public String getMarkDownDocs() {
         String md = generateMarkDown(appName.getValue(),
-                                       appDesc.getValue(),
-                                       dataFolderSelector.getValue().getPath(),
-                                       inputDesc.getValue(),
-                                       paramDesc.getValue(),
-                                       outputDesc.getValue());
+                                     appDesc.getValue(),
+                                     dataFolderSelector.getValue().getPath(),
+                                     inputDesc.getValue(),
+                                     paramDesc.getValue(),
+                                     outputDesc.getValue());
         LOG.log(Level.SEVERE, md);
-        appRequest.setDocumentation(md);
-
-        return appRequest;
+        return md;
     }
 
     private boolean checkRefLinksGrid() {
@@ -464,23 +485,16 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     private boolean checkAppCategories() {
-        return tree.getCheckedSelection().size() > 0;
+        return categoryTree.getCheckedSelection().size() > 0;
     }
 
-    private List<String> getRefLinks() {
+    @Override
+    public List<String> getReferenceLinks() {
         List<String> refLinks = Lists.newArrayList();
         for (AppRefLink model : listStore.getAll()) {
             refLinks.add(model.getRefLink());
         }
         return refLinks;
-    }
-
-    private List<Avu> getAppAvus() {
-        List<Avu> avus = Lists.newArrayList();
-        for (OntologyHierarchy model : tree.getCheckedSelection()) {
-            avus.add(ontologyUtil.convertHierarchyToAvu(model));
-        }
-        return avus;
     }
 
     @Override
@@ -493,6 +507,11 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         this.selectedApp = selectedApp;
         appName.setValue(selectedApp.getName());
         appDesc.setValue(selectedApp.getDescription());
+    }
+
+    @Override
+    public Tree<Group, String> getCommunityTree() {
+        return communityTree;
     }
 
 }

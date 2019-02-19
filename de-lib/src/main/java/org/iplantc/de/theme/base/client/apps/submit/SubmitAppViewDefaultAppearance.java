@@ -11,6 +11,9 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
+import com.sencha.gxt.widget.core.client.tree.Tree;
+import com.sencha.gxt.widget.core.client.tree.TreeStyle;
+
 /**
  * @author jstroot
  */
@@ -221,5 +224,30 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     @Override
     public String warning() {
         return iplantDisplayStrings.warning();
+    }
+
+    @Override
+    public String communities() {
+        return appsMessages.chooseCommunities();
+    }
+
+    @Override
+    public TreeStyle getTreeStyle() {
+        TreeStyle style = new TreeStyle();
+        style.setNodeCloseIcon(categoryIcon());
+        style.setNodeOpenIcon(categoryOpenIcon());
+        style.setLeafIcon(subCategoryIcon());
+        
+        return style;
+    }
+
+    @Override
+    public String contentPanelHeight() {
+        return "200";
+    }
+
+    @Override
+    public String publicSubmissionFormCommunities() {
+        return appsMessages.publicSubmissionFormCommunities();
     }
 }

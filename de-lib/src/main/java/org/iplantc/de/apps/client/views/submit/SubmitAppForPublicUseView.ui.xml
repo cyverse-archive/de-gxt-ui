@@ -28,7 +28,9 @@
         <ui:attributes height="-1" width=".90" margins="{centerMargins}"/>
 
     </ui:with>
-    <ui:with field="treeStore"
+    <ui:with field="categoryTreeStore"
+             type="com.sencha.gxt.data.shared.TreeStore"/>
+    <ui:with field="communityTreeStore"
              type="com.sencha.gxt.data.shared.TreeStore"/>
     <ui:with field="listStore"
              type="com.sencha.gxt.data.shared.ListStore"/>
@@ -80,8 +82,14 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <cp:ContentPanel ui:field="catPanel"
-                             height="200">
-                <tree:Tree ui:field="tree"/>
+                             height="{appearance.contentPanelHeight}">
+                <tree:Tree ui:field="categoryTree"/>
+            </cp:ContentPanel>
+        </con:child>
+        <con:child layoutData="{layoutData}">
+            <cp:ContentPanel ui:field="communityPanel"
+                             height="{appearance.contentPanelHeight}">
+                <tree:Tree ui:field="communityTree"/>
             </cp:ContentPanel>
         </con:child>
         <con:child layoutData="{fileSelLabel}">
