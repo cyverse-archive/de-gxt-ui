@@ -341,7 +341,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     void getCommunityApps(Group community) {
         activeView.mask(appearance.getAppsLoadingMask());
-        appService.getCommunityApps(community, filter, new AppsCallback<Splittable>() {
+        appService.getCommunityApps(community.getDisplayName(), filter, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 new AppListCallback().onFailure(statusCode, caught);

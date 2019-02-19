@@ -10,6 +10,8 @@ import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
@@ -24,7 +26,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -91,6 +95,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject EventBus eventBus;
     @Inject SubmitAppPresenterBeanFactory factory;
     @Inject AppAutoBeanFactory appAutoBeanFactory;
+    @Inject GroupAutoBeanFactory groupAutoBeanFactory;
     @Inject AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject SubmitAppForPublicUseView view;
     private OntologyServiceFacade ontologyService;
@@ -117,16 +122,17 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         // Fetch Hierarchies
         ontologyService.getRootHierarchies(new HierarchiesCallback());
         // Fetch communities
-        groupServiceFacade.getCommunities(new AsyncCallback<List<Group>>() {
+        groupServiceFacade.getCommunities(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.publishFailureDefaultMessage(), caught);
             }
 
             @Override
-            public void onSuccess(List<Group> result) {
+            public void onSuccess(Splittable result) {
+                List<Group> groupList = AutoBeanCodex.decode(groupAutoBeanFactory, GroupList.class, result).as().getGroups();
                 TreeStore<Group> treeStore = view.getCommunityTree().getStore();
-                treeStore.add(result);
+                treeStore.add(groupList);
             }
         });
     }
