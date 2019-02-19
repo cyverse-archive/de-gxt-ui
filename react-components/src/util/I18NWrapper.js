@@ -7,9 +7,14 @@ import { FormattedHTMLMessage, FormattedMessage, IntlProvider } from "react-intl
 const withI18N = (WrappedComponent, intlData) => {
     return class extends React.Component {
         render() {
+            const {
+                messages,
+                ...rest
+            } = this.props;
+            let combinedMessages = {...messages, ...intlData.messages};
             return (
-                <IntlProvider locale={intlData.locales} defaultLocale='en' messages={intlData.messages}>
-                    <WrappedComponent {...intlData} {...this.props}/>
+                <IntlProvider locale={intlData.locales} defaultLocale='en' messages={combinedMessages}>
+                    <WrappedComponent messages={combinedMessages} {...rest}/>
                 </IntlProvider>
             );
         }

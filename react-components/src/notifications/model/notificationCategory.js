@@ -7,5 +7,6 @@ const notificationCategory = {
     apps: "Apps",
     permanent_id_request: "Permanent ID Request",
     team: "Team",
+    community: "Community",
 };
 export default notificationCategory;

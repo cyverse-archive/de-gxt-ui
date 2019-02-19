@@ -560,6 +560,25 @@ class NotificationViewTest extends Component {
                 },
                 "seen": true,
                 "deleted": false
+            }, {
+                "type": "community",
+                "user": "aramsey",
+                "subject": "Added as community admin to Mo Test",
+                "email": true,
+                "email_template": "blank",
+                "payload": {
+                    "action": "added_to_community",
+                    "email_address": "asherz@email.arizona.edu",
+                    "contents": null,
+                    "team_name": "Mo Test"
+                },
+                "message": {
+                    "id": "E1BBFE58-9191-4BA5-8D2A-CFCA6B6F9F8D",
+                    "timestamp": "1550008416697",
+                    "text": "Added as community admin to Mo Test"
+                },
+                "seen": true,
+                "deleted": false
             }],
             "system-messages": []
         };

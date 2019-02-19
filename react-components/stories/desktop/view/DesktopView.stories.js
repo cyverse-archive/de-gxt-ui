@@ -434,6 +434,7 @@ class DesktopViewTest extends  Component {
             doLogout: () => logger("Logout Clicked"),
             onCollaboratorsClick: () => logger("Collaborators Clicked"),
             onTeamsClick: () => logger("Teams Clicked"),
+            onCommunitiesClick: () => logger("Communities Clicked"),
         };
         return (
             <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>

@@ -50,6 +50,12 @@ public class ConfigFactory {
         return teamsWindowConfig.as();
     }
 
+    public static CommunitiesWindowConfig communitiesWindowConfig() {
+        AutoBean<CommunitiesWindowConfig> communitiesWindowConfig = applyWindowType(WindowType.COMMUNITIES, factory.communitiesWindowConfig());
+        applyTag("Communities", communitiesWindowConfig);
+        return communitiesWindowConfig.as();
+    }
+
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
         AutoBean<AppsIntegrationWindowConfig> aiwc = applyWindowType(WindowType.APP_INTEGRATION,
                 factory.appsIntegrationWindowConfig());
@@ -204,6 +210,11 @@ public class ConfigFactory {
 
             case TEAMS:
                 config = teamsWindowConfig();
+                break;
+
+            case COMMUNITIES:
+                config = communitiesWindowConfig();
+                break;
 
             case APP_INTEGRATION:
             case APP_WIZARD:
@@ -292,6 +303,12 @@ public class ConfigFactory {
             case TEAMS:
                 config = AutoBeanCodex.decode(factory,
                                               TeamsWindowConfig.class,
+                                              wc.getWindowConfig()).as();
+                break;
+
+            case COMMUNITIES:
+                config = AutoBeanCodex.decode(factory,
+                                              CommunitiesWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
         }

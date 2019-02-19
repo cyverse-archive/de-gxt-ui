@@ -31,6 +31,8 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.shared.DECallback;
@@ -120,19 +122,14 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getCommunityApps(Group community, AppTypeFilter filter, DECallback<List<App>> callback) {
-        String address = APP_COMMUNITIES + "/" + URL.encode(community.getDisplayName()) + "/apps";
+    public void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback) {
+        String address = APP_COMMUNITIES + "/" + URL.encode(communityDisplayName) + "/apps";
         if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
             address = address + "?app-type=" + filter.getFilterString();
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                return AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override

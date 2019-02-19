@@ -29,8 +29,8 @@
     </replace-with>
 
     <!-- Communities -->
-    <replace-with class="org.iplantc.de.theme.base.client.apps.communities.CommunitiesViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.client.CommunitiesView.Appearance"/>
+    <replace-with class="org.iplantc.de.theme.base.client.communities.ManageCommunitiesViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.client.ManageCommunitiesView.Appearance"/>
     </replace-with>
 
     <!-- Cells -->

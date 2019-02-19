@@ -1,8 +1,10 @@
 package org.iplantc.de.client.models.groups;
 
 import org.iplantc.de.client.models.HasMessage;
+import org.iplantc.de.client.models.HasStringList;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.SubjectList;
+import org.iplantc.de.client.models.collaborators.SubjectMemberList;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -45,6 +47,10 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
     AutoBean<CreateTeamRequest> getCreateTeamRequest();
 
     AutoBean<HasMessage> getHasMessage();
+
+    AutoBean<SubjectMemberList> getSubjectMemberList();
+
+    AutoBean<HasStringList> getList();
 
     default Group getDefaultGroup() {
         Group group = getGroup().as();

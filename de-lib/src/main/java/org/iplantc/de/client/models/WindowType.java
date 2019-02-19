@@ -18,5 +18,6 @@ public enum WindowType {
     WORKFLOW_INTEGRATION,
     MANAGETOOLS,
     COLLABORATORS,
-    TEAMS
+    TEAMS,
+    COMMUNITIES
 }

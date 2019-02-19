@@ -1,0 +1,9 @@
+<module>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.iplantc.de.commons.ui-commons" />
+    <inherits name="org.iplantc.de.pipelines.pipelines"/>
+    <inherits name="org.iplantc.de.apps.Apps"/>
+
+    <source path="client"/>
+    <source path="shared"/>
+</module>

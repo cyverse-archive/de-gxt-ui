@@ -27,8 +27,12 @@ class SubjectSearchField extends Component {
 
     getSubjects(input, callback) {
         if (input.length > 2) {
-            this.props.presenter.searchCollaborators(input, (data) => {
-                callback(data);
+            new Promise((resolve, reject) => {
+                this.props.presenter.searchCollaborators(input, resolve, reject);
+            }).then(listing => {
+                callback(listing);
+            }).catch(() => {
+                callback(null);
             });
         } else {
             callback(null);

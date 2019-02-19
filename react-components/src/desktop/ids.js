@@ -10,6 +10,7 @@ export default ({
     PREFERENCES_LINK: "preferences",
     COLLABORATORS_LINK: "collaborators",
     TEAMS_LINK: "teams",
+    COMMUNITIES_LINK: "communities",
     USER_MANUAL_LINK: "userManual",
     INTRO_LINK: "introduction",
     ABOUT_LINK: "about",

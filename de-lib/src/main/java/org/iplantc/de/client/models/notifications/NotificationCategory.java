@@ -23,6 +23,7 @@ public enum NotificationCategory {
     APPS("Apps"),
     /** Team notifications **/
     TEAM("Team"),
+    COMMUNITY("Community"),
 
     /** EZID request */
     PERMANENTIDREQUEST("Permanent ID Request"),

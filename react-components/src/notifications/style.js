@@ -14,7 +14,7 @@ export default (theme) => ({
         position: 'absolute',
         top: 200,
         left: 400,
-        color: '#DB6619',
+        color: Color.orange,
     },
     container: {
         width: "100%",
