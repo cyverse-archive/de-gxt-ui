@@ -28,9 +28,24 @@ import build from "../../../util/DebugIDUtil";
 import ids from "../../ids";
 
 const columnData = [
-    {name: "Status", numeric: false, enableSorting: false},
-    {name: "Date", numeric: false, enableSorting: true},
-    {name: "Comment", numeric: false, enableSorting: false},
+    {
+        id: ids.STATUS,
+        name: "Status",
+        numeric: false,
+        enableSorting: false,
+    },
+    {
+        id: ids.CREATED_DATE,
+        name: "Date",
+        numeric: false,
+        enableSorting: true,
+    },
+    {
+        id: ids.COMMENT,
+        name: "Comment",
+        numeric: false,
+        enableSorting: false,
+    },
 ];
 
 
@@ -66,7 +81,6 @@ class RequestHistoryDialog extends Component {
                             selectable={false}
                             order={this.state.order}
                             orderBy={this.state.orderBy}
-                            ids={ids}
                             baseId={baseId}
                         />
                         <TableBody>

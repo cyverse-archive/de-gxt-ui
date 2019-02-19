@@ -1,20 +1,21 @@
 /**
- *
- * @author Sriram
- *
- **/
+ * @author Sriram, psarando
+ */
 import React from "react";
+import PropTypes from "prop-types";
+
+import Color from "../CyVersePalette";
+import build from "../DebugIDUtil";
+
+import exStyles from "./style";
+
+import Checkbox from "@material-ui/core/Checkbox";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
-import Color from "../CyVersePalette";
-import PropTypes from "prop-types";
-import build from "../../util/DebugIDUtil";
 import { withStyles } from "@material-ui/core/styles";
-import exStyles from "./style";
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -50,16 +51,17 @@ class EnhancedTableHead extends React.Component {
                     )
                     }
                     {columnData.map(column => {
+                        const key = column.key || column.name;
+
                         return (
                             <TableCell
-                                key={column.key ? column.key : column.name}
+                                key={key}
+                                id={build(this.props.baseId, column.id)}
                                 variant="head"
                                 numeric={column.numeric}
-                                padding={padding || "default"}
-                                sortDirection={orderBy === column.name ? order : false}
+                                padding={column.padding || padding || "default"}
+                                sortDirection={orderBy === key ? order : false}
                                 className={classes.column_heading}
-                                id={build(this.props.baseId,
-                                    this.props.ids[column.name.replace(/\s/g, "_").toUpperCase()])}
                             >
                                 {column.enableSorting ? (
                                         <Tooltip
@@ -68,13 +70,9 @@ class EnhancedTableHead extends React.Component {
                                             enterDelay={300}
                                         >
                                             <TableSortLabel
-                                                active={column.key ?
-                                                    orderBy === column.key :
-                                                    orderBy === column.name}
+                                                active={orderBy === key}
                                                 direction={order.toLowerCase()}
-                                                onClick={this.createSortHandler(column.key ?
-                                                    column.key :
-                                                    column.name)}
+                                                onClick={this.props.onRequestSort && this.createSortHandler(key)}
                                                 style={{color: Color.white}}
                                             >
                                                 {column.name}
@@ -101,10 +99,11 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string,
     rowCount: PropTypes.number,
     baseId: PropTypes.string.isRequired,
-    ids:  PropTypes.object.isRequired,
     columnData: PropTypes.arrayOf(
         PropTypes.shape({
+            id: PropTypes.string,
             name: PropTypes.string,
+            padding: PropTypes.string,
             numeric: PropTypes.bool,
             enableSorting: PropTypes.bool,
             key: PropTypes.string
@@ -115,4 +114,5 @@ EnhancedTableHead.propTypes = {
 EnhancedTableHead.defaultProps = {
     selectable: false,
 };
+
 export default withStyles(exStyles)(EnhancedTableHead);
