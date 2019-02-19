@@ -404,8 +404,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         newCommunity.setDescription(description);
 
         if (originalCommunityName == null) {
-            List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
-            serviceFacade.addCommunity(newCommunity, publicPrivileges, new AsyncCallback<Group>() {
+            serviceFacade.addCommunity(newCommunity, new AsyncCallback<Group>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.postReact(caught);

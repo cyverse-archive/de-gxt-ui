@@ -381,10 +381,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     }
 
     void addCommunityWithAdmins(Group community, List<Subject> admins) {
-        List<PrivilegeType> publicPrivileges = Lists.newArrayList(PrivilegeType.read);
         view.maskCommunities();
 
-        groupServiceFacade.addCommunity(community, publicPrivileges, new AsyncCallback<Group>() {
+        groupServiceFacade.addCommunity(community, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
