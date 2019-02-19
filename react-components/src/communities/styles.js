@@ -40,7 +40,7 @@ const styles = theme => ({
 
     loading: {
         position: 'absolute',
-        top: '30%',
+        top: '50%',
         left: '50%',
         color: palette.orange,
     }

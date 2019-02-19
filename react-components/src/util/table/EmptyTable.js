@@ -19,7 +19,7 @@ function EmptyTable(props) {
     } = props;
     return (
         <TableRow>
-            <TableCell colspan={numColumns}>
+            <TableCell colSpan={numColumns}>
                 <Typography component="p">
                     {message}
                 </Typography>
