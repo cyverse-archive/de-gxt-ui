@@ -126,17 +126,18 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void addCommunity(Group community,
-                             List<PrivilegeType> publicPrivileges,
                              AsyncCallback<Group> communityCallback) {
         String address = COMMUNITIES;
-        addGroup(community, publicPrivileges, address, communityCallback);
+        addGroup(community, null, address, communityCallback);
     }
 
     void addGroup(Group group, List<PrivilegeType> publicPrivileges, String address, AsyncCallback<Group> callback) {
         CreateTeamRequest request = factory.getCreateTeamRequest().as();
         request.setName(group.getName());
         request.setDescription(group.getDescription());
-        request.setPublicPrivileges(publicPrivileges);
+        if (publicPrivileges != null) {
+            request.setPublicPrivileges(publicPrivileges);
+        }
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 

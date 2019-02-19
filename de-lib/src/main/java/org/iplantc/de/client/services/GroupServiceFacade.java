@@ -65,10 +65,9 @@ public interface GroupServiceFacade {
     /**
      * Create a Community
      * @param community
-     * @param publicPrivileges
      * @param communityCallback
      */
-    void addCommunity(Group community, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> communityCallback);
+    void addCommunity(Group community, AsyncCallback<Group> communityCallback);
 
     /**
      * Delete a collaborator list
