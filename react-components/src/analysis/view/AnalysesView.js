@@ -272,7 +272,7 @@ class AnalysesView extends Component {
     }
 
     componentDidMount() {
-        this.fetchAnalyses(false);
+        this.fetchAnalyses();
     }
 
     componentDidUpdate(prevProps) {
@@ -435,11 +435,11 @@ class AnalysesView extends Component {
         const {rowsPerPage} = this.state;
         //reset selection between pages
         this.setState({page: page, offset: rowsPerPage * page, selected: []},
-            () => this.fetchAnalyses(false));
+            () => this.fetchAnalyses());
     }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses(false));
+        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses());
     }
 
     handleSelectAllClick(event, checked) {
@@ -625,11 +625,11 @@ class AnalysesView extends Component {
             Promise.all(promises)
                 .then(value => {
                     this.setState({loading: false});
-                    this.fetchAnalyses(false);
+                    this.fetchAnalyses();
                 })
                 .catch(error => {
                     this.setState({loading: false});
-                    this.fetchAnalyses(false);
+                    this.fetchAnalyses();
                 });
         }
     }
@@ -674,7 +674,7 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                     selected: []
-                }, () => this.fetchAnalyses(false));
+                }, () => this.fetchAnalyses());
             },
             (errorCode, errorMessage) => {
                 this.setState({
@@ -926,7 +926,8 @@ class AnalysesView extends Component {
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
                                                                   event,
-                                                                  id, analysis.name)}
+                                                                  id,
+                                                                  analysis.name)}
                                                               handleViewAllIconClick={(event) => this.handleViewAllIconClick(
                                                                   event)}/>
                                             </TableCell>
