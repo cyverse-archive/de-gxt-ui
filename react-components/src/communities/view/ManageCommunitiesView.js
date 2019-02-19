@@ -1,10 +1,12 @@
 import CommunitiesToolbar from "./CommunitiesToolbar";
 import CommunityFilter from "./CommunityFilter";
 import CommunityListing from "./CommunityListing";
+import styles from "../styles";
 
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import EditCommunityDialog from "./EditCommunityDialog";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * @author aramsey
@@ -131,10 +133,11 @@ class ManageCommunitiesView extends Component {
             collaboratorsUtil,
             presenter,
             currentUser,
+            classes,
         } = this.props;
 
         return (
-            <div>
+            <div className={classes.wrapper}>
                 <CommunitiesToolbar parentId={parentId}
                                     currentCommunityType={this.state.communityType}
                                     onCreateCommunityClicked={this.onCreateCommunityClicked}
@@ -176,4 +179,4 @@ ManageCommunitiesView.propTypes = {
     })
 };
 
-export default ManageCommunitiesView;
+export default withStyles(styles)(ManageCommunitiesView);
