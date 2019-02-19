@@ -122,13 +122,53 @@ function Status(props) {
 }
 
 const columnData = [
-    {name: "Name", numeric: false, enableSorting: true, key: "name"},
-    {name: "Owner", numeric: false, enableSorting: false, key: "owner"},
-    {name: "App", numeric: false, enableSorting: false, key: "app"},
-    {name: "Start Date", numeric: false, enableSorting: true, key: "startdate"},
-    {name: "End Date", numeric: false, enableSorting: true, key: "enddate"},
-    {name: "Status", numeric: false, enableSorting: true, key: "status"},
-    {name: "", numeric: false, enableSorting: false},
+    {
+        id: ids.NAME,
+        name: "Name",
+        numeric: false,
+        enableSorting: true,
+        key: "name",
+    },
+    {
+        id: ids.OWNER,
+        name: "Owner",
+        numeric: false,
+        enableSorting: false,
+        key: "owner",
+    },
+    {
+        id: ids.APP,
+        name: "App",
+        numeric: false,
+        enableSorting: false,
+        key: "app",
+    },
+    {
+        id: ids.START_DATE,
+        name: "Start Date",
+        numeric: false,
+        enableSorting: true,
+        key: "startdate",
+    },
+    {
+        id: ids.END_DATE,
+        name: "End Date",
+        numeric: false,
+        enableSorting: true,
+        key: "enddate",
+    },
+    {
+        id: ids.STATUS,
+        name: "Status",
+        numeric: false,
+        enableSorting: true,
+        key: "status",
+    },
+    {
+        name: "",
+        numeric: false,
+        enableSorting: false,
+    },
 ];
 
 const IPLANT = "iplantcollaborative";
@@ -829,7 +869,6 @@ class AnalysesView extends Component {
                                 rowCount={total}
                                 columnData={columnData}
                                 baseId={baseId}
-                                ids={ids}
                                 padding="none"
                             />
                             <TableBody>

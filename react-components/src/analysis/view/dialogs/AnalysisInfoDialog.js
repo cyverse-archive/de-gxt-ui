@@ -21,8 +21,18 @@ import { withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
 
 const columnData = [
-    {name: "Job Id", numeric: false, enableSorting: false},
-    {name: "Type", numeric: false, enableSorting: false},
+    {
+        id: ids.JOB_ID,
+        name: "Job Id",
+        numeric: false,
+        enableSorting: false,
+    },
+    {
+        id: ids.TYPE,
+        name: "Type",
+        numeric: false,
+        enableSorting: false,
+    },
 ];
 
 class AnalysisInfoDialog extends Component {
@@ -37,7 +47,6 @@ class AnalysisInfoDialog extends Component {
                     <Table>
                         <EnhancedTableHead
                             columnData={columnData}
-                            ids={ids}
                             baseId="analysis"
                         />
                         <TableBody>

@@ -26,9 +26,24 @@ import formatDate from "../../util/DateFormatter";
 import constants from "../../constants";
 
 const columnData = [
-    {name: "Category", numeric: false, enableSorting: false,},
-    {name: "Message", numeric: false, enableSorting: false},
-    {name: "Created Date", numeric: false, enableSorting: true},
+    {
+        id: ids.CATEGORY,
+        name: "Category",
+        numeric: false,
+        enableSorting: false,
+    },
+    {
+        id: ids.MESSAGE,
+        name: "Message",
+        numeric: false,
+        enableSorting: false,
+    },
+    {
+        id: ids.CREATED_DATE,
+        name: "Created Date",
+        numeric: false,
+        enableSorting: true,
+    },
 ];
 
 
@@ -235,8 +250,6 @@ class NotificationView extends Component {
                             rowCount={total}
                             columnData={columnData}
                             baseId={baseId}
-                            ids={ids}
-
                         />
                         <TableBody>
                             {data.map(n => {

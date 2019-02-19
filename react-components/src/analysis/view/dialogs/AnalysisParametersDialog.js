@@ -61,9 +61,24 @@ function ParameterValue(props) {
 }
 
 const columnData = [
-    {name: "Name", numeric: false, enableSorting: true},
-    {name: "Type", numeric: false, enableSorting: true},
-    {name: "Value", numeric: false, enableSorting: false},
+    {
+        id: ids.NAME,
+        name: "Name",
+        numeric: false,
+        enableSorting: true,
+    },
+    {
+        id: ids.TYPE,
+        name: "Type",
+        numeric: false,
+        enableSorting: true,
+    },
+    {
+        id: ids.VALUE,
+        name: "Value",
+        numeric: false,
+        enableSorting: false,
+    },
 ];
 
 class AnalysisParametersDialog extends Component {
@@ -87,7 +102,6 @@ class AnalysisParametersDialog extends Component {
                     <Table>
                         <EnhancedTableHead
                             columnData={columnData}
-                            ids={ids}
                             baseId="analysis"
                             order={order}
                             orderBy={orderBy}
