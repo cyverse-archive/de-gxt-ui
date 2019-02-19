@@ -12,6 +12,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
@@ -47,7 +48,8 @@ public interface AppsListView extends IsWidget,
                                       AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                       AppFavoritedEvent.HasAppFavoritedEventHandlers,
                                       BeforeAppSearchEvent.BeforeAppSearchEventHandler,
-                                      OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler {
+                                      OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
+                                      CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
     String GRID_VIEW = "grid";
     String TILE_VIEW = "tile";
 
@@ -108,7 +110,8 @@ public interface AppsListView extends IsWidget,
                                 OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
                                 SwapViewButtonClickedEvent.SwapViewButtonClickedEventHandler,
                                 AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
-                                AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers {
+                                AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
+                                CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
         App getSelectedApp();
 
         List<DragSource> getAppsDragSources();

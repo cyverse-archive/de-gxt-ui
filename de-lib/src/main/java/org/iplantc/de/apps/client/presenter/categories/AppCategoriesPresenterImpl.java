@@ -8,6 +8,7 @@ import org.iplantc.de.apps.client.events.EditAppEvent;
 import org.iplantc.de.apps.client.events.EditWorkflowEvent;
 import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
 import org.iplantc.de.apps.client.gin.AppCategoryTreeStoreProvider;
@@ -170,11 +171,11 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     public void go(final HasId selectedAppCategory, final boolean selectDefaultCategory, final DETabPanel tabPanel) {
         this.viewTabPanel = tabPanel;
 
-        viewTabPanel.add(workspaceView.getTree(), new TabItemConfig(appearance.workspaceTab()), baseId + AppsModule.Ids.WORKSPACE_TAB);
         viewTabPanel.add(hpcView.getTree(), new TabItemConfig(appearance.hpcTab()), baseId + AppsModule.Ids.HPC_TAB);
 
         workspaceView.getTree().mask(appearance.getAppCategoriesLoadingMask());
         hpcView.getTree().mask(appearance.getAppCategoriesLoadingMask());
+        tabPanel.mask();
 
         appService.getAppCategories(true, new AppsCallback<List<AppCategory>>() {
             @Override
@@ -192,6 +193,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
                 addHPCTabSelectionHandler();
                 workspaceView.getTree().unmask();
                 hpcView.getTree().unmask();
+                viewTabPanel.unmask();
             }
         });
 
@@ -242,6 +244,11 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
                 selectDefaultCategory();
             }
         }
+    }
+
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
+        workspaceView.getTree().getSelectionModel().deselectAll();
     }
 
     boolean doSelectCategory(Tree<AppCategory, String> tree, AppCategory category) {

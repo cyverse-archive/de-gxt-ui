@@ -12,6 +12,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.shared.AppsModule;
@@ -136,6 +137,16 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
         setHeading(Joiner.on(" >> ").join(event.getPath()));
 
         if (event.getSelectedHierarchy() != null) {
+            // Reset Search
+            acm.setSearchRegexPattern("");
+        }
+    }
+
+    @Override
+    public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
+        setHeading(Joiner.on(" >> ").join(event.getPath()));
+
+        if (event.getCommunitySelection() != null) {
             // Reset Search
             acm.setSearchRegexPattern("");
         }
