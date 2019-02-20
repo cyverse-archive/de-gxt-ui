@@ -180,7 +180,6 @@ class EditAttribute extends Component {
                                        label={getMessage("attrNameLabel")}
                                        id={build(formID, ids.ATTR_NAME)}
                                        required={true}
-                                       margin="dense"
                                        component={FormTextField}
                             />
                         </Grid>

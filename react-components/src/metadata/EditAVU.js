@@ -118,7 +118,6 @@ class EditAVU extends Component {
                                required={editable}
                                autoFocus={editable}
                                InputProps={{ readOnly: !editable }}
-                               margin="dense"
                                component={FormTextField}
                     />
                     <FastField name={`${field}.value`}

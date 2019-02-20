@@ -57,7 +57,6 @@ class StringEditorDialog extends Component {
                                component={FormTextField}
                                id={fieldID}
                                label={valueLabel || getMessage("value")}
-                               margin="dense"
                                autoFocus
                     />
                 </DialogContent>

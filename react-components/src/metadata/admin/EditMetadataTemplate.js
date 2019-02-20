@@ -116,7 +116,6 @@ class EditMetadataTemplate extends Component {
                                id={build(ids.METADATA_TEMPLATE_FORM, ids.TEMPLATE_NAME)}
                                required={true}
                                autoFocus
-                               margin="dense"
                                component={FormTextField}
                     />
                     <FastField name="description"
