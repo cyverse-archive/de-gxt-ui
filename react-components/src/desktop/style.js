@@ -46,17 +46,35 @@ export default {
         backgroundSize: 'contain',
         color: '#ffffff',
         position: 'relative',
-        marginBottom: '8px',
-        marginRight: '8px',
+        marginLeft: "8px",
+        marginBottom: '0px',
+        marginRight: '6px',
         cursor: 'pointer',
         '&:hover': {
             boxShadow: '0px 2px 3px #ccc',
         },
         borderRadius: '10px',
     },
+    notificationMenuIcon: {
+        display: 'inline-block',
+        opacity: '.8',
+        backgroundSize: 'contain',
+        color: '#ffffff',
+        position: 'relative',
+        marginBottom: '12px',
+        cursor: 'pointer',
+        '&:hover': {
+            boxShadow: '0px 2px 3px #ccc',
+        },
+        borderRadius: '10px',
+    },
+    notificationBadge: {
+        backgroundColor: color.orange,
+        color: color.white
+    },
     logoContainer: {
         color: '#eee',
-        fontSize: '1.1em',
+        fontSize: '1em',
         fontStyle: 'normal',
         display: 'inline-block',
         marginTop: '10px',

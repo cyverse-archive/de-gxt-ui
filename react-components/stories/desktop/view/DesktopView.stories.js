@@ -28,7 +28,7 @@ class DesktopViewTest extends  Component {
         
         const notifications = {
             "total": "30",
-            "unseen_total": "0",
+            "unseen_total": "12",
             "messages": [{
                 "type": "analysis",
                 "user": "sriram",
