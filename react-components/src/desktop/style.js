@@ -11,6 +11,7 @@ export default {
         right: 0,
         left: 0,
         overflow: 'hidden',
+        fontFamily: 'Roboto',
     },
     desktop: {
         backgroundImage: `url(${desktopBcg})`,
