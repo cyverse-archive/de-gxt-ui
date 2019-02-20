@@ -7,15 +7,15 @@ export default (theme) => ({
         width: "100%"
     },
     tableHead: {
-        backgroundColor: "#e2e2e2",
+        backgroundColor: Color.blue,
         position: "sticky",
-        top: 0
+        top: 0,
     },
     loadingStyle: {
         position: 'absolute',
-        top: 200,
-        left: 400,
-        color: '#DB6619',
+        top: '50%',
+        left: '50%',
+        color: Color.orange,
     },
     container: {
         width: "100%",
@@ -33,7 +33,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
-        height: 60,
+        height: 55,
     },
     dialogCloseButton: {
         position: 'absolute',

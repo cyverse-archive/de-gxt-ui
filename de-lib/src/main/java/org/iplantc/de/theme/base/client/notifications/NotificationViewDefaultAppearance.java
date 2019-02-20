@@ -49,7 +49,7 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
 
     @Override
     public int windowMinWidth() {
-        return 700;
+        return 950;
     }
 
     @Override

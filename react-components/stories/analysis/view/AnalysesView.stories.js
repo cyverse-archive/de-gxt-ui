@@ -196,6 +196,7 @@ class AnalysesViewTest extends Component {
                           filter,
                           orderBy,
                           order,
+                          resetSelectedAnalyses,
                           resultCallback,
                           errorCallback) => {
                 resultCallback(analysesList);
@@ -226,6 +227,18 @@ class AnalysesViewTest extends Component {
             },
             onUserSupportRequested: ()=> {
                 console.log("User support requested!");
+            },
+            handleViewAndTypeFilterChange: (viewFilter, appTypeFilter) => {
+                console.log("View filter ->" + viewFilter + " Type filter ->" + appTypeFilter);
+            },
+            handleBatchIconClick: (parentId) => {
+                console.log("Parent id ->" + parentId);
+            },
+            handleSearch: (searchTerm) => {
+                console.log("Search Term -> " + searchTerm);
+            },
+            handleViewAllIconClick: () => {
+                console.log("View All");
             }
         };
 

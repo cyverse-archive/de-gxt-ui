@@ -22,6 +22,8 @@ public class AnalysesViewImpl implements AnalysesView {
     DiskResourceUtil diskResourceUtil;
     UserInfo userInfo;
 
+    private ReactAnalyses.AnalysesProps props;
+
     @Inject
     AnalysesViewImpl(AnalysisParametersView.Presenter paramPresenter,
                      DiskResourceUtil diskResourceUtil,
@@ -41,7 +43,7 @@ public class AnalysesViewImpl implements AnalysesView {
     public void load(Presenter presenter,
                      String baseDebugId,
                      Analysis selectedAnalysis) {
-        ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
+        props = new ReactAnalyses.AnalysesProps();
         props.presenter = presenter;
         props.username = userInfo.getFullUsername();
         props.email = userInfo.getEmail();
@@ -50,16 +52,37 @@ public class AnalysesViewImpl implements AnalysesView {
         props.diskResourceUtil = diskResourceUtil;
         props.baseDebugId = baseDebugId;
         if (selectedAnalysis != null) {
-            props.selectedAnalysisId = selectedAnalysis.getId();
-            props.selectedAnalysisName = selectedAnalysis.getName();
-            props.permFilter="";
-            props.appTypeFilter="";
+            props.nameFilter = "";
+            props.viewFilter = "";
+            props.appTypeFilter = "";
+            props.idFilter = selectedAnalysis.getId();
+            props.parentId = "";
+            props.appNameFilter = "";
         } else {
-            props.selectedAnalysisId = "";
-            props.selectedAnalysisName = "";
-            props.permFilter="All";
-            props.appTypeFilter="All";
+            props.viewFilter = "All";
+            props.appTypeFilter = "All";
+            props.appNameFilter = "";
+            props.nameFilter = "";
+            props.idFilter = "";
+            props.parentId = "";
         }
         CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
     }
+
+    @Override
+    public void updateFilter(String viewFilter,
+                             String appTypeFilter,
+                             String nameFilter,
+                             String appNameFilter,
+                             String idFilter,
+                             String parentId) {
+        props.viewFilter = viewFilter;
+        props.appTypeFilter = appTypeFilter;
+        props.nameFilter = nameFilter;
+        props.appNameFilter = appNameFilter;
+        props.idFilter = idFilter;
+        props.parentId = parentId;
+        CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
+    }
+
 }

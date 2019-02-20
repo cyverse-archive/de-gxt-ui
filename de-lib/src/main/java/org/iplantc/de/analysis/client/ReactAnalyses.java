@@ -27,10 +27,12 @@ public class ReactAnalyses {
         public AnalysisParametersView.Presenter paramPresenter;
         public DiskResourceUtil diskResourceUtil;
         public String baseDebugId;
-        public String selectedAnalysisId;
-        public String selectedAnalysisName;
-        public String permFilter;
+        public String viewFilter;
         public String appTypeFilter;
+        public String parentId;
+        public String appNameFilter;
+        public String nameFilter;
+        public String idFilter;
     }
 }
 

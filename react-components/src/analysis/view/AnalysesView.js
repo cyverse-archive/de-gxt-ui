@@ -11,7 +11,7 @@ import intlData from "../messages";
 import ids from "../ids";
 import exStyles from "../style";
 import appType from "../model/appType";
-import permission from "../model/permission";
+import viewFilter from "../model/viewFilterOptions";
 import Color from "../../util/CyVersePalette";
 import formatDate from "../../util/DateFormatter";
 import build from "../../util/DebugIDUtil";
@@ -40,8 +40,8 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-
+import SubDirRightIcon from "@material-ui/icons/SubdirectoryArrowRightSharp";
+import SubDirLeftIcon from "@material-ui/icons/SubdirectoryArrowLeftSharp";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -49,19 +49,21 @@ function AnalysisName(props) {
     const className = props.classes.analysisName;
     const handleGoToOutputFolder = props.handleGoToOutputFolder;
     const handleBatchIconClick = props.handleBatchIconClick;
+    const handleViewAllIconClick = props.handleViewAllIconClick;
     const interactiveUrls = props.analysis.interactive_urls;
     const handleInteractiveUrlClick = props.handleInteractiveUrlClick;
     const status = props.analysis.status;
     const intl = props.intl;
     const analysis = props.analysis;
+    const parentId = props.parentId;
 
     if (isBatch) {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
-                <ListAltIcon onClick={handleBatchIconClick}
-                             style={{color: Color.darkGreen}}/>
+                <SubDirRightIcon onClick={handleBatchIconClick}
+                                 style={{color: Color.darkGreen}}/>
                 <sup>{name}</sup>
             </span>
         );
@@ -76,6 +78,16 @@ function AnalysisName(props) {
                 <sup>{name}</sup>
             </span>
         )
+    } else if (parentId) {
+        return (
+            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                  className={className}
+                  onClick={() => handleGoToOutputFolder(analysis)}>
+                <SubDirLeftIcon onClick={handleViewAllIconClick}
+                                style={{color: Color.darkGreen}}/>
+                <sup>{name}</sup>
+            </span>
+        );
     } else {
         return (
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
@@ -197,7 +209,7 @@ const ID = "id";
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
-        const {analysesList, permFilter, appTypeFilter, selectedAnalysisId} = props;
+        const {analysesList} = props;
         this.state = {
             data: analysesList ? analysesList.analyses : [],
             loading: true,
@@ -210,12 +222,6 @@ class AnalysesView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'startdate',
-            permFilter: permFilter,
-            typeFilter: appTypeFilter,
-            parentId: "",
-            nameFilter: "",
-            appNameFilter: "",
-            idFilter: selectedAnalysisId,
             parameters: [],
             info: null,
             infoDialogOpen: false,
@@ -245,7 +251,7 @@ class AnalysesView extends Component {
         this.fetchAnalyses = this.fetchAnalyses.bind(this);
         this.getParentIdFilter = this.getParentIdFilter.bind(this);
         this.getTypeFilter = this.getTypeFilter.bind(this);
-        this.getPermissionFilter = this.getPermissionFilter.bind(this);
+        this.getViewFilter = this.getViewFilter.bind(this);
         this.doRename = this.doRename.bind(this);
         this.doComments = this.doComments.bind(this);
         this.update = this.update.bind(this);
@@ -253,7 +259,7 @@ class AnalysesView extends Component {
         this.statusClick = this.statusClick.bind(this);
         this.handleBatchIconClick = this.handleBatchIconClick.bind(this);
         this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
-        this.onPermissionsFilterChange = this.onPermissionsFilterChange.bind(this);
+        this.onViewFilterChange = this.onViewFilterChange.bind(this);
         this.handleParamValueClick = this.handleParamValueClick.bind(this);
         this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -262,22 +268,38 @@ class AnalysesView extends Component {
         this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
+        this.handleViewAllIconClick = this.handleViewAllIconClick.bind(this);
     }
 
     componentDidMount() {
         this.fetchAnalyses();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.viewFilter !== this.props.viewFilter ||
+            prevProps.appTypeFilter !== this.props.appTypeFilter ||
+            prevProps.appNameFilter !== this.props.appNameFilter ||
+            prevProps.nameFilter !== this.props.nameFilter ||
+            prevProps.parentId !== this.props.parentId ||
+            prevProps.idFilter !== this.props.idFilter) {
+            this.fetchAnalyses();
+        }
+    }
+
+    /**
+     * Fetch analyses for the given configuration from state.
+     *
+     */
     fetchAnalyses() {
         const {rowsPerPage, offset, order, orderBy} = this.state;
         this.setState({loading: true});
 
         const parentFilter = this.getParentIdFilter();
         const typeFilter = this.getTypeFilter();
-        const permFilter = this.getPermissionFilter();
+        const viewFilter = this.getViewFilter();
         const searchFilter = this.getSearchFilter();
 
-        if (permFilter && permFilter.value) {
+        if (viewFilter && viewFilter.value) {
             parentFilter.value = "";
         }
 
@@ -285,10 +307,14 @@ class AnalysesView extends Component {
         if (searchFilter && searchFilter.length > 0) {
             filtersObj.filters = searchFilter;
         } else {
-            filtersObj.filters = [parentFilter, typeFilter, permFilter];
+            filtersObj.filters = [parentFilter, typeFilter, viewFilter];
         }
 
-        this.props.presenter.getAnalyses(rowsPerPage, offset, filtersObj, orderBy, order.toUpperCase(),
+        this.props.presenter.getAnalyses(rowsPerPage,
+            offset,
+            filtersObj,
+            orderBy,
+            order.toUpperCase(),
             (analysesList) => {
                 this.setState({
                     loading: false,
@@ -304,9 +330,14 @@ class AnalysesView extends Component {
         );
     }
 
-    handleBatchIconClick(event, id) {
+    handleBatchIconClick(event, parentId, analysesName) {
         event.stopPropagation();
-        this.setState({typeFilter: "", permFilter: "", parentId: id}, () => this.fetchAnalyses());
+        this.props.presenter.handleBatchIconClick(parentId, analysesName);
+    }
+
+    handleViewAllIconClick(event) {
+        event.stopPropagation();
+        this.props.presenter.handleViewAllIconClick();
     }
 
     handleRequestSort(event, property) {
@@ -320,18 +351,18 @@ class AnalysesView extends Component {
         this.setState({
             order,
             orderBy,
-        }, () => this.fetchAnalyses());
+        }, () => this.fetchAnalyses(false));
     }
 
     getParentIdFilter() {
         const idParentFilter = Object.create(filter);
         idParentFilter.field = "parent_id";
-        idParentFilter.value = this.state.parentId;
+        idParentFilter.value = this.props.parentId;
         return idParentFilter;
     }
 
     getTypeFilter() {
-        const typeFilter1 = this.state.typeFilter;
+        const typeFilter1 = this.props.appTypeFilter;
 
         if (!typeFilter1 || typeFilter1 === appType.all) {
             return null;
@@ -343,36 +374,36 @@ class AnalysesView extends Component {
         return typeFilter;
     }
 
-    getPermissionFilter() {
-        const permFilter1 = this.state.permFilter;
+    getViewFilter() {
+        const viewFilter1 = this.props.viewFilter;
         let val = "";
 
-        if (!permFilter1) {
+        if (!viewFilter1) {
             return null;
         }
 
-        switch (permFilter1) {
-            case permission.all :
+        switch (viewFilter1) {
+            case viewFilter.all :
                 val = ALL;
                 break;
-            case permission.mine :
+            case viewFilter.mine :
                 val = MINE;
                 break;
-            case permission.theirs:
+            case viewFilter.theirs:
                 val = THEIRS;
                 break;
             default:
                 val = ALL;
         }
 
-        const permFilter = Object.create(filter);
-        permFilter.field = "ownership";
-        permFilter.value = val;
-        return permFilter;
+        const vf = Object.create(filter);
+        vf.field = "ownership";
+        vf.value = val;
+        return vf;
     }
 
     getSearchFilter() {
-        const {nameFilter, appNameFilter, idFilter} = this.state;
+        const {nameFilter, appNameFilter, idFilter} = this.props;
         const searchFilters = [];
         if (nameFilter) {
             const nameFilterObj = Object.create(filter);
@@ -392,21 +423,23 @@ class AnalysesView extends Component {
             const idFilterObj = Object.create(filter);
             idFilterObj.field = ID;
             idFilterObj.value = idFilter;
-            searchFilters.push(idFilterObj);
+            searchFilters.push(idFilterObj);           
         }
 
         return searchFilters;
 
     }
-    
+
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
-        this.setState({page: page, offset: rowsPerPage * page});
+        //reset selection between pages
+        this.setState({page: page, offset: rowsPerPage * page, selected: []},
+            () => this.fetchAnalyses());
     }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value});
+        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses());
     }
 
     handleSelectAllClick(event, checked) {
@@ -509,13 +542,13 @@ class AnalysesView extends Component {
             });
     }
     handleParamValueClick(parameter) {
-        //have to close view params otherwise file viewer wont show up front
-       this.setState({viewParamsDialogOpen: false});
-       this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
+        //have to close viewFilter params otherwise file viewer wont show up front
+        this.setState({viewParamsDialogOpen: false});
+        this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
-        //close view params temporarily so that save as dialog opens on top of the screen
+        //close viewFilter params temporarily so that save as dialog opens on top of the screen
         this.setState({loading: true, viewParamsDialogOpen: false});
         if (parameters && parameters.length > 0) {
             let contents = "Name\t" + "Type\t" + "Value\t\n";
@@ -758,34 +791,19 @@ class AnalysesView extends Component {
 
     }
 
-    onPermissionsFilterChange(permFilterVal) {
-        this.setState({permFilter: permFilterVal}, () => this.fetchAnalyses());
+    onViewFilterChange(viewFilter) {
+        const {appTypeFilter, presenter} = this.props;
+        presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
-    onTypeFilterChange(typeFilterVal) {
-        this.setState({typeFilter: typeFilterVal}, () => this.fetchAnalyses());
+    onTypeFilterChange(appTypeFilter) {
+        const {viewFilter, presenter} = this.props;
+        presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     handleSearch(searchText) {
-        if (searchText) {
-            this.setState({
-                permFilter: "",
-                typeFilter: "",
-                parentId: "",
-                idFilter:"",
-                nameFilter: searchText,
-                appNameFilter: searchText,
-            }, () => this.fetchAnalyses());
-        } else {
-            this.setState({
-                permFilter: permission.all,
-                typeFilter: appType.all,
-                idFilter: "",
-                parentId: "",
-                nameFilter: "",
-                appNameFilter: "",
-            }, () => this.fetchAnalyses());
-        }
+        const {presenter} = this.props;
+        presenter.handleSearch(searchText);
     }
 
     render() {
@@ -796,7 +814,10 @@ class AnalysesView extends Component {
             email,
             username,
             baseDebugId,
-            selectedAnalysisName
+            viewFilter,
+            appTypeFilter,
+            nameFilter,
+            parentId,
         } = this.props;
         const {
             rowsPerPage,
@@ -809,8 +830,6 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
             confirmDeleteDialogOpen,
-            permFilter,
-            typeFilter,
             parameters,
             info,
             infoDialogOpen,
@@ -846,12 +865,12 @@ class AnalysesView extends Component {
                                      handleUpdateComments={this.handleUpdateComments}
                                      handleSaveAndComplete={this.handleSaveAndComplete}
                                      handleRefresh={this.fetchAnalyses}
-                                     permFilter={permFilter}
-                                     typeFilter={typeFilter}
-                                     onPermissionsFilterChange={this.onPermissionsFilterChange}
+                                     viewFilter={viewFilter}
+                                     typeFilter={appTypeFilter}
+                                     onViewFilterChange={this.onViewFilterChange}
                                      onTypeFilterChange={this.onTypeFilterChange}
                                      onSearch={this.handleSearch}
-                                     searchInputValue={selectedAnalysisName}
+                                     searchInputValue={nameFilter}
                                      selectionCount={selectionCount}
                                      owner={owner}
                                      sharable={sharable}
@@ -866,10 +885,10 @@ class AnalysesView extends Component {
                                 orderBy={orderBy}
                                 onSelectAllClick={this.handleSelectAllClick}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={total}
                                 columnData={columnData}
                                 baseId={baseId}
                                 padding="none"
+                                rowsInPage={data.length}
                             />
                             <TableBody>
                                 {data.map(analysis => {
@@ -902,11 +921,15 @@ class AnalysesView extends Component {
                                                 <AnalysisName classes={classes}
                                                               intl={intl}
                                                               analysis={analysis}
+                                                              parentId={parentId}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
                                                               handleBatchIconClick={(event) => this.handleBatchIconClick(
                                                                   event,
-                                                                  id)}/>
+                                                                  id,
+                                                                  analysis.name)}
+                                                              handleViewAllIconClick={(event) => this.handleViewAllIconClick(
+                                                                  event)}/>
                                             </TableCell>
                                             <TableCell className={classes.cellText}
                                                        padding="none">
@@ -932,7 +955,7 @@ class AnalysesView extends Component {
                                                         username={username}/>
                                             </TableCell>
                                             <TableCell padding="none"
-                                                       >
+                                            >
                                                 <DotMenu
                                                     baseDebugId={build(gridId,
                                                         id + ids.ANALYSIS_DOT_MENU)}
@@ -973,7 +996,7 @@ class AnalysesView extends Component {
                             </Typography>
                         }
                     </div>
-                    <TablePagination style={{height: 50}}
+                    <TablePagination style={{height: 40}}
                                      colSpan={3}
                                      component="div"
                                      count={total}
@@ -1052,10 +1075,11 @@ AnalysesView.propTypes = {
     paramPresenter: PropTypes.object.isRequired,
     diskResourceUtil: PropTypes.object.isRequired,
     baseDebugId: PropTypes.string.isRequired,
-    selectedAnalysisId: PropTypes.string.isRequired,
-    selectedAnalysisName: PropTypes.string.isRequired,
-    permFilter: PropTypes.string.isRequired,
+    nameFilter: PropTypes.string,
+    appNameFilter: PropTypes.string,
+    viewFilter: PropTypes.string.isRequired,
     appTypeFilter: PropTypes.string.isRequired,
+    idFilter: PropTypes.string,
 };
 
 export default withStyles(exStyles)(withI18N(injectIntl(AnalysesView), intlData));

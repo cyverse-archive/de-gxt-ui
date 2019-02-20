@@ -6,14 +6,14 @@ export default (theme) => ({
         height: "75%",
     },
     tableHead: {
-        backgroundColor: "#e2e2e2",
+        backgroundColor:  Color.blue,
         position: "sticky",
         top: 0
     },
     loadingStyle: {
         position: 'absolute',
-        top: 200,
-        left: 400,
+        top: '50%',
+        left: '50%',
         color: Color.orange,
     },
     container: {
@@ -30,6 +30,7 @@ export default (theme) => ({
         backgroundColor: Color.lightGray,
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
+        height: 55,
     },
     notification: {
         textDecoration: 'underline',
@@ -37,5 +38,14 @@ export default (theme) => ({
     },
     unSeenNotificationBackground: {
         backgroundColor: Color.lightBlue,
+    },
+    dropDown: {
+        margin: 3,
+        height: 40,
+        flexDirection: 'unset',
+    },
+    dropDownLabel: {
+        paddingLeft: 5,
+        fontSize:10
     }
 });

@@ -52,6 +52,7 @@ function Message(props) {
     let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
     return (
         <TableCell
+            padding="none"
             className={className}>
             <div
                 onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
@@ -247,9 +248,9 @@ class NotificationView extends Component {
                             orderBy={orderBy}
                             onSelectAllClick={this.handleSelectAllClick}
                             onRequestSort={this.handleRequestSort}
-                            rowCount={total}
                             columnData={columnData}
                             baseId={baseId}
+                            rowsInPage={data.length}
                         />
                         <TableBody>
                             {data.map(n => {
@@ -290,7 +291,7 @@ class NotificationView extends Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     ActionsComponent={TablePaginationActions}
-                    rowsPerPageOptions={[100, 500, 1000]}
+                    rowsPerPageOptions={[5, 100, 500, 1000]}
                 />
             </div>
         )

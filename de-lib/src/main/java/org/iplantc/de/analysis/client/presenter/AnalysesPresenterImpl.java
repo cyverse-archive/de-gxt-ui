@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
+import org.iplantc.de.analysis.client.events.UpdateAnalysesWindowTitleEvent;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
@@ -36,6 +37,7 @@ import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -165,7 +167,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Inject
     AnalysesAutoBeanFactory factory;
 
-
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -173,6 +174,38 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         //Set default filter to ALL
         currentPermFilter = AnalysisPermissionFilter.ALL;
         currentTypeFilter = AppTypeFilter.ALL;
+    }
+
+
+    @Override
+    public void handleViewAndTypeFilterChange(String viewFilter,
+                                              String appTypeFilter) {
+        view.updateFilter(viewFilter, appTypeFilter, "", "", "", "");
+    }
+
+    @Override
+    public void handleBatchIconClick(String parentId,
+                                     String analysisName) {
+        view.updateFilter("", "","", "", "", parentId);
+        UpdateAnalysesWindowTitleEvent event =
+                new UpdateAnalysesWindowTitleEvent(" " + appearance.htAnalysisTitle(analysisName));
+        eventBus.fireEvent(event);
+    }
+
+    @Override
+    public void handleSearch(String searchTerm) {
+        if (Strings.isNullOrEmpty(searchTerm)) {
+            view.updateFilter("All", "All", "", "", "", "");
+       } else {
+            view.updateFilter("", "", searchTerm, searchTerm, "", "");
+        }
+    }
+
+    @Override
+    public void handleViewAllIconClick() {
+        view.updateFilter("All", "All", "", "", "", "");
+        UpdateAnalysesWindowTitleEvent event = new UpdateAnalysesWindowTitleEvent("");
+        eventBus.fireEvent(event);
     }
 
     @Override
@@ -200,6 +233,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                 if (errorCallback != null) {
                     errorCallback.onError(statusCode, exception.getMessage());
                 }
+
             }
 
             @Override
