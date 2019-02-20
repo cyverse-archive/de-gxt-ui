@@ -158,10 +158,8 @@ class Notifications extends Component {
 
         return (
             <React.Fragment>
-                <Badge badgeContent={unSeenCount} style={{
-                    margin: '0',
-                    right: '30px'
-                }} classes={{badge: classes.notificationBadge}}>
+                <Badge badgeContent={unSeenCount}
+                       classes={{badge: classes.notificationBadge, root: classes.badge}}>
                     <NotificationIcon
                         id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
                         className={classes.notificationMenuIcon}

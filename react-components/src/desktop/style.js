@@ -70,7 +70,11 @@ export default {
     },
     notificationBadge: {
         backgroundColor: color.orange,
-        color: color.white
+        color: color.white,
+    },
+    badge:{
+        margin: '0',
+        right: '30px'
     },
     logoContainer: {
         color: '#eee',
