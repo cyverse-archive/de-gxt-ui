@@ -37,5 +37,4 @@ public interface AppsWidgetsContextualHelpMessages extends Messages, AppContextH
     String argumentOrder();
 
     String doNotPass();
-
 }

@@ -791,6 +791,26 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     }
 
     @Override
+    public String fileInputDefaultLabel() {
+        return propertyPanelLabels.fileInputDefaultLabel();
+    }
+
+    @Override
+    public String fileInputDefaultText() {
+        return contextualHelpMessages.fileInputDefaultText();
+    }
+
+    @Override
+    public String folderInputDefaultLabel() {
+        return propertyPanelLabels.folderInputDefaultLabel();
+    }
+
+    @Override
+    public String folderInputDefaultText() {
+        return contextualHelpMessages.fileInputDefaultText();
+    }
+
+    @Override
     public String textInputExcludeArgument() {
         return contextualHelpMessages.textInputExcludeArgument();
     }
