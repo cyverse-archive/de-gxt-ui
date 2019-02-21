@@ -6,7 +6,6 @@ export default (theme) => ({
         position: "sticky",
         top: 0,
         color: Color.white,
-        fontSize: 12,
     },
     checkbox_cell: {
         backgroundColor: Color.blue,

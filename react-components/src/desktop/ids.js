@@ -29,4 +29,5 @@ export default ({
     NOTIFICATION_MENU_ANCHOR : "notificationMenuAnchor",
     USER_MENU_ANCHOR: "userMenuAnchor",
     HELP_MENU_ANCHOR: "helpMenuAnchor",
+    UNSEEN_NOTIFICATION_COUNT: "unSeenCount",
 });

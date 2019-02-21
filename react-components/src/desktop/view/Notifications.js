@@ -19,6 +19,7 @@ import intlData from "../messages";
 import classnames from "classnames";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import tour from "../NewUserTourSteps";
+import Badge from "@material-ui/core/Badge";
 
 
 function ErrorComponent(props) {
@@ -157,18 +158,16 @@ class Notifications extends Component {
 
         return (
             <React.Fragment>
-                <NotificationIcon
-                    id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
-                    className={classes.menuIcon}
-                    onClick={this.handleNotificationsClick}
-                    ref={this.notificationBtn}
-                />
-                {unSeenCount !== 0 &&
-                <span id='notifyCount'
-                      className={classes.unSeenCount}>
-                        {unSeenCount}
-                    </span>
-                }
+                <Badge id={build((ids.DESKTOP, ids.UNSEEN_NOTIFICATION_COUNT))}
+                       badgeContent={unSeenCount}
+                       classes={{badge: classes.notificationBadge, root: classes.badge}}>
+                    <NotificationIcon
+                        id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
+                        className={classes.notificationMenuIcon}
+                        onClick={this.handleNotificationsClick}
+                        ref={this.notificationBtn}
+                    />
+                </Badge>
                 <Menu id={build(ids.DESKTOP, ids.NOTIFICATIONS_MENU)}
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
