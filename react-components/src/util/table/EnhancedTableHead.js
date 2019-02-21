@@ -59,7 +59,7 @@ class EnhancedTableHead extends React.Component {
                                 key={key}
                                 id={build(this.props.baseId, column.id)}
                                 variant="head"
-                                numeric={column.numeric}
+                                align={column.numeric ? "right" : "inherit"}
                                 padding={column.padding || padding || "default"}
                                 sortDirection={orderBy === key ? order : false}
                                 className={classes.column_heading}
@@ -103,7 +103,7 @@ EnhancedTableHead.propTypes = {
     columnData: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
-            name: PropTypes.string,
+            name: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
             padding: PropTypes.string,
             numeric: PropTypes.bool,
             enableSorting: PropTypes.bool,
