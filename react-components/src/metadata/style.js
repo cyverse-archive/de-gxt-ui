@@ -22,7 +22,7 @@ const styles = theme => ({
         flex: 1,
     },
     tableHead: {
-        backgroundColor: "#e2e2e2",
+        backgroundColor: palette.lightGray,
         position: "sticky",
         top: 0
     },
@@ -49,6 +49,10 @@ const styles = theme => ({
     },
     errorSubTitle: {
         color: theme.palette.error.dark,
+    },
+    childAVUsContainer: {
+        paddingLeft: theme.typography.pxToRem(4),
+        paddingRight: theme.typography.pxToRem(4),
     },
 });
 

@@ -16,6 +16,7 @@ import ids from "./ids";
 import { FormCheckbox, FormSelectField, FormTextField, getFormError } from "../../util/FormField";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
+
 import Divider from "@material-ui/core/Divider";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -122,11 +123,11 @@ class EditAttribute extends Component {
                         <ContentRemove />
                     </IconButton>
                     <div className={classes.title}>
-                        <Typography id={dialogTitleID} variant="title" color="inherit" >
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" >
                             {name}
                         </Typography>
                         <Typography id={build(formID, error ? ids.TITLE_ERR : ids.TITLE_SUB)}
-                                    variant="subheading"
+                                    variant="subtitle1"
                                     noWrap
                                     className={error ? classes.errorSubTitle : null}
                         >
@@ -137,15 +138,14 @@ class EditAttribute extends Component {
                     <div className={classes.actions}>
                         <Fab id={build(formID, ids.BUTTONS.MOVE_UP)}
                              size="small"
-                             mini
                              color="secondary"
                              aria-label={formatMessage(intl, "moveUp")}
                              className={classes.button}
                              disabled={moveUpDisabled}
                              onClick={(event) => {
-                                    event.stopPropagation();
-                                    moveUp();
-                                }}
+                                 event.stopPropagation();
+                                 moveUp();
+                             }}
                         >
                             <KeyboardArrowUp />
                         </Fab>
@@ -153,15 +153,14 @@ class EditAttribute extends Component {
                     <div className={classes.actions}>
                         <Fab id={build(formID, ids.BUTTONS.MOVE_DOWN)}
                              size="small"
-                             mini
                              color="secondary"
                              aria-label={formatMessage(intl, "moveDown")}
                              className={classes.button}
                              disabled={moveDownDisabled}
                              onClick={(event) => {
-                                    event.stopPropagation();
-                                    moveDown();
-                                }}
+                                 event.stopPropagation();
+                                 moveDown();
+                             }}
                         >
                             <KeyboardArrowDown />
                         </Fab>
@@ -228,7 +227,7 @@ class EditAttribute extends Component {
                         <Grid item>
                             <ExpansionPanel defaultExpanded>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.ENUM_VALUES_GRID)} />}>
-                                    <Typography className={classes.heading}>{getMessage("enumValues")}</Typography>
+                                    <Typography variant="subtitle1">{getMessage("enumValues")}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <FieldArray name={`${field}.values`}
@@ -248,7 +247,7 @@ class EditAttribute extends Component {
                         <Grid item>
                             <ExpansionPanel defaultExpanded>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.OLS_PARAMS_EDIT_DIALOG)} />}>
-                                    <Typography className={classes.heading}>{getMessage("olsQueryParams")}</Typography>
+                                    <Typography variant="subtitle1">{getMessage("olsQueryParams")}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <OntologyLookupServiceSettings field={`${field}.settings`}
@@ -342,15 +341,14 @@ class EditAttributeFormList extends Component {
             <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(name, ids.BUTTONS.EXPAND, ids.ATTR_GRID)} />}>
                     <div className={classes.actions}>
-                        <Fab variant="fab"
-                             size="small"
+                        <Fab size="small"
                              color="primary"
                              id={build(name, ids.BUTTONS.ADD)}
                              aria-label={formatMessage(intl, "addRow")}
                              onClick={(event) => {
-                                    event.stopPropagation();
-                                    this.onAddAttribute();
-                                }}
+                                 event.stopPropagation();
+                                 this.onAddAttribute();
+                             }}
                         >
                             <ContentAdd />
                         </Fab>

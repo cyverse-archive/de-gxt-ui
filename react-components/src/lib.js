@@ -34,7 +34,6 @@ const getDefaultTheme = () => createMuiTheme({
             textTransform: "none",
         },
         useNextVariants: true,
-
     },
     zIndex: {
         mobileStepper: 1000 + adjustZIndexForGXT,

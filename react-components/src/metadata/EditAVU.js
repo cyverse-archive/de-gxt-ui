@@ -104,7 +104,7 @@ class EditAVU extends Component {
                             >
                                 <ArrowBack />
                             </IconButton>
-                            <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
+                            <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                                 {title}
                             </Typography>
                         </Toolbar>
@@ -140,10 +140,9 @@ class EditAVU extends Component {
                         <ExpansionPanel defaultExpanded={hasChildren}>
                             <ExpansionPanelSummary
                                 expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.AVU_GRID)}/>}>
-                                <Typography
-                                    className={classes.heading}>{getMessage("metadataChildrenLabel")}</Typography>
+                                <Typography variant="subtitle1">{getMessage("metadataChildrenLabel")}</Typography>
                             </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
+                            <ExpansionPanelDetails className={classes.childAVUsContainer}>
                                 <FieldArray name={`${field}.avus`}
                                             render={arrayHelpers => (
                                                 <MetadataList {...arrayHelpers}

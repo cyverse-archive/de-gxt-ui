@@ -80,7 +80,7 @@ class EditMetadata extends Component {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                             {getMessage(
                                 editable ? "dialogTitleEditMetadataFor" : "dialogTitleViewMetadataFor",
                                 { values: { targetName } }

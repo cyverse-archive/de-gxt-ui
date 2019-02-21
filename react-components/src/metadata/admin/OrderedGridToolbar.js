@@ -60,12 +60,12 @@ class OrderedGridToolbar extends Component {
                 </div>
                 <div className={classes.title}>
                     <Typography id={build(parentID, ids.TITLE)}
-                                variant="title"
+                                variant="h6"
                     >
                         {title}
                     </Typography>
                     <Typography id={build(parentID, ids.TITLE_ERR)}
-                                variant="subheading"
+                                variant="subtitle1"
                                 className={classes.errorSubTitle}
                     >
                         {error}
@@ -75,7 +75,6 @@ class OrderedGridToolbar extends Component {
                 <div className={classes.actions}>
                     <Fab id={build(parentID, ids.BUTTONS.MOVE_UP)}
                          size="small"
-                         mini
                          color="secondary"
                          aria-label={formatMessage(intl, "moveUp")}
                          className={classes.button}
@@ -88,7 +87,6 @@ class OrderedGridToolbar extends Component {
                 <div className={classes.actions}>
                     <Fab id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
                          size="small"
-                         mini
                          color="secondary"
                          aria-label={formatMessage(intl, "moveDown")}
                          className={classes.button}

@@ -15,7 +15,8 @@ import styles from "./style";
 
 import EnhancedTableHead from "../util/table/EnhancedTableHead";
 
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -44,18 +45,17 @@ class MetadataGridToolbar extends Component {
             >
                 {editable &&
                 <div className={classes.actions}>
-                    <Button id={build(parentID, ids.BUTTONS.ADD)}
-                            variant="fab"
-                            mini
-                            color="primary"
-                            aria-label={formatMessage(intl, "addMetadata")}
-                            onClick={onAddAVU}
+                    <Fab id={build(parentID, ids.BUTTONS.ADD)}
+                         size="small"
+                         color="primary"
+                         aria-label={formatMessage(intl, "addMetadata")}
+                         onClick={onAddAVU}
                     >
                         <ContentAdd/>
-                    </Button>
+                    </Fab>
                 </div>}
                 <div className={classes.title}>
-                    <Typography id={build(parentID, ids.TITLE)} variant="title">
+                    <Typography id={build(parentID, ids.TITLE)} variant="h6">
                         {getMessage("avus")}
                     </Typography>
                 </div>
@@ -220,29 +220,41 @@ class MetadataList extends Component {
                                         </TableCell>
                                         <TableCell>{value}</TableCell>
                                         <TableCell>{unit}</TableCell>
-                                        <TableCell padding="none" numeric>{avus ? avus.length : 0}</TableCell>
+                                        <TableCell padding="none" align="right">{avus ? avus.length : 0}</TableCell>
                                         <TableCell padding="none">
-                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
-                                                        aria-label={formatMessage(intl, "edit")}
-                                                        className={classes.button}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.props.onEditAVU(index);
-                                                        }}
+                                            <Grid container
+                                                  spacing={0}
+                                                  wrap="nowrap"
+                                                  direction="row"
+                                                  justify="center"
+                                                  alignItems="center"
                                             >
-                                                {editable ? <ContentEdit/> : <ContentView/>}
-                                            </IconButton>
-                                            {editable &&
-                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                        aria-label={formatMessage(intl, "delete")}
-                                                        classes={{ root: classes.deleteIcon }}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.props.remove(index);
-                                                        }}
-                                            >
-                                                <ContentRemove/>
-                                            </IconButton>}
+                                                <Grid item>
+                                                    <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                                aria-label={formatMessage(intl, "edit")}
+                                                                className={classes.button}
+                                                                onClick={event => {
+                                                                    event.stopPropagation();
+                                                                    this.props.onEditAVU(index);
+                                                                }}
+                                                    >
+                                                        {editable ? <ContentEdit/> : <ContentView/>}
+                                                    </IconButton>
+                                                </Grid>
+                                                {editable &&
+                                                <Grid item>
+                                                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                                aria-label={formatMessage(intl, "delete")}
+                                                                classes={{ root: classes.deleteIcon }}
+                                                                onClick={event => {
+                                                                    event.stopPropagation();
+                                                                    this.props.remove(index);
+                                                                }}
+                                                    >
+                                                        <ContentRemove/>
+                                                    </IconButton>
+                                                </Grid>}
+                                            </Grid>
                                         </TableCell>
                                     </TableRow>
                                 );

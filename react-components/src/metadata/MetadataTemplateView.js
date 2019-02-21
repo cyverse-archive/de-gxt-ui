@@ -40,6 +40,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -50,7 +51,6 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Fab from "@material-ui/core/Fab";
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -267,13 +267,13 @@ class MetadataTemplateAttributeView extends Component {
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
                                             {writable &&
                                             <Fab id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                    size="small"
-                                                    color="primary"
-                                                    aria-label={formatMessage(intl, "addRow")}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        this.onAddAVU(arrayHelpers, attribute);
-                                                    }}
+                                                 size="small"
+                                                 color="primary"
+                                                 aria-label={formatMessage(intl, "addRow")}
+                                                 onClick={event => {
+                                                     event.stopPropagation();
+                                                     this.onAddAVU(arrayHelpers, attribute);
+                                                 }}
                                             >
                                                 <ContentAdd/>
                                             </Fab>
