@@ -71,10 +71,11 @@ export default {
     notificationBadge: {
         backgroundColor: color.orange,
         color: color.white,
+        fontSize: 10,
     },
     badge:{
         margin: '0',
-        right: '30px'
+        right: '30px',
     },
     logoContainer: {
         color: '#eee',
@@ -158,17 +159,6 @@ export default {
         top: '70px',
         right: '50px',
         position: 'absolute',
-    },
-    unSeenCount: {
-        backgroundColor: color.orange,
-        fontSize: '.625em',
-        color: 'white',
-        height: 8,
-        verticalAlign: 'super',
-        visibility: 'visible',
-        lineHeight: '0.8em',
-        float: 'left',
-        padding: 2,
     },
     taskbarButton: {
         backgroundImage: `url(${cyverseMini})`,
