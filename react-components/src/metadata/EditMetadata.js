@@ -30,6 +30,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import CloseIcon from "@material-ui/icons/Close";
 import ContentView from "@material-ui/icons/List";
+import SaveIcon from "@material-ui/icons/Save";
 
 class EditMetadata extends Component {
     constructor(props) {
@@ -46,6 +47,7 @@ class EditMetadata extends Component {
             onSaveMetadata: PropTypes.func.isRequired,
             closeEditMetadataDialog: PropTypes.func.isRequired,
             onSelectTemplateBtnSelected: PropTypes.func.isRequired,
+            onSaveMetadataToFileBtnSelected: PropTypes.func.isRequired,
         }).isRequired,
     };
 
@@ -101,6 +103,21 @@ class EditMetadata extends Component {
                                             color="inherit"
                                 >
                                     <ContentView/>
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title={getMessage("saveToFile")}
+                                 placement="bottom-start"
+                                 enterDelay={200}
+                        >
+                            <span>
+                                <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE_METADATA_TO_FILE)}
+                                            aria-label={formatMessage(intl, "saveToFile")}
+                                            disabled={loading || dirty || isSubmitting}
+                                            onClick={() => this.props.presenter.onSaveMetadataToFileBtnSelected()}
+                                            color="inherit"
+                                >
+                                    <SaveIcon/>
                                 </IconButton>
                             </span>
                         </Tooltip>

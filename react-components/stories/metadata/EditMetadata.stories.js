@@ -15,6 +15,7 @@ const presenter = (logger) => ({
     onSelectTemplateBtnSelected: (metadata) => {
         logger("view in templates", metadata);
     },
+    onSaveMetadataToFileBtnSelected: () => logger("save to file selected."),
 });
 
 class EditMetadataTest extends Component {

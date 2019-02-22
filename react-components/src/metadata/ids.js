@@ -14,6 +14,7 @@ export default {
         EDIT: "editBtn",
         EXPAND: "expand",
         SAVE: "saveBtn",
+        SAVE_METADATA_TO_FILE: "saveMetadataToFile",
         VIEW_TEMPLATES: "templates",
     },
     COL_ACTIONS: "actions",

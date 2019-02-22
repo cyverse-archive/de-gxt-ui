@@ -52,6 +52,7 @@ export default {
         olsSettingTypeTitle: "Entity Type",
         required: "Required",
         save: "Save",
+        saveToFile: "Save Metadata to File",
         templateNameLabel: "Name",
         templateValidationErrMsgNumber: "Please enter a valid number.",
         templateValidationErrMsgTimestamp: "Please enter a valid date/time.",
