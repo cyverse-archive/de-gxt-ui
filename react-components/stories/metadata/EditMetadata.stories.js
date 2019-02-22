@@ -5,13 +5,16 @@ import EditMetadata from "../../src/metadata/EditMetadata"
 const presenter = (logger) => ({
     onSaveMetadata: (metadata, resolve, errorCallback) => {
         setTimeout(() => {
-                logger(metadata);
+                logger("save metadata", metadata);
                 resolve(metadata);
             },
             1500
         );
     },
     closeEditMetadataDialog: () => logger("dialog closed."),
+    onSelectTemplateBtnSelected: (metadata) => {
+        logger("view in templates", metadata);
+    },
 });
 
 class EditMetadataTest extends Component {

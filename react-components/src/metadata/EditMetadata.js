@@ -24,10 +24,12 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import CloseIcon from "@material-ui/icons/Close";
+import ContentView from "@material-ui/icons/List";
 
 class EditMetadata extends Component {
     constructor(props) {
@@ -43,6 +45,7 @@ class EditMetadata extends Component {
         presenter: PropTypes.shape({
             onSaveMetadata: PropTypes.func.isRequired,
             closeEditMetadataDialog: PropTypes.func.isRequired,
+            onSelectTemplateBtnSelected: PropTypes.func.isRequired,
         }).isRequired,
     };
 
@@ -55,7 +58,7 @@ class EditMetadata extends Component {
             loading,
             targetName,
             // from formik
-            handleSubmit, dirty, isSubmitting, errors,
+            handleSubmit, dirty, isSubmitting, errors, values,
         } = this.props;
 
         const { editingAttrIndex } = this.state;
@@ -86,6 +89,21 @@ class EditMetadata extends Component {
                                 { values: { targetName } }
                             )}
                         </Typography>
+                        <Tooltip title={getMessage("viewInTemplate")}
+                                 placement="bottom-start"
+                                 enterDelay={200}
+                        >
+                            <span>
+                                <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.VIEW_TEMPLATES)}
+                                            aria-label={formatMessage(intl, "viewInTemplate")}
+                                            disabled={loading || isSubmitting || errors.error}
+                                            onClick={() => this.props.presenter.onSelectTemplateBtnSelected(values)}
+                                            color="inherit"
+                                >
+                                    <ContentView/>
+                                </IconButton>
+                            </span>
+                        </Tooltip>
                         {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
                                 disabled={loading || !dirty || isSubmitting || errors.error}

@@ -14,6 +14,7 @@ export default {
         EDIT: "editBtn",
         EXPAND: "expand",
         SAVE: "saveBtn",
+        VIEW_TEMPLATES: "templates",
     },
     COL_ACTIONS: "actions",
     COL_HEADER: "colHeader",
