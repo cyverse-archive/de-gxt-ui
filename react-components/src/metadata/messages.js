@@ -1,7 +1,11 @@
+import constants from "./constants"
+const importIRODSMetadataMsg = `This will import your existing metadata to the CyVerse metadata database. This cannot be undone. For more information, please see <a href='${constants.IMPORT_IRODS_METADATA_LINK}' target='_blank'>Using Metadata with the CyVerse Data Store</a>. Continue?`;
+
 export default {
     locales: "en-US",
     messages: {
         addMetadata: "Add Metadata",
+        additionalMetadata: "Additional Metadata",
         addRow: "Add Row",
         attribute: "Attribute",
         attributes: "Attributes",
@@ -11,9 +15,9 @@ export default {
         attrRequiredLabel: "Required?",
         attrTypeLabel: "Type",
         back: "Back",
-        cancel: "Cancel",
         close: "Close",
-        confirmCloseUnsavedChanges: "You have unsaved changes. Save now?",
+        confirmDiscardChangesDialogHeader: "Discard Changes?",
+        confirmDiscardChangesDialogMsg: "You have unsaved changes. Do you wish to continue without saving?",
         dialogTitleEditEnumValue: "Edit Enum Value",
         dialogTitleEditMetadataFor: "Edit Metadata for { targetName }",
         dialogTitleEditMetadataTemplate: "Edit Metadata Template",
@@ -31,6 +35,9 @@ export default {
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",
         formatMetadataTermFreeTextOption: `Use "{ inputValue }"`,
+        importIRODSMetadata: "Import to User Metadata",
+        importIRODSMetadataMsg,
+        importIRODSMetadataTooltip: "Imports your existing metadata to the CyVerse metadata database. This action cannot be undone.",
         markAsDeleted: "Mark as Deleted?",
         metadataChildrenLabel: "Child Metadata",
         metadataUnitLabel: "Unit",
@@ -38,7 +45,6 @@ export default {
         moveUp: "Move Up",
         newAttrName: "New attribute { count }",
         newValue: "New value { count }",
-        no: "No",
         olsQueryParams: "Ontology Lookup Service Query Params",
         olsSettingAllChildrenOfHelpLabel: "Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):",
         olsSettingAllChildrenOfTitle: "All Children",
@@ -57,8 +63,8 @@ export default {
         templateValidationErrMsgNumber: "Please enter a valid number.",
         templateValidationErrMsgTimestamp: "Please enter a valid date/time.",
         templateValidationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
+        userMetadata: "User Metadata",
         value: "Value",
         viewInTemplate: "View in Template",
-        yes: "Yes",
     }
 };

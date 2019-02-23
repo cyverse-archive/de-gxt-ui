@@ -15,7 +15,6 @@ import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
 import {
     FormCheckbox,
     FormIntegerField,
@@ -26,6 +25,7 @@ import {
     FormTimestampField,
     getFormError,
 } from "../util/FormField";
+import DEConfirmationDialog from "../util/dialog/DEConfirmationDialog";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
@@ -51,6 +51,8 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
+const ConfirmationDialog = withI18N(DEConfirmationDialog, intlData);
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -351,6 +353,8 @@ class MetadataTemplateView extends Component {
             values, handleSubmit, dirty, isSubmitting, errors, touched,
         } = this.props;
 
+        const { showConfirmationDialog } = this.state;
+
         const dialogTitleID = build(ids.METADATA_TEMPLATE_VIEW, ids.TITLE);
 
         return (
@@ -399,19 +403,12 @@ class MetadataTemplateView extends Component {
                     />
                 </DialogContent>
 
-                <ConfirmCloseDialog open={this.state.showConfirmationDialog}
-                                    parentId={ids.METADATA_TEMPLATE_VIEW}
-                                    onConfirm={() => {
-                                        this.closeConfirmationDialog();
-                                        handleSubmit();
-                                    }}
-                                    onClose={this.closeMetadataTemplateDialog}
-                                    onCancel={this.closeConfirmationDialog}
-                                    title={getMessage("save")}
-                                    dialogContent={getMessage("confirmCloseUnsavedChanges")}
-                                    confirmLabel={getMessage("yes")}
-                                    closeLabel={getMessage("no")}
-                                    cancelLabel={getMessage("cancel")}
+                <ConfirmationDialog dialogOpen={showConfirmationDialog}
+                                    debugId={ids.METADATA_TEMPLATE_VIEW}
+                                    heading={getMessage("confirmDiscardChangesDialogHeader")}
+                                    message={getMessage("confirmDiscardChangesDialogMsg")}
+                                    onOkBtnClick={this.closeMetadataTemplateDialog}
+                                    onCancelBtnClick={this.closeConfirmationDialog}
                 />
             </Dialog>
         );

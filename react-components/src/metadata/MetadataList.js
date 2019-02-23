@@ -15,6 +15,7 @@ import styles from "./style";
 
 import EnhancedTableHead from "../util/table/EnhancedTableHead";
 
+import Checkbox from "@material-ui/core/Checkbox";
 import Fab from "@material-ui/core/Fab";
 import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
@@ -173,6 +174,11 @@ class MetadataList extends Component {
         const {
             parentID,
             editable,
+            selectable,
+            onSelectAVU,
+            onSelectAllClick,
+            avusSelected,
+            rowsInPage,
             classes,
             intl,
             name,
@@ -209,12 +215,21 @@ class MetadataList extends Component {
 
                                 const rowID = build(ids.EDIT_METADATA_FORM, field);
 
+                                const selected = avusSelected && avusSelected.includes(avu);
+
                                 return (
                                     <TableRow
                                         hover
                                         tabIndex={-1}
                                         key={field}
+                                        selected={selected}
                                     >
+                                        {selectable &&
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={selected}
+                                                      onChange={(event, checked) => onSelectAVU(avu, checked)}
+                                            />
+                                        </TableCell>}
                                         <TableCell component="th" scope="row">
                                             {attr}
                                         </TableCell>
@@ -265,6 +280,10 @@ class MetadataList extends Component {
                                            order={order}
                                            orderBy={orderBy}
                                            onRequestSort={this.handleRequestSort}
+                                           selectable={selectable}
+                                           onSelectAllClick={onSelectAllClick}
+                                           numSelected={avusSelected ? avusSelected.length : 0}
+                                           rowsInPage={rowsInPage}
                         />
                     </Table>
                 </div>

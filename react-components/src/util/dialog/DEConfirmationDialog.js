@@ -1,5 +1,5 @@
 /**
- *  @author sriram
+ *  @author sriram psarando
  *
  **/
 import React, { Component } from 'react';
@@ -27,33 +27,33 @@ class DEConfirmationDialog extends Component {
             okLabel,
             messages
         } = this.props;
+        const dialogTitleID = build(debugId, "title");
+
         return (
-            <Dialog open={dialogOpen} id={debugId}>
-                <DEDialogHeader
-                    messages={messages}
-                    heading={heading}
-                    onClose={() => {
-                        if (onCancelBtnClick) {
-                            onCancelBtnClick();
-                        }
-                    }}/>
+            <Dialog id={debugId}
+                    open={dialogOpen}
+                    aria-labelledby={dialogTitleID}
+            >
+                <DEDialogHeader id={dialogTitleID}
+                                messages={messages}
+                                heading={heading}
+                                onClose={onCancelBtnClick}
+                />
                 <DialogContent>
                     {message}
                 </DialogContent>
                 <DialogActions>
                     <Button id={build(debugId, ids.CANCEL)}
-                            onClick={() => {
-                        if (onCancelBtnClick) {
-                            onCancelBtnClick();
-                        }
-                    }} color="primary">
-                        {getMessage("cancel")}
+                            onClick={onCancelBtnClick}
+                            color="primary"
+                    >
+                        {getMessage("cancelBtnText")}
                     </Button>
-                    <Button
-                        id={build(debugId, ids.OK)}
-                        variant="contained"
-                        onClick={onOkBtnClick}
-                        color="primary">
+                    <Button id={build(debugId, ids.OK)}
+                            variant="contained"
+                            onClick={onOkBtnClick}
+                            color="primary"
+                    >
                         {okLabel}
                     </Button>
                 </DialogActions>
@@ -63,13 +63,19 @@ class DEConfirmationDialog extends Component {
 }
 
 DEConfirmationDialog.defaultProps = {
-    okLabel: getMessage("ok")
+    okLabel: getMessage("okBtnText")
 };
 
 DEConfirmationDialog.propTypes = {
     dialogOpen: PropTypes.bool.isRequired,
-    message: PropTypes.string.isRequired,
-    heading: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+    ]).isRequired,
+    heading: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+    ]).isRequired,
     onOkBtnClick: PropTypes.func.isRequired,
     onCancelBtnClick: PropTypes.func,
     debugId: PropTypes.string.isRequired,

@@ -22,9 +22,9 @@ import IconButton from "@material-ui/core/IconButton";
 
 class DEDialogHeader extends Component {
     render() {
-        const {classes, heading, onClose, intl} = this.props;
+        const {classes, heading, onClose, intl, id} = this.props;
         return (
-            <DialogTitle className={classes.header}>
+            <DialogTitle id={id} className={classes.header}>
                 <Typography
                     className={classes.title}>
                     {heading}
