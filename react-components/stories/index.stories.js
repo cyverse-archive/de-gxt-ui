@@ -45,6 +45,7 @@ import TeamsTest from "./teams/Teams.stories";
 
 import EditToolTest from "./tools/EditTool.stories";
 import ManageToolsTest from "./tools/ManageTools.stories";
+import NewToolRequestFormTest from "./tools/requests/NewToolRequestsForm.stories";
 
 import {
     EditDataCiteMetadataTest,
@@ -238,4 +239,5 @@ storiesOf("tools", module)
     .add("Edit Tool", () => <EditToolTest logger={action("Saved Tool")} />)
     .add("Manage Tools", () => (
         <ManageToolsTest logger={action("Manage Tools")} />
-    ));
+    ))
+    .add("NewToolRequest", () => <NewToolRequestFormTest />);
