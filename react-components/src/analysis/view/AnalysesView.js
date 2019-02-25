@@ -36,12 +36,15 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import ToolTip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import LaunchIcon from "@material-ui/icons/Launch";
-import SubDirRightIcon from "@material-ui/icons/SubdirectoryArrowRightSharp";
-import SubDirLeftIcon from "@material-ui/icons/SubdirectoryArrowLeftSharp";
+import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
+import analysesCollapseIcon from "../../resources/images/analyses-collapseList.svg";
+import altAnalysesExpandIcon from "../../resources/images/analyses-expandList.png";
+import altAnalysesCollapseIcon  from "../../resources/images/analyses-collapseList.png";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -62,8 +65,12 @@ function AnalysisName(props) {
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
-                <SubDirRightIcon onClick={handleBatchIconClick}
-                                 style={{color: Color.darkGreen}}/>
+                 <ToolTip title={getMessage('htDetails')}>
+                    <img src={analysesExpandIcon}
+                         alt={altAnalysesExpandIcon}
+                         onClick={handleBatchIconClick}
+                         style={{height: 16}}/>
+                 </ToolTip>
                 <sup>{name}</sup>
             </span>
         );
@@ -83,8 +90,12 @@ function AnalysisName(props) {
             <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
-                <SubDirLeftIcon onClick={handleViewAllIconClick}
-                                style={{color: Color.darkGreen}}/>
+                 <ToolTip title={getMessage('viewAll')}>
+                     <img src={analysesCollapseIcon}
+                          alt={altAnalysesCollapseIcon}
+                          onClick={handleViewAllIconClick}
+                          style={{height: 16}}/>
+                 </ToolTip>
                 <sup>{name}</sup>
             </span>
         );
