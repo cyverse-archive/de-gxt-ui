@@ -71,5 +71,14 @@ export default {
             "WARNING: Do not add Container Volumes or Container Volumes From settings to " +
             "tools unless it is certain that tool is authorized to access that data.",
         makePublic: "Make Public",
+        newToolRequestDialogHeading: "New Tool Request",
+        toolNameLabel: "What is the name of the tool?",
+        toolDescLabel: "Briefly describe the tool:",
+        toolSrcLinkLabel: "Enter link for your tool's source (GitHub, BitBucket, DockerHub etc...):",
+        toolVersionLabel: "What is your tool's version?",
+        toolDocumentationLabel: "Enter link for your tool's documentation:",
+        toolInstructionsLabel: "Enter instructions for how to use the tool in the Unix environment:",
+        toolTestDataLabel: "Enter link for your tool's test data:",
     },
 };
+
