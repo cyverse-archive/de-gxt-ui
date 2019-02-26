@@ -45,10 +45,6 @@ class AnalysisInfoDialog extends Component {
                     onClose={onInfoDialogClose}/>
                 <DialogContent>
                     <Table>
-                        <EnhancedTableHead
-                            columnData={columnData}
-                            baseId="analysis"
-                        />
                         <TableBody>
                             {info.steps.map(n => {
                                 return (
@@ -59,6 +55,9 @@ class AnalysisInfoDialog extends Component {
                                 );
                             })}
                         </TableBody>
+                        <EnhancedTableHead columnData={columnData}
+                                           baseId="analysis"
+                        />
                     </Table>
                 </DialogContent>
                 <DialogActions>

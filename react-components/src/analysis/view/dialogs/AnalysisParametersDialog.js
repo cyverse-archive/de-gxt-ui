@@ -100,12 +100,6 @@ class AnalysisParametersDialog extends Component {
                     onClose={onViewParamDialogClose}/>
                 <DialogContent>
                     <Table>
-                        <EnhancedTableHead
-                            columnData={columnData}
-                            baseId="analysis"
-                            order={order}
-                            orderBy={orderBy}
-                        />
                         <TableBody>
                             {parameters.map(n => {
                                 return (
@@ -123,6 +117,11 @@ class AnalysisParametersDialog extends Component {
                                 );
                             })}
                         </TableBody>
+                        <EnhancedTableHead columnData={columnData}
+                                           baseId="analysis"
+                                           order={order}
+                                           orderBy={orderBy}
+                        />
                     </Table>
                 </DialogContent>
                 <DialogActions>

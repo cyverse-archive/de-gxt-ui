@@ -66,15 +66,6 @@ class CommunityListing extends Component {
                 }
                 <div className={classes.table}>
                     <Table>
-                        <EnhancedTableHead selectable={false}
-                                           rowCount={data ? data.length : 0}
-                                           order={order}
-                                           orderBy={orderBy}
-                                           baseId={parentId}
-                                           ids={ids.TABLE_HEADER}
-                                           columnData={tableColumns}
-                                           onRequestSort={this.onRequestSort}
-                        />
                         <TableBody>
                             {(!data || data.length === 0) &&
                             <EmptyTable message={getMessage("noCommunities")}
@@ -95,6 +86,15 @@ class CommunityListing extends Component {
                                 )
                             })}
                         </TableBody>
+                        <EnhancedTableHead selectable={false}
+                                           rowCount={data ? data.length : 0}
+                                           order={order}
+                                           orderBy={orderBy}
+                                           baseId={parentId}
+                                           ids={ids.TABLE_HEADER}
+                                           columnData={tableColumns}
+                                           onRequestSort={this.onRequestSort}
+                        />
                     </Table>
                 </div>
             </Fragment>

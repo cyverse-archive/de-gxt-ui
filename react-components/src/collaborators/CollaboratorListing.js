@@ -3,7 +3,7 @@ import EnhancedTableHead from "../util/table/EnhancedTableHead";
 import { getSorting, stableSort } from "../util/table/TableSort";
 import ids from "./ids";
 import messages from "./messages";
-import withI18N, { getMessage } from "../util/I18NWrapper";
+import withI18N from "../util/I18NWrapper";
 
 import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -104,17 +104,6 @@ class CollaboratorListing extends Component {
 
         return (
             <Table>
-                <EnhancedTableHead selectable={selectable}
-                                   numSelected={selected.length}
-                                   rowCount={data ? data.length : 0}
-                                   order={order}
-                                   orderBy={orderBy}
-                                   baseId={parentId}
-                                   ids={ids.TABLE_HEADER}
-                                   columnData={columnData}
-                                   onRequestSort={this.onRequestSort}
-                                   onSelectAllClick={this.handleSelectAllClick}
-                />
                 <TableBody>
                     {(!data || data.length === 0) && <EmptyTable message={emptyTableMsg} numColumns={columnData.length}/>}
                     {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(subject => {
@@ -148,6 +137,17 @@ class CollaboratorListing extends Component {
                         )
                     })}
                 </TableBody>
+                <EnhancedTableHead selectable={selectable}
+                                   numSelected={selected.length}
+                                   rowCount={data ? data.length : 0}
+                                   order={order}
+                                   orderBy={orderBy}
+                                   baseId={parentId}
+                                   ids={ids.TABLE_HEADER}
+                                   columnData={columnData}
+                                   onRequestSort={this.onRequestSort}
+                                   onSelectAllClick={this.handleSelectAllClick}
+                />
             </Table>
         )
     }
