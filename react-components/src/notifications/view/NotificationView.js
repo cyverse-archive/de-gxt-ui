@@ -241,17 +241,6 @@ class NotificationView extends Component {
                                      onDeleteClicked={this.handleDeleteClick}/>
                 <div className={classes.table}>
                     <Table>
-                        <EnhancedTableHead
-                            selectable={true}
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={this.handleSelectAllClick}
-                            onRequestSort={this.handleRequestSort}
-                            columnData={columnData}
-                            baseId={baseId}
-                            rowsInPage={data.length}
-                        />
                         <TableBody>
                             {data.map(n => {
                                 const isSelected = this.isSelected(n.message.id);
@@ -263,7 +252,7 @@ class NotificationView extends Component {
                                               selected={isSelected}
                                               hover
                                               key={n.message.id}>
-                                        <TableCell>
+                                        <TableCell padding="checkbox">
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
                                         <TableCell>{notificationCategory[n.type.replace(
@@ -280,6 +269,16 @@ class NotificationView extends Component {
                                 );
                             })}
                         </TableBody>
+                        <EnhancedTableHead selectable={true}
+                                           numSelected={selected.length}
+                                           order={order}
+                                           orderBy={orderBy}
+                                           onSelectAllClick={this.handleSelectAllClick}
+                                           onRequestSort={this.handleRequestSort}
+                                           columnData={columnData}
+                                           baseId={baseId}
+                                           rowsInPage={data.length}
+                        />
                     </Table>
                 </div>
                 <TablePagination

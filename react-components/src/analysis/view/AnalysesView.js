@@ -889,18 +889,6 @@ class AnalysesView extends Component {
                     />
                     <div className={classes.table}>
                         <Table>
-                            <EnhancedTableHead
-                                selectable={true}
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={this.handleSelectAllClick}
-                                onRequestSort={this.handleRequestSort}
-                                columnData={columnData}
-                                baseId={baseId}
-                                padding="none"
-                                rowsInPage={data.length}
-                            />
                             <TableBody>
                                 {data.map(analysis => {
                                     const id = analysis.id;
@@ -997,6 +985,17 @@ class AnalysesView extends Component {
 
                                 }
                             </TableBody>
+                            <EnhancedTableHead selectable={true}
+                                               numSelected={selected.length}
+                                               order={order}
+                                               orderBy={orderBy}
+                                               onSelectAllClick={this.handleSelectAllClick}
+                                               onRequestSort={this.handleRequestSort}
+                                               columnData={columnData}
+                                               baseId={baseId}
+                                               padding="none"
+                                               rowsInPage={data.length}
+                            />
                         </Table>
                         {
                             !hasData &&

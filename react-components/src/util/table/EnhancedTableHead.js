@@ -40,7 +40,7 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     {selectable && (
-                        <TableCell padding={padding ? padding : "default"}
+                        <TableCell padding={padding ? padding : "checkbox"}
                                    className={classes.checkbox_cell}>
                             <Checkbox
                                 indeterminate={isInDeterminate}

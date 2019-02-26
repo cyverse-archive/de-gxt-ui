@@ -76,13 +76,6 @@ class RequestHistoryDialog extends Component {
                 </DialogTitle>
                 <DialogContent>
                     <Table>
-                        <EnhancedTableHead
-                            columnData={columnData}
-                            selectable={false}
-                            order={this.state.order}
-                            orderBy={this.state.orderBy}
-                            baseId={baseId}
-                        />
                         <TableBody>
                             {history.map(n => {
                                 return (
@@ -97,6 +90,12 @@ class RequestHistoryDialog extends Component {
                                 );
                             })}
                         </TableBody>
+                        <EnhancedTableHead columnData={columnData}
+                                           selectable={false}
+                                           order={this.state.order}
+                                           orderBy={this.state.orderBy}
+                                           baseId={baseId}
+                        />
                     </Table>
                 </DialogContent>
                 <DialogActions>

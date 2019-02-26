@@ -102,17 +102,6 @@ class AppGridListing extends Component {
 
         return (
             <Table>
-                <EnhancedTableHead selectable={selectable}
-                                   numSelected={selected.length}
-                                   rowCount={data ? data.length : 0}
-                                   order={order}
-                                   orderBy={orderBy}
-                                   baseId={parentId}
-                                   ids={ids.TABLE_HEADER}
-                                   columnData={columnData}
-                                   onRequestSort={this.onRequestSort}
-                                   onSelectAllClick={this.handleSelectAllClick}
-                />
                 <TableBody>
                     {(!data || data.length === 0) && <EmptyTable message={getMessage("noApps")} numColumns={columnData.length}/>}
                     {data && data.length > 0 && stableSort(data, getSorting(order, orderBy)).map(app => {
@@ -151,6 +140,17 @@ class AppGridListing extends Component {
                         )
                     })}
                 </TableBody>
+                <EnhancedTableHead selectable={selectable}
+                                   numSelected={selected.length}
+                                   rowCount={data ? data.length : 0}
+                                   order={order}
+                                   orderBy={orderBy}
+                                   baseId={parentId}
+                                   ids={ids.TABLE_HEADER}
+                                   columnData={columnData}
+                                   onRequestSort={this.onRequestSort}
+                                   onSelectAllClick={this.handleSelectAllClick}
+                />
             </Table>
         )
     }
