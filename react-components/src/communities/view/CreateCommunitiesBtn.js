@@ -19,7 +19,7 @@ function CreateCommunitiesBtn(props) {
     } = props;
     return (
         <div>
-            <Button variant="raised"
+            <Button variant="contained"
                     id={build(parentId, ids.BUTTONS.CREATE)}
                     {...custom}>
                 <AddIcon/>

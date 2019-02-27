@@ -365,7 +365,7 @@ class EditCommunity extends Component {
             <div className={classes.wrapper}>
                 <Toolbar>
                     {community && isMember &&
-                    <Button variant="raised"
+                    <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.LEAVE_COMMUNITY)}
                             className={classes.toolbarItem}
                             onClick={() => this.onDialogBtnClicked('leaveCommunity')}>
@@ -373,7 +373,7 @@ class EditCommunity extends Component {
                     </Button>
                     }
                     {!isMember &&
-                    <Button variant="raised"
+                    <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.JOIN_COMMUNITY)}
                             className={classes.toolbarItem}
                             onClick={() => this.onDialogBtnClicked('joinCommunity')}>
@@ -381,8 +381,7 @@ class EditCommunity extends Component {
                     </Button>}
                     <div className={classes.grow}/>
                     {community && isCommunityAdmin &&
-                    <Button variant="raised"
-                            color="alert"
+                    <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.DELETE_COMMUNITY)}
                             className={classes.deleteButton}
                             onClick={() => this.onDialogBtnClicked('deleteCommunity')}>
@@ -450,9 +449,6 @@ class EditCommunity extends Component {
                                         }/>
                 </Toolbar>
                 <form className={classes.column}>
-                    {loading &&
-                    <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
-                    }
                     <TextField id={build(parentId, ids.EDIT.NAME)}
                                error={this.isInvalid()}
                                required
@@ -514,6 +510,9 @@ class EditCommunity extends Component {
                                         deletable={isCommunityAdmin}
                                         onRemoveApp={this.handleRemoveApp}/>
                     </fieldset>
+                    {loading &&
+                    <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
+                    }
                 </form>
             </div>
         )

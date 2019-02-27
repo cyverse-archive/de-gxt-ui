@@ -98,13 +98,13 @@ class EditCommunityDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     {isCommunityAdmin &&
-                    <Button variant="raised"
+                    <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.OK)}
                             onClick={() => this.onDialogBtnClicked('saveCommunity')}>
                         {getMessage('ok')}
                     </Button>
                     }
-                    <Button variant="raised"
+                    <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.CANCEL)}
                             onClick={this.handleCloseEditDialog}>
                         {getMessage('cancel')}

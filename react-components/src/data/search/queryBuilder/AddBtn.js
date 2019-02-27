@@ -1,7 +1,7 @@
 import styles from "../styles";
 
 import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -11,13 +11,12 @@ import { withStyles } from "@material-ui/core/styles";
 function AddBtn(props) {
     const {classes, ...custom} = props;
     return (
-        <Button variant='fab'
-                color='primary'
-                classes={{root: classes.conditionButton}}
-                mini
-                {...custom}>
+        <Fab color="primary"
+             size="small"
+             classes={{root: classes.conditionButton}}
+             {...custom}>
             <AddIcon />
-        </Button>
+        </Fab>
     )
 }
 

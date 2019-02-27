@@ -174,7 +174,10 @@ CollaboratorListing.propTypes = {
     data: PropTypes.array.isRequired,
     onDeleteCollaborator: PropTypes.func,
     deletable: PropTypes.bool,
-    emptyTableMsg: PropTypes.string.isRequired,
+    emptyTableMsg: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]).isRequired,
 };
 
 export default withI18N(CollaboratorListing, messages);

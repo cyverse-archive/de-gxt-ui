@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Search from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
-import { Palette } from "@material-ui/icons";
 import CyVersePalette from "./CyVersePalette";
 
 /**
