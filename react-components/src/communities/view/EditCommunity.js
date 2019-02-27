@@ -9,7 +9,9 @@ import SubjectSearchField from "../../collaborators/SubjectSearchField";
 import withI18N from "../../util/I18NWrapper";
 
 import AddIcon from "@material-ui/icons/Add";
+import Button from "@material-ui/core/Button/Button";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
 import Fab from "@material-ui/core/Fab/Fab";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
@@ -38,6 +40,9 @@ class EditCommunity extends Component {
             admins: [],
             apps: [],
             loading: false,
+            deleteCommunity: false,
+            leaveCommunity: false,
+            joinCommunity: false,
         };
 
         [
@@ -56,6 +61,9 @@ class EditCommunity extends Component {
             'isDuplicateApp',
             'isDuplicateAdmin',
             'saveCommunity',
+            'handleDialogConfirmed',
+            'onDialogBtnClicked',
+            "closeDialog",
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
@@ -174,7 +182,7 @@ class EditCommunity extends Component {
                 Promise.all(promises)
                     .then(() => {
                         this.setState({loading: false});
-                        this.props.onSaveComplete();
+                        this.props.handleCloseEditDlg();
                     })
                     .catch(error => {
                         console.log(error);
@@ -183,7 +191,7 @@ class EditCommunity extends Component {
                     });
             } else {
                 this.setState({loading: false});
-                this.props.onSaveComplete();
+                this.props.handleCloseEditDlg();
             }
         }).catch(error => {
             console.log(error);
@@ -307,6 +315,30 @@ class EditCommunity extends Component {
         this.setState({apps: [...this.state.apps, app]})
     }
 
+    handleDialogConfirmed(dialogName) {
+        const {community} = this.props;
+
+        this.setState({loading: true});
+
+        new Promise((resolve, reject) => {
+            this.props.presenter[dialogName](community.name, resolve, reject);
+        }).then(() => {
+            this.closeDialog(dialogName);
+            this.setState({loading: false});
+            this.props.handleCloseEditDlg();
+        }).catch(() => {
+            this.setState({loading: false});
+        });
+    }
+
+    onDialogBtnClicked(dialogName) {
+        this.setState({[dialogName]: true})
+    }
+
+    closeDialog(dialogName) {
+        this.setState({[dialogName]: false})
+    }
+
     render() {
         const {
             admins,
@@ -318,16 +350,105 @@ class EditCommunity extends Component {
 
         const {
             isCommunityAdmin,
+            isMember,
             parentId,
             collaboratorsUtil,
             presenter,
+            community,
             classes,
         } = this.props;
 
         const toolbarId = build(parentId, ids.EDIT.TOOLBAR);
+        const communityName = community !== null ? collaboratorsUtil.getSubjectDisplayName(community) : null;
 
         return (
             <div className={classes.wrapper}>
+                <Toolbar>
+                    {community && isMember &&
+                    <Button variant="raised"
+                            id={build(ids.EDIT_DLG, ids.BUTTONS.LEAVE_COMMUNITY)}
+                            className={classes.toolbarItem}
+                            onClick={() => this.onDialogBtnClicked('leaveCommunity')}>
+                        {getMessage('leaveCommunity')}
+                    </Button>
+                    }
+                    {!isMember &&
+                    <Button variant="raised"
+                            id={build(ids.EDIT_DLG, ids.BUTTONS.JOIN_COMMUNITY)}
+                            className={classes.toolbarItem}
+                            onClick={() => this.onDialogBtnClicked('joinCommunity')}>
+                        {getMessage('joinCommunity')}
+                    </Button>}
+                    <div className={classes.grow}/>
+                    {community && isCommunityAdmin &&
+                    <Button variant="raised"
+                            color="alert"
+                            id={build(ids.EDIT_DLG, ids.BUTTONS.DELETE_COMMUNITY)}
+                            className={classes.deleteButton}
+                            onClick={() => this.onDialogBtnClicked('deleteCommunity')}>
+                        {getMessage('deleteCommunity')}
+                    </Button>
+                    }
+                    <ConfirmCloseDialog open={this.state.deleteCommunity}
+                                        parentId={ids.CONFIRM_DELETE_DLG}
+                                        onConfirm={() => this.handleDialogConfirmed('deleteCommunity')}
+                                        confirmLabel={getMessage('yes')}
+                                        onCancel={() => this.closeDialog('deleteCommunity')}
+                                        cancelLabel={getMessage('cancel')}
+                                        onClose={() => this.closeDialog('deleteCommunity')}
+                                        closeLabel={getMessage('no')}
+                                        title={getMessage('confirmDeleteCommunityTitle', {values: {name: communityName}})}
+                                        dialogContent={
+                                            <div>
+                                                {loading &&
+                                                <CircularProgress size={30}
+                                                                  classes={{root: classes.loading}}
+                                                                  thickness={7}/>
+                                                }
+                                                {getMessage('confirmDeleteCommunity')}
+                                            </div>
+                                        }/>
+
+                    <ConfirmCloseDialog open={this.state.joinCommunity}
+                                        parentId={ids.CONFIRM_JOIN_DLG}
+                                        onConfirm={() => this.handleDialogConfirmed('joinCommunity')}
+                                        confirmLabel={getMessage('yes')}
+                                        onCancel={() => this.closeDialog('joinCommunity')}
+                                        cancelLabel={getMessage('cancel')}
+                                        onClose={() => this.closeDialog('joinCommunity')}
+                                        closeLabel={getMessage('no')}
+                                        title={getMessage('confirmJoinCommunityTitle', {values: {name: communityName}})}
+                                        dialogContent={
+                                            <div>
+                                                {loading &&
+                                                <CircularProgress size={30}
+                                                                  classes={{root: classes.loading}}
+                                                                  thickness={7}/>
+                                                }
+                                                {getMessage('confirmJoinCommunity')}
+                                            </div>
+                                        }/>
+
+                    <ConfirmCloseDialog open={this.state.leaveCommunity}
+                                        parentId={ids.CONFIRM_LEAVE_DLG}
+                                        onConfirm={() => this.handleDialogConfirmed('leaveCommunity')}
+                                        confirmLabel={getMessage('yes')}
+                                        onCancel={() => this.closeDialog('leaveCommunity')}
+                                        cancelLabel={getMessage('cancel')}
+                                        onClose={() => this.closeDialog('leaveCommunity')}
+                                        closeLabel={getMessage('no')}
+                                        title={getMessage('confirmLeaveCommunityTitle', {values: {name: communityName}})}
+                                        dialogContent={
+                                            <div>
+                                                {loading &&
+                                                <CircularProgress size={30}
+                                                                  classes={{root: classes.loading}}
+                                                                  thickness={7}/>
+                                                }
+                                                {getMessage('confirmLeaveCommunity')}
+                                            </div>
+                                        }/>
+                </Toolbar>
                 <form className={classes.column}>
                     {loading &&
                     <CircularProgress size={30} classes={{root: classes.loading}} thickness={7}/>
@@ -404,10 +525,11 @@ EditCommunity.propTypes = {
     collaboratorsUtil: PropTypes.object.isRequired,
     community: PropTypes.object,
     isCommunityAdmin: PropTypes.bool.isRequired,
+    isMember: PropTypes.bool.isRequired,
     saveCommunity: PropTypes.bool.isRequired, // to save any new/modified Group values
     cancelSave: PropTypes.func.isRequired,
     onCommunitySaved: PropTypes.func.isRequired, // Group values have successfully been updated
-    onSaveComplete: PropTypes.func.isRequired, // Group, admins, and apps have been saved
+    handleCloseEditDlg: PropTypes.func.isRequired, // Group, admins, and apps have been saved
     currentUser: PropTypes.shape({
         name: PropTypes.string.isRequired,
         id: PropTypes.string.isRequired,

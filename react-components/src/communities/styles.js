@@ -38,6 +38,17 @@ const styles = theme => ({
         overflow: "auto",
     },
 
+    deleteButton: {
+        backgroundColor: theme.palette.error.main,
+        "&:hover": {
+            backgroundColor: theme.palette.error.dark,
+        }
+    },
+
+    grow: {
+        flexGrow: 1,
+    },
+
     loading: {
         position: 'absolute',
         top: '50%',
