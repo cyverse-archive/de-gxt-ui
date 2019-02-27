@@ -7,6 +7,7 @@ export default {
         createCommunity: "Create",
         createCommunityTitle: "Create Community",
         communityAdmins: "Community Admins",
+        communityNameToolTip: "Click to view community details and join, leave, or delete the community",
         confirmDeleteCommunity: "Deleting a community removes this community for all users. Do you wish to continue deleting the community?",
         confirmDeleteCommunityTitle: "Delete {name}?",
         confirmJoinCommunity: "Joining a community adds it to your App window listing for quick access.  Do you wish to continue joining the community?",

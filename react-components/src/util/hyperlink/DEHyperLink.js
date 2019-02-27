@@ -7,9 +7,18 @@ import PropTypes from "prop-types";
 class DEHyperLink extends Component {
 
     render() {
-        const {classes, text, onClick} = this.props;
+        const {
+            classes,
+            text,
+            onClick,
+            ...custom
+        } = this.props;
         return (
-            <span onClick={onClick} className={classes.normal}>{text}</span>
+            <span onClick={onClick}
+                  {...custom}
+                  className={classes.normal}>
+                {text}
+            </span>
         );
     }
 
