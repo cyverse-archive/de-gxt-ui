@@ -29,6 +29,11 @@ const getDefaultTheme = () => createMuiTheme({
             main: palette.lightBlue
         }
     },
+    typography: {
+        button: {
+            textTransform: "none",
+        }
+    },
     zIndex: {
         mobileStepper: 1000 + adjustZIndexForGXT,
         // Not sure about appBar, but MUI docs recommend customizing all zIndex values.
