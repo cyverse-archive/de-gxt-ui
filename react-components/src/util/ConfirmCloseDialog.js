@@ -38,7 +38,7 @@ class ConfirmCloseDialog extends Component {
 
         return (
             <Dialog open={open}
-                    onClose={onClose}
+                    onClose={onCancel}
                     aria-labelledby={dialogTitleID}
             >
                 <DialogTitle id={dialogTitleID}>
