@@ -30,7 +30,6 @@ import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.gwt.core.client.GWT;
@@ -66,8 +65,6 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     AppsToolbarView.AppsToolbarAppearance appearance;
     @Inject
     EventBus eventBus;
-    @Inject
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
     @Inject
     AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
     @Inject

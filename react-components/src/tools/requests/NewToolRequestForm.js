@@ -18,15 +18,31 @@ import Button from "@material-ui/core/Button";
 
 
 class NewToolRequestForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(values, actions) {
+        console.log("Tool request-->" + values.toolName);
+        actions.setSubmitting(true);
+        this.props.presenter.submitRequest(values, ()=> {
+            actions.setSubmitting(false);
+        }, ()=> {
+            actions.setSubmitting(false);
+        });
+    }
+
     render() {
-        const {open, intl} = this.props;
+        const {intl, open, presenter} = this.props;
         return (
-            <Dialog open={open}
-                    disableBackdropClick
-                    disableEscapeKeyDown>
-                <DEDialogHeader heading={intl.formatMessage({id: "newToolRequestDialogHeading"})}/>
+            <Dialog open={open}>
+                <DEDialogHeader heading={intl.formatMessage({id: "newToolRequestDialogHeading"})}
+                                onClose={() => presenter.onClose()}/>
                 <DialogContent>
                     <Formik
+                        onSubmit={this.handleSubmit}
                         render={({errors, status, touched, isSubmitting}) => (
                             <Form>
                                 <Field name="toolName"
@@ -77,7 +93,7 @@ class NewToolRequestForm extends Component {
                                         color="primary"
                                         type="submit"
                                         disabled={isSubmitting}>
-                                    Submit
+                                    {getMessage("submit")}
                                 </Button>
                             </Form>
                         )}
