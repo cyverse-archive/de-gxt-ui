@@ -94,13 +94,13 @@ export default {
         validationErrMaxRAMLessThanMin: "Must be greater than Min Memory",
         validationErrMustBePositive: "Must be at least 0",
         newToolRequestDialogHeading: "New Tool Request",
+        submit: "Submit",
         toolNameLabel: "What is the name of the tool?",
         toolDescLabel: "Briefly describe the tool:",
         toolSrcLinkLabel: "Enter link for your tool's source (GitHub, BitBucket, DockerHub etc...):",
         toolVersionLabel: "What is your tool's version?",
         toolDocumentationLabel: "Enter link for your tool's documentation:",
-        toolInstructionsLabel: "Enter instructions for how to use the tool in the Unix environment:",
+        toolInstructionsLabel: "Enter any other instructions or relevant information:",
         toolTestDataLabel: "Enter link for your tool's test data:",
     },
 };
-

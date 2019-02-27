@@ -7,7 +7,11 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolType;
+import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
+import org.iplantc.de.client.services.ToolRequestServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -21,7 +25,6 @@ import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
@@ -32,6 +35,7 @@ import org.iplantc.de.tools.shared.ToolsModule;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -58,21 +62,25 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
-    @Inject AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
     @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
     @Inject EventBus eventBus;
     @Inject ToolAutoBeanFactory factory;
     @Inject DEProperties deProperties;
     protected List<Tool> currentSelection = Lists.newArrayList();
     private HandlerManager handlerManager;
+    private final NewToolRequestFormView requestFormView;
+    private final ToolRequestServiceFacade reqServices =
+            ServicesInjector.INSTANCE.getToolRequestServiceProvider();
 
     @Inject
     public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance,
                                     ManageToolsViewFactory manageToolsViewFactory,
-                                    EditToolViewFactory editToolViewFactory) {
+                                    EditToolViewFactory editToolViewFactory,
+                                    NewToolRequestFormView requestFormView) {
         this.appearance = appearance;
         this.toolsView = manageToolsViewFactory.create(getBaseManageToolsProps());
         this.editToolView = editToolViewFactory.create(getBaseEditToolProps());
+        this.requestFormView = requestFormView;
     }
 
     @Override
@@ -293,17 +301,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onRequestToolSelected() {
-        newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(NewToolRequestDialog o) {
-                o.show(NewToolRequestFormView.Mode.NEWTOOL);
-            }
-        });
+        requestFormView.load(this);
     }
 
     @Override
@@ -336,22 +334,28 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    @SuppressWarnings("unusable-by-js")
-    public void onRequestToMakeToolPublicSelected(Splittable toolSpl) {
-        Tool tool = convertSplittableToTool(toolSpl);
-        newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
+    public void submitRequest(Splittable toolRequest,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback) {
 
+        reqServices.requestInstallation(toolRequest, new AsyncCallback<ToolRequestDetails>() {
+            @Override
+            public void onFailure(final Throwable caught) {
+                if(errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
+                ErrorHandler.postReact(caught);
             }
 
             @Override
-            public void onSuccess(NewToolRequestDialog o) {
-                o.setTool(tool);
-                o.show(NewToolRequestFormView.Mode.MAKEPUBLIC);
+            public void onSuccess(final ToolRequestDetails response) {
+                if(callback != null) {
+                    callback.onSuccess(null);
+                }
             }
         });
     }
+
 
     @Override
     public void onShowToolInfo(String toolId) {
@@ -442,4 +446,3 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         return props;
     }
 }
-
