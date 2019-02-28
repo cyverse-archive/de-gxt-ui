@@ -4,19 +4,28 @@
  **/
 
 import React, { Component } from 'react';
-import { withStyles } from "@material-ui/core";
+
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { injectIntl } from "react-intl";
+
+import constants from "../../constants";
+import exStyles from "../../tools/style";
+import intlData from "../../tools/messages";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+import { FormMultilineTextField, FormTextField } from "../../util/FormField";
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import intlData from "../../tools/messages";
-import exStyles from "../../tools/style";
-import { injectIntl } from "react-intl";
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { FormMultilineTextField, FormTextField } from "../../util/FormField";
 import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core";
 
 
+/**
+ *
+ * A form to collect information about users tool requests.
+ *
+ */
 class NewToolRequestForm extends Component {
 
     constructor(props) {
@@ -26,10 +35,10 @@ class NewToolRequestForm extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.validateUrl = this.validateUrl.bind(this);
     }
 
     handleSubmit(values, actions) {
-        console.log("Tool request-->" + values.name);
         //test_data_path and cmd_line are required by service. Most of the times those info. can be
         // found in the source repo. So copy the source url to those fields if not provided by user.
         if(!values.test_data_path) {
@@ -42,8 +51,9 @@ class NewToolRequestForm extends Component {
         this.props.presenter.submitRequest(values, ()=> {
             actions.setSubmitting(false);
             this.handleClose();
-        }, ()=> {
+        }, (httpStatusCode, errorMessage) => {
             actions.setSubmitting(false);
+            actions.setStatus({success: false, errorMessage});
         });
     }
 
@@ -53,6 +63,14 @@ class NewToolRequestForm extends Component {
 
     handleClose() {
         this.setState({dialogOpen: false});
+    }
+
+    validateUrl(value) {
+        let error;
+        if (!constants.URL_REGEX.test(value)) {
+            error = getMessage("validationErrMsgURL");
+        }
+        return error;
     }
 
     render() {
@@ -86,6 +104,7 @@ class NewToolRequestForm extends Component {
                                        label={getMessage("toolSrcLinkLabel")}
                                        required={true}
                                        margin="dense"
+                                       validate={this.validateUrl}
                                        component={FormTextField}/>
                                 <ErrorMessage name="source_url" component="div"/>
                                 <Field name="version"
@@ -98,6 +117,7 @@ class NewToolRequestForm extends Component {
                                        label={getMessage("toolDocumentationLabel")}
                                        required={true}
                                        margin="dense"
+                                       validate={this.validateUrl}
                                        component={FormTextField}/>
                                 <ErrorMessage name="documentation_url" component="div"/>
                                 <Field name="cmd_line"
@@ -114,7 +134,8 @@ class NewToolRequestForm extends Component {
                                 <ErrorMessage name="test_data_path" component="div"/>
 
 
-                                <Button style={{float: "right"}} variant="contained"
+                                <Button style={{float: "right"}}
+                                        variant="contained"
                                         color="primary"
                                         type="submit"
                                         disabled={isSubmitting}>
