@@ -80,5 +80,6 @@ export default {
         toolDocumentationLabel: "Enter link for your tool's documentation:",
         toolInstructionsLabel: "Enter any other instructions or relevant information:",
         toolTestDataLabel: "Enter link for your tool's test data:",
+        validationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
     },
 };
