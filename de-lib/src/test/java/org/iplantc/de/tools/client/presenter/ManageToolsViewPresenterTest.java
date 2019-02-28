@@ -17,9 +17,20 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.ReactToolViews;
+<<<<<<< HEAD
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+=======
+import org.iplantc.de.tools.client.events.AddNewToolSelected;
+import org.iplantc.de.tools.client.events.EditToolSelected;
+import org.iplantc.de.tools.client.events.RequestToolSelected;
+import org.iplantc.de.tools.client.events.ShareToolsSelected;
+import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
+import org.iplantc.de.tools.client.events.ToolFilterChanged;
+import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+>>>>>>> 383b420... core-99 Refactor code.
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
@@ -78,15 +89,7 @@ public class ManageToolsViewPresenterTest {
     @Mock
     ToolSharingDialog toolSharingDialogMock;
 
-    @Mock
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProviderMock;
-
-    @Captor
-    ArgumentCaptor<AsyncCallback<NewToolRequestDialog>> newToolDialogCaptor;
-
-    @Mock
-    NewToolRequestDialog toolRequestMock;
-
+ 
     @Mock
     AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProviderMock;
 
@@ -138,9 +141,22 @@ public class ManageToolsViewPresenterTest {
     Iterator<Tool> iteratorMock;
     @Mock ManageToolsViewPresenter spy;
 
+    @Mock
+    NewToolRequestFormView requestFormViewMock;
+
+    @Mock
+    NewToolRequestFormView.Presenter requestPresenterMock;
+
     @Before
     public void setUp() {
+<<<<<<< HEAD
         uut = new ManageToolsViewPresenter(appearanceMock, manageToolsViewFactoryMock, editToolViewFactoryMock) {
+=======
+        uut = new ManageToolsViewPresenter(requestPresenterMock,
+                                           requestFormViewMock,
+                                           appearanceMock,
+                                           editToolViewFactoryMock) {
+>>>>>>> 383b420... core-99 Refactor code.
 
             @Override
             void displayInfoMessage(String title, String message) {
@@ -167,7 +183,6 @@ public class ManageToolsViewPresenterTest {
         uut.toolServices = toolServicesMock;
         uut.editToolView = editToolViewMock;
         uut.shareDialogProvider = shareDialogProviderMock;
-        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
@@ -189,6 +204,38 @@ public class ManageToolsViewPresenterTest {
 
         uut.go(containerMock);
         verify(containerMock).setWidget(eq(scMock));
+<<<<<<< HEAD
+=======
+
+        verify(manageToolsToolbarViewMock, times(1)).addBeforeToolSearchEventHandler(eq(toolsViewMock));
+        verify(manageToolsToolbarViewMock,
+               times(1)).addToolSearchResultLoadEventHandler(eq(toolsViewMock));
+        verify(manageToolsToolbarViewMock, times(1)).addRefreshToolsSelectedEventHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addNewToolSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addShareToolselectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addDeleteToolsSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addToolFilterChangedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addRequestToolSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addEditToolSelectedHandler(eq(uut));
+  
+        verify(toolsViewMock, times(1)).addToolSelectionChangedEventHandler(uut);
+        verify(toolsViewMock, times(1)).addShowToolInfoEventHandlers(uut);
+    }
+
+    @Test
+    public void testOnToolSelectionChanged() {
+        when(toolsViewMock.getToolbar()).thenReturn(manageToolsToolbarViewMock);
+
+        ToolSelectionChangedEvent tsceMock = mock(ToolSelectionChangedEvent.class);
+        Tool t1Mock = mock(Tool.class);
+        Tool t2Mock = mock(Tool.class);
+        Tool t3Mock = mock(Tool.class);
+
+        when(tsceMock.getToolSelection()).thenReturn(Arrays.asList(t1Mock, t2Mock, t3Mock));
+        uut.onToolSelectionChanged(tsceMock);
+        assertEquals(3, uut.currentSelection.size());
+
+>>>>>>> 383b420... core-99 Refactor code.
     }
 
     @Test
@@ -273,6 +320,7 @@ public class ManageToolsViewPresenterTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void testOnRequestToolSelected() {
         uut.onRequestToolSelected();
 
@@ -292,6 +340,8 @@ public class ManageToolsViewPresenterTest {
     }
 
     @Test
+=======
+>>>>>>> 383b420... core-99 Refactor code.
     public void testOnShowToolInfo() {
         App a1 = mock(App.class);
         List<App> appList = Arrays.asList(a1);
