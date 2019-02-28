@@ -173,8 +173,9 @@ a:hover {
 
     <hr/>
 
-    <div style="float: left"><a href="${login_url}">Go back to ${app_name}</a></div>
     <div style="float: right"><a href="http://www.cyverse.org">CyVerse Home Page</a></div>
+    <div><a href="${login_url}">Go back to ${app_name}</a></div>
+    <div><a href="${logout_url}">Log Out</a></div>
 
 </div>
 

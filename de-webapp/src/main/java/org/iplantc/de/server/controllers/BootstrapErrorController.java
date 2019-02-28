@@ -36,6 +36,7 @@ public class BootstrapErrorController {
         ModelAndView modelAndView = new ModelAndView("bootstrapError");
         modelAndView.addObject("app_name", appName);
         modelAndView.addObject("login_url", appNamePathPart);
+        modelAndView.addObject("logout_url", appNamePathPart + "/logout");
         modelAndView.addObject("twitter_url", twitterUrl);
         modelAndView.addObject("facebook_url", facebookUrl);
         modelAndView.addObject("newsletter_url", newsletterUrl);
