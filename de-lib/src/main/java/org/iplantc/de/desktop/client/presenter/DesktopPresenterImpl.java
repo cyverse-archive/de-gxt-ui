@@ -95,6 +95,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -667,8 +668,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         messagePoller.start();
         initKBShortCuts();
         panel.add(view);
-        processQueryStrings();
+        checkDataQueryString();
         doPeriodicWindowStateSave();
+        doPeriodicSessionSave();
     }
 
     @Override
@@ -690,9 +692,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         }
     }
 
-    private void getUserSession(final boolean urlHasDataTypeParameter) {
+    private void getUserSession() {
         // do not attempt to get user session for new user
-        if (userSettings.isSaveSession() && !urlHasDataTypeParameter && !userInfo.isNewUser()) {
+        if (userSettings.isSaveSession() && !userInfo.isNewUser()) {
             // This restoreSession's callback will also init periodic session saving.
             final AutoProgressMessageBox progressMessageBox = new AutoProgressMessageBox(appearance.loadingSession(),
                                                                                          appearance.loadingSessionWaitNotice());
@@ -713,8 +715,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
                     }
                 }
             });
-        } else if (urlHasDataTypeParameter) {
-            doPeriodicSessionSave();
+        } else {
+            checkRemainingQueryStrings();
         }
     }
 
@@ -744,69 +746,66 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         return Strings.isNullOrEmpty(systemId) ? deClientConstants.deSystemId() : systemId;
     }
 
-    void processQueryStrings() {
-        boolean hasError = false;
-        boolean hasDataTypeParameter = false;
+    void checkDataQueryString() {
         Map<String, List<String>> params = Window.Location.getParameterMap();
-        for (String key : params.keySet()) {
+        Set<String> keys = params.keySet();
+        boolean hasTypeKeys = keys.stream().anyMatch(QueryStrings.TYPE::equalsIgnoreCase);
+        boolean hasDataType = hasTypeKeys && params.get(QueryStrings.TYPE).stream().anyMatch(TypeQueryValues.DATA::equalsIgnoreCase);
 
-            if (QueryStrings.TYPE.equalsIgnoreCase(key)) { // Process query strings for opening DE windows
-                for (String paramValue : params.get(key)) {
-                    WindowConfig windowConfig = null;
+        if (hasDataType) {
+            DiskResourceWindowConfig drConfig = ConfigFactory.diskResourceWindowConfig(true);
+            drConfig.setMaximized(true);
+            // If user has multiple folder parameters, the last one will be used.
+            String folderParameter = Window.Location.getParameter(QueryStrings.FOLDER);
+            String selectedFolder = URL.decode(Strings.nullToEmpty(folderParameter));
 
-                    if (TypeQueryValues.APPS.equalsIgnoreCase(paramValue)) {
-                        final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
-                        final String appCategoryId = Window.Location.getParameter(QueryStrings.APP_CATEGORY);
-                        final String systemId = getSystemId(Window.Location.getParameter(QueryStrings.SYSTEM_ID));
-                        final String appId = Window.Location.getParameter(QueryStrings.APP_ID);
-                        if (!Strings.isNullOrEmpty(appCategoryId)) {
-                            appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
-                            windowConfig = appsConfig;
-                        } else if (!Strings.isNullOrEmpty(appId)) {
-                            AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
-                            show(config);
-                        }
-                        
-                    } else if (TypeQueryValues.DATA.equalsIgnoreCase(paramValue)) {
-                        hasDataTypeParameter = true;
-                        DiskResourceWindowConfig drConfig = ConfigFactory.diskResourceWindowConfig(true);
-                        drConfig.setMaximized(true);
-                        // If user has multiple folder parameters, the last one will be used.
-                        String folderParameter = Window.Location.getParameter(QueryStrings.FOLDER);
-                        String selectedFolder = URL.decode(Strings.nullToEmpty(folderParameter));
+            if (!Strings.isNullOrEmpty(selectedFolder)) {
+                HasPath folder = CommonModelUtils.getInstance().createHasPathFromString(selectedFolder);
+                drConfig.setSelectedFolder(folder);
+            }
+            show(drConfig);
+        } else {
+            getUserSession();
+        }
+    }
 
-                        if (!Strings.isNullOrEmpty(selectedFolder)) {
-                            HasPath folder = CommonModelUtils.getInstance().createHasPathFromString(selectedFolder);
-                            drConfig.setSelectedFolder(folder);
-                        }
-                        windowConfig = drConfig;
-                    }
+    void showAuthErrors(Map<String, List<String>> params) {
+        // Remove underscores, and upper case whole error
+        String upperCaseError = Iterables.getFirst(params.get(AuthErrors.ERROR), "").replaceAll("_", " ").toUpperCase();
+        String apiName = Strings.nullToEmpty(Window.Location.getParameter(AuthErrors.API_NAME));
+        String titleApi = apiName.isEmpty() ? "" : " : " + apiName;
+        IplantErrorDialog errorDialog = new IplantErrorDialog(upperCaseError + titleApi,
+                                                              Window.Location.getParameter(AuthErrors.ERROR_DESCRIPTION));
+        errorDialog.show();
+    }
 
-                    if (windowConfig != null) {
-                        show(windowConfig);
-                    }
+    public void checkRemainingQueryStrings() {
+        Map<String, List<String>> params = Window.Location.getParameterMap();
+        Set<String> keys = params.keySet();
+        boolean hasTypeKeys = keys.stream().anyMatch(QueryStrings.TYPE::equalsIgnoreCase);
+        boolean hasStateKey = keys.stream().anyMatch(QueryStrings.STATE::equalsIgnoreCase);
+        boolean hasAppsType = hasTypeKeys && params.get(QueryStrings.TYPE).stream().anyMatch(TypeQueryValues.APPS::equalsIgnoreCase);
+        boolean hasError = keys.stream().anyMatch(AuthErrors.ERROR::equalsIgnoreCase);
 
-                }
-            } else if (AuthErrors.ERROR.equalsIgnoreCase(key)) { // Process errors
-                hasError = true;
-                // Remove underscores, and upper case whole error
-                String upperCaseError = Iterables.getFirst(params.get(key), "").replaceAll("_", " ").toUpperCase();
-                String apiName = Strings.nullToEmpty(Window.Location.getParameter(AuthErrors.API_NAME));
-                String titleApi = apiName.isEmpty() ? "" : " : " + apiName;
-                IplantErrorDialog errorDialog = new IplantErrorDialog(upperCaseError + titleApi,
-                                                                      Window.Location.getParameter(AuthErrors.ERROR_DESCRIPTION));
-                errorDialog.show();
-                errorDialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        getUserSession(false);
-                    }
-                });
-            } else if (QueryStrings.STATE.equalsIgnoreCase(key)) {
-                WebStorageUtil.clear(WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX);
+        if (hasAppsType) {
+            final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
+            final String appCategoryId = Window.Location.getParameter(QueryStrings.APP_CATEGORY);
+            final String systemId = getSystemId(Window.Location.getParameter(QueryStrings.SYSTEM_ID));
+            final String appId = Window.Location.getParameter(QueryStrings.APP_ID);
+            if (!Strings.isNullOrEmpty(appCategoryId)) {
+                appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
+                show(appsConfig);
+            } else if (!Strings.isNullOrEmpty(appId)) {
+                AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
+                show(config);
             }
         }
-        if (!hasError) getUserSession(hasDataTypeParameter);
+        if (hasStateKey) {
+            WebStorageUtil.clear(WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX);
+        }
+        if (hasError) {
+            showAuthErrors(params);
+        }
     }
 
     void setBrowserContextMenuEnabled(boolean enabled){

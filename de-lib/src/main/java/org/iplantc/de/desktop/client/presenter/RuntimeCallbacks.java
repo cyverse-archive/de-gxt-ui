@@ -47,6 +47,7 @@ class RuntimeCallbacks {
             final SafeHtml message = SafeHtmlUtils.fromTrustedString(appearance.loadSessionFailed());
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
             presenter.setUserSessionConnection(false);
+            presenter.checkRemainingQueryStrings();
             progressMessageBox.hide();
         }
 
@@ -55,6 +56,7 @@ class RuntimeCallbacks {
             presenter.setUserSessionConnection(true);
             presenter.restoreWindows(result.getWindowConfigs());
             presenter.doPeriodicSessionSave();
+            presenter.checkRemainingQueryStrings();
             progressMessageBox.hide();
         }
     }
