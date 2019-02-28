@@ -29,9 +29,6 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
     private final NewToolRequestFormView view;
 
     @Inject
-    NewToolRequestFormView.NewToolRequestFormViewAppearance appearance;
-
-    @Inject
     NewToolRequestFormPresenterImpl(final NewToolRequestFormView view) {
         this.view = view;
     }

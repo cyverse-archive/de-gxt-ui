@@ -13,9 +13,4 @@
         <when-type-is
                 class="org.iplantc.de.tools.client.views.cells.ToolInfoCell.ToolInfoCellAppearance"/>
     </replace-with>
-    <replace-with class="org.iplantc.de.theme.base.client.tools.NewToolRequestFormViewDefaultAppearance">
-        <when-type-is
-                class="org.iplantc.de.tools.client.views.requests.NewToolRequestFormView.NewToolRequestFormViewAppearance"/>
-    </replace-with>
-
 </module>
