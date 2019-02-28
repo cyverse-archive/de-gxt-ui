@@ -100,7 +100,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         toolsView.getToolbar().addToolFilterChangedHandler(this);
         toolsView.getToolbar().addRequestToolSelectedHandler(this);
         toolsView.getToolbar().addEditToolSelectedHandler(this);
-        toolsView.getToolbar().addRequestToMakeToolPublicSelectedHandler(this);
         toolsView.addShowToolInfoEventHandlers(this);
 
         toolsView.mask(appearance.mask());

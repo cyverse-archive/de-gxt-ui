@@ -10,7 +10,6 @@ import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
-import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
@@ -58,13 +57,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     TextButton toolsMenuButton;
 
     @UiField
-    TextButton shareMenuButton;
-
-    @UiField
-    MenuItem shareCollab;
-
-    @UiField
-    MenuItem sharePublic;
+    TextButton shareCollab;
 
     @UiField
     TextButton refreshButton;
@@ -149,9 +142,8 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         delete.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_DELETE);
         useInApp.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_USE_IN_APPS);
 
-        shareMenuButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_SHARE);
+        shareCollab.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_SHARE);
         shareCollab.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_COLLABS);
-        sharePublic.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_PUBLIC);
 
         refreshButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_REFRESH);
 
@@ -184,13 +176,8 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     }
 
     @UiHandler("shareCollab")
-    void onShareCollabClicked(SelectionEvent<Item> event) {
+    void onShareCollabClicked(SelectEvent event) {
         fireEvent(new ShareToolsSelected());
-    }
-
-    @UiHandler("sharePublic")
-    void onSharePublicClicked(SelectionEvent<Item> event) {
-        fireEvent(new RequestToMakeToolPublicSelected());
     }
 
     @UiHandler("refreshButton")
@@ -245,12 +232,6 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     }
 
     @Override
-    public HandlerRegistration addRequestToMakeToolPublicSelectedHandler(RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler handler) {
-        return addHandler(handler, RequestToMakeToolPublicSelected.TYPE);
-    }
-
-
-    @Override
     public void setSelection(List<Tool> currentSelection) {
         this.currentSelection = currentSelection;
         setButtonState(currentSelection);
@@ -276,7 +257,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
                     edit.setEnabled(false);
                     delete.setEnabled(false);
                     useInApp.setEnabled(false);
-                    shareMenuButton.setEnabled(false);
+                    shareCollab.setEnabled(false);
                     break;
                 case 1:
                     Tool selection = tools.get(0);
@@ -285,9 +266,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
                     edit.setEnabled(isEditable(selection));
                     delete.setEnabled(isOwner(selection));
                     useInApp.setEnabled(true);
-                    shareMenuButton.setEnabled(isOwner(selection));
                     shareCollab.setEnabled(isOwner(selection));
-                    sharePublic.setEnabled(isOwner(selection));
                     break;
                 default:
                     addTool.setEnabled(true);
@@ -295,9 +274,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
                     edit.setEnabled(false);
                     delete.setEnabled(false);
                     useInApp.setEnabled(false);
-                    shareMenuButton.setEnabled(true);
                     shareCollab.setEnabled(true);
-                    sharePublic.setEnabled(false);
             }
         }
 

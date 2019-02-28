@@ -20,14 +20,12 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
-import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
@@ -35,11 +33,9 @@ import org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
@@ -85,15 +81,7 @@ public class ManageToolsViewPresenterTest {
     @Mock
     ToolSharingDialog toolSharingDialogMock;
 
-    @Mock
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProviderMock;
-
-    @Captor
-    ArgumentCaptor<AsyncCallback<NewToolRequestDialog>> newToolDialogCaptor;
-
-    @Mock
-    NewToolRequestDialog toolRequestMock;
-
+ 
     @Mock
     AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProviderMock;
 
@@ -138,9 +126,18 @@ public class ManageToolsViewPresenterTest {
     @Mock
     Iterator<Tool> iteratorMock;
 
+    @Mock
+    NewToolRequestFormView requestFormViewMock;
+
+    @Mock
+    NewToolRequestFormView.Presenter requestPresenterMock;
+
     @Before
     public void setUp() {
-        uut = new ManageToolsViewPresenter(appearanceMock, editToolViewFactoryMock) {
+        uut = new ManageToolsViewPresenter(requestPresenterMock,
+                                           requestFormViewMock,
+                                           appearanceMock,
+                                           editToolViewFactoryMock) {
 
             @Override
             void displayInfoMessage(String title, String message) {
@@ -167,7 +164,6 @@ public class ManageToolsViewPresenterTest {
         uut.toolServices = toolServicesMock;
         uut.editToolView = editToolViewMock;
         uut.shareDialogProvider = shareDialogProviderMock;
-        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
@@ -199,8 +195,7 @@ public class ManageToolsViewPresenterTest {
         verify(manageToolsToolbarViewMock, times(1)).addToolFilterChangedHandler(eq(uut));
         verify(manageToolsToolbarViewMock, times(1)).addRequestToolSelectedHandler(eq(uut));
         verify(manageToolsToolbarViewMock, times(1)).addEditToolSelectedHandler(eq(uut));
-        verify(manageToolsToolbarViewMock, times(1)).addRequestToMakeToolPublicSelectedHandler(eq(uut));
-
+  
         verify(toolsViewMock, times(1)).addToolSelectionChangedEventHandler(uut);
         verify(toolsViewMock, times(1)).addShowToolInfoEventHandlers(uut);
     }
@@ -332,36 +327,6 @@ public class ManageToolsViewPresenterTest {
         verify(shareDialogProviderMock).get(sharingDialogCaptor.capture());
         sharingDialogCaptor.getValue().onSuccess(toolSharingDialogMock);
         verify(toolSharingDialogMock).show(eq(currentSelectionMock));
-    }
-
-    @Test
-    public void testOnRequestToolSelected() {
-        RequestToolSelected rtsMock = mock(RequestToolSelected.class);
-
-        uut.onRequestToolSelected(rtsMock);
-
-        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
-        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
-        verify(toolRequestMock).show(eq(NewToolRequestFormView.Mode.NEWTOOL));
-    }
-
-    @Test
-    public void testOnRequestToMakePublicSelected() {
-        RequestToMakeToolPublicSelected rtmtpsMock = mock(RequestToMakeToolPublicSelected.class);
-        Tool t1Mock = mock(Tool.class);
-        when(currentSelectionMock.isEmpty()).thenReturn(false);
-        when(currentSelectionMock.size()).thenReturn(1);
-        when(iteratorMock.hasNext()).thenReturn(true, false);
-        when(iteratorMock.next()).thenReturn(t1Mock);
-        when(currentSelectionMock.iterator()).thenReturn(iteratorMock);
-        when(uut.getSelectedTool()).thenReturn(t1Mock);
-
-        uut.onRequestToMakeToolPublicSelected(rtmtpsMock);
-
-        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
-        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
-        verify(toolRequestMock).setTool(eq(t1Mock));
-        verify(toolRequestMock).show(eq(NewToolRequestFormView.Mode.MAKEPUBLIC));
     }
 
     @Test

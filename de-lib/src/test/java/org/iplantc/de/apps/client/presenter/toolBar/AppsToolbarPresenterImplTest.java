@@ -29,7 +29,6 @@ import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -65,13 +64,6 @@ public class AppsToolbarPresenterImplTest {
     @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
 
     @Mock
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProviderMock;
-    @Captor
-    ArgumentCaptor<AsyncCallback<NewToolRequestDialog>> newToolDialogCaptor;
-    @Mock
-    NewToolRequestDialog toolRequestMock;
-
-    @Mock
     AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProviderMock;
     @Captor
     ArgumentCaptor<AsyncCallback<SubmitAppForPublicDialog>> submitDialogCaptor;
@@ -93,7 +85,6 @@ public class AppsToolbarPresenterImplTest {
         };
         uut.eventBus = eventBusMock;
         uut.userInfo = userInfoMock;
-        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.submitAppDialogAsyncProvider = submitAppDialogAsyncProviderMock;
         uut.appearance = appearanceMock;
     }

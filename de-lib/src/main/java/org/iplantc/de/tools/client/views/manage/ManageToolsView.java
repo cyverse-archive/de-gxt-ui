@@ -8,7 +8,6 @@ import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
-import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
@@ -122,8 +121,8 @@ public interface ManageToolsView extends IsWidget,
                                        ShareToolsSelected.ShareToolsSelectedHandler,
                                        ToolSelectionChangedEvent.ToolSelectionChangedEventHandler,
                                        ToolFilterChanged.ToolFilterChangedHandler,
-                                       RequestToolSelected.RequestToolSelectedHandler, EditToolSelected.EditToolSelectedHandler,
-                                       RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler,
+                                       RequestToolSelected.RequestToolSelectedHandler,
+                                       EditToolSelected.EditToolSelectedHandler,
                                        ShowToolInfoEvent.ShowToolInfoEventHandler{
         @JsIgnore
         void setViewDebugId(String baseId);

@@ -42,18 +42,9 @@
             </button:TextButton>
         </toolbar:child>
         <toolbar:child>
-            <button:TextButton ui:field="shareMenuButton" text="{appearance.share}">
-                <button:menu>
-                    <menu:Menu ui:field="sharingMenu">
-                        <menu:MenuItem ui:field="shareCollab" enabled="false"
-                                       text="{appearance.shareCollab}" icon="{appearance.shareToolIcon}"
-                        />
-                        <menu:MenuItem ui:field="sharePublic" enabled="false"
-                                       text="{appearance.sharePublic}" icon="{appearance.submitForPublicIcon}"
-                                       toolTipConfig="{submitToolTip}" />
-                    </menu:Menu>
-                </button:menu>
-            </button:TextButton>
+            <button:TextButton ui:field="shareCollab"
+                               text="{appearance.shareCollab}"
+                               icon="{appearance.shareToolIcon}"/>
         </toolbar:child>
         <toolbar:child>
             <button:TextButton ui:field="refreshButton"
