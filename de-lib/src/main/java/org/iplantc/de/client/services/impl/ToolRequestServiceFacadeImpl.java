@@ -13,6 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * Uses the backend services to provide the tool request services.
@@ -27,9 +28,10 @@ public final class ToolRequestServiceFacadeImpl implements ToolRequestServiceFac
     public ToolRequestServiceFacadeImpl(){ }
 
     @Override
-    public void requestInstallation(final NewToolRequest request, final AsyncCallback<ToolRequestDetails> callback) {
+    public void requestInstallation(final Splittable request,
+                                    final AsyncCallback<ToolRequestDetails> callback) {
         final String address = TOOL_REQUESTS;
-        final String body = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
+        final String body = request.getPayload();
         final ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.POST, address, body);
         final AsyncCallback<String> convCB = new AsyncCallbackConverter<String, ToolRequestDetails>(callback) {
             @Override

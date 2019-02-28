@@ -1,9 +1,9 @@
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.toolRequests.NewToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * Objects of this type can provide the tool request remote services.
@@ -18,6 +18,6 @@ public interface ToolRequestServiceFacade {
      * @param request the tool installation request
      * @param callback the callback with the response from the provider
      */
-    void requestInstallation(NewToolRequest request, AsyncCallback<ToolRequestDetails> callback);
+    void requestInstallation(Splittable request, AsyncCallback<ToolRequestDetails> callback);
     
 }

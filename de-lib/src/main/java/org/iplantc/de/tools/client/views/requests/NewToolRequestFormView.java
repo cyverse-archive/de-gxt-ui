@@ -49,15 +49,12 @@ public interface NewToolRequestFormView extends IsWidget {
 
     void load(Presenter presenter);
 
-    void onClose();
-
     @JsType
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
         void submitRequest(Splittable toolRequest,
                            ReactSuccessCallback callback,
                            ReactErrorCallback errorCallback);
 
-        void onClose();
     }
 
 
