@@ -125,18 +125,31 @@ a:hover {
         color-stop(1, #FFF)
     );;
 }
+
+.accordion {
+    background-color: #0971AB;
+    color: #FFF;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+}
+.accordion:hover {
+    background-color: #3EA1DA;
+    text-decoration: underline;
+}
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+    overflow: hidden;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+}
 </style>
-
-<script type="text/javascript">
-    <%--If the user refreshes their browser, redirect to /de --%>
-    if (sessionStorage.getItem("is_reloaded")) {
-        window.location.replace('${login_url}');
-        sessionStorage.removeItem("is_reloaded");
-    } else {
-        sessionStorage.setItem("is_reloaded", 1);
-    }
-
-</script>
 
 </head>
 <body>
@@ -156,13 +169,20 @@ a:hover {
 
     <p>
         If the error persists and you want to learn more about what's going on
-        and when it may be resolved, you can:
-    <ul>
-        <li>Contact Support at <a href="mailto:support@cyverse.org">support@cyverse.org</a></li>
-        <li>Check <a href="${ask_url}">Ask CyVerse</a></li>
-    </ul>
-
+        and when it may be resolved, you can contact support with the below error details at <a href="mailto:support@cyverse.org">support@cyverse.org</a>
     </p>
+
+    <button id="errorBtn" class="accordion">View Error Details</button>
+    <div id="errorPanel" class="panel">
+        <p>
+            ${error_message}<br>
+            Username: ${username}<br>
+            User Agent: ${user_agent}<br>
+            Date: ${date}<br>
+            Host: ${request_url}<br>
+        </p>
+        <p class="blueHeader">Please include the above details when contacting support.</p>
+    </div>
 
     <p>
         You can also learn more about goings-on at CyVerse, as well as scheduled maintenance events, upcoming
@@ -181,3 +201,30 @@ a:hover {
 
 </body>
 </html>
+
+<script type="text/javascript">
+    <%--If the user refreshes their browser, redirect to /de --%>
+    if (sessionStorage.getItem("is_reloaded")) {
+        window.location.replace('${login_url}');
+        sessionStorage.removeItem("is_reloaded");
+    } else {
+        sessionStorage.setItem("is_reloaded", 1);
+    }
+
+    var acc = document.getElementById("errorBtn");
+
+    acc.addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        var panel = window.document.getElementById("errorPanel");
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+
+</script>

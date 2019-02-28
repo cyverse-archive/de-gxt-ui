@@ -68,7 +68,7 @@ class InitializationCallbacks {
             if (caught instanceof HttpException) {
                 statusCode = ((HttpException)caught).getStatusCode();
             }
-            presenter.onBootstrapError(statusCode);
+            presenter.onBootstrapError(statusCode, caught.getMessage());
         }
 
         @Override
@@ -76,7 +76,7 @@ class InitializationCallbacks {
             userInfo.init(result);
 
             if (userInfo.hasUserProfileError()) {
-                presenter.onBootstrapError(null);
+                presenter.onBootstrapError(null, "{\"reason\":\"User profile contains errors\"}");
                 return;
             }
 
@@ -196,7 +196,7 @@ class InitializationCallbacks {
             if (caught instanceof HttpException) {
                 statusCode = ((HttpException)caught).getStatusCode();
             }
-            presenter.onBootstrapError(statusCode);
+            presenter.onBootstrapError(statusCode, caught.getMessage());
         }
 
         @Override

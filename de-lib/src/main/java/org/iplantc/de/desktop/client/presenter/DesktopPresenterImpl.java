@@ -23,6 +23,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -97,6 +98,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -154,6 +156,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     @Inject UserSettings userSettings;
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
+    @Inject JsonUtil jsonUtil;
     @Inject NotificationUtil notificationUtil;
     @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
     private DesktopPresenterAppearance appearance;
@@ -281,10 +284,17 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         }
     }
 
-    public void onBootstrapError(Integer statusCode) {
+    public void onBootstrapError(Integer statusCode, String errorMessage) {
         String redirectUrl = GWT.getHostPageBaseURL() + deClientConstants.errorUrl();
         if (statusCode != null) {
             redirectUrl += "-" + statusCode.toString();
+        }
+        if (errorMessage != null) {
+            JSONObject json = jsonUtil.getObject(errorMessage);
+            String errorString = json.keySet().stream()
+                                     .map(key -> URL.encode(key) + "=" + URL.encode(json.get(key).toString()))
+                                     .collect(Collectors.joining("&"));
+            redirectUrl += "?" + URL.encode(errorString);
         }
         Window.Location.assign(redirectUrl);
     }
