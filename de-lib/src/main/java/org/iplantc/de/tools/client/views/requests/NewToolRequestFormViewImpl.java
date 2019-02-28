@@ -3,6 +3,7 @@ package org.iplantc.de.tools.client.views.requests;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.tools.client.ReactTools;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -23,7 +24,6 @@ public final class NewToolRequestFormViewImpl implements NewToolRequestFormView 
     @Inject
     NewToolRequestFormViewImpl() {
         panel = new HTMLPanel("<div></div>");
-        props = new ReactTools.ToolRequestProps();
     }
 
     /*
@@ -39,15 +39,11 @@ public final class NewToolRequestFormViewImpl implements NewToolRequestFormView 
 
     @Override
     public void load(Presenter presenter) {
-        props.presenter = presenter;
-        props.open = true;
-        CyVerseReactComponents.render(ReactTools.NewToolRequestForm, props, panel.getElement());
-    }
+        props = new ReactTools.ToolRequestProps();
+        Scheduler.get().scheduleFinally(() -> {
+            props.presenter = presenter;
+            CyVerseReactComponents.render(ReactTools.NewToolRequestForm, props, panel.getElement());
+        });
 
-    @Override
-    public void onClose() {
-        props.open = false;
-        CyVerseReactComponents.render(ReactTools.NewToolRequestForm, props, panel.getElement());
     }
-
 }

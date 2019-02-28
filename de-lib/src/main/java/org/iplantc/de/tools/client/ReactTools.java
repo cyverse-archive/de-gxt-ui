@@ -20,7 +20,6 @@ public class ReactTools {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name="Object")
     public static class ToolRequestProps extends BaseProps {
         public NewToolRequestFormView.Presenter presenter;
-        public boolean open;
     }
     
 
