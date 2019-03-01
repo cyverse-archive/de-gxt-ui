@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client.presenter.submit;
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppPublishedEvent;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
@@ -13,6 +14,8 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
@@ -95,6 +98,8 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject EventBus eventBus;
     @Inject SubmitAppPresenterBeanFactory factory;
     @Inject AppAutoBeanFactory appAutoBeanFactory;
+    @Inject
+    ToolAutoBeanFactory toolAutoBeanFactory;
     @Inject GroupAutoBeanFactory groupAutoBeanFactory;
     @Inject AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject SubmitAppForPublicUseView view;
@@ -200,6 +205,15 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             @Override
             public void onSuccess(Splittable result) {
                 view.loadReferences(parseRefLinks(result.get("references")));
+                ToolList toolsLst =
+                        AutoBeanCodex.decode(toolAutoBeanFactory, ToolList.class, result).as();
+                boolean isInteractive = toolsLst.getToolList()
+                                                .stream()
+                                                .anyMatch(tool -> tool.getType()
+                                                                      .equalsIgnoreCase(AppTypeFilter.INTERACTIVE
+                                                                                                .getFilterString()));
+                view.setIsInteractive(isInteractive);
+
             }
         });
     }
