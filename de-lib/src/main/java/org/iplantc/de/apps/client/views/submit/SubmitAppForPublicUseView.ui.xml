@@ -93,8 +93,7 @@
             </cp:ContentPanel>
         </con:child>
         <con:child layoutData="{fileSelLabel}">
-            <g:HTML ui:field="testDataLbl"
-                    HTML="{appearance.testDataLabel}"/>
+            <g:HTML ui:field="testDataLbl" />
         </con:child>
         <con:child layoutData="{layoutData}">
             <selector:FolderSelectorField ui:field="dataFolderSelector"

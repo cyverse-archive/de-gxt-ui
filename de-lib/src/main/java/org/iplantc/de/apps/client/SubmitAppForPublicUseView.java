@@ -2,7 +2,6 @@ package org.iplantc.de.apps.client;
 
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppRefLink;
-import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
@@ -12,7 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
@@ -65,7 +63,7 @@ public interface SubmitAppForPublicUseView extends IsWidget {
 
         String submitting();
 
-        String testDataLabel();
+        String testDataLabel(boolean required);
 
         String inputDescriptionEmptyText();
 
@@ -85,11 +83,11 @@ public interface SubmitAppForPublicUseView extends IsWidget {
 
         String publicAttach();
 
-        SafeHtml describeInputLbl();
+        SafeHtml describeInputLbl(boolean required);
 
-        SafeHtml describeParamLbl();
+        SafeHtml describeParamLbl(boolean required);
 
-        SafeHtml describeOutputLbl();
+        SafeHtml describeOutputLbl(boolean required);
 
         SafeHtml publicCategories();
 
@@ -131,4 +129,8 @@ public interface SubmitAppForPublicUseView extends IsWidget {
     void setSelectedApp(App selectedApp);
 
     Tree<Group, String> getCommunityTree();
+
+    void setIsInteractive(boolean interactive);
+
+    boolean getIsInteractive();
 }

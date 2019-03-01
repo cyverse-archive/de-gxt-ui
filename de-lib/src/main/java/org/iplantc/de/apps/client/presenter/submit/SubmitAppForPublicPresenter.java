@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client.presenter.submit;
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppPublishedEvent;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
@@ -13,6 +14,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
@@ -37,6 +39,7 @@ import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -198,6 +201,13 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             @Override
             public void onSuccess(App result) {
                 view.loadReferences(parseRefLinks(result.getReferences()));
+                List<Tool> toolsLst = result.getTools();
+                List<Tool> interactiveList = toolsLst.stream()
+                                                     .filter(t -> t.getType()
+                                                                   .equalsIgnoreCase(AppTypeFilter.INTERACTIVE
+                                                                                             .getFilterString()))
+                                                     .collect(Collectors.toList());
+                view.setIsInteractive(interactiveList != null && interactiveList.size() > 0);
             }
         });
     }

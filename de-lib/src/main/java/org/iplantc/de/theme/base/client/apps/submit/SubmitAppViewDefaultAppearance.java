@@ -11,7 +11,6 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
-import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
 /**
@@ -147,8 +146,12 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     }
 
     @Override
-    public String testDataLabel() {
-        return templates.requiredLabel(appsMessages.testDataLabel()).asString() ;
+    public String testDataLabel(boolean required) {
+        if(required) {
+            return templates.requiredLabel(appsMessages.testDataLabel()).asString();
+        } else {
+            return appsMessages.testDataLabel();
+        }
     }
 
     @Override
@@ -197,18 +200,30 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     }
 
     @Override
-    public SafeHtml describeInputLbl() {
-        return templates.requiredLabel(appsMessages.describeInputLbl());
+    public SafeHtml describeInputLbl(boolean required) {
+        if(required) {
+            return templates.requiredLabel(appsMessages.describeInputLbl());
+        } else {
+            return new SafeHtmlBuilder().appendEscaped(appsMessages.describeInputLbl()).toSafeHtml();
+        }
     }
 
     @Override
-    public SafeHtml describeParamLbl() {
-        return templates.requiredLabel(appsMessages.describeParamLbl());
+    public SafeHtml describeParamLbl(boolean required) {
+        if(required) {
+            return templates.requiredLabel(appsMessages.describeParamLbl());
+        } else {
+            return new SafeHtmlBuilder().appendEscaped(appsMessages.describeParamLbl()).toSafeHtml();
+        }
     }
 
     @Override
-    public SafeHtml describeOutputLbl() {
-        return templates.requiredLabel(appsMessages.describeOutputLbl());
+    public SafeHtml describeOutputLbl(boolean required) {
+        if(required) {
+            return templates.requiredLabel(appsMessages.describeOutputLbl());
+        } else {
+            return new SafeHtmlBuilder().appendEscaped(appsMessages.describeOutputLbl()).toSafeHtml();
+        }
     }
 
     @Override

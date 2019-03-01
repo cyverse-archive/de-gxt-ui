@@ -118,6 +118,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     private OntologyUtil ontologyUtil = OntologyUtil.getInstance();
     private AppAutoBeanFactory factory;
 
+    private boolean interactive;
+
     final Logger LOG = Logger.getLogger("Submit Application for Public Use");
 
     @Inject
@@ -149,11 +151,26 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     private void setFieldLabelHTML() {
         appField.setHTML(appearance.publicNameHTML());
         descField.setHTML(appearance.publicDescription());
-        descInputField.setHTML(appearance.describeInputLbl());
-        descParamField.setHTML(appearance.describeParamLbl());
-        descOutputField.setHTML(appearance.describeOutputLbl());
+        descInputField.setHTML(appearance.describeInputLbl(true));
+        descParamField.setHTML(appearance.describeParamLbl(true));
+        descOutputField.setHTML(appearance.describeOutputLbl(true));
+        testDataLbl.setHTML(appearance.testDataLabel(true));
         catPanel.setHeading(appearance.publicCategories());
         communityPanel.setHeading(appearance.communities());
+    }
+
+    private void updateFieldLabels() {
+        descInputField.setHTML(appearance.describeInputLbl(!interactive));
+        descParamField.setHTML(appearance.describeParamLbl(!interactive));
+        descOutputField.setHTML(appearance.describeOutputLbl(!interactive));
+        testDataLbl.setHTML(appearance.testDataLabel(!interactive));
+    }
+
+    private void updateRequiredFields(){
+        updateFieldLabels();
+        inputDesc.setAllowBlank(interactive);
+        outputDesc.setAllowBlank(interactive);
+        paramDesc.setAllowBlank(interactive);
     }
 
     @UiFactory
@@ -406,13 +423,15 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     public boolean validate() {
         Folder tdFolder = dataFolderSelector.getValue();
 
-        if (tdFolder == null ||  tdFolder.getPath() == null) {
-            return false;
-        }
-        
-        if (!tdFolder.getPath().startsWith(deProps.getCommunityDataPath())) {
-            dataFolderSelector.setInfoErrorText(appearance.testDataWarn());
-            return false;
+        if(!interactive ) {
+            if (tdFolder == null || tdFolder.getPath() == null) {
+                return false;
+            }
+
+            if (!tdFolder.getPath().startsWith(deProps.getCommunityDataPath())) {
+                dataFolderSelector.setInfoErrorText(appearance.testDataWarn());
+                return false;
+            }
         } else {
             dataFolderSelector.setInfoErrorText(null);
         }
@@ -512,6 +531,17 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     @Override
     public Tree<Group, String> getCommunityTree() {
         return communityTree;
+    }
+
+    @Override
+    public void setIsInteractive(boolean interactive) {
+       this.interactive = interactive;
+       updateRequiredFields();
+    }
+
+    @Override
+    public boolean getIsInteractive() {
+        return interactive;
     }
 
 }
