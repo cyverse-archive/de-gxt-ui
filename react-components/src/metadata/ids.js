@@ -13,6 +13,7 @@ export default {
         DELETE: "deleteBtn",
         EDIT: "editBtn",
         EXPAND: "expand",
+        HELP: "help",
         IMPORT_IRODS_METADATA: "importIRODSMetadata",
         SAVE: "saveBtn",
         SAVE_METADATA_TO_FILE: "saveMetadataToFile",

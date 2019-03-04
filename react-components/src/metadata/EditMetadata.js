@@ -24,6 +24,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
+import Popover from "@material-ui/core/Popover";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -32,6 +33,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import CloseIcon from "@material-ui/icons/Close";
+import HelpIcon from "@material-ui/icons/Help";
 import ContentView from "@material-ui/icons/List";
 import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
@@ -48,6 +50,7 @@ class EditMetadata extends Component {
             editingAttrIndex: -1,
             tabIndex: 0,
             irodsAVUsSelected: [],
+            helpTextAnchor: null,
         };
 
         [
@@ -145,6 +148,7 @@ class EditMetadata extends Component {
             editingAttrIndex,
             tabIndex,
             irodsAVUsSelected,
+            helpTextAnchor,
         } = this.state;
 
         const dialogTitleID = build(ids.EDIT_METADATA_FORM, ids.TITLE);
@@ -227,6 +231,29 @@ class EditMetadata extends Component {
                                 </IconButton>
                             </span>
                         </Tooltip>
+
+                        <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.HELP)}
+                                    aria-label={formatMessage(intl, "helpBtnLabel")}
+                                    onClick={(e) => this.setState({ helpTextAnchor: e.currentTarget })}
+                                    color="inherit"
+                        >
+                            <HelpIcon/>
+                        </IconButton>
+
+                        <Popover open={!!helpTextAnchor}
+                                 anchorEl={helpTextAnchor}
+                                 onClose={() => this.setState({ helpTextAnchor: null })}
+                                 anchorOrigin={{
+                                     vertical: "bottom",
+                                     horizontal: "left",
+                                 }}
+                                 transformOrigin={{
+                                     vertical: "top",
+                                     horizontal: "left",
+                                 }}
+                        >
+                            <Typography className={classes.helpText}>{formatHTMLMessage("helpText")}</Typography>
+                        </Popover>
 
                         {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}

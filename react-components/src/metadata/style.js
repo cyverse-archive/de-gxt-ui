@@ -54,6 +54,9 @@ const styles = theme => ({
         paddingLeft: theme.typography.pxToRem(4),
         paddingRight: theme.typography.pxToRem(4),
     },
+    helpText: {
+        margin: theme.spacing.unit * 2,
+    },
 });
 
 export default styles;

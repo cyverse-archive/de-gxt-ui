@@ -1,5 +1,19 @@
 import constants from "./constants"
-const importIRODSMetadataMsg = `This will import your existing metadata to the CyVerse metadata database. This cannot be undone. For more information, please see <a href='${constants.IMPORT_IRODS_METADATA_LINK}' target='_blank'>Using Metadata with the CyVerse Data Store</a>. Continue?`;
+
+const importIRODSMetadataMsg =
+    `This will import your existing metadata to the CyVerse metadata database. This cannot be undone.
+For more information, please see
+<a href='${constants.IMPORT_IRODS_METADATA_LINK}' target='_blank'>Using Metadata with the CyVerse Data Store</a>.
+Continue?`;
+
+const helpText =
+    `<p>An attribute is a changeable property or characteristic of the file or folder you have selected that can be set to a value.</p>
+<p>For example, "filetype" is an attribute of a file and "text" would be its value.</p>
+<p>
+By entering this information, you are describing the contents and context of the data.
+This can be very useful when you are trying to remember specific information about that data in the future,
+or sharing a file so collaborators may know the context of the data, and many other instances.
+</p>`;
 
 export default {
     locales: "en-US",
@@ -35,6 +49,8 @@ export default {
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",
         formatMetadataTermFreeTextOption: `Use "{ inputValue }"`,
+        helpBtnLabel: "Help",
+        helpText,
         importIRODSMetadata: "Import to User Metadata",
         importIRODSMetadataMsg,
         importIRODSMetadataTooltip: "Imports your existing metadata to the CyVerse metadata database. This action cannot be undone.",
