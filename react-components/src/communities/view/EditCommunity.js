@@ -11,7 +11,7 @@ import withI18N from "../../util/I18NWrapper";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button/Button";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
-import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
+import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import Fab from "@material-ui/core/Fab/Fab";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
@@ -388,16 +388,14 @@ class EditCommunity extends Component {
                         {getMessage('deleteCommunity')}
                     </Button>
                     }
-                    <ConfirmCloseDialog open={this.state.deleteCommunity}
-                                        parentId={ids.CONFIRM_DELETE_DLG}
-                                        onConfirm={() => this.handleDialogConfirmed('deleteCommunity')}
-                                        confirmLabel={getMessage('yes')}
-                                        onCancel={() => this.closeDialog('deleteCommunity')}
-                                        cancelLabel={getMessage('cancel')}
-                                        onClose={() => this.closeDialog('deleteCommunity')}
-                                        closeLabel={getMessage('no')}
-                                        title={getMessage('confirmDeleteCommunityTitle', {values: {name: communityName}})}
-                                        dialogContent={
+                    <DEConfirmationDialog dialogOpen={this.state.deleteCommunity}
+                                          debugId={ids.CONFIRM_DELETE_DLG}
+                                          onOkBtnClick={() => this.handleDialogConfirmed('deleteCommunity')}
+                                          okLabel={getMessage('deleteCommunity')}
+                                          onCancelBtnClick={() => this.closeDialog('deleteCommunity')}
+                                          heading={getMessage('confirmDeleteCommunityTitle', {values: {name: communityName}})}
+                                          messages={messages.messages}
+                                          message={
                                             <div>
                                                 {loading &&
                                                 <CircularProgress size={30}
@@ -408,16 +406,14 @@ class EditCommunity extends Component {
                                             </div>
                                         }/>
 
-                    <ConfirmCloseDialog open={this.state.joinCommunity}
-                                        parentId={ids.CONFIRM_JOIN_DLG}
-                                        onConfirm={() => this.handleDialogConfirmed('joinCommunity')}
-                                        confirmLabel={getMessage('yes')}
-                                        onCancel={() => this.closeDialog('joinCommunity')}
-                                        cancelLabel={getMessage('cancel')}
-                                        onClose={() => this.closeDialog('joinCommunity')}
-                                        closeLabel={getMessage('no')}
-                                        title={getMessage('confirmJoinCommunityTitle', {values: {name: communityName}})}
-                                        dialogContent={
+                    <DEConfirmationDialog dialogOpen={this.state.joinCommunity}
+                                          debugId={ids.CONFIRM_JOIN_DLG}
+                                          onOkBtnClick={() => this.handleDialogConfirmed('joinCommunity')}
+                                          okLabel={getMessage('joinCommunity')}
+                                          onCancelBtnClick={() => this.closeDialog('joinCommunity')}
+                                          heading={getMessage('confirmJoinCommunityTitle', {values: {name: communityName}})}
+                                          messages={messages.messages}
+                                          message={
                                             <div>
                                                 {loading &&
                                                 <CircularProgress size={30}
@@ -428,16 +424,14 @@ class EditCommunity extends Component {
                                             </div>
                                         }/>
 
-                    <ConfirmCloseDialog open={this.state.leaveCommunity}
-                                        parentId={ids.CONFIRM_LEAVE_DLG}
-                                        onConfirm={() => this.handleDialogConfirmed('leaveCommunity')}
-                                        confirmLabel={getMessage('yes')}
-                                        onCancel={() => this.closeDialog('leaveCommunity')}
-                                        cancelLabel={getMessage('cancel')}
-                                        onClose={() => this.closeDialog('leaveCommunity')}
-                                        closeLabel={getMessage('no')}
-                                        title={getMessage('confirmLeaveCommunityTitle', {values: {name: communityName}})}
-                                        dialogContent={
+                    <DEConfirmationDialog dialogOpen={this.state.leaveCommunity}
+                                          debugId={ids.CONFIRM_LEAVE_DLG}
+                                          onOkBtnClick={() => this.handleDialogConfirmed('leaveCommunity')}
+                                          okLabel={getMessage('leaveCommunity')}
+                                          onCancelBtnClick={() => this.closeDialog('leaveCommunity')}
+                                          heading={getMessage('confirmLeaveCommunityTitle', {values: {name: communityName}})}
+                                          messages={messages.messages}
+                                          message={
                                             <div>
                                                 {loading &&
                                                 <CircularProgress size={30}

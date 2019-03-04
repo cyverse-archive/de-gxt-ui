@@ -17,10 +17,20 @@ import build from "../DebugIDUtil";
 class DEConfirmationDialog extends Component {
 
     render() {
-        const {heading, message, dialogOpen, onOkBtnClick, onCancelBtnClick, debugId} = this.props;
+        const {
+            heading,
+            message,
+            dialogOpen,
+            onOkBtnClick,
+            onCancelBtnClick,
+            debugId,
+            okLabel,
+            messages
+        } = this.props;
         return (
             <Dialog open={dialogOpen} id={debugId}>
                 <DEDialogHeader
+                    messages={messages}
                     heading={heading}
                     onClose={() => {
                         if (onCancelBtnClick) {
@@ -44,13 +54,17 @@ class DEConfirmationDialog extends Component {
                         variant="contained"
                         onClick={onOkBtnClick}
                         color="primary">
-                        {getMessage("ok")}
+                        {okLabel}
                     </Button>
                 </DialogActions>
             </Dialog>
         );
     }
 }
+
+DEConfirmationDialog.defaultProps = {
+    okLabel: getMessage("ok")
+};
 
 DEConfirmationDialog.propTypes = {
     dialogOpen: PropTypes.bool.isRequired,

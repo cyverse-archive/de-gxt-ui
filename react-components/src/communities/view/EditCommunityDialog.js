@@ -97,6 +97,11 @@ class EditCommunityDialog extends Component {
                                    handleCloseEditDlg={this.handleCloseEditDialog}/>
                 </DialogContent>
                 <DialogActions>
+                    <Button variant="contained"
+                            id={build(ids.EDIT_DLG, ids.BUTTONS.CANCEL)}
+                            onClick={this.handleCloseEditDialog}>
+                        {getMessage('cancel')}
+                    </Button>
                     {isCommunityAdmin &&
                     <Button variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.OK)}
@@ -104,11 +109,6 @@ class EditCommunityDialog extends Component {
                         {getMessage('ok')}
                     </Button>
                     }
-                    <Button variant="contained"
-                            id={build(ids.EDIT_DLG, ids.BUTTONS.CANCEL)}
-                            onClick={this.handleCloseEditDialog}>
-                        {getMessage('cancel')}
-                    </Button>
                 </DialogActions>
             </Dialog>
         )
