@@ -14,8 +14,8 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 4/20/17.
  */
+@JsType
 public interface ManageToolsView extends IsWidget {
-
     interface ManageToolsViewAppearance {
         String name();
 

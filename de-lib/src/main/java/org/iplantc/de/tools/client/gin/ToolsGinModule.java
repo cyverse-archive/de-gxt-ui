@@ -5,7 +5,6 @@ import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ToolInfoViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.tools.client.presenter.ManageToolsViewPresenter;
-import org.iplantc.de.tools.client.presenter.NewToolRequestFormPresenterImpl;
 import org.iplantc.de.tools.client.presenter.ToolSharingPresenterImpl;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.EditToolViewImpl;
@@ -26,13 +25,13 @@ public class ToolsGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(NewToolRequestFormView.class).to(NewToolRequestFormViewImpl.class);
+
         install(new GinFactoryModuleBuilder().implement(EditToolView.class,
                                                         EditToolViewImpl.class)
                                              .build(EditToolViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(ManageToolsView.class,
                                                         ManageToolsViewImpl.class)
                                              .build(ManageToolsViewFactory.class));
-        bind(NewToolRequestFormView.Presenter.class).to(NewToolRequestFormPresenterImpl.class);
         bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
         bind(ToolSharingView.class).to(ToolSharingViewImpl.class);
         install(new GinFactoryModuleBuilder().implement(ToolInfoView.class, ToolInfoViewImpl.class)

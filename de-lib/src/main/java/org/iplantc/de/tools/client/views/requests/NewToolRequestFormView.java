@@ -1,10 +1,8 @@
 package org.iplantc.de.tools.client.views.requests;
 
-import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
-import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import jsinterop.annotations.JsType;
 
@@ -16,15 +14,9 @@ import jsinterop.annotations.JsType;
 @JsType
 public interface NewToolRequestFormView extends IsWidget {
 
-    void load(Presenter presenter);
+    void load(ManageToolsView.Presenter presenter);
 
-    @JsType
-    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
-        void submitRequest(Splittable toolRequest,
-                           ReactSuccessCallback callback,
-                           ReactErrorCallback errorCallback);
-
-    }
+    void onClose();
 
 
 }

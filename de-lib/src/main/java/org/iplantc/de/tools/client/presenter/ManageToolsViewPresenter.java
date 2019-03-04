@@ -376,6 +376,11 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     }
 
+    @Override
+    public void onToolRequestDialogClose() {
+        requestFormView.onClose();
+    }
+
     private void getToolInfo(String toolId, List<App> appsUsingTool) {
         toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
             @Override

@@ -1,6 +1,6 @@
 package org.iplantc.de.tools.client;
 
-import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
+import static org.iplantc.de.tools.client.views.manage.ManageToolsView.Presenter;
 
 import gwt.react.client.components.ComponentConstructorFn;
 import gwt.react.client.proptypes.BaseProps;
@@ -19,7 +19,8 @@ public class ReactTools {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name="Object")
     public static class ToolRequestProps extends BaseProps {
-        public NewToolRequestFormView.Presenter presenter;
+        public Presenter presenter;
+        public boolean dialogOpen;
     }
     
 
