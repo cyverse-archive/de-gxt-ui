@@ -29,7 +29,10 @@ function EmptyTable(props) {
 }
 
 EmptyTable.propTypes = {
-    message: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]).isRequired,
     numColumns: PropTypes.number.isRequired,
 };
 

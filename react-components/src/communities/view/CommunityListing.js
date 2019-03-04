@@ -13,6 +13,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
@@ -76,8 +77,10 @@ class CommunityListing extends Component {
                                               hover
                                               key={community.id}>
                                         <TableCell>
-                                            <DEHyperLink onClick={() => onCommunityClicked(community)}
-                                                         text={collaboratorsUtil.getSubjectDisplayName(community)}/>
+                                            <Tooltip title={getMessage('communityNameToolTip')}>
+                                                <DEHyperLink onClick={() => onCommunityClicked(community)}
+                                                             text={collaboratorsUtil.getSubjectDisplayName(community)}/>
+                                            </Tooltip>
                                         </TableCell>
                                         <TableCell>
                                             {community.description}

@@ -43,7 +43,10 @@ class DEDialogHeader extends Component {
 }
 
 DEDialogHeader.propTypes = {
-    heading: PropTypes.string.isRequired,
+    heading: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]).isRequired,
     onClose: PropTypes.func.isRequired,
 };
 

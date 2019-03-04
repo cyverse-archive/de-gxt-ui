@@ -43,10 +43,7 @@ class ManageCommunitiesView extends Component {
     }
 
     handleCommunityFilterChange(selection) {
-        this.setState({
-            communityType: selection,
-            loadingListing: true,
-        });
+        this.setState({communityType: selection});
 
         this.refreshCommunityList(selection);
     }
@@ -55,6 +52,8 @@ class ManageCommunitiesView extends Component {
         if (!selection) {
             selection = this.state.communityType;
         }
+
+        this.setState({loadingListing: true});
 
         if (selection === CommunityFilter.MY_COMMUNITIES) {
             new Promise((resolve, reject) => {
