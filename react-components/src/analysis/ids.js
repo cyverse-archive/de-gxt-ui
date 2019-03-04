@@ -54,4 +54,10 @@ export default ({
     DE: ".de",
     INTERACTIVE: ".interactive",
     OSG: ".osg",
+
+    ICONS: {
+        INTERACTIVE: "interactive",
+        BATCH: "batch",
+        COLLAPSE: "collapse",
+    }
 });
