@@ -400,6 +400,34 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     }
 
+    @Override
+    public void submitRequest(Splittable toolRequest,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback) {
+
+        reqServices.requestInstallation(toolRequest, new AsyncCallback<ToolRequestDetails>() {
+            @Override
+            public void onFailure(final Throwable caught) {
+                if(errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
+                ErrorHandler.postReact(caught);
+            }
+
+            @Override
+            public void onSuccess(final ToolRequestDetails response) {
+                if(callback != null) {
+                    callback.onSuccess(null);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onToolRequestDialogClose() {
+        requestFormView.onClose();
+    }
+
     private void getToolInfo(String toolId, List<App> appsUsingTool) {
         toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
             @Override

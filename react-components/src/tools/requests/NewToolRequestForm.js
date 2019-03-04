@@ -30,9 +30,6 @@ class NewToolRequestForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            dialogOpen: true,
-        };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.validateUrl = this.validateUrl.bind(this);
@@ -57,12 +54,8 @@ class NewToolRequestForm extends Component {
         });
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        this.setState({dialogOpen: true});
-    }
-
     handleClose() {
-        this.setState({dialogOpen: false});
+        this.props.presenter.onToolRequestDialogClose();
     }
 
     validateUrl(value) {
@@ -74,8 +67,7 @@ class NewToolRequestForm extends Component {
     }
 
     render() {
-        const {intl} = this.props;
-        const {dialogOpen} = this.state;
+        const {intl, dialogOpen} = this.props;
         return (
             <Dialog open={dialogOpen}
                     disableBackdropClick

@@ -3,6 +3,8 @@ package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
@@ -30,6 +32,7 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 4/20/17.
  */
+@JsType
 public interface ManageToolsView extends IsWidget,
                                          IsMaskable,
                                          HasHandlers,
@@ -140,5 +143,11 @@ public interface ManageToolsView extends IsWidget,
 
         @JsIgnore
         HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
+
+        void submitRequest(Splittable toolRequest,
+                           ReactSuccessCallback callback,
+                           ReactErrorCallback errorCallback);
+
+        void onToolRequestDialogClose();
     }
 }
