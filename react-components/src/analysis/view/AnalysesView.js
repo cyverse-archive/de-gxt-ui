@@ -59,6 +59,7 @@ function AnalysisName(props) {
     const intl = props.intl;
     const analysis = props.analysis;
     const parentId = props.parentId;
+    const baseId = props.baseId;
 
     if (isBatch) {
         return (
@@ -69,7 +70,8 @@ function AnalysisName(props) {
                     <img src={analysesExpandIcon}
                          alt={altAnalysesExpandIcon}
                          onClick={handleBatchIconClick}
-                         style={{height: 16}}/>
+                         style={{height: 16}}
+                         id={build(baseId, ids.ICONS.BATCH)}/>
                  </ToolTip>
                 <sup>{name}</sup>
             </span>
@@ -81,6 +83,7 @@ function AnalysisName(props) {
                   className={className}
                   onClick={() => handleGoToOutputFolder(analysis)}>
                 <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
+                            id={build(baseId, ids.ICONS.INTERACTIVE)}
                             style={{color: Color.darkBlue}}/>
                 <sup>{name}</sup>
             </span>
@@ -94,6 +97,7 @@ function AnalysisName(props) {
                      <img src={analysesCollapseIcon}
                           alt={altAnalysesCollapseIcon}
                           onClick={handleViewAllIconClick}
+                          id={build(baseId, ids.ICONS.COLLAPSE)}
                           style={{height: 16}}/>
                  </ToolTip>
                 <sup>{name}</sup>
@@ -920,6 +924,7 @@ class AnalysesView extends Component {
                                                 <AnalysisName classes={classes}
                                                               intl={intl}
                                                               analysis={analysis}
+                                                              baseId={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
                                                               parentId={parentId}
                                                               handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                               handleInteractiveUrlClick={this.handleInteractiveUrlClick}
