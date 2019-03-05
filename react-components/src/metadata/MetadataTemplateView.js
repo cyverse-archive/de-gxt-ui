@@ -279,10 +279,10 @@ class MetadataTemplateAttributeView extends Component {
                                             </Button>
                                             }
                                             <div className={classes.title}>
-                                                <Typography variant="title" color="inherit" >
+                                                <Typography variant="h6" color="inherit" >
                                                     {attribute.name}
                                                 </Typography>
-                                                <Typography variant="subheading" className={classes.errorSubTitle}>
+                                                <Typography variant="subtitle1" className={classes.errorSubTitle}>
                                                     {attrErrors && attrErrors.error && getMessage("errAttrHasErrors")}
                                                 </Typography>
                                             </div>
@@ -295,7 +295,7 @@ class MetadataTemplateAttributeView extends Component {
                                                   alignItems="stretch"
                                             >
                                                 <Grid item xs>
-                                                    <Typography variant="subheading">
+                                                    <Typography variant="subtitle1">
                                                         {attribute.description}
                                                     </Typography>
                                                 </Grid>
@@ -375,7 +375,7 @@ class MetadataTemplateView extends Component {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                             {values.template.name}
                         </Typography>
                         <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}

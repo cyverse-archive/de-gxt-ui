@@ -1006,7 +1006,7 @@ class AnalysesView extends Component {
                             !hasData &&
                             <Typography style={{margin: '0, auto, 0, auto', width: 600}}
                                         align="center"
-                                        variant="subtitle2">
+                                        variant="subtitle1">
                                 {getMessage("noAnalysis")}
                             </Typography>
                         }

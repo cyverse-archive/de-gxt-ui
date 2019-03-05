@@ -97,7 +97,7 @@ class EditMetadataTemplate extends Component {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                             {getMessage("dialogTitleEditMetadataTemplate")}
                         </Typography>
                         <Button id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.SAVE)}
