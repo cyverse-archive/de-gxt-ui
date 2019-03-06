@@ -26,7 +26,7 @@ class DEHyperLink extends Component {
 
 DEHyperLink.propTypes = {
     text: PropTypes.string.isRequired,
-    onClick: PropTypes.PropTypes.func
+    onClick: PropTypes.func,
 };
 
 export default injectSheet(styles)(DEHyperLink);
