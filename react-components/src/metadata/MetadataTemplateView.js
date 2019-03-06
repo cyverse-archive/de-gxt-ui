@@ -50,6 +50,7 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Fab from "@material-ui/core/Fab";
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -265,9 +266,8 @@ class MetadataTemplateAttributeView extends Component {
                                     >
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
                                             {writable &&
-                                            <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                    variant="fab"
-                                                    mini
+                                            <Fab id={build(attrFieldId, ids.BUTTONS.ADD)}
+                                                    size="small"
                                                     color="primary"
                                                     aria-label={formatMessage(intl, "addRow")}
                                                     onClick={event => {
@@ -276,7 +276,7 @@ class MetadataTemplateAttributeView extends Component {
                                                     }}
                                             >
                                                 <ContentAdd/>
-                                            </Button>
+                                            </Fab>
                                             }
                                             <div className={classes.title}>
                                                 <Typography variant="h6" color="inherit" >

@@ -12,7 +12,7 @@ import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -49,15 +49,14 @@ class OrderedGridToolbar extends Component {
                 className={classes.toolbar}
             >
                 <div className={classes.actions}>
-                    <Button id={build(parentID, ids.BUTTONS.ADD)}
-                            variant="fab"
-                            mini
-                            color="primary"
-                            aria-label={formatMessage(intl, "addRow")}
-                            onClick={onAddItem}
+                    <Fab id={build(parentID, ids.BUTTONS.ADD)}
+                         size="small"
+                         color="primary"
+                         aria-label={formatMessage(intl, "addRow")}
+                         onClick={onAddItem}
                     >
                         <ContentAdd/>
-                    </Button>
+                    </Fab>
                 </div>
                 <div className={classes.title}>
                     <Typography id={build(parentID, ids.TITLE)}
@@ -74,30 +73,30 @@ class OrderedGridToolbar extends Component {
                 </div>
                 <div className={classes.spacer}/>
                 <div className={classes.actions}>
-                    <Button id={build(parentID, ids.BUTTONS.MOVE_UP)}
-                            variant="fab"
-                            mini
-                            color="secondary"
-                            aria-label={formatMessage(intl, "moveUp")}
-                            className={classes.button}
-                            disabled={moveUpDisabled}
-                            onClick={() => moveUp()}
+                    <Fab id={build(parentID, ids.BUTTONS.MOVE_UP)}
+                         size="small"
+                         mini
+                         color="secondary"
+                         aria-label={formatMessage(intl, "moveUp")}
+                         className={classes.button}
+                         disabled={moveUpDisabled}
+                         onClick={() => moveUp()}
                     >
                         <KeyboardArrowUp/>
-                    </Button>
+                    </Fab>
                 </div>
                 <div className={classes.actions}>
-                    <Button id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
-                            variant="fab"
-                            mini
-                            color="secondary"
-                            aria-label={formatMessage(intl, "moveDown")}
-                            className={classes.button}
-                            disabled={moveDownDisabled}
-                            onClick={() => moveDown()}
+                    <Fab id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
+                         size="small"
+                         mini
+                         color="secondary"
+                         aria-label={formatMessage(intl, "moveDown")}
+                         className={classes.button}
+                         disabled={moveDownDisabled}
+                         onClick={() => moveDown()}
                     >
                         <KeyboardArrowDown/>
-                    </Button>
+                    </Fab>
                 </div>
             </Toolbar>
         );

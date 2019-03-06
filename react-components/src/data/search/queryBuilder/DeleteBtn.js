@@ -1,7 +1,7 @@
 import styles from "../styles";
 
 import DeleteIcon from "@material-ui/icons/Delete";
-import Fab from "@material-ui/core/Fab/Fab";
+import Fab from "@material-ui/core/Fab";
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 
