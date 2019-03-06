@@ -32,7 +32,9 @@ const getDefaultTheme = () => createMuiTheme({
     typography: {
         button: {
             textTransform: "none",
-        }
+        },
+        useNextVariants: true,
+
     },
     zIndex: {
         mobileStepper: 1000 + adjustZIndexForGXT,

@@ -169,7 +169,7 @@ class StringListEditor extends Component {
             <fieldset>
                 <legend>{title}</legend>
 
-                <Typography variant="subheading">{helpLabel}</Typography>
+                <Typography variant="subtitle1">{helpLabel}</Typography>
 
                 <OrderedGridToolbar title={columnLabel}
                                     parentID={parentID}

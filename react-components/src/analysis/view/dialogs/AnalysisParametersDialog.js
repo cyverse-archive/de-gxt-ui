@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import exStyles from "../../style";
 import ids from "../../ids";
 import intlData from "../../messages";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
+import withI18N, { getMessage, formatMessage } from "../../../util/I18NWrapper";
 import ArgumentType from "../../../../src/apps/ArgumentType";
 
 
@@ -96,7 +96,7 @@ class AnalysisParametersDialog extends Component {
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
-                    heading={intl.formatMessage({id:"analysisParamTitle",  name: analysisName})}
+                    heading={formatMessage(intl, "analysisParamTitle", {name: analysisName})}
                     onClose={onViewParamDialogClose}/>
                 <DialogContent>
                     <Table>

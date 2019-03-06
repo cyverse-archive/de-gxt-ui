@@ -9,7 +9,6 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import ids from "../ids";
 import build from "../../util/DebugIDUtil";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "../style";
@@ -20,6 +19,7 @@ import classnames from "classnames";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import tour from "../NewUserTourSteps";
 import Badge from "@material-ui/core/Badge";
+import Fab from "@material-ui/core/Fab";
 
 
 function ErrorComponent(props) {
@@ -29,12 +29,11 @@ function ErrorComponent(props) {
                 {getMessage("notificationError")}
             </div>
             <div id={build(ids.DESKTOP,ids.RETRY_BTN)}>
-                <Button variant="fab"
-                        mini="true"
-                        className={props.classes.errorRetryButton}
-                        onClick={props.onClick}>
+                <Fab size="small"
+                     className={props.classes.errorRetryButton}
+                     onClick={props.onClick}>
                     <RefreshIcon />
-                </Button>
+                </Fab>
             </div>
         </div>
     )

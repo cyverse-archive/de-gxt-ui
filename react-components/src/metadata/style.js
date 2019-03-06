@@ -19,6 +19,7 @@ const styles = theme => ({
         top: 0
     },
     deleteIcon: {
+        margin: 5,
         "&:hover": {
             backgroundColor: theme.palette.error.dark,
         },

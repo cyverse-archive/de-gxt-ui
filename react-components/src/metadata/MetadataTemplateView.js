@@ -50,6 +50,7 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Fab from "@material-ui/core/Fab";
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -265,9 +266,8 @@ class MetadataTemplateAttributeView extends Component {
                                     >
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
                                             {writable &&
-                                            <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                    variant="fab"
-                                                    mini
+                                            <Fab id={build(attrFieldId, ids.BUTTONS.ADD)}
+                                                    size="small"
                                                     color="primary"
                                                     aria-label={formatMessage(intl, "addRow")}
                                                     onClick={event => {
@@ -276,13 +276,13 @@ class MetadataTemplateAttributeView extends Component {
                                                     }}
                                             >
                                                 <ContentAdd/>
-                                            </Button>
+                                            </Fab>
                                             }
                                             <div className={classes.title}>
-                                                <Typography variant="title" color="inherit" >
+                                                <Typography variant="h6" color="inherit" >
                                                     {attribute.name}
                                                 </Typography>
-                                                <Typography variant="subheading" className={classes.errorSubTitle}>
+                                                <Typography variant="subtitle1" className={classes.errorSubTitle}>
                                                     {attrErrors && attrErrors.error && getMessage("errAttrHasErrors")}
                                                 </Typography>
                                             </div>
@@ -295,7 +295,7 @@ class MetadataTemplateAttributeView extends Component {
                                                   alignItems="stretch"
                                             >
                                                 <Grid item xs>
-                                                    <Typography variant="subheading">
+                                                    <Typography variant="subtitle1">
                                                         {attribute.description}
                                                     </Typography>
                                                 </Grid>
@@ -375,7 +375,7 @@ class MetadataTemplateView extends Component {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                             {values.template.name}
                         </Typography>
                         <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}

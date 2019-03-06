@@ -16,12 +16,11 @@ import ids from "./ids";
 import { FormCheckbox, FormSelectField, FormTextField, getFormError } from "../../util/FormField";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
-
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Fab from "@material-ui/core/Fab";
 import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -33,6 +32,7 @@ import ContentRemove from "@material-ui/icons/Delete";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+
 
 const AttributeTypes = [
     "String",
@@ -135,36 +135,36 @@ class EditAttribute extends Component {
                     </div>
                     <div className={classes.spacer} />
                     <div className={classes.actions}>
-                        <Button id={build(formID, ids.BUTTONS.MOVE_UP)}
-                                variant="fab"
-                                mini
-                                color="secondary"
-                                aria-label={formatMessage(intl, "moveUp")}
-                                className={classes.button}
-                                disabled={moveUpDisabled}
-                                onClick={(event) => {
+                        <Fab id={build(formID, ids.BUTTONS.MOVE_UP)}
+                             size="small"
+                             mini
+                             color="secondary"
+                             aria-label={formatMessage(intl, "moveUp")}
+                             className={classes.button}
+                             disabled={moveUpDisabled}
+                             onClick={(event) => {
                                     event.stopPropagation();
                                     moveUp();
                                 }}
                         >
                             <KeyboardArrowUp />
-                        </Button>
+                        </Fab>
                     </div>
                     <div className={classes.actions}>
-                        <Button id={build(formID, ids.BUTTONS.MOVE_DOWN)}
-                                variant="fab"
-                                mini
-                                color="secondary"
-                                aria-label={formatMessage(intl, "moveDown")}
-                                className={classes.button}
-                                disabled={moveDownDisabled}
-                                onClick={(event) => {
+                        <Fab id={build(formID, ids.BUTTONS.MOVE_DOWN)}
+                             size="small"
+                             mini
+                             color="secondary"
+                             aria-label={formatMessage(intl, "moveDown")}
+                             className={classes.button}
+                             disabled={moveDownDisabled}
+                             onClick={(event) => {
                                     event.stopPropagation();
                                     moveDown();
                                 }}
                         >
                             <KeyboardArrowDown />
-                        </Button>
+                        </Fab>
                     </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
@@ -343,18 +343,18 @@ class EditAttributeFormList extends Component {
             <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(name, ids.BUTTONS.EXPAND, ids.ATTR_GRID)} />}>
                     <div className={classes.actions}>
-                        <Button variant="fab"
-                                mini
-                                color="primary"
-                                id={build(name, ids.BUTTONS.ADD)}
-                                aria-label={formatMessage(intl, "addRow")}
-                                onClick={(event) => {
+                        <Fab variant="fab"
+                             size="small"
+                             color="primary"
+                             id={build(name, ids.BUTTONS.ADD)}
+                             aria-label={formatMessage(intl, "addRow")}
+                             onClick={(event) => {
                                     event.stopPropagation();
                                     this.onAddAttribute();
                                 }}
                         >
                             <ContentAdd />
-                        </Button>
+                        </Fab>
                     </div>
                     <Typography className={classes.title}>{getMessage("attributes")}</Typography>
                 </ExpansionPanelSummary>
