@@ -3,6 +3,7 @@
  *
  */
 import React, {Component} from "react";
+import {  text } from '@storybook/addon-knobs';
 import DEHyperLink from "../../../src/util/hyperlink/DEHyperLink";
 
 class DEHyperLinkTest extends Component {
@@ -10,7 +11,7 @@ class DEHyperLinkTest extends Component {
         let linkText = "Test links";
 
         return(
-                <DEHyperLink text={linkText}/>
+                <DEHyperLink text={text('Link Text', linkText)}/>
         );
     }
 }
