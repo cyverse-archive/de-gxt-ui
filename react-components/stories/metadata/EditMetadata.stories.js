@@ -117,6 +117,26 @@ class ViewMetadataTest extends Component {
         });
 
         const metadata = {
+            "irods-avus": [
+                {
+                    "id": "1",
+                    "attr": "iRODS Attr 1",
+                    "value": "value1",
+                    "unit": "",
+                },
+                {
+                    "id": "2",
+                    "attr": "iRODS Attr 2",
+                    "value": "value2",
+                    "unit": "",
+                },
+                {
+                    "id": "3",
+                    "attr": "iRODS Attr 3",
+                    "value": "value3",
+                    "unit": "",
+                },
+            ],
             "avus": [
                 {
                     "id": "1",

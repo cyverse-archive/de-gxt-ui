@@ -192,7 +192,7 @@ class EditMetadata extends Component {
                     <Toolbar>
                         <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
                                     onClick={() =>
-                                        dirty ?
+                                        (dirty && editable) ?
                                             this.setState({showDiscardChangesDialog: true}) :
                                             this.props.presenter.closeMetadataDialog()
                                     }
@@ -216,7 +216,7 @@ class EditMetadata extends Component {
                             <span>
                                 <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.VIEW_TEMPLATES)}
                                             aria-label={formatMessage(intl, "viewInTemplate")}
-                                            disabled={loading || isSubmitting || errors.error}
+                                            disabled={loading || isSubmitting || (errors.error && editable)}
                                             onClick={() => this.props.presenter.onSelectTemplateBtnSelected(values)}
                                             color="inherit"
                                 >
@@ -225,7 +225,7 @@ class EditMetadata extends Component {
                             </span>
                         </Tooltip>}
 
-                        {tabIndex === 1 &&
+                        {(tabIndex === 1 && editable) &&
                         <Tooltip title={getMessage("importIRODSMetadataTooltip")}
                                  placement="bottom"
                                  enterDelay={200}
@@ -249,7 +249,7 @@ class EditMetadata extends Component {
                             <span>
                                 <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE_METADATA_TO_FILE)}
                                             aria-label={formatMessage(intl, "saveToFile")}
-                                            disabled={loading || dirty || isSubmitting}
+                                            disabled={loading || (dirty && editable) || isSubmitting}
                                             onClick={() => this.props.presenter.onSaveMetadataToFileBtnSelected()}
                                             color="inherit"
                                 >
@@ -344,7 +344,7 @@ class EditMetadata extends Component {
                                                               editable={false}
                                                               parentID={ids.EDIT_METADATA_FORM}
                                                               onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
-                                                              selectable={true}
+                                                              selectable={editable}
                                                               onSelectAVU={this.handleSelectAVU}
                                                               onSelectAllClick={this.handleSelectAllAVUs}
                                                               avusSelected={irodsAVUsSelected}
