@@ -7,6 +7,8 @@ import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.s
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
 
+import AppDetailsTest from "./apps/details/AppDetails.stories";
+import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
@@ -60,163 +62,69 @@ import ErrorExpansionPanelTest from "./util/ErrorExpansionPanel.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
-storiesOf("analysis/view", module).add("with test analyses", () => (
-    <AnalysesViewTest />
-));
-storiesOf("analysis/view/dialogs", module).add(
-    "with test analysis info",
-    () => <AnalysisInfoDialogTest />
-);
-storiesOf("analysis/view/dialogs", module).add(
-    "with test analysis parameters",
-    () => <AnalysisParametersDialogTest />
-);
-storiesOf("analysis/view/dialogs", module).add(
-    "with test analysis support",
-    () => <ShareWithSupportDialogTest />
-);
 
-storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
-    <AppStatsTest />
-));
-storiesOf("apps/details", module).add("CategoryTree", () => (
-    <CategoryTreeTest logger={action("hierarchy")} />
-));
-storiesOf("apps/details", module).add("ToolDetails", () => <ToolDetailsTest />);
+storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
+    <AnalysisInfoDialogTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis parameters', () =>
+    <AnalysisParametersDialogTest/>);
+storiesOf('analysis/view/dialogs', module)
+    .add('with test analysis support', () => <ShareWithSupportDialogTest/>);
 
-storiesOf("collaborators", module).add("Subject Search Field", () => (
-    <SubjectSearchFieldTest logger={action("Selected Subject")} />
-));
+storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
+storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
+storiesOf('apps/details', module).add('AppDetails', () => <AppDetailsTest/>);
+storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
+storiesOf('apps/details', module).add('AppInfoDialog', () => <AppInfoDialogTest/>);
 
-storiesOf("communities", module).add("Manage Communities View", () => (
-    <ManageCommunitiesViewTest
-        communityAppsClickedLogger={action("Add apps to community clicked")}
-        confirmedDialogAction={action("Confirmed dialog action")}
-    />
-));
+storiesOf('collaborators', module).add('Subject Search Field', () => <SubjectSearchFieldTest logger={action('Selected Subject')}/>);
 
-storiesOf("data/BasicDetails", module).add(
-    "with test diskresource details",
-    () => <BasicDetailsTest logger={action("details")} />
-);
-storiesOf("data/InfoTypeSelectionList", module).add(
-    "with test diskresource details",
-    () => <InfoTypeSelectionListTest logger={action("infoTypes")} />
-);
-storiesOf("data/search", module).add("EditTagDialog", () => (
-    <EditTagDialogTest
-        saveTagLogger={action("Save Updated Tag")}
-        closeDlgLogger={action("Close Dialog")}
-    />
-));
-storiesOf("data/search", module).add("QueryBuilder", () => (
-    <QueryBuilderTest
-        searchLogger={action("Search Submitted")}
-        editTagLogger={action("Edit Tag")}
-        saveSearchLogger={action("Save Search")}
-        addTagLogger={action("Add Tag")}
-    />
-));
-storiesOf("data/search", module).add("SaveSearchButton", () => (
-    <SaveSearchButtonTest logger={action("Save Search")} />
-));
-storiesOf("data/search", module).add("SearchFormTagPanel", () => (
-    <SearchFormTagPanel
-        removeTagLogger={action("Remove Tag")}
-        editTagLogger={action("Edit Tag")}
-        appendTagLogger={action("Append Tag")}
-        addTagLogger={action("Add Tag")}
-    />
-));
-storiesOf("data/Tag", module).add("with test diskresource details", () => (
-    <TagTest logger={action("tag")} />
-));
-storiesOf("data/TagPanel", module).add("with test diskresource details", () => (
-    <TagPanelTest logger={action("tagpanel")} />
-));
+storiesOf('communities', module).add("Manage Communities View", () => <ManageCommunitiesViewTest communityAppsClickedLogger={action("Add apps to community clicked")} confirmedDialogAction={action("Confirmed dialog action")}/>);
 
-storiesOf("desktop/view", module).add("with test desktop view", () => (
-    <DesktopViewTest logger={action("desktop")} />
-));
-storiesOf("desktop/view", module).add("with test desktop taskbutton", () => (
-    <TaskButtonTest />
-));
-storiesOf("desktop/view", module).add("with test desktop taskbar", () => (
-    <TaskbarTest />
-));
+storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
+storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
+storiesOf('data/search', module).add('EditTagDialog', () => <EditTagDialogTest saveTagLogger={action('Save Updated Tag')} closeDlgLogger={action('Close Dialog')}/>);
+storiesOf('data/search', module).add('QueryBuilder', () => <QueryBuilderTest searchLogger={action('Search Submitted')} editTagLogger={action('Edit Tag')} saveSearchLogger={action('Save Search')} addTagLogger={action('Add Tag')}/>);
+storiesOf('data/search', module).add('SaveSearchButton', () => <SaveSearchButtonTest logger={action('Save Search')}/>);
+storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagPanel removeTagLogger={action('Remove Tag')} editTagLogger={action('Edit Tag')} appendTagLogger={action('Append Tag')} addTagLogger={action('Add Tag')}/>);
+storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
+storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
-storiesOf("fileViewers", module).add("VideoViewer", () => <VideoViewerTest />);
+storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest logger={action('desktop')}/>);
+storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
+storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
 
-storiesOf("metadata/admin/EditMetadataTemplate", module)
-    .add("with nested attributes", () => (
-        <EditNestedAttrMetadataTemplateTest logger={action("template")} />
-    ))
-    .add("with DataCite attributes", () => (
-        <EditDataCiteMetadataTemplateTest logger={action("template")} />
-    ));
-storiesOf("metadata/EditMetadata", module)
-    .add("with nested AVUs", () => (
-        <EditMetadataTest logger={action("metadata")} />
-    ))
-    .add("with read-only metadata", () => (
-        <ViewMetadataTest logger={action("metadata")} />
-    ))
-    .add("with empty metadata", () => (
-        <EmptyMetadataTest logger={action("metadata")} />
-    ))
-    .add("with DateCite nested AVUs", () => (
-        <EditDataCiteMetadataTest logger={action("metadata")} />
-    ));
+storiesOf('fileViewers', module).add("VideoViewer", () => <VideoViewerTest/>);
 
-storiesOf("metadata/MetadataTemplateView", module)
-    .add("with nested attributes", () => (
-        <MetadataTemplateViewTest logger={action("templateView")} />
-    ))
-    .add("with read-only nested attributes", () => (
-        <MetadataTemplateReadOnlyViewTest logger={action("templateView")} />
-    ))
-    .add("with DataCite metadata", () => (
-        <DataCiteMetadataTemplateViewTest logger={action("templateView")} />
-    ))
-    .add("with DataCite Template, no metadata", () => (
-        <DataCiteMetadataTemplateViewNoValuesTest
-            logger={action("templateView")}
-        />
-    ));
+storiesOf('metadata/admin/EditMetadataTemplate', module)
+    .add('with nested attributes', () => <EditNestedAttrMetadataTemplateTest logger={action('template')} />)
+    .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
+storiesOf('metadata/EditMetadata', module)
+    .add('with nested AVUs', () => <EditMetadataTest logger={action('metadata')}/>)
+    .add('with read-only metadata', () => <ViewMetadataTest logger={action('metadata')}/>)
+    .add('with empty metadata', () => <EmptyMetadataTest logger={action('metadata')}/>)
+    .add('with DateCite nested AVUs', () => <EditDataCiteMetadataTest logger={action('metadata')}/>);
 
-storiesOf("util", module).add("Autocomplete", () => (
-    <AutocompleteTest selectOptionLogger={action("Selected Option")} />
-));
-storiesOf("notifications/view", module).add("with test notifications", () => (
-    <NotificationViewTest logger={action("notification Window")} />
-));
-storiesOf("notifications/view/dialogs", module).add(
-    "with test JoinTeamRequestDialog",
-    () => <JoinTeamRequestDialogTest logger={action("notification window")} />
-);
-storiesOf("notifications/view/dialogs", module).add(
-    "with test DenyJoinRequestDetailsDialog",
-    () => (
-        <DenyJoinRequestDetailsDialogTest
-            logger={action("notification window")}
-        />
-    )
-);
-storiesOf("notifications/view/dialogs", module).add(
-    "with test RequestHistoryDialogTest",
-    () => <RequestHistoryDialogTest logger={action("notification window")} />
-);
+storiesOf('metadata/MetadataTemplateView', module)
+    .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>)
+    .add('with read-only nested attributes', () => <MetadataTemplateReadOnlyViewTest logger={action('templateView')}/>)
+    .add('with DataCite metadata', () => <DataCiteMetadataTemplateViewTest logger={action('templateView')}/>)
+    .add('with DataCite Template, no metadata', () => <DataCiteMetadataTemplateViewNoValuesTest logger={action('templateView')}/>);
 
-storiesOf("util", module).add("CopyTextArea", () => <CopyTextAreaTest />);
-storiesOf("util", module).add("DEHyperLink", () => <DEHyperLinkTest />);
-storiesOf("util", module).add("ErrorExpansionPanel", () => (
-    <ErrorExpansionPanelTest />
-));
-storiesOf("util", module).add("ErrorHandler", () => <ErrorHandlerTest />);
-storiesOf("util", module).add("SearchField", () => (
-    <SearchFieldTest logger={action("Search")} />
-));
-storiesOf("util", module).add("TriggerSearchField", () => (
-    <TriggerFieldTest logger={action("Search")} />
-));
-storiesOf("util", module).add("DEPromptDialog", () => <DEPromptDialogTest />);
+storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
+storiesOf('notifications/view', module).add('with test notifications', () => <NotificationViewTest
+    logger={action('notification Window')}/>);
+storiesOf('notifications/view/dialogs', module).add('with test JoinTeamRequestDialog', () =>
+    <JoinTeamRequestDialogTest logger={action('notification window')}/>);
+storiesOf('notifications/view/dialogs', module).add('with test DenyJoinRequestDetailsDialog', () =>
+    <DenyJoinRequestDetailsDialogTest logger={action('notification window')}/>);
+storiesOf('notifications/view/dialogs', module).add('with test RequestHistoryDialogTest', () =>
+    <RequestHistoryDialogTest logger={action('notification window')}/>);
+
+storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
+storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
+storiesOf('util', module).add('ErrorExpansionPanel', () => <ErrorExpansionPanelTest/>);
+storiesOf('util', module).add('ErrorHandler', () => <ErrorHandlerTest/>);
+storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
+storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
+storiesOf('util', module).add('DEPromptDialog', () => <DEPromptDialogTest/>);
