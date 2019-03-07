@@ -32,20 +32,19 @@ class ToolDetailsV1 extends Component {
 
     render() {
         const classes = this.props.classes;
-        let tools = this.props.app.tools,
+        let tools = this.props.details,
             labelClass = classes.toolDetailsLabel,
             valueClass = classes.toolDetailsValue;
         return (
-            <div>
-                {tools.map((toolInfo, index) => (
-                    <ExpansionPanel key={index}>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <p className={labelClass}>{toolInfo.name}:</p>
-                            <p className={valueClass}>{toolInfo.description}</p>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <table>
-                                <tbody>
+                    tools.map((toolInfo, index) => (
+                        <ExpansionPanel key={index}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                                <p className={labelClass}>{toolInfo.name}:</p>
+                                <p className={valueClass}>{toolInfo.description}</p>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <table>
+                                    <tbody>
                                     <tr>
                                         <td>{getMessage("detailsLabel")}</td>
                                     </tr>
@@ -93,8 +92,7 @@ class ToolDetailsV1 extends Component {
                             </table>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
-                ))}
-            </div>
+                ))
         );
     }
 }

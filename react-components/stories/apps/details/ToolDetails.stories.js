@@ -4,21 +4,7 @@ import "../../../src/index.css";
 
 class ToolDetailsTest extends Component {
     render() {
-        const toolDetailsAppearance = {
-            css: () => ({
-                detailsCard: () => "tool-details-media-card",
-                label: () => "",
-                value: () => "",
-            }),
-            detailsLabel: () => "Details: ",
-            toolNameLabel: () => "Name: ",
-            descriptionLabel: () => "Description: ",
-            imageLabel: () => "Image: ",
-            toolVersionLabel: () => "Version: ",
-            toolAttributionLabel: () => "Attribution: ",
-        };
-
-        const app = {
+        const details = {
             tools: [
                 {
                     id: "66f99e46-854a-11e4-b626-0fcca6cef881",
@@ -39,8 +25,9 @@ class ToolDetailsTest extends Component {
                 },
             ],
         };
-
-        return <ToolDetails appearance={toolDetailsAppearance} app={app} />;
+        return (
+            <ToolDetails details={details.tools}/>
+        );
     }
 }
 
