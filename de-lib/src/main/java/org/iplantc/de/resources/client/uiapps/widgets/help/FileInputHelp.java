@@ -6,4 +6,6 @@ public interface FileInputHelp {
     String fileInputIsImplicit();
 
     String fileInputRepeatOptionFlag();
+
+    String fileInputDefaultText();
 }

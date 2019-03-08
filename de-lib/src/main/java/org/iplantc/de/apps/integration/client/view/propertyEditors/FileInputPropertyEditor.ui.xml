@@ -3,7 +3,8 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
-             xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets">
+             xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets"
+             xmlns:converter="urn:import:org.iplantc.de.apps.widgets.client.view.editors.arguments.converters">
     <ui:with field="appearance"
              type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
@@ -58,6 +59,19 @@
             </con:child>
 
             <con:child layoutData="{fieldLayoutData}">
+                <form:FieldLabel ui:field="defaultValueLabel"
+                                 labelAlign="TOP">
+                    <form:widget>
+                        <converter:ArgumentEditorConverter ui:field="defaultValueEditor"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </con:child>
+            <con:child layoutData="{fieldLayoutData}">
+                <fields:CheckBoxAdapter ui:field="doNotDisplay"
+                                        negated="true"/>
+            </con:child>
+
+            <con:child layoutData="{fieldLayoutData}">
                 <fields:CheckBoxAdapter ui:field="requiredEditor"/>
             </con:child>
             <con:child layoutData="{fieldLayoutData}">
@@ -86,7 +100,6 @@
             <con:child layoutData="{fieldLayoutData}">
                 <fields:CheckBoxAdapter ui:field="isImplicit" />
             </con:child>
-
 
         </con:VerticalLayoutContainer>
     </gxt:ContentPanel>

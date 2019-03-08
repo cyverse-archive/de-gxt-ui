@@ -3,8 +3,8 @@ package org.iplantc.de.apps.widgets.client.view.editors.arguments.converters;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -31,14 +31,13 @@ public class SplittableToFileConverter implements Converter<Splittable, File> {
         if (object == null) {
             return null;
           }
-        if(object.isString()){
-            AutoBean<File> fileBean = factory.file();
-            File file = fileBean.as();
-            file.setPath(object.asString());
+        String path = object.get("path") != null ? object.get("path").asString() : "";
+        if (!Strings.isNullOrEmpty(path)) {
+            File file = factory.file().as();
+            file.setPath(path);
             return file;
-        } else {
-            return null;
         }
+        return null;
     }
 
 }

@@ -286,6 +286,14 @@ public interface PropertyEditorAppearance {
 
     String textInputDefaultText();
 
+    String fileInputDefaultLabel();
+
+    String fileInputDefaultText();
+
+    String folderInputDefaultLabel();
+
+    String folderInputDefaultText();
+
     String textInputExcludeArgument();
 
     String multiLineTextLabel();

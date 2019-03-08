@@ -68,4 +68,7 @@ public interface AppsWidgetsPropertyPanelLabels extends Messages, ArgumentGroupL
 
     String validatorRulesLabel();
 
+    String fileInputDefaultLabel();
+
+    String folderInputDefaultLabel();
 }
