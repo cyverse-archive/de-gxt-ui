@@ -3,11 +3,6 @@ package org.iplantc.de.apps.client.presenter.details;
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.selection.AppDetailsDocSelected;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.DetailsCategoryClicked;
-import org.iplantc.de.apps.client.events.selection.DetailsHierarchyClicked;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.client.events.EventBus;
@@ -23,11 +18,10 @@ import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 
@@ -51,80 +45,59 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
     AppDetailsViewPresenterImpl() {
     }
 
-    @Override
-    public HandlerRegistration addAppFavoriteSelectedEventHandlers(final AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler handler) {
-        if(view == null){
-            throw new IllegalStateException("You must call 'go(..)' before calling this method");
-        }
-        return view.addAppFavoriteSelectedEventHandlers(handler);
-    }
 
     @Override
-    public HandlerRegistration addAppRatingDeselectedHandler(AppRatingDeselected.AppRatingDeselectedHandler handler) {
-        if(view == null){
-            throw new IllegalStateException("You must call 'go(..)' before calling this method");
-        }
-        return view.addAppRatingDeselectedHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addAppRatingSelectedHandler(AppRatingSelected.AppRatingSelectedHandler handler) {
-        if(view == null){
-            throw new IllegalStateException("You must call 'go(..)' before calling this method");
-        }
-        return view.addAppRatingSelectedHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addDetailsHierarchyClickedHandler(DetailsHierarchyClicked.DetailsHierarchyClickedHandler handler) {
-        if(view == null){
-            throw new IllegalStateException("You must call 'go(..)' before calling this method");
-        }
-        return view.addDetailsHierarchyClickedHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addDetailsCategoryClickedHandler(DetailsCategoryClicked.DetailsCategoryClickedHandler handler) {
-        if(view == null){
-            throw new IllegalStateException("You must call 'go(..)' before calling this method");
-        }
-        return view.addDetailsCategoryClickedHandler(handler);
-    }
-
-    @Override
-    public void go(final HasOneWidget widget,
-                   final App app,
+    public void go(final App app,
                    final String searchRegexPattern,
                    TreeStore<OntologyHierarchy> hierarchyTreeStore,
                    TreeStore<AppCategory> categoryTreeStore) {
         Preconditions.checkState(view == null, "Cannot call go(..) more than once");
 
         view = viewFactoryProvider.get().create(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
-        view.addAppDetailsDocSelectedHandler(AppDetailsViewPresenterImpl.this);
         view.addSaveMarkdownSelectedHandler(AppDetailsViewPresenterImpl.this);
-        widget.setWidget(view);
 
         eventBus.addHandler(AppUpdatedEvent.TYPE, view);
 
         // If the App has a wiki url, return before fetching app doc.
-        if (!Strings.isNullOrEmpty(app.getWikiUrl())){
-            return;
-        }
-        // Prefetch Docs
-        appUserService.getAppDoc(app, new AppsCallback<AppDoc>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable caught) {
-                // warn only for public app
-                if (app.isPublic()) {
-                    announcer.schedule(new ErrorAnnouncementConfig(appearance.getAppDocError(caught)));
+        if (Strings.isNullOrEmpty(app.getWikiUrl())) {
+            // Prefetch Docs
+            appUserService.getAppDoc(app, new AppsCallback<AppDoc>() {
+                @Override
+                public void onFailure(Integer statusCode,
+                                      Throwable caught) {
+                    // warn only for public app
+                    if (app.isPublic()) {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.getAppDocError(caught)));
+                    }
                 }
-            }
 
-            @Override
-            public void onSuccess(final AppDoc result) {
-                appDoc = result;
-            }
-        });
+                @Override
+                public void onSuccess(final AppDoc result) {
+                    appDoc = result;
+                }
+            });
+        }
+        view.load(this);
+    }
+
+    @Override
+    public void onAppFavoriteSelected(Splittable app) {
+
+    }
+
+    @Override
+    public void onAppRatingSelected(Splittable app) {
+
+    }
+
+    @Override
+    public void onAppRatingDeSelected(Splittable app) {
+
+    }
+
+    @Override
+    public void onClose() {
+        view.onClose();
     }
 
     @Override

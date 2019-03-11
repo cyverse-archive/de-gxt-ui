@@ -8,7 +8,6 @@ import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEv
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.factory.CommunitiesViewFactory;
-import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
@@ -22,7 +21,6 @@ import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -46,7 +44,7 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
 
     protected String searchRegexPattern;
     @Inject IplantAnnouncer announcer;
-    @Inject AsyncProviderWrapper<AppDetailsDialog> appDetailsDlgAsyncProvider;
+
     @Inject AppServiceFacade appService;
     @Inject GroupServiceFacade groupServiceFacade;
     @Inject AppUserServiceFacade appUserService;

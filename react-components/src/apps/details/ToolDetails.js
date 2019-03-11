@@ -39,8 +39,8 @@ class ToolDetailsV1 extends Component {
                     tools.map((toolInfo, index) => (
                         <ExpansionPanel key={index}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <p className={labelClass}>{toolInfo.name}:</p>
-                                <p className={valueClass}>{toolInfo.description}</p>
+                                <p><b>{toolInfo.name}:</b>
+                                    {toolInfo.description}</p>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <table>

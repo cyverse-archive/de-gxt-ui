@@ -4,54 +4,162 @@ import AppInfoDialog from "../../../src/apps/details/AppInfoDialog";
 
 class AppInfoDialogTest extends Component {
     render()  {
-        const appDetals = {
-            "integration_date": "2015-08-04T16:30:16Z",
-            "description": "Counts the number of words in a file",
+        const appDetals ={
+            "is_favorite": true,
+            "beta": false,
             "deleted": false,
-            "integrator_name": "Default DE Tools",
             "disabled": false,
-            "suggested_categories": [],
+            "is_public": true,
+            "can_run": true,
+            "step_count": 1,
+            "app_type": "DE",
+            "description": "This App will add existing reference annotation information to newly assembled transcripts in GFF format.",
+            "id": "676846d4-854a-11e4-980d-7f0fcca75dbb",
+            "integrator_email": "rogerab@email.arizona.edu",
+            "integrator_name": "Roger Barthelson",
+            "name": "Annotate transcripts",
+            "permission": "read",
+            "system_id": "de",
+            "wiki_url": "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
+            "edited_date": "1369428963000",
+            "integration_date": "1369431889000",
+            "references": ["", "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html"],
+            "categories": [{
+                "id": "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
+                "name": "Assembly Annotation"
+            }],
+            "suggested_categories": [{
+                "id": "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
+                "name": "Assembly Annotation"
+            }],
             "hierarchies": [{
+                "iri": "http://edamontology.org/topic_0003",
+                "label": "Topic",
+                "subclasses": [{
+                    "iri": "http://edamontology.org/topic_3307",
+                    "label": "Computational biology",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/topic_3321",
+                        "label": "Molecular genetics",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/topic_0203",
+                            "label": "Gene expression",
+                            "subclasses": [{
+                                "iri": "http://edamontology.org/topic_3308",
+                                "label": "Transcriptomics"
+                            }]
+                        }]
+                    }]
+                }, {
+                    "iri": "http://edamontology.org/topic_3391",
+                    "label": "Omics",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/topic_0622",
+                        "label": "Genomics",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/topic_3308",
+                            "label": "Transcriptomics"
+                        }]
+                    }]
+                }, {
+                    "iri": "http://edamontology.org/topic_3070",
+                    "label": "Biology",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/topic_3053",
+                        "label": "Genetics",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/topic_3321",
+                            "label": "Molecular genetics",
+                            "subclasses": [{
+                                "iri": "http://edamontology.org/topic_0203",
+                                "label": "Gene expression",
+                                "subclasses": [{
+                                    "iri": "http://edamontology.org/topic_3308",
+                                    "label": "Transcriptomics"
+                                }]
+                            }]
+                        }]
+                    }]
+                }]
+            }, {
                 "iri": "http://edamontology.org/operation_0004",
                 "label": "Operation",
                 "subclasses": [{
-                    "iri": "http://edamontology.org/operation_2409",
-                    "label": "Data handling"
+                    "iri": "http://edamontology.org/operation_0226",
+                    "label": "Annotation",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/operation_0361",
+                        "label": "Sequence annotation",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/operation_3672",
+                            "label": "Gene functional annotation"
+                        }]
+                    }]
+                }, {
+                    "iri": "http://edamontology.org/operation_2428",
+                    "label": "Validation",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/operation_3180",
+                        "label": "Sequence assembly validation"
+                    }]
+                }, {
+                    "iri": "http://edamontology.org/operation_2945",
+                    "label": "Analysis",
+                    "subclasses": [{
+                        "iri": "http://edamontology.org/operation_2403",
+                        "label": "Sequence analysis",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/operation_2478",
+                            "label": "Nucleic acid sequence analysis",
+                            "subclasses": [{
+                                "iri": "http://edamontology.org/operation_3180",
+                                "label": "Sequence assembly validation"
+                            }]
+                        }]
+                    }, {
+                        "iri": "http://edamontology.org/operation_2501",
+                        "label": "Nucleic acid analysis",
+                        "subclasses": [{
+                            "iri": "http://edamontology.org/operation_2478",
+                            "label": "Nucleic acid sequence analysis",
+                            "subclasses": [{
+                                "iri": "http://edamontology.org/operation_3180",
+                                "label": "Sequence assembly validation"
+                            }]
+                        }]
+                    }]
                 }]
             }],
-            "name": "DE Word Count",
             "tools": [{
-                "name": "wc",
+                "attribution": "rogerab",
+                "description": "gffintersect",
+                "id": "66fbef16-854a-11e4-9d48-ab603f97c137",
+                "location": "/usr/local2/AnnotateTranscripts/annotate_transcripts",
+                "name": "gffintersect_wrapper.pl",
                 "type": "executable",
-                "description": "Word Count",
-                "id": "85cf7a33-386b-46fe-87c7-8c9d59972624",
-                "location": "",
+                "version": "1.0",
                 "container": {
                     "image": {
-                        "name": "discoenv/url-import",
+                        "deprecated": true,
+                        "name": "docker.cyverse.org/backwards-compat",
                         "tag": "latest",
-                        "url": "https://registry.hub.docker.com/u/discoenv/url-import/",
-                        "deprecated": false
+                        "url": "https://registry.hub.docker.com/u/discoenv/backwards-compat"
                     }
-                },
-                "version": "0.0.1"
+                }
             }],
-            "system_id": "de",
-            "references": [],
-            "categories": [{
-                "id": "5401bd14-6c14-4470-aedd-57b47ea1b979",
-                "name": "Beta"
-            }],
-            "id": "67d15627-22c5-42bd-8daf-9af5deecceab",
-            "edited_date": "2019-02-19T17:02:42Z",
-            "job_stats": {
-                "job_count_completed": 32,
-                "job_last_completed": "2019-03-07T08:03:23Z"
+            "rating": {
+                "average": 4,
+                "total": 1,
+                "user": 4
             },
-            "integrator_email": "support@iplantcollaborative.org"
+            "job_stats": {},
+            "pipeline_eligibility": {
+                "is_valid": true,
+                "reason": ""
+            }
         };
         return (
-            <AppInfoDialog details={appDetals} dialogOpen={true}/>
+            <AppInfoDialog app={appDetals} dialogOpen={true}/>
         )
     }
 }

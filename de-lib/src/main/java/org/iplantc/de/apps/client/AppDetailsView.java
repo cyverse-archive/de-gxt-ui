@@ -1,23 +1,16 @@
 package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.apps.client.events.selection.AppDetailsDocSelected;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.DetailsCategoryClicked;
-import org.iplantc.de.apps.client.events.selection.DetailsHierarchyClicked;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
-import com.google.gwt.editor.client.Editor;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
@@ -33,15 +26,8 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public interface AppDetailsView extends IsWidget,
-                                        Editor<App>,
                                         AppUpdatedEvent.AppUpdatedEventHandler,
-                                        AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                        AppDetailsDocSelected.HasAppDetailsDocSelectedHandlers,
-                                        SaveMarkdownSelected.HasSaveMarkdownSelectedHandlers,
-                                        AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                        AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                        DetailsHierarchyClicked.HasDetailsHierarchyClickedHandlers,
-                                        DetailsCategoryClicked.HasDetailsCategoryClickedHandlers {
+                                        SaveMarkdownSelected.HasSaveMarkdownSelectedHandlers {
 
     @JsType
     interface AppDetailsAppearance {
@@ -123,18 +109,28 @@ public interface AppDetailsView extends IsWidget,
 
     }
 
-    interface Presenter extends AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                DetailsHierarchyClicked.HasDetailsHierarchyClickedHandlers,
-                                DetailsCategoryClicked.HasDetailsCategoryClickedHandlers{
+    @JsType
+    interface Presenter {
 
-        void go(HasOneWidget widget,
-                App app,
+        void go(App app,
                 String searchRegexPattern,
                 TreeStore<OntologyHierarchy> hierarchyTreeStore,
                 TreeStore<AppCategory> categoryTreeStore);
+
+        void onAppFavoriteSelected(Splittable app);
+
+        void onAppRatingSelected(Splittable app);
+
+        void onAppRatingDeSelected(Splittable app);
+
+        void onClose();
+
     }
+
+
+    void load(Presenter presenter);
+
+    void onClose();
 
     /**
      * Displays the documentation window

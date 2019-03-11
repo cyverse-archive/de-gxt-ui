@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client.presenter.hierarchies;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -20,7 +21,6 @@ import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.ParentFilteredHierarchyCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
-import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -33,12 +33,12 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -68,12 +68,10 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     class AppDetailsCallback extends AppsCallback<App> {
 
-        private final AppDetailsDialog dlg;
         private App app;
 
-        public AppDetailsCallback(App app, AppDetailsDialog dlg) {
+        public AppDetailsCallback(App app) {
             this.app = app;
-            this.dlg = dlg;
         }
 
         @Override
@@ -99,16 +97,22 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
             }
             addHierarchies(hierarchyTreeStore, null, hierarchies);
 
-            dlg.show(appDetails,
-                     searchRegexPattern,
-                     hierarchyTreeStore,
-                     categoryTreeStore,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this);
+            presenterProvider.get(new AsyncCallback<AppDetailsView.Presenter>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    ErrorHandler.post(caught);
+                }
+
+                @Override
+                public void onSuccess(final AppDetailsView.Presenter result) {
+                    result.go(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
+                }
+            });
+
+
         }
+
+
     }
 
     public class FilteredHierarchyCallback extends AppsCallback<OntologyHierarchy> {
@@ -153,7 +157,8 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Inject IplantAnnouncer announcer;
     OntologyUtil ontologyUtil;
-    @Inject AsyncProvider<AppDetailsDialog> appDetailsDlgAsyncProvider;
+    @Inject
+    AsyncProviderWrapper<AppDetailsView.Presenter> presenterProvider;
     @Inject AppUserServiceFacade appUserService;
     DETabPanel viewTabPanel;
     private OntologyServiceFacade serviceFacade;
@@ -231,19 +236,8 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
-        appDetailsDlgAsyncProvider.get(new AsyncCallback<AppDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(final AppDetailsDialog dlg) {
                 App app = event.getApp();
-                appUserService.getAppDetails(app,
-                                             new AppDetailsCallback(app, dlg));
-            }
-        });
+                appUserService.getAppDetails(app, new AppDetailsCallback(app));
     }
 
     void createViewTabs(final OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {

@@ -17,7 +17,7 @@ import AppDetails from "./AppDetails";
 import { injectIntl } from "react-intl";
 
 function AppInfoDialog(props) {
-    const {dialogOpen, details, intl} = props;
+    const {dialogOpen, app, presenter, intl} = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
 
@@ -29,14 +29,14 @@ function AppInfoDialog(props) {
 
     return (
         <Dialog open={dialogOpen} fullWidth={true}>
-            <DEDialogHeader heading={details.name}/>
-            <DialogContent style={{minHeight: 500}}>
+            <DEDialogHeader heading={app.name} onClose={() => presenter.onClose()}/>
+            <DialogContent style={{minHeight: 600}}>
                 <Tabs value={value} onChange={handleChange}>
                     <Tab label={appInfoLabel}/>
                     <Tab label={toolInfoLabel}/>
                 </Tabs>
-                {value === 0 && <AppDetails details={details}/>}
-                {value === 1 && <ToolDetails details={details.tools}/>}
+                {value === 0 && <AppDetails details={app}/>}
+                {value === 1 && <ToolDetails details={app.tools}/>}
             </DialogContent>
         </Dialog>
     );

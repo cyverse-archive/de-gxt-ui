@@ -13,6 +13,9 @@ import goldstar from "../../../src/resources/images/star-gold.gif";
 import whitestar from "../../../src/resources/images/star-white.gif";
 import redstar from "../../../src/resources/images/star-red.gif";
 import intlData from "../../apps/messages";
+import CategoryTree from "./CategoryTree";
+import formatDate from "../../util/DateFormatter";
+
 
 class AppDetails extends Component {
 
@@ -24,8 +27,8 @@ class AppDetails extends Component {
         const {details} = this.props;
         if (details) {
             return (
-                <Paper style={{margin: 10}}>
-                    <Grid container spacing={24}>
+                <Paper style={{margin: 5, fontSize:11}}>
+                    <Grid container spacing={24} style={{paddingLeft: 5}}>
                         <Grid item xs={12}>
                             <b>{getMessage("descriptionLabel")}:</b> {details.description}
                         </Grid>
@@ -33,7 +36,7 @@ class AppDetails extends Component {
                             <Typography variant="h6">{getMessage("detailsLabel")}</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("publishedOn")}</b> {details.integration_date}
+                            <b>{getMessage("publishedOn")}</b> {formatDate(details.integration_date)}
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("integratorName")}</b> {details.integrator_name}
@@ -47,7 +50,7 @@ class AppDetails extends Component {
                         <Grid item xs={12}>
                             <b>{getMessage("detailsRatingLbl")} </b>
                             <Rating
-                                placeholderRating={3.5}
+                                placeholderRating={details.rating.average}
                                 emptySymbol={<img src={whitestar} className="icon" alt="white star"/>}
                                 fullSymbol={<img src={goldstar} className="icon" alt="gold star"/>}
                                 placeholderSymbol={<img src={redstar} className="icon"
@@ -55,18 +58,24 @@ class AppDetails extends Component {
                                 fractions={2}
                                 readonly={true}
                             />
-                            <span style={{padding: 3}}>
-                              (3)
+                            <span style={{paddingLeft: 3}}>
+                                ({details.rating.total})
                         </span>
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("analysesCompleted")}</b> {details.job_stats.job_count_completed}
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("detailsLastCompleted")}</b> {details.job_stats.job_last_completed}
+                            <b>{getMessage("detailsLastCompleted")}</b> {formatDate(details.job_stats.job_last_completed)}
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("url")}</b> URL
+                        </Grid>
+                        <Grid item xs={12}>
+                            <b>{getMessage("category")}</b>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <CategoryTree hierarchies={details.hierarchies}/>
                         </Grid>
                     </Grid>
                 </Paper>
