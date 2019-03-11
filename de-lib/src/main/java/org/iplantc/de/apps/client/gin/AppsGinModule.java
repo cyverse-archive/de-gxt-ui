@@ -32,6 +32,7 @@ import org.iplantc.de.apps.client.views.WorkspaceViewImpl;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.communities.CommunitiesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
+
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;

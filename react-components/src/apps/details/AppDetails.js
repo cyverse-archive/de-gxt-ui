@@ -334,6 +334,7 @@ class AppDetails extends Component {
                         </DialogContent>
                     </Dialog>
                 </React.Fragment>
+
             );
         } else {
             return null;

@@ -25,6 +25,7 @@ import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+
 import com.google.web.bindery.autobean.shared.Splittable;
 
 /**

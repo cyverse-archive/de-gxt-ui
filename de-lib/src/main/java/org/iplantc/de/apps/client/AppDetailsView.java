@@ -60,9 +60,9 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
 
     }
 
-
     void load(Presenter presenter);
 
     void onClose();
+
 }
 
