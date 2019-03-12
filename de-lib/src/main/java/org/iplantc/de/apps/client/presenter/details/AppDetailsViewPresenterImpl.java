@@ -2,7 +2,6 @@ package org.iplantc.de.apps.client.presenter.details;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.apps.client.events.selection.AppDetailsDocSelected;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.client.events.EventBus;
@@ -18,7 +17,6 @@ import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -29,7 +27,6 @@ import com.sencha.gxt.data.shared.TreeStore;
  * @author jstroot
  */
 public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
-                                                    AppDetailsDocSelected.AppDetailsDocSelectedHandler,
                                                     SaveMarkdownSelected.SaveMarkdownSelectedHandler {
 
     @Inject AppUserServiceFacade appUserService;
@@ -101,13 +98,9 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
     }
 
     @Override
-    public void onAppDetailsDocSelected(AppDetailsDocSelected event) {
-        if (Strings.isNullOrEmpty(event.getApp().getWikiUrl())) {
+    public void onAppDetailsDocSelected() {
             Preconditions.checkNotNull(appDoc, "AppDoc should have been pre-fetched in go(..) method!");
             view.showDoc(appDoc);
-        } else {
-            Window.open(event.getApp().getWikiUrl(), "_blank", "");
-        }
     }
 
     @Override

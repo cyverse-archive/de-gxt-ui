@@ -125,6 +125,8 @@ public interface AppDetailsView extends IsWidget,
 
         void onClose();
 
+        void onAppDetailsDocSelected();
+
     }
 
 

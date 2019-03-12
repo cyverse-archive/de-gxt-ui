@@ -4,16 +4,12 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { hasClipboardAPI, copySelection } from "../clipboardFunctions";
+import { copySelection, hasClipboardAPI } from "../clipboardFunctions";
+import PropTypes from "prop-types";
 
 class CopyTextArea extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            btnText: props.btnText,
-        };
-
         // This binding is necessary to make `this` work in the callback
         this.onCopyText = this.onCopyText.bind(this);
     }
@@ -43,6 +39,7 @@ class CopyTextArea extends Component {
     }
 
     render() {
+        const {multiline, btnText} = this.props;
         return (
             <div>
                 <TextField
@@ -60,12 +57,23 @@ class CopyTextArea extends Component {
                         onClick={this.onCopyText}
                         style={{ padding: 2 }}
                     >
-                        {this.state.btnText}
+                        {btnText}
                     </Button>
                 )}
             </div>
         );
     }
 }
+
+CopyTextArea.defaultProps = {
+    multiline: false,
+    btnText: "Copy",
+};
+
+CopyTextArea.propTypes = {
+    multiline: PropTypes.bool,
+    text: PropTypes.string.isRequired,
+    btnText: PropTypes.string,
+};
 
 export default CopyTextArea;
