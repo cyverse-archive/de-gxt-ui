@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.client;
 
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.client.models.HasId;
@@ -42,7 +43,8 @@ public interface CommunitiesView extends IsWidget,
      */
     interface Presenter extends CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler,
                                 CommunitySelectionChangedEvent.HasCommunitySelectionChangedEventHandlers,
-                                AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler {
+                                AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
+                                AppSearchResultLoadEvent.AppSearchResultLoadEventHandler {
 
         /**
          * @return the community the user currently has selected
