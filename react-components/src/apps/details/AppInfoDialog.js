@@ -35,7 +35,7 @@ function AppInfoDialog(props) {
                     <Tab label={appInfoLabel}/>
                     <Tab label={toolInfoLabel}/>
                 </Tabs>
-                {value === 0 && <AppDetails details={app}/>}
+                {value === 0 && <AppDetails details={app} presenter={presenter}/>}
                 {value === 1 && <ToolDetails details={app.tools}/>}
             </DialogContent>
         </Dialog>
