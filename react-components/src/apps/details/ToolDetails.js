@@ -11,6 +11,7 @@ import intlData from "../messages";
 import styles from "../style";
 import injectSheet from "react-jss";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
+import Typography from "@material-ui/core/Typography";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {
@@ -39,8 +40,8 @@ class ToolDetailsV1 extends Component {
                     tools.map((toolInfo, index) => (
                         <ExpansionPanel key={index}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <p><b>{toolInfo.name}:</b>
-                                    {toolInfo.description}</p>
+                                <Typography variant="caption"> {toolInfo.name}:
+                                    {toolInfo.description}</Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <table>
