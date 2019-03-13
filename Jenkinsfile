@@ -49,7 +49,7 @@ timestamps {
               sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
               sh "docker run ${dockerCacheVolumes} --name ${dockerNpmTestRunner} ${dockerRepoBuild} ./gradlew npmTest"
               sh "docker cp ${dockerTestRunner}:${dockerSrcRootDir}/de-lib/build/test-results jenkins_tests"
-              sh "docker cp ${dockerNpmTestRunner}:${dockerSrcRootDir}/react-components/test-report.xml jenkins_test/npm-test-results.xml"
+              sh "docker cp ${dockerNpmTestRunner}:${dockerSrcRootDir}/react-components/test-report.xml jenkins_tests/npm-test-results.xml"
 
               junit "jenkins_tests/*.xml"
               milestone 41
