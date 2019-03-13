@@ -67,4 +67,9 @@ public class ManageCommunitiesViewDefaultAppearance implements ManageCommunities
     public String windowBackground() {
         return style.whiteBackground();
     }
+
+    @Override
+    public String appSelectionHeader() {
+        return displayStrings.appSelectionHeader();
+    }
 }

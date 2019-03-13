@@ -13,7 +13,7 @@ import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.Status.BoxStatusAppearance;
 import com.sencha.gxt.widget.core.client.button.ButtonBar;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
+import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
@@ -32,10 +32,14 @@ public class AppSelectionDialog extends Dialog {
 
     private Presenter presenter;
 
-    private final Status appCountStatus;
-    private final Status lastAppStatus;
+    private Status appCountStatus;
+    private Status lastAppStatus;
 
     public AppSelectionDialog() {
+        this(true);
+    }
+
+    public AppSelectionDialog(boolean showAppCounts) {
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CLOSE);
         setHeading(I18N.DISPLAY.selectWindowTitle());
         setSize("800", "400"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -43,8 +47,6 @@ public class AppSelectionDialog extends Dialog {
         setAutoHide(false);
         setResizable(false);
         setHideOnButtonClick(false);
-        setButtonAlign(BoxLayoutPack.START);
-
         ButtonBar btnBar = getButtonBar();
 
         TextButton okBtn = (TextButton)btnBar.getItemByItemId(PredefinedButton.OK.name());
@@ -57,14 +59,18 @@ public class AppSelectionDialog extends Dialog {
             }
         });
 
-        appCountStatus = new Status((BoxStatusAppearance)GWT.create(BoxStatusAppearance.class));
-        lastAppStatus = new Status((BoxStatusAppearance)GWT.create(BoxStatusAppearance.class));
+        if (showAppCounts) {
+            setButtonAlign(BoxLayoutContainer.BoxLayoutPack.START);
 
-        btnBar.insert(appCountStatus, 0);
-        btnBar.insert(lastAppStatus, 1);
-        btnBar.insert(new FillToolItem(), 2);
+            appCountStatus = new Status((BoxStatusAppearance)GWT.create(BoxStatusAppearance.class));
+            lastAppStatus = new Status((BoxStatusAppearance)GWT.create(BoxStatusAppearance.class));
 
-        updateStatusBar(0, null);
+            btnBar.insert(appCountStatus, 0);
+            btnBar.insert(lastAppStatus, 1);
+            btnBar.insert(new FillToolItem(), 2);
+
+            updateStatusBar(0, null);
+        }
     }
 
     public void setPresenter(Presenter presenter) {

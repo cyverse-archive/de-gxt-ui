@@ -53,6 +53,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     private CollaboratorsUtil collaboratorsUtil;
     private ManageCommunitiesView view;
     private AppSelectionDialog appSelectView;
+    private ManageCommunitiesView.Appearance appearance;
     private AppsView.Presenter appsPresenter;
     private ReactSuccessCallback selectAppsCallback;
     @Inject AsyncProviderWrapper<RetagAppsConfirmationDialog> retagAppsConfirmationDlgProvider;
@@ -67,6 +68,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
                                           UserInfo userInfo,
                                           CollaboratorsUtil collaboratorsUtil,
                                           ManageCommunitiesView view,
+                                          ManageCommunitiesView.Appearance appearance,
                                           AppsView.Presenter appsPresenter) {
         this.serviceFacade = serviceFacade;
         this.appUserServiceFacade = appUserServiceFacade;
@@ -77,6 +79,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         this.userInfo = userInfo;
         this.collaboratorsUtil = collaboratorsUtil;
         this.view = view;
+        this.appearance = appearance;
         this.appsPresenter = appsPresenter;
     }
 
@@ -312,7 +315,8 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     @Override
     public void onAddCommunityAppsClicked(ReactSuccessCallback selectAppsCallback) {
         this.selectAppsCallback = selectAppsCallback;
-        appSelectView = new AppSelectionDialog();
+        appSelectView = new AppSelectionDialog(false);
+        appSelectView.setHeading(appearance.appSelectionHeader());
         appSelectView.addDialogHideHandler(event -> selectAppsCallback.onSuccess(null));
         appSelectView.setPresenter(this);
         appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null, null, false);
