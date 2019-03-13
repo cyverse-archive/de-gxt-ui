@@ -201,8 +201,9 @@ class EditCommunity extends Component {
     };
 
     onAddCommunityAppsClicked() {
-        const {community} = this.props;
+        const {community, isSelectAppsDlgOpen} = this.props;
         new Promise((resolve, reject) => {
+            isSelectAppsDlgOpen(true);
             this.props.presenter.onAddCommunityAppsClicked(resolve, reject);
         }).then(app => {
             if (app && !this.isDuplicateApp(app)) {
@@ -216,7 +217,11 @@ class EditCommunity extends Component {
                     this.addApp(app)
                 }
             }
-        }).catch(() => this.setState({loading: false}));
+            isSelectAppsDlgOpen(false);
+        }).catch(() => {
+            this.setState({loading: false});
+            isSelectAppsDlgOpen(false);
+        });
     }
 
     isDuplicateApp(app) {
@@ -527,6 +532,7 @@ EditCommunity.propTypes = {
         name: PropTypes.string.isRequired,
         id: PropTypes.string.isRequired,
     }),
+    isSelectAppsDlgOpen: PropTypes.func.isRequired,
     presenter: PropTypes.shape({
         fetchCommunityAdmins: PropTypes.func.isRequired,
         fetchCommunityApps: PropTypes.func.isRequired,
