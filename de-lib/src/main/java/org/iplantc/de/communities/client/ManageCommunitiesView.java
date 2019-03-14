@@ -1,6 +1,5 @@
 package org.iplantc.de.communities.client;
 
-import org.iplantc.de.client.models.HasStringList;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.communities.client.views.ReactCommunities;
@@ -31,6 +30,8 @@ public interface ManageCommunitiesView extends IsWidget {
         String windowHeight();
 
         String windowBackground();
+
+        String appSelectionHeader();
     }
 
     @JsType

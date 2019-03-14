@@ -86,6 +86,7 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addCopyAppSelectedHandler(categoriesPresenterMock);
         verify(toolbarViewMock).addCopyWorkflowSelectedHandler(categoriesPresenterMock);
         verify(toolbarViewMock).addRunAppSelectedHandler(listPresenterMock);
+        verify(toolbarViewMock).addAppSearchResultLoadEventHandler(communitiesPresenterMock);
         verify(toolbarViewMock).addAppSearchResultLoadEventHandler(categoriesPresenterMock);
         verify(toolbarViewMock).addAppSearchResultLoadEventHandler(listPresenterMock);
         verify(toolbarViewMock).addAppSearchResultLoadEventHandler(hierarchiesPresenter);
@@ -94,7 +95,7 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addRefreshAppsSelectedEventHandler(isA(AppsViewPresenterImpl.class));
         verify(toolbarViewMock).addManageToolsClickedEventHandler(toolbarPresenterMock);
 
-        verify(toolbarPresenterMock, times(15)).getView();
+        verify(toolbarPresenterMock, times(16)).getView();
 
 
         verifyNoMoreInteractions(viewFactoryMock,

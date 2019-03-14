@@ -33,6 +33,10 @@ const styles = theme => ({
         height: "100%",
     },
 
+    hidden: {
+        visibility: "hidden"
+    },
+
     table: {
         height: "calc(100% - " + theme.mixins.toolbar['@media (min-width:600px)'].minHeight + "px)",
         overflow: "auto",

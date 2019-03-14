@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client.presenter.communities;
 import static org.iplantc.de.apps.client.CommunitiesView.COMMUNITIES_ROOT;
 
 import org.iplantc.de.apps.client.CommunitiesView;
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
@@ -177,5 +178,10 @@ public class CommunitiesPresenterImpl implements CommunitiesView.Presenter {
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+    }
+
+    @Override
+    public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
+        view.getTree().getSelectionModel().deselectAll();
     }
 }

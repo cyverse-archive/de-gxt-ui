@@ -6,4 +6,6 @@ public interface CommunitiesDisplayStrings extends Messages {
     String windowHeading();
 
     String communitiesHelp();
+
+    String appSelectionHeader();
 }

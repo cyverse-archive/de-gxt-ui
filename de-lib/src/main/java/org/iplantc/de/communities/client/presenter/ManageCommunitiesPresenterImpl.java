@@ -11,7 +11,6 @@ import org.iplantc.de.client.models.collaborators.SubjectMemberList;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
-import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
 import org.iplantc.de.client.services.AppUserServiceFacade;
@@ -28,7 +27,6 @@ import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -55,6 +53,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     private CollaboratorsUtil collaboratorsUtil;
     private ManageCommunitiesView view;
     private AppSelectionDialog appSelectView;
+    private ManageCommunitiesView.Appearance appearance;
     private AppsView.Presenter appsPresenter;
     private ReactSuccessCallback selectAppsCallback;
     @Inject AsyncProviderWrapper<RetagAppsConfirmationDialog> retagAppsConfirmationDlgProvider;
@@ -69,6 +68,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
                                           UserInfo userInfo,
                                           CollaboratorsUtil collaboratorsUtil,
                                           ManageCommunitiesView view,
+                                          ManageCommunitiesView.Appearance appearance,
                                           AppsView.Presenter appsPresenter) {
         this.serviceFacade = serviceFacade;
         this.appUserServiceFacade = appUserServiceFacade;
@@ -79,6 +79,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         this.userInfo = userInfo;
         this.collaboratorsUtil = collaboratorsUtil;
         this.view = view;
+        this.appearance = appearance;
         this.appsPresenter = appsPresenter;
     }
 
@@ -314,11 +315,12 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     @Override
     public void onAddCommunityAppsClicked(ReactSuccessCallback selectAppsCallback) {
         this.selectAppsCallback = selectAppsCallback;
-        appSelectView = new AppSelectionDialog();
+        appSelectView = new AppSelectionDialog(false);
+        appSelectView.setHeading(appearance.appSelectionHeader());
+        appSelectView.addDialogHideHandler(event -> selectAppsCallback.onSuccess(null));
         appSelectView.setPresenter(this);
         appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null, null, false);
         appSelectView.show();
-        appSelectView.setZIndex(1000000);
     }
 
     @Override

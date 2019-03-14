@@ -24,13 +24,15 @@ class EditCommunityDialog extends Component {
         super(props);
 
         this.state = {
-            saveCommunity: false
+            saveCommunity: false,
+            isSelectAppsDlgOpen: false,
         };
 
         [
             'onDialogBtnClicked',
             'handleCloseEditDialog',
             'cancelSave',
+            'isSelectAppsDlgOpen'
         ].forEach((fn) => this[fn] = this[fn].bind(this));
     }
 
@@ -52,6 +54,10 @@ class EditCommunityDialog extends Component {
         });
     }
 
+    isSelectAppsDlgOpen(open) {
+        this.setState({isSelectAppsDlgOpen: open});
+    }
+
     render() {
         const {
             community,
@@ -63,10 +69,12 @@ class EditCommunityDialog extends Component {
             presenter,
             currentUser,
             onCommunitySaved,
+            classes,
         } = this.props;
 
         const {
-            saveCommunity
+            saveCommunity,
+            isSelectAppsDlgOpen,
         } = this.state;
 
         const communityName = community !== null ? collaboratorsUtil.getSubjectDisplayName(community) : null;
@@ -76,6 +84,7 @@ class EditCommunityDialog extends Component {
                     fullWidth={true}
                     maxWidth='lg'
                     onClose={onClose}
+                    classes={{root: isSelectAppsDlgOpen ? classes.hidden : null}}
                     id={ids.EDIT_DLG}>
                 <DEDialogHeader heading={<DialogHeader community={community}
                                                        communityName={communityName}
@@ -93,6 +102,7 @@ class EditCommunityDialog extends Component {
                                    presenter={presenter}
                                    saveCommunity={saveCommunity}
                                    cancelSave={this.cancelSave}
+                                   isSelectAppsDlgOpen={this.isSelectAppsDlgOpen}
                                    onCommunitySaved={onCommunitySaved}
                                    handleCloseEditDlg={this.handleCloseEditDialog}/>
                 </DialogContent>
