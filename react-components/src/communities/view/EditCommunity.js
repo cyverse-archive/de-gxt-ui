@@ -501,6 +501,9 @@ class EditCommunity extends Component {
                                 <AddIcon/>
                                 {getMessage('apps')}
                             </Fab>
+                            <Typography variant='caption' className={classes.textBlurb}>
+                                {getMessage('explainCommunityApps')}
+                            </Typography>
                         </Toolbar>
                         }
                         <AppGridListing parentId={parentId}

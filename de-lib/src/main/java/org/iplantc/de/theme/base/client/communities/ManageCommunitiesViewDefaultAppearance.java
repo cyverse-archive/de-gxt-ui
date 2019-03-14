@@ -72,4 +72,9 @@ public class ManageCommunitiesViewDefaultAppearance implements ManageCommunities
     public String appSelectionHeader() {
         return displayStrings.appSelectionHeader();
     }
+
+    @Override
+    public String agaveAppsNotSupportedToolTip() {
+        return displayStrings.agaveAppsNotSupportedToolTip();
+    }
 }

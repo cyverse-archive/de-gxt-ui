@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.client;
 
+import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
@@ -81,7 +82,9 @@ public interface AppsView extends IsWidget,
 
         void setWestPanelWidth(String width);
 
-        public boolean isDetailsCollapsed();
+        boolean isDetailsCollapsed();
+
+        void addAppSelectionChangedHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler);
     }
 
     DETabPanel getCategoryTabPanel();

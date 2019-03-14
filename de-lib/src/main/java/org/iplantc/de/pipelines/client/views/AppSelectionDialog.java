@@ -16,6 +16,7 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
+import com.sencha.gxt.widget.core.client.tips.ToolTipConfig;
 import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
 
 /**
@@ -34,6 +35,7 @@ public class AppSelectionDialog extends Dialog {
 
     private Status appCountStatus;
     private Status lastAppStatus;
+    TextButton okBtn;
 
     public AppSelectionDialog() {
         this(true);
@@ -49,7 +51,7 @@ public class AppSelectionDialog extends Dialog {
         setHideOnButtonClick(false);
         ButtonBar btnBar = getButtonBar();
 
-        TextButton okBtn = (TextButton)btnBar.getItemByItemId(PredefinedButton.OK.name());
+        okBtn = (TextButton)btnBar.getItemByItemId(PredefinedButton.OK.name());
         okBtn.setText(I18N.DISPLAY.add());
         okBtn.addSelectHandler(new SelectHandler() {
 
@@ -94,5 +96,18 @@ public class AppSelectionDialog extends Dialog {
             SuccessAnnouncementConfig config = new SuccessAnnouncementConfig(builder.toSafeHtml(), true);
             IplantAnnouncer.getInstance().schedule(config);
         }
+    }
+
+    public void disableAddAppBtn(String tooltip) {
+        okBtn.disable();
+        ToolTipConfig config = new ToolTipConfig();
+        config.setShowDelay(0);
+        config.setBody(tooltip);
+        okBtn.setToolTipConfig(config);
+    }
+
+    public void enableAddAppBtn() {
+        okBtn.enable();
+        okBtn.removeToolTip();
     }
 }
