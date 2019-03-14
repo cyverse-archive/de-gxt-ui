@@ -19,6 +19,7 @@ export default {
         editCommunityTitle: "Edit {name}",
         emptyField: "This field is required",
         explainCommunityAdmin: "A community admin has the ability to help manage the community. Admins can add or remove other community admins and add or remove apps to the community.",
+        explainCommunityApps: "NOTE: Adding Agave/HPC apps is not currently supported.",
         invalidColonChar: "Invalid character: ':'",
         joinCommunity: "Join",
         leaveCommunity: "Leave",

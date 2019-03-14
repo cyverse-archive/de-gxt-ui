@@ -8,4 +8,6 @@ public interface CommunitiesDisplayStrings extends Messages {
     String communitiesHelp();
 
     String appSelectionHeader();
+
+    String agaveAppsNotSupportedToolTip();
 }

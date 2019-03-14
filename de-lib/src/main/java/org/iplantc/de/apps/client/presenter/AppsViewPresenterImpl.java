@@ -7,6 +7,8 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.WorkspaceView;
+import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.client.models.HasId;
@@ -205,4 +207,8 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         return view.isNavPanelCollapsed();
     }
 
+    @Override
+    public void addAppSelectionChangedHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler) {
+        appsListPresenter.addAppSelectionChangedEventHandler(handler);
+    }
 }

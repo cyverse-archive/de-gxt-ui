@@ -32,6 +32,8 @@ public interface ManageCommunitiesView extends IsWidget {
         String windowBackground();
 
         String appSelectionHeader();
+
+        String agaveAppsNotSupportedToolTip();
     }
 
     @JsType
