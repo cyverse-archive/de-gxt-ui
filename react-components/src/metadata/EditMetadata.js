@@ -22,6 +22,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import Popover from "@material-ui/core/Popover";
@@ -55,6 +56,7 @@ class EditMetadata extends Component {
 
         [
             "closeMetadataDialog",
+            "confirmCloseMetadataDialog",
             "closeDiscardChangesDialog",
             "handleTabChange",
             "handleSelectAVU",
@@ -98,6 +100,14 @@ class EditMetadata extends Component {
     }
 
     closeMetadataDialog() {
+        const { dirty, editable, presenter } = this.props;
+
+        (dirty && editable) ?
+            this.setState({showDiscardChangesDialog: true}) :
+            presenter.closeMetadataDialog();
+    }
+
+    confirmCloseMetadataDialog() {
         this.closeDiscardChangesDialog();
         this.props.presenter.closeMetadataDialog();
     }
@@ -190,17 +200,6 @@ class EditMetadata extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
-                                    onClick={() =>
-                                        (dirty && editable) ?
-                                            this.setState({showDiscardChangesDialog: true}) :
-                                            this.props.presenter.closeMetadataDialog()
-                                    }
-                                    aria-label={formatMessage(intl, "close")}
-                                    color="inherit"
-                        >
-                            <CloseIcon />
-                        </IconButton>
                         <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
                             {getMessage(
                                 editable ? "dialogTitleEditMetadataFor" : "dialogTitleViewMetadataFor",
@@ -281,14 +280,13 @@ class EditMetadata extends Component {
                             <Typography className={classes.helpText}>{formatHTMLMessage("helpText")}</Typography>
                         </Popover>
 
-                        {editable &&
-                        <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
-                                disabled={loading || !dirty || isSubmitting || errors.error}
-                                onClick={handleSubmit}
-                                color="inherit"
+                        <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE_ICON)}
+                                    onClick={this.closeMetadataDialog}
+                                    aria-label={formatMessage(intl, "close")}
+                                    color="inherit"
                         >
-                            {getMessage("save")}
-                        </Button>}
+                            <CloseIcon />
+                        </IconButton>
                     </Toolbar>
                 </AppBar>
 
@@ -367,11 +365,29 @@ class EditMetadata extends Component {
                     }
                 </DialogContent>
 
+                <DialogActions>
+                    <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
+                                onClick={this.closeMetadataDialog}
+                                color="primary"
+                    >
+                        {getMessage("close")}
+                    </Button>
+                    {editable &&
+                    <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
+                            disabled={loading || !dirty || isSubmitting || errors.error}
+                            onClick={handleSubmit}
+                            color="primary"
+                            variant="contained"
+                    >
+                        {getMessage("save")}
+                    </Button>}
+                </DialogActions>
+
                 <ConfirmationDialog dialogOpen={showDiscardChangesDialog}
                                     debugId={ids.EDIT_METADATA_FORM}
                                     heading={getMessage("confirmDiscardChangesDialogHeader")}
                                     message={getMessage("confirmDiscardChangesDialogMsg")}
-                                    onOkBtnClick={this.closeMetadataDialog}
+                                    onOkBtnClick={this.confirmCloseMetadataDialog}
                                     onCancelBtnClick={this.closeDiscardChangesDialog}
                 />
 

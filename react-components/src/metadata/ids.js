@@ -10,6 +10,7 @@ export default {
     BUTTONS: {
         ADD: "addBtn",
         CLOSE: "closeBtn",
+        CLOSE_ICON: "closeIconBtn",
         DELETE: "deleteBtn",
         EDIT: "editBtn",
         EXPAND: "expand",
