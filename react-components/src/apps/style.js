@@ -1,3 +1,8 @@
+import fav from "../../src/resources/images/fav.png";
+import favAdd from "../../src/resources/images/fav_add.png";
+import favRemove from "../../src/resources/images/fav_remove.png";
+import notFav from "../../src/resources/images/not_fav.png";
+
 export default (theme) => ({
     loadingStyle: {
         position: "absolute",
@@ -42,4 +47,27 @@ export default (theme) => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
+    favorite: {
+        backgroundImage: `url(${fav})`,
+        height: 16,
+        width: 16,
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundImage: `url(${favRemove})`,
+        },
+    },
+    notFavorite: {
+        backgroundImage: `url(${notFav})`,
+        height: 16,
+        width: 16,
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundImage: `url(${favAdd})`,
+        },
+    },
+    disableFavorite: {
+        backgroundImage: `url(${notFav})`,
+    },
+
+
 });

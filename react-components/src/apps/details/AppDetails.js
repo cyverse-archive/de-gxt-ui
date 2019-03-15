@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
 import Grid from "@material-ui/core/Grid";
@@ -20,7 +21,24 @@ import { injectIntl } from "react-intl";
 import CopyTextArea from "../../util/CopyTextArea";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import constants from "../../constants";
+import style from "../../apps/style";
+import Delete from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 
+
+function Favorite(props) {
+    const {is_favorite} = props.details;
+    const {classes, isExternal, onFavoriteClick} = props;
+    let className = classes.disableFavorite;
+
+    if (!isExternal) {
+        className = is_favorite ? classes.favorite : classes.notFavorite;
+    }
+
+    return (
+        <div className={className} onClick={() => onFavoriteClick(isExternal)}></div>
+    );
+}
 
 class AppDetails extends Component {
 
@@ -32,6 +50,7 @@ class AppDetails extends Component {
         };
         this.onAppUrlClick = this.onAppUrlClick.bind(this);
         this.onUserManualClick = this.onUserManualClick.bind(this);
+        this.onFavoriteClick = this.onFavoriteClick.bind(this);
     }
 
     onAppUrlClick() {
@@ -59,15 +78,26 @@ class AppDetails extends Component {
         }
     }
 
+    onFavoriteClick(isExternal) {
+        const {presenter, details} = this.props;
+        if (!isExternal) {
+            presenter.onFavoriteClick(details);
+        }
+    }
+
     render() {
-        const {details, intl} = this.props;
-        const showAppURL = details.is_public || details.app_type.toUpperCase() ===
-            constants.EXTERNAL_APP.toUpperCase();
+        const {details, intl, classes} = this.props;
+        const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
+        const showAppURL = details.is_public || isExternal;
+
         if (details) {
             return (
                 <React.Fragment>
                     <Paper style={{padding: 5, fontSize: 11}}>
                     <Grid container spacing={24} style={{paddingLeft: 5}}>
+                        <Grid item xs={12}>
+                            <Favorite details={details} isExternal={isExternal} classes={classes}/>
+                        </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("descriptionLabel")}:</b> {details.description}
                         </Grid>
@@ -98,11 +128,19 @@ class AppDetails extends Component {
                                 placeholderSymbol={<img src={redstar} className="icon"
                                                         alt="red star"/>}
                                 fractions={2}
-                                readonly={true}
+                                readonly={isExternal}
                             />
-                            <span style={{paddingLeft: 3}}>
-                                ({details.rating.total})
-                        </span>
+                            <span>
+                                {
+                                    details.rating.user &&
+                                    <IconButton><Delete style={{height: 12, width: 12}}/> </IconButton>
+
+                                }
+                            </span>
+                            <span>
+                                    ({details.rating.total})
+                            </span>
+
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("analysesCompleted")}</b>
@@ -146,4 +184,4 @@ class AppDetails extends Component {
 
 AppDetails.propTypes = {};
 
-export default (withI18N(injectIntl(AppDetails), intlData));
+export default withStyles(style)((withI18N(injectIntl(AppDetails), intlData)));
