@@ -28,7 +28,7 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
     }
 
     @JsType
-    interface Presenter {
+    interface Presenter extends SaveMarkdownSelected.SaveMarkdownSelectedHandler {
 
         void go(App app,
                 String searchRegexPattern);
