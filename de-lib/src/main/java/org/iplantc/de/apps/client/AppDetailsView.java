@@ -1,6 +1,9 @@
 package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
+import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
+import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -110,7 +113,10 @@ public interface AppDetailsView extends IsWidget,
     }
 
     @JsType
-    interface Presenter extends SaveMarkdownSelected.SaveMarkdownSelectedHandler {
+    interface Presenter extends SaveMarkdownSelected.SaveMarkdownSelectedHandler,
+                                AppRatingDeselected.HasAppRatingDeselectedHandlers,
+                                AppRatingSelected.HasAppRatingSelectedEventHandlers,
+                                AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers {
 
         void go(App app,
                 String searchRegexPattern,
@@ -119,7 +125,7 @@ public interface AppDetailsView extends IsWidget,
 
         void onAppFavoriteSelected(Splittable app);
 
-        void onAppRatingSelected(Splittable app);
+        void onAppRatingSelected(Splittable app, int score);
 
         void onAppRatingDeSelected(Splittable app);
 

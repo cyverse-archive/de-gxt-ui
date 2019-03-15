@@ -105,6 +105,9 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
                 @Override
                 public void onSuccess(final AppDetailsView.Presenter result) {
+                    result.addAppFavoriteSelectedEventHandlers(OntologyHierarchiesPresenterImpl.this);
+                    result.addAppRatingDeselectedHandler(OntologyHierarchiesPresenterImpl.this);
+                    result.addAppRatingSelectedHandler(OntologyHierarchiesPresenterImpl.this);
                     result.go(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
                 }
             });
