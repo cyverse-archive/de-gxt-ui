@@ -26,8 +26,7 @@ import com.sencha.gxt.data.shared.TreeStore;
 /**
  * @author jstroot
  */
-public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
-                                                    SaveMarkdownSelected.SaveMarkdownSelectedHandler {
+public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
     @Inject AppUserServiceFacade appUserService;
     @Inject Provider<AppDetailsViewFactory> viewFactoryProvider;

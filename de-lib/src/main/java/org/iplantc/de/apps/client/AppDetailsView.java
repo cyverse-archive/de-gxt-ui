@@ -110,7 +110,7 @@ public interface AppDetailsView extends IsWidget,
     }
 
     @JsType
-    interface Presenter {
+    interface Presenter extends SaveMarkdownSelected.SaveMarkdownSelectedHandler {
 
         void go(App app,
                 String searchRegexPattern,

@@ -61,8 +61,8 @@ public class AppDetailsViewImpl extends Composite implements
 
         // Add self so that rating cell events will fire
         // ratings.setHasHandlers(this);
-/*
-        if (app.isPublic() || app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
+
+/*        if (app.isPublic() || app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
             url.setText(appearance.appUrl());
             url.addClickHandler(new ClickHandler() {
                 @Override
@@ -79,8 +79,7 @@ public class AppDetailsViewImpl extends Composite implements
             });
         } else {
             helpLink.setVisible(false);
-        }
-*/
+        }*/
 
     }
 
@@ -124,7 +123,11 @@ public class AppDetailsViewImpl extends Composite implements
             @Override
             public void onSuccess(AppDocMarkdownDialog result) {
                 result.show(app, appDoc, userInfo);
-                result.addSaveMarkdownSelectedHandler(AppDetailsViewImpl.this);
+                result.addSaveMarkdownSelectedHandler(props.presenter);
+                result.addHideHandler(event -> {
+                    props.dialogOpen = true;
+                    CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
+                });
             }
         });
     }

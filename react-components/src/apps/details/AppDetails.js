@@ -19,6 +19,7 @@ import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import { injectIntl } from "react-intl";
 import CopyTextArea from "../../util/CopyTextArea";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+import constants from "../../constants";
 
 
 class AppDetails extends Component {
@@ -39,9 +40,9 @@ class AppDetails extends Component {
             this.setState({dialogOpen: true});
         } else {
             let host = window.location.protocol + '//' + window.location.host + window.location.pathname;
-            const url = host + "?type=apps"
-                + "&app-id="
-                + id + "&" + "system-id"
+            const url = host + "?" + constants.TYPE + "=" + constants.APPS
+                + "&" + constants.APP_ID + "="
+                + id + "&" + constants.SYSTEM_ID
                 + "=" + system_id;
             this.setState({dialogOpen: true, appURL: url});
         }
@@ -52,12 +53,16 @@ class AppDetails extends Component {
         if (wiki_url) {
             window.open(wiki_url, "_blank");
         } else {
+            //temp. hide this dialog to show app documentation
+            this.setState({dialogOpen: false});
             this.props.presenter.onAppDetailsDocSelected();
         }
     }
 
     render() {
         const {details, intl} = this.props;
+        const showAppURL = details.is_public || details.app_type.toUpperCase() ===
+            constants.EXTERNAL_APP.toUpperCase();
         if (details) {
             return (
                 <React.Fragment>
@@ -108,10 +113,13 @@ class AppDetails extends Component {
                         <Grid item xs={12}>
                             <b>{getMessage("detailsLastCompleted")}</b> {formatDate(details.job_stats.job_last_completed)}
                         </Grid>
+                        {showAppURL &&
                         <Grid item xs={12}>
                             <b>{getMessage("url")}:</b> <DEHyperLink onClick={this.onAppUrlClick}
-                                                                     text={formatMessage(intl, "url")}/>
+                                                                     text={formatMessage(intl,
+                                                                         "url")}/>
                         </Grid>
+                        }
                         <Grid item xs={12}>
                             <b>{getMessage("category")}</b>
                         </Grid>
