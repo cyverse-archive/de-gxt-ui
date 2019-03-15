@@ -77,7 +77,7 @@ DEConfirmationDialog.propTypes = {
         PropTypes.object,
     ]).isRequired,
     onOkBtnClick: PropTypes.func.isRequired,
-    onCancelBtnClick: PropTypes.func,
+    onCancelBtnClick: PropTypes.func.isRequired,
     debugId: PropTypes.string.isRequired,
 };
 export default withI18N(DEConfirmationDialog, intlData);
