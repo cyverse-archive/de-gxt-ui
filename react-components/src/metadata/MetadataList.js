@@ -120,7 +120,7 @@ class MetadataList extends Component {
     }
 
     newAttrName() {
-        return `New attribute ${this.newAttrCount++}`;
+        return formatMessage(this.props.intl, "newAttrName", {count: this.newAttrCount++});
     }
 
     onAddAVU() {
