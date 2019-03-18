@@ -48,7 +48,7 @@ public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceAsync
             ErrorHandler.post(updateMetadataErr, caught);
         }
         catch (Exception e) {
-            ErrorHandler.post(getErrorMessageDefault(), caught);
+            ErrorHandler.postReact(getErrorMessageDefault(), caught);
         }
 
         if (reject != null) {
