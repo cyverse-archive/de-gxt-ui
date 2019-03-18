@@ -60,6 +60,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
 
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
+    @Inject DiskResourceUtil diskResourceUtil;
     @Inject MetadataTemplateView templateViewDialog;
     @Inject OntologyLookupServiceFacade svcFacade;
     @Inject EventBus eventBus;
@@ -79,7 +80,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     @Override
     public void go(final DiskResource selected) {
         this.resource = selected;
-        view.init(this, DiskResourceUtil.getInstance().isWritable(selected), selected);
+        view.init(this, diskResourceUtil.isWritable(selected), selected);
         view.mask();
 
         drService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
@@ -290,7 +291,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         }
 
         private boolean isWritable() {
-            return DiskResourceUtil.getInstance().isWritable(resource);
+            return diskResourceUtil.isWritable(resource);
         }
     }
 }
