@@ -1,19 +1,26 @@
 package org.iplantc.de.apps.client.presenter.details;
 
 import org.iplantc.de.apps.client.AppDetailsView;
+import org.iplantc.de.apps.client.OntologyHierarchiesView;
+import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
+import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
+import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -24,6 +31,7 @@ import com.google.common.base.Strings;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -47,10 +55,78 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     HandlerManager handlerManager;
 
     private AppDetailsView view;
-    private AppDoc appDoc;
+    private OntologyHierarchiesView.OntologyHierarchiesAppearance ontologyHierarchiesAppearance;
+
+
+    class AppRateCallback extends RateAppCallback {
+
+        private final ReactSuccessCallback callback;
+        private final ReactErrorCallback errorCallback;
+
+        AppRateCallback(App app,
+                        EventBus eventBus,
+                        ReactSuccessCallback callback,
+                        ReactErrorCallback errorCallback) {
+            super(app, eventBus);
+            this.callback = callback;
+            this.errorCallback = errorCallback;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode,
+                              Throwable exception) {
+            super.onFailure(statusCode, exception);
+            if (errorCallback != null) {
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onSuccess(AppFeedback result) {
+            super.onSuccess(result);
+            if (callback != null) {
+                callback.onSuccess(null);
+            }
+        }
+    }
+
+    class AppDeleteRateCallback extends DeleteRatingCallback {
+        private final ReactSuccessCallback callback;
+        private final ReactErrorCallback errorCallback;
+
+        AppDeleteRateCallback(App app,
+                              EventBus eventBus,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback) {
+            super(app, eventBus);
+            this.callback = callback;
+            this.errorCallback = errorCallback;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode,
+                              Throwable exception) {
+            super.onFailure(statusCode, exception);
+            if (errorCallback != null) {
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onSuccess(AppFeedback result) {
+            super.onSuccess(result);
+            if (callback != null) {
+                callback.onSuccess(null);
+            }
+        }
+    }
+
 
     @Inject
-    AppDetailsViewPresenterImpl() {
+    AppDetailsViewPresenterImpl(OntologyHierarchiesView.OntologyHierarchiesAppearance ontologyHierarchiesAppearance) {
+        this.ontologyHierarchiesAppearance = ontologyHierarchiesAppearance;
     }
 
 
@@ -68,53 +144,90 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
         // If the App has a wiki url, return before fetching app doc.
         if (Strings.isNullOrEmpty(app.getWikiUrl())) {
-            // Prefetch Docs
-            appUserService.getAppDoc(app, new AppsCallback<AppDoc>() {
-                @Override
-                public void onFailure(Integer statusCode,
-                                      Throwable caught) {
-                    // warn only for public app
-                    if (app.isPublic()) {
-                        announcer.schedule(new ErrorAnnouncementConfig(appearance.getAppDocError(caught)));
-                    }
-                }
 
-                @Override
-                public void onSuccess(final AppDoc result) {
-                    appDoc = result;
-                }
-            });
         }
         view.load(this);
     }
 
     @Override
-    public void onAppFavoriteSelected(Splittable app) {
-        fireEvent(new AppFavoriteSelectedEvent(AutoBeanCodex.decode(appAutoBeanFactory, App.class, app)
-                                                            .as()));
+    public void getAppDoc(Splittable appSplittable,
+                          ReactSuccessCallback callback,
+                          ReactErrorCallback errorCallback) {
+
+        App app = AutoBeanCodex.decode(appAutoBeanFactory, App.class, appSplittable).as();
+
+        appUserService.getAppDoc(app, new AppsCallback<Splittable>() {
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable caught) {
+                // warn only for public app
+                if (app.isPublic()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.getAppDocError(caught)));
+                }
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(final Splittable result) {
+                if (callback != null) {
+                    callback.onSuccess(result);
+                }
+            }
+        });
     }
 
     @Override
-    public void onAppRatingSelected(Splittable app, int score) {
-        fireEvent(new AppRatingSelected(AutoBeanCodex.decode(appAutoBeanFactory, App.class, app).as(),
-                                        score));
+    public void onAppFavoriteSelected(Splittable appSplittable,
+                                      ReactSuccessCallback callback,
+                                      ReactErrorCallback errorCallback) {
+        App app = AutoBeanCodex.decode(appAutoBeanFactory, App.class, appSplittable).as();
+
+        appUserService.favoriteApp(app, !app.isFavorite(), new AppsCallback<Void>() {
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(ontologyHierarchiesAppearance.favServiceFailure()));
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
+
+                app.setFavorite(!app.isFavorite());
+                eventBus.fireEvent(new AppFavoritedEvent(app));
+                eventBus.fireEvent(new AppUpdatedEvent(app));
+            }
+        });
     }
 
     @Override
-    public void onAppRatingDeSelected(Splittable app) {
-        fireEvent(new AppRatingDeselected(AutoBeanCodex.decode(appAutoBeanFactory, App.class, app)
-                                                            .as()));
+    public void onAppRatingSelected(Splittable appSplittable,
+                                    int score,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback) {
+        App app = AutoBeanCodex.decode(appAutoBeanFactory, App.class, appSplittable).as();
+        appUserService.rateApp(app, score, new AppRateCallback(app, eventBus, callback, errorCallback));
+    }
+
+    @Override
+    public void onAppRatingDeSelected(Splittable appSplittable,
+                                      ReactSuccessCallback callback,
+                                      ReactErrorCallback errorCallback) {
+        App app = AutoBeanCodex.decode(appAutoBeanFactory, App.class, appSplittable).as();
+        appUserService.deleteRating(app,
+                                    new AppDeleteRateCallback(app, eventBus, callback, errorCallback));
     }
 
     @Override
     public void onClose() {
         view.onClose();
-    }
-
-    @Override
-    public void onAppDetailsDocSelected() {
-            Preconditions.checkNotNull(appDoc, "AppDoc should have been pre-fetched in go(..) method!");
-            view.showDoc(appDoc);
     }
 
     @Override
@@ -133,7 +246,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
             @Override
             public void onSuccess(final AppDoc result) {
                 event.getMaskable().unmask();
-                appDoc = result;
+               // appDoc = result;
             }
         });
     }

@@ -9,6 +9,8 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -123,15 +125,24 @@ public interface AppDetailsView extends IsWidget,
                 TreeStore<OntologyHierarchy> hierarchyTreeStore,
                 TreeStore<AppCategory> categoryTreeStore);
 
-        void onAppFavoriteSelected(Splittable app);
+        void onAppFavoriteSelected(Splittable app,
+                                   ReactSuccessCallback callback,
+                                   ReactErrorCallback errorCallback);
 
-        void onAppRatingSelected(Splittable app, int score);
+        void onAppRatingSelected(Splittable app,
+                                 int score,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback);
 
-        void onAppRatingDeSelected(Splittable app);
+        void onAppRatingDeSelected(Splittable app,
+                                   ReactSuccessCallback callback,
+                                   ReactErrorCallback errorCallback);
 
         void onClose();
 
-        void onAppDetailsDocSelected();
+        void getAppDoc(Splittable appSplittable,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
 
     }
 

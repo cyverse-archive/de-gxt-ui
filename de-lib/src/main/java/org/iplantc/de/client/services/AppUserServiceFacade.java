@@ -12,6 +12,8 @@ import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.shared.DECallback;
 
+import com.google.web.bindery.autobean.shared.Splittable;
+
 import java.util.List;
 
 /**
@@ -74,7 +76,7 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
      */
     void getAppDetails(App app, DECallback<App> callback);
 
-    void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, DECallback<Splittable> callback);
 
     void saveAppDoc(HasQualifiedId appId, String doc, DECallback<AppDoc> callback);
 

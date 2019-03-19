@@ -2,8 +2,10 @@ package org.iplantc.de.apps.client.views.details;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.AppUpdatedEvent.AppUpdatedEventHandler;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog;
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppDoc;
@@ -28,7 +30,8 @@ import com.sencha.gxt.widget.core.client.Composite;
  */
 public class AppDetailsViewImpl extends Composite implements
                                                  AppDetailsView,
-                                                 SaveMarkdownSelected.SaveMarkdownSelectedHandler {
+                                                 SaveMarkdownSelected.SaveMarkdownSelectedHandler,
+                                                 AppUpdatedEventHandler {
 
 
     private final App app;
@@ -39,19 +42,23 @@ public class AppDetailsViewImpl extends Composite implements
     @Inject
     AsyncProviderWrapper<AppDocMarkdownDialog> markdownDialogProvider;
     @Inject
+    EventBus eventBus;
+    @Inject
     UserInfo userInfo;
 
     private ReactAppDetails.AppInfoProps props;
 
     @Inject
     AppDetailsViewImpl(final AppDetailsView.AppDetailsAppearance appearance,
+                       final EventBus eventBus,
                        @Assisted final App app,
                        @Assisted final String searchRegexPattern) {
         this.appearance = appearance;
+        this.eventBus = eventBus;
         this.app = app;
         this.searchRegexPattern = searchRegexPattern;
         panel = new HTMLPanel("<div></div>");
-
+        eventBus.addHandler(AppUpdatedEvent.TYPE, this);
 
         /*
          * Debug id has to be set before binding the editor to ensure that UI elements get the debug id
@@ -140,7 +147,8 @@ public class AppDetailsViewImpl extends Composite implements
 
     @Override
     public void onAppUpdated(AppUpdatedEvent event) {
-
+        props.app = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(event.getApp()));
+        CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 
 
