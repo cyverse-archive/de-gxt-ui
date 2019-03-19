@@ -2,13 +2,14 @@ import fav from "../../src/resources/images/fav.png";
 import favAdd from "../../src/resources/images/fav_add.png";
 import favRemove from "../../src/resources/images/fav_remove.png";
 import notFav from "../../src/resources/images/not_fav.png";
+import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
     loadingStyle: {
-        position: "absolute",
-        top: 400,
-        left: 400,
-        color: "#DB6619",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        color: Color.orange
     },
     statFilterButton: {
         margin: 1,
