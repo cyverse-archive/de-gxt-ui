@@ -9,6 +9,7 @@ import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
+import { stableSort, getSorting } from "../util/table/TableSort";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -142,32 +143,14 @@ class MetadataList extends Component {
     }
 
     handleRequestSort(event, property) {
-        const { name, form: { setFieldValue, values } } = this.props;
-        const avus = [...getIn(values, name)];
-
         const orderBy = property;
-        let order = 'asc';
+        let order = "asc";
 
         if (this.state.orderBy === property && this.state.order === order) {
-            order = 'desc';
+            order = "desc";
         }
 
-        const comparator = (a, b) => (a < b ? -1 : 1);
-        avus.sort((a, b) => {
-            let aVal = a[orderBy];
-            let bVal = b[orderBy];
-
-            if (orderBy === "avus") {
-                aVal = aVal ? aVal.length : 0;
-                bVal = bVal ? bVal.length : 0;
-            }
-
-            return order === 'desc' ? comparator(bVal, aVal) : comparator(aVal, bVal);
-        });
-
         this.setState({ order, orderBy });
-
-        setFieldValue(name, avus);
     }
 
     render() {
@@ -192,6 +175,96 @@ class MetadataList extends Component {
         const avus = getIn(values, name);
         const tableID = build(parentID, ids.AVU_GRID);
 
+        // A copy of the list of AVUs, but including only each AVU's sortable fields,
+        // along with a TableRow component for rendering within the returned Table below.
+        // This will allow the TableRows to be sorted without altering the original AVU list,
+        // which also allows each AVU's original index in the metadata model to be preserved
+        // and used in the form editing functions.
+        const unsortedAVURows = (avus && avus.map((avu, index) => {
+            const {
+                attr,
+                value,
+                unit,
+                avus,
+            } = avu;
+
+            const field = `${name}[${index}]`;
+
+            const rowID = build(ids.EDIT_METADATA_FORM, field);
+
+            const selected = avusSelected && avusSelected.includes(avu);
+
+            // This returned object should include each sortable field defined by columnData above,
+            // in addition to the TableRow component.
+            return {
+                attr,
+                value,
+                unit,
+                // This field only requires the length of the original AVU's children, for TableRow sorting purposes.
+                avus: avus ? avus.length : 0,
+                // Include the TableRow component that will be rendered within the final Table component.
+                tableRow: (
+                    <TableRow
+                        hover
+                        tabIndex={-1}
+                        key={field}
+                        selected={selected}
+                    >
+                        {selectable &&
+                        <TableCell padding="checkbox">
+                            <Checkbox checked={selected}
+                                      onChange={(event, checked) => onSelectAVU(avu, checked)}
+                            />
+                        </TableCell>}
+                        <TableCell component="th" scope="row">
+                            {attr}
+                        </TableCell>
+                        <TableCell>{value}</TableCell>
+                        <TableCell>{unit}</TableCell>
+                        <TableCell padding="none" align="right">{avus ? avus.length : 0}</TableCell>
+                        <TableCell padding="none">
+                            <Grid container
+                                  spacing={0}
+                                  wrap="nowrap"
+                                  direction="row"
+                                  justify="center"
+                                  alignItems="center"
+                            >
+                                <Grid item>
+                                    <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                aria-label={formatMessage(intl, "edit")}
+                                                className={classes.button}
+                                                onClick={event => {
+                                                    event.stopPropagation();
+                                                    this.props.onEditAVU(index);
+                                                }}
+                                    >
+                                        {editable ? <ContentEdit/> : <ContentView/>}
+                                    </IconButton>
+                                </Grid>
+                                {editable &&
+                                <Grid item>
+                                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                aria-label={formatMessage(intl, "delete")}
+                                                classes={{ root: classes.deleteIcon }}
+                                                onClick={event => {
+                                                    event.stopPropagation();
+                                                    this.props.remove(index);
+                                                }}
+                                    >
+                                        <ContentRemove/>
+                                    </IconButton>
+                                </Grid>}
+                            </Grid>
+                        </TableCell>
+                    </TableRow>
+                ),
+            };
+        }));
+
+        // Only sort the TableRows if sorting has been requested.
+        const sortedAVURows = orderBy ? stableSort(unsortedAVURows, getSorting(order, orderBy)) : unsortedAVURows;
+
         return (
             <div className={classes.metadataTemplateContainer}>
 
@@ -203,77 +276,7 @@ class MetadataList extends Component {
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
-                            {avus && avus.map((avu, index) => {
-                                const {
-                                    attr,
-                                    value,
-                                    unit,
-                                    avus,
-                                } = avu;
-
-                                const field = `${name}[${index}]`;
-
-                                const rowID = build(ids.EDIT_METADATA_FORM, field);
-
-                                const selected = avusSelected && avusSelected.includes(avu);
-
-                                return (
-                                    <TableRow
-                                        hover
-                                        tabIndex={-1}
-                                        key={field}
-                                        selected={selected}
-                                    >
-                                        {selectable &&
-                                        <TableCell padding="checkbox">
-                                            <Checkbox checked={selected}
-                                                      onChange={(event, checked) => onSelectAVU(avu, checked)}
-                                            />
-                                        </TableCell>}
-                                        <TableCell component="th" scope="row">
-                                            {attr}
-                                        </TableCell>
-                                        <TableCell>{value}</TableCell>
-                                        <TableCell>{unit}</TableCell>
-                                        <TableCell padding="none" align="right">{avus ? avus.length : 0}</TableCell>
-                                        <TableCell padding="none">
-                                            <Grid container
-                                                  spacing={0}
-                                                  wrap="nowrap"
-                                                  direction="row"
-                                                  justify="center"
-                                                  alignItems="center"
-                                            >
-                                                <Grid item>
-                                                    <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
-                                                                aria-label={formatMessage(intl, "edit")}
-                                                                className={classes.button}
-                                                                onClick={event => {
-                                                                    event.stopPropagation();
-                                                                    this.props.onEditAVU(index);
-                                                                }}
-                                                    >
-                                                        {editable ? <ContentEdit/> : <ContentView/>}
-                                                    </IconButton>
-                                                </Grid>
-                                                {editable &&
-                                                <Grid item>
-                                                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                                aria-label={formatMessage(intl, "delete")}
-                                                                classes={{ root: classes.deleteIcon }}
-                                                                onClick={event => {
-                                                                    event.stopPropagation();
-                                                                    this.props.remove(index);
-                                                                }}
-                                                    >
-                                                        <ContentRemove/>
-                                                    </IconButton>
-                                                </Grid>}
-                                            </Grid>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                            {sortedAVURows && sortedAVURows.map(row => row.tableRow)}
                         </TableBody>
                         <EnhancedTableHead baseId={tableID}
                                            columnData={columnData}
