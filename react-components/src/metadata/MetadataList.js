@@ -9,7 +9,7 @@ import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
-import { stableSort, getSorting } from "../util/table/TableSort";
+import { getSorting, stableSort } from "../util/table/TableSort";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -103,6 +103,76 @@ const columnData = [
     },
 ];
 
+const AVURow = ({
+    classes,
+    intl,
+    editable,
+    selectable,
+    rowID,
+    selected,
+    attr,
+    value,
+    unit,
+    avuChildCount,
+    onRowSelect,
+    onRowEdit,
+    onRowDelete,
+}) => (
+    <TableRow
+        hover
+        tabIndex={-1}
+        selected={selected}
+    >
+        {selectable &&
+        <TableCell padding="checkbox">
+            <Checkbox checked={selected}
+                      onChange={onRowSelect}
+            />
+        </TableCell>}
+        <TableCell component="th" scope="row">
+            {attr}
+        </TableCell>
+        <TableCell>{value}</TableCell>
+        <TableCell>{unit}</TableCell>
+        <TableCell padding="none" align="right">{avuChildCount}</TableCell>
+        <TableCell padding="none">
+            <Grid container
+                  spacing={0}
+                  wrap="nowrap"
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+            >
+                <Grid item>
+                    <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                aria-label={formatMessage(intl, "edit")}
+                                className={classes.button}
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    onRowEdit();
+                                }}
+                    >
+                        {editable ? <ContentEdit/> : <ContentView/>}
+                    </IconButton>
+                </Grid>
+                {editable &&
+                <Grid item>
+                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                aria-label={formatMessage(intl, "delete")}
+                                classes={{ root: classes.deleteIcon }}
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    onRowDelete();
+                                }}
+                    >
+                        <ContentRemove/>
+                    </IconButton>
+                </Grid>}
+            </Grid>
+        </TableCell>
+    </TableRow>
+);
+
 class MetadataList extends Component {
     constructor(props) {
         super(props);
@@ -158,6 +228,7 @@ class MetadataList extends Component {
             parentID,
             editable,
             selectable,
+            onEditAVU,
             onSelectAVU,
             onSelectAllClick,
             avusSelected,
@@ -168,6 +239,7 @@ class MetadataList extends Component {
             form: {
                 values,
             },
+            remove,
         } = this.props;
 
         const { order, orderBy } = this.state;
@@ -193,6 +265,7 @@ class MetadataList extends Component {
             const rowID = build(ids.EDIT_METADATA_FORM, field);
 
             const selected = avusSelected && avusSelected.includes(avu);
+            const avuChildCount = avus ? avus.length : 0;
 
             // This returned object should include each sortable field defined by columnData above,
             // in addition to the TableRow component.
@@ -201,63 +274,24 @@ class MetadataList extends Component {
                 value,
                 unit,
                 // This field only requires the length of the original AVU's children, for TableRow sorting purposes.
-                avus: avus ? avus.length : 0,
+                avus: avuChildCount,
                 // Include the TableRow component that will be rendered within the final Table component.
                 tableRow: (
-                    <TableRow
-                        hover
-                        tabIndex={-1}
-                        key={field}
-                        selected={selected}
-                    >
-                        {selectable &&
-                        <TableCell padding="checkbox">
-                            <Checkbox checked={selected}
-                                      onChange={(event, checked) => onSelectAVU(avu, checked)}
-                            />
-                        </TableCell>}
-                        <TableCell component="th" scope="row">
-                            {attr}
-                        </TableCell>
-                        <TableCell>{value}</TableCell>
-                        <TableCell>{unit}</TableCell>
-                        <TableCell padding="none" align="right">{avus ? avus.length : 0}</TableCell>
-                        <TableCell padding="none">
-                            <Grid container
-                                  spacing={0}
-                                  wrap="nowrap"
-                                  direction="row"
-                                  justify="center"
-                                  alignItems="center"
-                            >
-                                <Grid item>
-                                    <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
-                                                aria-label={formatMessage(intl, "edit")}
-                                                className={classes.button}
-                                                onClick={event => {
-                                                    event.stopPropagation();
-                                                    this.props.onEditAVU(index);
-                                                }}
-                                    >
-                                        {editable ? <ContentEdit/> : <ContentView/>}
-                                    </IconButton>
-                                </Grid>
-                                {editable &&
-                                <Grid item>
-                                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                aria-label={formatMessage(intl, "delete")}
-                                                classes={{ root: classes.deleteIcon }}
-                                                onClick={event => {
-                                                    event.stopPropagation();
-                                                    this.props.remove(index);
-                                                }}
-                                    >
-                                        <ContentRemove/>
-                                    </IconButton>
-                                </Grid>}
-                            </Grid>
-                        </TableCell>
-                    </TableRow>
+                    <AVURow key={field}
+                            classes={classes}
+                            intl={intl}
+                            editable={editable}
+                            selectable={selectable}
+                            rowID={rowID}
+                            selected={selected}
+                            attr={attr}
+                            value={value}
+                            unit={unit}
+                            avuChildCount={avuChildCount}
+                            onRowSelect={(event, checked) => onSelectAVU(avu, checked)}
+                            onRowEdit={() => onEditAVU(index)}
+                            onRowDelete={() => remove(index)}
+                    />
                 ),
             };
         }));
