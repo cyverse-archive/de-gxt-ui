@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import AppDetails from "../../../src/apps/details/AppDetails";
 
 
@@ -160,8 +160,21 @@ class AppDetailsTest extends Component {
             }
         };
 
+
+        const presenter = {
+            onAppFavoriteSelected: (appDetails, successCallback, errCallback) => {
+                console.log("Favorite clicked!");
+            },
+            onAppRatingSelected: (appDetails, val, successCallback, errCallback) => {
+                console.log("Rating value: " + val);
+            },
+            onAppRatingDeSelected: (appDetails, successCallback, errCallback) => {
+                console.log("Rating deleted!");
+            }
+        };
+
         return (
-            <AppDetails details={appDetals}/>
+            <AppDetails details={appDetals} presenter={presenter}/>
         );
     }
 }

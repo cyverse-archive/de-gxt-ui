@@ -15,11 +15,13 @@ import Tab from "@material-ui/core/Tab";
 import ToolDetails from "./ToolDetails";
 import AppDetails from "./AppDetails";
 import { injectIntl } from "react-intl";
+import AppDoc from "./AppDoc";
 
 function AppInfoDialog(props) {
     const {dialogOpen, app, presenter, intl} = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
+    const appDocLabel = formatMessage(intl, "appDocLabel");
 
     const [value, setValue] = useState(0);
 
@@ -34,9 +36,12 @@ function AppInfoDialog(props) {
                 <Tabs value={value} onChange={handleChange}>
                     <Tab label={appInfoLabel}/>
                     <Tab label={toolInfoLabel}/>
+                    <Tab label={appDocLabel}/>
                 </Tabs>
-                {value === 0 && <AppDetails details={app} presenter={presenter}/>}
+                {value === 0 && <AppDetails details={app}
+                                            presenter={presenter}/>}
                 {value === 1 && <ToolDetails details={app.tools}/>}
+                {value === 2 && <AppDoc presenter={presenter} app={app}/>}
             </DialogContent>
         </Dialog>
     );

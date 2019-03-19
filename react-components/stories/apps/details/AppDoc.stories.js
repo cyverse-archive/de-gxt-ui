@@ -1,10 +1,14 @@
-import React, { Component } from "react";
-import AppInfoDialog from "../../../src/apps/details/AppInfoDialog";
+/**
+ *  @author sriram
+ *
+ **/
 
+import React, { Component } from 'react';
+import AppDoc from "../../../src/apps/details/AppDoc";
 
-class AppInfoDialogTest extends Component {
-    render()  {
-        const appDetals ={
+class AppDocTest extends Component {
+    render() {
+        const appDetals = {
             "is_favorite": true,
             "beta": false,
             "deleted": false,
@@ -20,10 +24,10 @@ class AppInfoDialogTest extends Component {
             "name": "Annotate transcripts",
             "permission": "read",
             "system_id": "de",
-            "wiki_url": "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
             "edited_date": "1369428963000",
             "integration_date": "1369431889000",
-            "references": ["", "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html"],
+            "references": ["",
+                "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html"],
             "categories": [{
                 "id": "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
                 "name": "Assembly Annotation"
@@ -171,23 +175,18 @@ class AppInfoDialogTest extends Component {
                 "> #### Output File(s) \n" +
                 ">> outputs"
         };
+
         const presenter = {
             getAppDoc: (id, successCallback, errCallback) => {
                 successCallback(doc);
             },
-            onAppFavoriteSelected: (appDetails, successCallback, errCallback) => {
-                console.log("Favorite clicked!");
-            },
-            onAppRatingSelected: (appDetails, val, successCallback, errCallback) => {
-                console.log("Rating value: " + val);
-            },
-            onAppRatingDeSelected: (appDetails, successCallback, errCallback) => {
-                console.log("Rating deleted!");
-            }
         };
+
         return (
-            <AppInfoDialog app={appDetals} dialogOpen={true} presenter={presenter}/>
-        )
+            <AppDoc app={appDetals} doc={doc} presenter={presenter}/>
+        );
     }
 }
-export default  AppInfoDialogTest;
+
+
+export default AppDocTest;

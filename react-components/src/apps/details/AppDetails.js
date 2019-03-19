@@ -24,6 +24,7 @@ import constants from "../../constants";
 import style from "../../apps/style";
 import Delete from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 function Favorite(props) {
@@ -47,10 +48,12 @@ class AppDetails extends Component {
         this.state = {
             dialogOpen: false,
             appURL: "",
+
         };
         this.onAppUrlClick = this.onAppUrlClick.bind(this);
-        this.onUserManualClick = this.onUserManualClick.bind(this);
         this.onFavoriteClick = this.onFavoriteClick.bind(this);
+        this.onRatingChange = this.onRatingChange.bind(this);
+        this.onDeleteRatingClick = this.onDeleteRatingClick.bind(this);
     }
 
     onAppUrlClick() {
@@ -67,36 +70,59 @@ class AppDetails extends Component {
         }
     }
 
-    onUserManualClick() {
-        const wiki_url = this.props.details.wiki_url;
-        if (wiki_url) {
-            window.open(wiki_url, "_blank");
-        } else {
-            //temp. hide this dialog to show app documentation
-            this.setState({dialogOpen: false});
-            this.props.presenter.onAppDetailsDocSelected();
-        }
+    onDeleteRatingClick() {
+        const {presenter, details} = this.props;
+        this.setState({loading: true});
+        presenter.onAppRatingDeSelected(details, () => {
+            this.setState({loading: false});
+        }, (httpCode, message) => {
+            this.setState({loading: false});
+        })
+    }
+
+    onRatingChange(value) {
+        const {presenter, details} = this.props;
+        this.setState({loading: true});
+        //service accepts only long
+        presenter.onAppRatingSelected(details, Math.ceil(value), () => {
+            this.setState({loading: false});
+        }, (httpCode, message) => {
+            this.setState({loading: false});
+        })
     }
 
     onFavoriteClick(isExternal) {
         const {presenter, details} = this.props;
+        this.setState({loading: true});
         if (!isExternal) {
-            presenter.onFavoriteClick(details);
+            presenter.onAppFavoriteSelected(details, () => {
+                this.setState({loading: false});
+            }, (httpCode, message) => {
+                this.setState({loading: false});
+            });
         }
     }
 
     render() {
         const {details, intl, classes} = this.props;
+        const {loading} = this.state;
         const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
+        const {average, user, total} = details.rating;
 
         if (details) {
             return (
                 <React.Fragment>
                     <Paper style={{padding: 5, fontSize: 11}}>
+                        {loading &&
+                        <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
+                        }
                     <Grid container spacing={24} style={{paddingLeft: 5}}>
                         <Grid item xs={12}>
-                            <Favorite details={details} isExternal={isExternal} classes={classes}/>
+                            <Favorite details={details}
+                                      isExternal={isExternal}
+                                      classes={classes}
+                                      onFavoriteClick={this.onFavoriteClick}/>
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("descriptionLabel")}:</b> {details.description}
@@ -114,31 +140,27 @@ class AppDetails extends Component {
                             <b>{getMessage("integratorEmail")}</b> {details.integrator_email}
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("help")}</b>
-                            <DEHyperLink onClick={this.onUserManualClick}
-                                         text={formatMessage(intl,
-                                             "userManual")}/>
-                        </Grid>
-                        <Grid item xs={12}>
                             <b>{getMessage("detailsRatingLbl")} </b>
                             <Rating
-                                placeholderRating={details.rating.average}
+                                placeholderRating={average}
                                 emptySymbol={<img src={whitestar} className="icon" alt="white star"/>}
                                 fullSymbol={<img src={goldstar} className="icon" alt="gold star"/>}
                                 placeholderSymbol={<img src={redstar} className="icon"
                                                         alt="red star"/>}
                                 fractions={2}
                                 readonly={isExternal}
+                                onChange={this.onRatingChange}
                             />
                             <span>
                                 {
-                                    details.rating.user &&
-                                    <IconButton><Delete style={{height: 12, width: 12}}/> </IconButton>
+                                    user &&
+                                    <IconButton onClick={this.onDeleteRatingClick}><Delete
+                                        style={{height: 12, width: 12}}/> </IconButton>
 
                                 }
                             </span>
                             <span>
-                                    ({details.rating.total})
+                                    ({total ? total : 0})
                             </span>
 
                         </Grid>
@@ -161,9 +183,11 @@ class AppDetails extends Component {
                         <Grid item xs={12}>
                             <b>{getMessage("category")}</b>
                         </Grid>
+                        {details.hierarchies &&
                         <Grid item xs={12}>
                             <CategoryTree hierarchies={details.hierarchies}/>
                         </Grid>
+                        }
                     </Grid>
                 </Paper>
                     <Dialog open={this.state.dialogOpen}

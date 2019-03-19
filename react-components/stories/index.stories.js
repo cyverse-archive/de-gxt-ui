@@ -10,6 +10,7 @@ import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupport
 import AppDetailsTest from "./apps/details/AppDetails.stories";
 import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
+import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 
@@ -63,6 +64,7 @@ import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
 
+
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
     <AnalysisInfoDialogTest/>);
@@ -76,6 +78,7 @@ storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest lo
 storiesOf('apps/details', module).add('AppDetails', () => <AppDetailsTest/>);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 storiesOf('apps/details', module).add('AppInfoDialog', () => <AppInfoDialogTest/>);
+storiesOf('apps/details', module).add('AppDoc', ()=> <AppDocTest/>);
 
 storiesOf('collaborators', module).add('Subject Search Field', () => <SubjectSearchFieldTest logger={action('Selected Subject')}/>);
 
