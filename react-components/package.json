@@ -44,6 +44,8 @@
     "react-select": "^2.0.0",
     "redux": "^4.0.0",
     "redux-form": "^7.4.2",
+    "sanitize-html": "^1.20.0",
+    "showdown": "^1.9.0",
     "sockette": "2.0.0",
     "sw-precache-webpack-plugin": "0.11.5",
     "whatwg-fetch": "2.0.3"
