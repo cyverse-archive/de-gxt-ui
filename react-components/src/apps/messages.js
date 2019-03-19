@@ -40,8 +40,10 @@ const intlData = {
         "detailsLastCompleted": "Last Completed:",
         "appInformationLbl": "App Information",
         "toolInformationLbl": "Tool Information",
+        "appDocLabel": "App Documentation",
         "userManual": "User Manual",
         "copyUrlHeading": "Copy App URL",
+        "docFetchError": "Unable to fetch documentation!",
     }
 };
 
