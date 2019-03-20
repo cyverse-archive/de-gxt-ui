@@ -17,14 +17,6 @@ const presenter = (logger) => ({
         logger(metadata);
         resolve(metadata);
     },
-    onSaveMetadata: (metadata, resolve, errorCallback) => {
-        setTimeout(() => {
-                logger(metadata);
-                resolve(metadata);
-            },
-            1500
-        );
-    },
     searchOLSTerms: (inputValue, loaderSettings, callback) => {
         setTimeout(() => {
                 callback({

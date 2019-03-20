@@ -24,10 +24,6 @@
     </replace-with>
 
     <!-- Metadata -->
-    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.MetadataViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.MetadataView.Appearance" />
-    </replace-with>
-    
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.MetadataPresenterDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance" />
     </replace-with>

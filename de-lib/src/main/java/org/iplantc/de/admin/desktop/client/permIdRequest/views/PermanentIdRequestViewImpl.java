@@ -6,17 +6,14 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequest;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.StaticIdHelper;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.diskResource.client.MetadataView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -74,6 +71,7 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
 
     PermanentIdRequestProperties pr_props;
 
+    @UiField(provided = true)
     PermanentIdRequestViewAppearance appearance;
 
     private Presenter presenter;
@@ -81,7 +79,7 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
     private final PermanentIdRequestAutoBeanFactory factory;
 
     @Inject
-    AsyncProviderWrapper<MetadataDialog> metadataDialogAsyncProvider;
+    MetadataView.Presenter metadataPresenter;
 
     @Inject
     PermanentIdRequestViewImpl(PermanentIdRequestProperties pr_props,
@@ -263,21 +261,7 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
     }
 
     @Override
-    public void fetchMetadata(Folder selectedFolder,
-                              PermanentIdRequestPresenterAppearance appearance) {
-        metadataDialogAsyncProvider.get(new AsyncCallback<MetadataDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                ErrorHandler.post(throwable);
-            }
-
-            @Override
-            public void onSuccess(MetadataDialog dialog) {
-                dialog.show(selectedFolder);
-            }
-        });
-
-
+    public void fetchMetadata(Folder selectedFolder) {
+        metadataPresenter.go(selectedFolder);
     }
-
 }

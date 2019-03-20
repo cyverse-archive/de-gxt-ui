@@ -55,7 +55,6 @@ import org.iplantc.de.diskResource.client.views.metadata.BulkMetadataViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewImpl;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm;
@@ -163,7 +162,6 @@ public class DiskResourceGinModule extends AbstractGinModule {
 
         // Dialogs
         bind(InfoTypeEditorDialog.class);
-        bind(ManageMetadataDialog.class);
         bind(DataSharingDialog.class);
         bind(SaveAsDialog.class);
         bind(BulkMetadataDialog.class);

@@ -37,11 +37,6 @@ public class PermanentIdRequestPresenterDefaultAppearance implements
     }
 
     @Override
-    public String metadataSaveError() {
-        return displayStrings.metadataSaveError();
-    }
-
-    @Override
     public String requestLoadFailure() {
         return displayStrings.requestLoadFailure();
     }

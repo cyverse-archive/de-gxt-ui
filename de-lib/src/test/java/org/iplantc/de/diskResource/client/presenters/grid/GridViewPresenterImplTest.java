@@ -13,7 +13,6 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
@@ -28,8 +27,8 @@ import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.BulkMetadataView;
-import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
+import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
@@ -50,19 +49,15 @@ import org.iplantc.de.diskResource.client.views.dialogs.MetadataCopyDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -80,7 +75,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -109,21 +103,15 @@ public class GridViewPresenterImplTest {
     @Mock InfoTypeEditorDialog infoTypeEditorDialogMock;
     @Mock AsyncProviderWrapper<CommentsDialog> commentDialogProviderMock;
     @Mock CommentsDialog commentsDialogMock;
-    @Mock AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProviderMock;
     @Mock AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProviderMock;
     @Mock AsyncProviderWrapper<SaveAsDialog> saveAsDialogProviderMock;
-    @Mock DiskResourceAutoBeanFactory drFactoryMock;
-    @Mock MetadataCopyDialog mCopyDialog;
     @Mock ListStore<DiskResource> listStoreMock;
-    @Mock HashMap<EventHandler, HandlerRegistration> registeredHandlersMock;
-    @Mock DiskResourceView.Presenter parentPresenterMock;
     @Mock List<DiskResource> resourcesMock;
     @Mock Iterator<DiskResource> resourceIteratorMock;
     @Mock DiskResource resourceMock;
     @Mock InfoType infoTypeMock;
     @Mock PermissionValue permissionValueMock;
-    @Mock AsyncProviderWrapper<ManageMetadataDialog> manageMetadataDlgProviderMock;
-    @Mock ManageMetadataDialog manageMetadataDlgMock;
+    @Mock MetadataView.Presenter metadataPresenterMock;
     @Mock AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProviderMock;
     @Mock MetadataCopyDialog copyMetadataDlgMock;
     @Mock List<HasPath> hasPathListMock;
@@ -132,7 +120,6 @@ public class GridViewPresenterImplTest {
     @Mock LiveGridCheckBoxSelectionModel selectionModelMock;
     @Mock SelectEvent selectEventMock;
     @Mock AlertMessageBox alertMessageBoxMock;
-    @Mock Splittable splittableMock;
     @Mock DataSharingDialog dataSharingDlgMock;
     @Mock DialogHideEvent hideEventMock;
     @Mock FastMap<TYPE> fastMapTypeMock;
@@ -142,7 +129,6 @@ public class GridViewPresenterImplTest {
     @Mock List<DataLink> dataLinksMock;
     @Mock FastMap<DiskResource> fastMapDiskResourceMock;
     @Mock HandlerManager handlerManagerMock;
-    @Mock AsyncProviderWrapper<SaveAsDialog> saveAsDlgProviderMock;
     @Mock SaveAsDialog saveAsDlgMock;
     @Mock AsyncProviderWrapper<SelectMetadataTemplateDialog> selectTemplateDlgProviderMock;
     @Mock SelectMetadataTemplateDialog selectTemplateDlgMock;
@@ -154,14 +140,12 @@ public class GridViewPresenterImplTest {
     @Captor ArgumentCaptor<AsyncCallback<InfoTypeEditorDialog>> infoTypeEditorDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<String>> stringCaptor;
     @Captor ArgumentCaptor<AsyncCallback<CommentsDialog>> commentsDialogCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<ManageMetadataDialog>> manageMetadataDlgCaptor;
     @Captor ArgumentCaptor<AsyncCallback<MetadataCopyDialog>> copyMetadataDlgCaptor;
     @Captor ArgumentCaptor<AsyncCallback<BulkMetadataDialog>> bulkMetadataDlgCaptor;
     @Captor ArgumentCaptor<SelectEvent.SelectHandler> selectHandlerCaptor;
     @Captor ArgumentCaptor<DataCallback<String>> dataStringCallback;
     @Captor ArgumentCaptor<AsyncCallback<DataSharingDialog>> dataSharingDlgCaptor;
     @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<ShareResourceLinkDialog>> shareResourceLinkDlgCaptor;
     @Captor ArgumentCaptor<DataCallback<FastMap<List<DataLink>>>> fastMapDataLinkCaptor;
     @Captor ArgumentCaptor<DataCallback<FastMap<DiskResource>>> fastMapDiskResourceCaptor;
     @Captor ArgumentCaptor<AsyncCallback<SaveAsDialog>> saveAsDlgCaptor;
@@ -229,10 +213,10 @@ public class GridViewPresenterImplTest {
         };
         uut.announcer = announcerMock;
         uut.infoTypeDialogProvider = infoTypeDialogProviderMock;
+        uut.metadataPresenter = metadataPresenterMock;
         uut.metadataService = metadataServiceMock;
         uut.commentDialogProvider = commentDialogProviderMock;
         uut.diskResourceService = diskResourceServiceMock;
-        uut.metadataDialogProvider = manageMetadataDlgProviderMock;
         uut.copyMetadataDlgProvider = copyMetadataDlgProviderMock;
         uut.bulkMetadataDlgProvider = bulkMetadataDlgProviderMock;
         uut.dataSharingDialogProvider = dataSharingDialogProviderMock;
@@ -327,10 +311,7 @@ public class GridViewPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onRequestManageMetadataSelected(eventMock);
 
-        verify(manageMetadataDlgProviderMock).get(manageMetadataDlgCaptor.capture());
-
-        manageMetadataDlgCaptor.getValue().onSuccess(manageMetadataDlgMock);
-        verify(manageMetadataDlgMock).show(eq(resourceMock));
+        verify(metadataPresenterMock).go(eq(resourceMock));
     }
 
     @Test

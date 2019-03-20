@@ -5,8 +5,6 @@ import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
 public class MetadataPresenterDefaultAppearance implements MetadataView.Presenter.Appearance {
 
@@ -40,11 +38,6 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 	}
 
 	@Override
-	public String saveMetadataError() {
-		return displayStrings.saveMetadataError();
-	}
-
-	@Override
 	public String templateinfoError() {
 		return displayStrings.templateInfoError();
 	}
@@ -67,25 +60,6 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 	@Override
 	public String incomplete() {
 		return displayStrings.incomplete();
-	}
-
-	@Override
-	public ImageResource info() {
-		return iplantResources.info();
-	}
-
-	public SafeHtml importMdMsg() {
-		return displayStrings.importMdMsg();
-	}
-
-	@Override
-	public SafeHtml importMd() {
-		return displayStrings.importMd();
-	}
-
-	@Override
-	public String loadingMask() {
-		return iplantDisplayStrings.loadingMask();
 	}
 
 	@Override

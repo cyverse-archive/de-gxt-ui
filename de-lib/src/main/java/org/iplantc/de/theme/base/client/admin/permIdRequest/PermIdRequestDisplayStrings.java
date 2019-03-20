@@ -45,8 +45,6 @@ public interface PermIdRequestDisplayStrings extends Messages {
 
     String createPermIdFailure();
 
-    String metadataSaveError();
-
     String requestLoadFailure();
 
     String statusUpdateFailure();

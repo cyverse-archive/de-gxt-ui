@@ -72,7 +72,6 @@ class AttributeEnumEditDialog extends Component {
                                id={build(dialogID, ids.ENUM_VALUE)}
                                required={true}
                                autoFocus
-                               margin="dense"
                                component={FormTextField}
                     />
                     <Field name={`${field}.is_default`}

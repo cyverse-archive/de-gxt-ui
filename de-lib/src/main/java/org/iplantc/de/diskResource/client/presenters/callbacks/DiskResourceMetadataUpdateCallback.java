@@ -2,34 +2,37 @@ package org.iplantc.de.diskResource.client.presenters.callbacks;
 
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.ErrorUpdateMetadata;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.gwt.http.client.Response;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
- * @author jstroot
+ * @author jstroot psarando
  */
 public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceAsyncCallback<String> {
 
-    private final IPlantDialog dialog;
     private final DiskResourceCallbackAppearance appearance = GWT.create(DiskResourceCallbackAppearance.class);
+    private final ReactSuccessCallback resolve;
+    private final ReactErrorCallback reject;
 
-    public DiskResourceMetadataUpdateCallback(IPlantDialog dialog) {
-        super(dialog);
-        this.dialog = dialog;
+    public DiskResourceMetadataUpdateCallback(ReactSuccessCallback resolve, ReactErrorCallback reject) {
+        super(null);
+        this.resolve = resolve;
+        this.reject = reject;
     }
 
     @Override
     public void onSuccess(String result) {
         super.onSuccess(result);
-        if (dialog != null) {
-            dialog.clearHandlers();
-            dialog.hide();
+
+        if (resolve != null) {
+            resolve.onSuccess(null);
         }
 
         IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.metadataSuccess()));
@@ -37,18 +40,20 @@ public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceAsync
 
     @Override
     public void onFailure(Throwable caught) {
-        unmaskCaller();
         try {
             DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
-            AutoBean<ErrorUpdateMetadata> errorBean =
-                    AutoBeanCodex.decode(factory, ErrorUpdateMetadata.class, caught.getMessage());
-            ErrorHandler.post(errorBean.as(), caught);
+            final ErrorUpdateMetadata updateMetadataErr =
+                    AutoBeanCodex.decode(factory, ErrorUpdateMetadata.class, caught.getMessage()).as();
+
+            ErrorHandler.post(updateMetadataErr, caught);
         }
         catch (Exception e) {
-            ErrorHandler.post(caught);
+            ErrorHandler.postReact(getErrorMessageDefault(), caught);
         }
 
-
+        if (reject != null) {
+            reject.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+        }
     }
 
     @Override

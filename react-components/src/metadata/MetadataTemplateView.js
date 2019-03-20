@@ -15,7 +15,6 @@ import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
 import {
     FormCheckbox,
     FormIntegerField,
@@ -26,6 +25,7 @@ import {
     FormTimestampField,
     getFormError,
 } from "../util/FormField";
+import DEConfirmationDialog from "../util/dialog/DEConfirmationDialog";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
@@ -36,10 +36,12 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from '@material-ui/core/DialogContent';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -50,7 +52,8 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Fab from "@material-ui/core/Fab";
+
+const ConfirmationDialog = withI18N(DEConfirmationDialog, intlData);
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -267,13 +270,13 @@ class MetadataTemplateAttributeView extends Component {
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
                                             {writable &&
                                             <Fab id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                    size="small"
-                                                    color="primary"
-                                                    aria-label={formatMessage(intl, "addRow")}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        this.onAddAVU(arrayHelpers, attribute);
-                                                    }}
+                                                 size="small"
+                                                 color="primary"
+                                                 aria-label={formatMessage(intl, "addRow")}
+                                                 onClick={event => {
+                                                     event.stopPropagation();
+                                                     this.onAddAVU(arrayHelpers, attribute);
+                                                 }}
                                             >
                                                 <ContentAdd/>
                                             </Fab>
@@ -321,8 +324,11 @@ class MetadataTemplateView extends Component {
             showConfirmationDialog: false,
         };
 
-        this.closeMetadataTemplateDialog = this.closeMetadataTemplateDialog.bind(this);
-        this.closeConfirmationDialog = this.closeConfirmationDialog.bind(this);
+        [
+            "closeMetadataTemplateDialog",
+            "confirmCloseMetadataTemplateDialog",
+            "closeConfirmationDialog",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
     static propTypes = {
@@ -333,6 +339,14 @@ class MetadataTemplateView extends Component {
     };
 
     closeMetadataTemplateDialog() {
+        const { dirty, writable, presenter } = this.props;
+
+        (dirty && writable) ?
+            this.setState({ showConfirmationDialog: true }) :
+            presenter.closeMetadataTemplateDialog()
+    }
+
+    confirmCloseMetadataTemplateDialog() {
         this.closeConfirmationDialog();
         this.props.presenter.closeMetadataTemplateDialog();
     }
@@ -348,8 +362,10 @@ class MetadataTemplateView extends Component {
             open,
             writable,
             // from formik
-            values, handleSubmit, dirty, isSubmitting, errors, touched,
+            values, handleSubmit, isSubmitting, errors, touched,
         } = this.props;
+
+        const { showConfirmationDialog } = this.state;
 
         const dialogTitleID = build(ids.METADATA_TEMPLATE_VIEW, ids.TITLE);
 
@@ -364,27 +380,16 @@ class MetadataTemplateView extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE)}
+                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
+                            {values.template.name}
+                        </Typography>
+                        <IconButton id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE_ICON)}
                                     aria-label={formatMessage(intl, "close")}
-                                    onClick={() => (
-                                        (dirty && writable) ?
-                                            this.setState({showConfirmationDialog: true}) :
-                                            this.props.presenter.closeMetadataTemplateDialog()
-                                    )}
+                                    onClick={this.closeMetadataTemplateDialog}
                                     color="inherit"
                         >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
-                            {values.template.name}
-                        </Typography>
-                        <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}
-                                disabled={!writable || isSubmitting || errors.error}
-                                onClick={handleSubmit}
-                                color="inherit"
-                        >
-                            {getMessage("save")}
-                        </Button>
                     </Toolbar>
                 </AppBar>
 
@@ -399,19 +404,30 @@ class MetadataTemplateView extends Component {
                     />
                 </DialogContent>
 
-                <ConfirmCloseDialog open={this.state.showConfirmationDialog}
-                                    parentId={ids.METADATA_TEMPLATE_VIEW}
-                                    onConfirm={() => {
-                                        this.closeConfirmationDialog();
-                                        handleSubmit();
-                                    }}
-                                    onClose={this.closeMetadataTemplateDialog}
-                                    onCancel={this.closeConfirmationDialog}
-                                    title={getMessage("save")}
-                                    dialogContent={getMessage("confirmCloseUnsavedChanges")}
-                                    confirmLabel={getMessage("yes")}
-                                    closeLabel={getMessage("no")}
-                                    cancelLabel={getMessage("cancel")}
+                <DialogActions>
+                    <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE)}
+                            onClick={this.closeMetadataTemplateDialog}
+                            color="primary"
+                    >
+                        {getMessage("close")}
+                    </Button>
+                    {writable &&
+                    <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}
+                            disabled={!writable || isSubmitting || errors.error}
+                            onClick={handleSubmit}
+                            color="primary"
+                            variant="contained"
+                    >
+                        {getMessage("save")}
+                    </Button>}
+                </DialogActions>
+
+                <ConfirmationDialog dialogOpen={showConfirmationDialog}
+                                    debugId={ids.METADATA_TEMPLATE_VIEW}
+                                    heading={getMessage("confirmDiscardChangesDialogHeader")}
+                                    message={getMessage("confirmDiscardChangesDialogMsg")}
+                                    onOkBtnClick={this.confirmCloseMetadataTemplateDialog}
+                                    onCancelBtnClick={this.closeConfirmationDialog}
                 />
             </Dialog>
         );

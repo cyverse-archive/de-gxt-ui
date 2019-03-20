@@ -14,14 +14,27 @@ import jsinterop.annotations.JsType;
 public class ReactMetadataViews {
 
     @JsProperty
+    public static ComponentConstructorFn<EditMetadataProps> EditMetadata;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class EditMetadataProps extends BaseProps {
+        public MetadataView.Presenter presenter;
+        public Splittable targetResource;
+        public Splittable metadata;
+        public boolean open;
+        public boolean editable;
+        public boolean loading;
+    }
+
+    @JsProperty
     public static ComponentConstructorFn<MetadataTemplateViewProps> MetadataTemplateView;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class MetadataTemplateViewProps extends BaseProps {
-        public Boolean open;
-        public Boolean writable;
         public MetadataView.Presenter presenter;
         public Splittable template;
         public Splittable metadata;
+        public boolean open;
+        public boolean writable;
     }
 }

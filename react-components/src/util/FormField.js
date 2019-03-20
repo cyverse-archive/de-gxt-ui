@@ -39,6 +39,8 @@ const FormTextField = ({
             error={!!errorMsg}
             helperText={errorMsg}
             required={required}
+            variant="outlined"
+            margin="dense"
             fullWidth
             {...field}
             {...custom}
@@ -194,6 +196,7 @@ const FormTimestampField = ({
         <FormControl error={!!errorMsg}>
             <TextField id={build(id, "date")}
                        type="date"
+                       variant="outlined"
                        label={label}
                        error={!!errorMsg}
                        required={required}
@@ -204,6 +207,7 @@ const FormTimestampField = ({
             />
             <TextField id={build(id, "time")}
                        type="time"
+                       variant="outlined"
                        error={!!errorMsg}
                        required={required}
                        value={date ? moment(date).format("HH:mm:ss") : ""}
