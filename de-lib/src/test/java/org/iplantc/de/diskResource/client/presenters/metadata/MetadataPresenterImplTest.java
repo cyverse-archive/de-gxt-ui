@@ -13,6 +13,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -41,6 +42,7 @@ import java.util.List;
 public class MetadataPresenterImplTest {
 
     @Mock MetadataView view;
+    @Mock DiskResourceUtil diskResourceUtilMock;
     @Mock DiskResourceServiceFacade drService;
     @Mock DiskResourceAutoBeanFactory diskResourceFactoryMock;
     @Mock MetadataView.Presenter.Appearance appearanceMock;
@@ -69,6 +71,7 @@ public class MetadataPresenterImplTest {
             }
         };
         uut.selectMetaTemplateDlgProvider = selectMetaTemplateDlgProviderMock;
+        uut.diskResourceUtil = diskResourceUtilMock;
         uut.autoBeanFactory = diskResourceFactoryMock;
         uut.appearance = appearanceMock;
 
