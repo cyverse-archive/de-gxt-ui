@@ -3,7 +3,6 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.apps.Publishable;
@@ -78,7 +77,10 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
 
     void getAppDoc(HasQualifiedId app, DECallback<Splittable> callback);
 
-    void saveAppDoc(HasQualifiedId appId, String doc, DECallback<AppDoc> callback);
+    void saveAppDoc(final String appId,
+                    final String systemId,
+                    final String doc,
+                    final DECallback<Splittable> callback);
 
     void createWorkflows(String body, DECallback<String> callback);
 

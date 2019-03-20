@@ -64,18 +64,6 @@ import java.util.List;
  */
 public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
-    private class AppDocCallbackConverter extends DECallbackConverter<String, AppDoc> {
-        public AppDocCallbackConverter(DECallback<AppDoc> callback) {
-            super(callback);
-        }
-
-        @Override
-        protected AppDoc convertFrom(String object) {
-            AutoBean<AppDoc> appDocAutoBean = AutoBeanCodex.decode(factory, AppDoc.class, object);
-            return appDocAutoBean.as();
-        }
-    }
-
     private class AppDocSplittableCallbackConverter extends DECallbackConverter<String, Splittable> {
         public AppDocSplittableCallbackConverter(DECallback<Splittable> callback) {
             super(callback);
@@ -433,14 +421,15 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void saveAppDoc(final HasQualifiedId app,
+    public void saveAppDoc(final String appId,
+                           final String systemId,
                            final String doc,
-                           final DECallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
+                           final DECallback<Splittable> callback) {
+        String address = APPS + "/" +systemId + "/" +appId + "/documentation";
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc).assign(payload, "documentation");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, payload.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppDocCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new AppDocSplittableCallbackConverter(callback));
 
     }
 

@@ -8,14 +8,11 @@ import org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppDoc;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -30,7 +27,6 @@ import com.sencha.gxt.widget.core.client.Composite;
  */
 public class AppDetailsViewImpl extends Composite implements
                                                  AppDetailsView,
-                                                 SaveMarkdownSelected.SaveMarkdownSelectedHandler,
                                                  AppUpdatedEventHandler {
 
 
@@ -103,6 +99,7 @@ public class AppDetailsViewImpl extends Composite implements
         props.app = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
         props.presenter = presenter;
         props.dialogOpen = true;
+        props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 
@@ -112,32 +109,6 @@ public class AppDetailsViewImpl extends Composite implements
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 
-
-    @Override
-    public void onSaveMarkdownSelected(SaveMarkdownSelected event) {
-        // Forward event
-        fireEvent(event);
-    }
-
-    @Override
-    public void showDoc(AppDoc appDoc) {
-        markdownDialogProvider.get(new AsyncCallback<AppDocMarkdownDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AppDocMarkdownDialog result) {
-                result.show(app, appDoc, userInfo);
-                result.addSaveMarkdownSelectedHandler(props.presenter);
-                result.addHideHandler(event -> {
-                    props.dialogOpen = true;
-                    CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
-                });
-            }
-        });
-    }
 
     @Override
     public void onDetailsCategoryClicked(String modelKey) {

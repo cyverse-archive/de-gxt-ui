@@ -25,6 +25,7 @@ public class ReactAppDetails {
         public Splittable app;
         public AppDetailsView.Presenter presenter;
         public boolean dialogOpen;
+        public boolean docEditable;
     }
 
 }

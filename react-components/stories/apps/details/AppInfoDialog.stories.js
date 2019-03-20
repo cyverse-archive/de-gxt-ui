@@ -20,7 +20,7 @@ class AppInfoDialogTest extends Component {
             "name": "Annotate transcripts",
             "permission": "read",
             "system_id": "de",
-            "wiki_url": "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
+            "wiki_url": "https://wiki.cyverse.org/wiki/display/DEapps/Word+Count",
             "edited_date": "1369428963000",
             "integration_date": "1369431889000",
             "references": ["", "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html"],
@@ -186,7 +186,7 @@ class AppInfoDialogTest extends Component {
             }
         };
         return (
-            <AppInfoDialog app={appDetals} dialogOpen={true} presenter={presenter}/>
+            <AppInfoDialog app={appDetals} dialogOpen={true} presenter={presenter} editable={false}/>
         )
     }
 }

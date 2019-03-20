@@ -7,7 +7,6 @@ import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
@@ -15,7 +14,6 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
@@ -27,7 +25,6 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -138,14 +135,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
         Preconditions.checkState(view == null, "Cannot call go(..) more than once");
 
         view = viewFactoryProvider.get().create(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
-        view.addSaveMarkdownSelectedHandler(AppDetailsViewPresenterImpl.this);
-
         eventBus.addHandler(AppUpdatedEvent.TYPE, view);
-
-        // If the App has a wiki url, return before fetching app doc.
-        if (Strings.isNullOrEmpty(app.getWikiUrl())) {
-
-        }
         view.load(this);
     }
 
@@ -231,22 +221,26 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
-    public void onSaveMarkdownSelected(final SaveMarkdownSelected event) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(event.getEditorContent()));
-
-        appUserService.saveAppDoc(event.getApp(),
-                                  event.getEditorContent(), new AppsCallback<AppDoc>() {
+    public void onSaveMarkdownSelected(String appId,
+                                       String systemId,
+                                       String doc,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback) {
+        appUserService.saveAppDoc(appId, systemId, doc, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                event.getMaskable().unmask();
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.saveAppDocError(caught)));
                 ErrorHandler.post(caught);
+                if(errorCallback !=null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
-            public void onSuccess(final AppDoc result) {
-                event.getMaskable().unmask();
-               // appDoc = result;
+            public void onSuccess(final Splittable result) {
+               if(callback != null) {
+                   callback.onSuccess(result);
+               }
             }
         });
     }

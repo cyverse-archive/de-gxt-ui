@@ -7,7 +7,6 @@ import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
@@ -115,8 +114,7 @@ public interface AppDetailsView extends IsWidget,
     }
 
     @JsType
-    interface Presenter extends SaveMarkdownSelected.SaveMarkdownSelectedHandler,
-                                AppRatingDeselected.HasAppRatingDeselectedHandlers,
+    interface Presenter extends AppRatingDeselected.HasAppRatingDeselectedHandlers,
                                 AppRatingSelected.HasAppRatingSelectedEventHandlers,
                                 AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers {
 
@@ -144,18 +142,18 @@ public interface AppDetailsView extends IsWidget,
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);
 
+        void onSaveMarkdownSelected(String appId,
+                                    String systemId,
+                                    String doc,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback);
+
     }
 
 
     void load(Presenter presenter);
 
     void onClose();
-
-    /**
-     * Displays the documentation window
-     */
-    @JsIgnore
-    void showDoc(AppDoc appDoc);
 
     void onDetailsCategoryClicked(String modelKey);
 }

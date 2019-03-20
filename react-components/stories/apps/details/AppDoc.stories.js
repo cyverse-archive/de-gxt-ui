@@ -173,7 +173,8 @@ class AppDocTest extends Component {
                 "> #### Parameters Used in App \n" +
                 ">> inputs \n" +
                 "> #### Output File(s) \n" +
-                ">> outputs"
+                ">> outputs",
+            references: ["http://google.com", "http://cyverse.org"]
         };
 
         const presenter = {
@@ -183,7 +184,7 @@ class AppDocTest extends Component {
         };
 
         return (
-            <AppDoc app={appDetals} doc={doc} presenter={presenter}/>
+            <AppDoc app={appDetals} doc={doc} presenter={presenter} editable={true}/>
         );
     }
 }

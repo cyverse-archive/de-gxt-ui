@@ -44,6 +44,8 @@ const intlData = {
         "userManual": "User Manual",
         "copyUrlHeading": "Copy App URL",
         "docFetchError": "Unable to fetch documentation!",
+        "documentation": "Documentation:",
+        "references": "References",
     }
 };
 

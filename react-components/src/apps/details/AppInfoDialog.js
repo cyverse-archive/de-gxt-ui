@@ -18,7 +18,7 @@ import { injectIntl } from "react-intl";
 import AppDoc from "./AppDoc";
 
 function AppInfoDialog(props) {
-    const {dialogOpen, app, presenter, intl} = props;
+    const {dialogOpen, app, presenter, docEditable, intl} = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
@@ -41,7 +41,7 @@ function AppInfoDialog(props) {
                 {value === 0 && <AppDetails details={app}
                                             presenter={presenter}/>}
                 {value === 1 && <ToolDetails details={app.tools}/>}
-                {value === 2 && <AppDoc presenter={presenter} app={app}/>}
+                {value === 2 && <AppDoc presenter={presenter} app={app} editable={docEditable}/>}
             </DialogContent>
         </Dialog>
     );
