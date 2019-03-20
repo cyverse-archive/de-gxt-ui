@@ -28,6 +28,7 @@ public class BootstrapErrorController {
     @Value("${org.iplantc.discoveryenvironment.facebook-url}") private String facebookUrl;
     @Value("${org.iplantc.discoveryenvironment.newsletter-url}") private String newsletterUrl;
     @Value("${org.iplantc.discoveryenvironment.ask-url}") private String askUrl;
+    @Value("${org.iplantc.discoveryenvironment.maintenance-cal-url}") private String maintCalUrl;
 
     private final Logger LOG = LoggerFactory.getLogger(BootstrapErrorController.class);
 
@@ -61,6 +62,7 @@ public class BootstrapErrorController {
         modelAndView.addObject("facebook_url", facebookUrl);
         modelAndView.addObject("newsletter_url", newsletterUrl);
         modelAndView.addObject("ask_url", askUrl);
+        modelAndView.addObject("maintenance_cal_url", maintCalUrl);
         modelAndView.addObject("status_code", statusCode);
         modelAndView.addObject("error_message", errorMessage);
         modelAndView.addObject("request_url", request.getRequestURL());

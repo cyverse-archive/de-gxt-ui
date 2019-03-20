@@ -152,7 +152,8 @@ a:hover {
     <div id="errorPanel"></div>
 
     <p>
-        You can also learn more about goings-on at CyVerse, as well as scheduled maintenance events, upcoming
+        You can also learn more about goings-on at CyVerse, as well as
+        <a href="${maintenance_cal_url}">scheduled maintenance</a> events, upcoming
         workshops, and more by checking our <a href="${facebook_url}">CyVerse Facebook</a> page,
         following us on <a href="${twitter_url}">CyVerse Twitter</a>, and making sure you're subscribed
         to our newsletter, <a href="${newsletter_url}">The Node</a>.
