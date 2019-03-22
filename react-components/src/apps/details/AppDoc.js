@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import showdown from "showdown";
 import sanitizeHtml from "sanitize-html";
 import { Paper, withStyles } from "@material-ui/core";
@@ -18,9 +18,7 @@ import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
-
-const EDIT_MODE = "edit";
-const VIEW_MODE = "view";
+import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
 function References(props) {
     const {doc} = props;
@@ -30,7 +28,7 @@ function References(props) {
                 <Typography variant="subtitle1">{getMessage("references")}</Typography>
                 {
                     doc.references.map((ref) => {
-                        return <div>{ref}</div>
+                        return <div key={ref}>{ref}</div>
                     })
                 }
             </React.Fragment>
@@ -52,62 +50,39 @@ function WikiUrl(props) {
 }
 
 function AppDoc(props) {
-    const {presenter, app, editable, classes, intl} = props;
-    const wiki_url = app.wiki_url;
+    const {
+        appName,
+        doc,
+        documentation,
+        wiki_url,
+        editable,
+        saveDoc,
+        onDocChange,
+        loading,
+        error,
+        classes,
+        mode,
+        onModeChange,
+        intl
+    } = props;
 
-    const [doc, setDoc] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [mode, setMode] = useState(VIEW_MODE);
-
-    const documentation = (doc, mode) => {
+    const markDownToHtml = () => {
         const converter = new showdown.Converter();
         converter.setFlavor('github');
-        if (doc) {
-            if (mode === VIEW_MODE) {
-                return sanitizeHtml(converter.makeHtml(doc.documentation));
-            } else {
-                return doc.documentation;
-            }
+        if (documentation) {
+            return sanitizeHtml(converter.makeHtml(documentation));
         } else {
             return "";
         }
     };
 
-    const saveDoc = () => {
-        const md = document.getElementById("docEditor").innerHTML;
-        console.log("Inner html ->" + md);
-        setLoading(true);
-        setMode(VIEW_MODE);
-        presenter.onSaveMarkdownSelected(app.id, app.system_id, md, (doc) => {
-            setLoading(false);
-            setDoc(doc);
-        }, (statusCode, errorMessage) => {
-            setLoading(false);
-            setError(true);
-        })
+    const docChange = (event) => {
+        onDocChange(event.target.value);
     };
-
-    useEffect(() => {
-        function handleSuccess(doc) {
-            setLoading(false);
-            setDoc(doc);
-        }
-
-        function handleFailure(statusCode, message) {
-            setLoading(false);
-            setError(true);
-        }
-
-        if (!wiki_url) {
-            setLoading(true);
-            presenter.getAppDoc(app, handleSuccess, handleFailure);
-        }
-    }, []);
 
 
     if (wiki_url) {
-        return (<WikiUrl wiki_url={wiki_url} name={app.name}/>);
+        return (<WikiUrl wiki_url={wiki_url} name={appName}/>);
     }
 
     if (error) {
@@ -120,18 +95,25 @@ function AppDoc(props) {
             <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
             }
             {mode === VIEW_MODE &&
-            <div id="docEditor" dangerouslySetInnerHTML={{__html: documentation(doc, mode)}}/>
+            <React.Fragment>
+                <div dangerouslySetInnerHTML={{__html: markDownToHtml()}}/>
+                <References doc={doc}/>
+            </React.Fragment>
             }
             {mode === EDIT_MODE &&
-              <TextField multiline={true} rows={20} value={documentation(doc, mode)} fullWidth={true}/>
+            <TextField id="docEditor"
+                       multiline={true}
+                       rows={20}
+                       value={documentation}
+                       fullWidth={true}
+                       onChange={docChange}/>
             }
-            {mode === VIEW_MODE && <References doc={doc}/>}
             {(editable && mode === VIEW_MODE) &&
             <Fab color="primary"
                  aria-label="Edit"
                  style={{float: 'right'}}
                  size="medium"
-                 onClick={() => setMode(EDIT_MODE)}>
+                 onClick={() => onModeChange(EDIT_MODE)}>
                 <EditIcon/>
             </Fab>
             }

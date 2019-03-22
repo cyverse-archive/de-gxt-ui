@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import AppDoc from "../../../src/apps/details/AppDoc";
+import { VIEW_MODE } from "../../../src/apps/details/AppInfoDialog";
 
 class AppDocTest extends Component {
     render() {
@@ -177,14 +178,29 @@ class AppDocTest extends Component {
             references: ["http://google.com", "http://cyverse.org"]
         };
 
-        const presenter = {
-            getAppDoc: (id, successCallback, errCallback) => {
-                successCallback(doc);
-            },
+        const saveDoc = () => {
+            console.log("Save documentation clicked!");
+        };
+
+        const onDocChange = () => {
+          console.log("App documentation edited!");
+        };
+
+        const onModeChange = () => {
+            console.log("Mode changed!");
         };
 
         return (
-            <AppDoc app={appDetals} doc={doc} presenter={presenter} editable={true}/>
+            <AppDoc appName={appDetals.name}
+                    doc={doc}
+                    editable={true}
+                    saveDoc={saveDoc}
+                    onDocChange={onDocChange}
+                    loading={false}
+                    error={false}
+                    mode={VIEW_MODE}
+                    onModeChange={onModeChange}
+                    />
         );
     }
 }

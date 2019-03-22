@@ -239,7 +239,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
             @Override
             public void onSuccess(final Splittable result) {
                if(callback != null) {
-                   callback.onSuccess(result);
+                   callback.onSuccess(null);
                }
             }
         });

@@ -46,6 +46,7 @@ const intlData = {
         "docFetchError": "Unable to fetch documentation!",
         "documentation": "Documentation:",
         "references": "References",
+        "docSavePrompt": "You have unsaved changes in app documentation. Save now?"
     }
 };
 

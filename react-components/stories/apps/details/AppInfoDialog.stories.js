@@ -173,7 +173,7 @@ class AppInfoDialogTest extends Component {
         };
         const presenter = {
             getAppDoc: (id, successCallback, errCallback) => {
-                successCallback(doc);
+                successCallback();
             },
             onAppFavoriteSelected: (appDetails, successCallback, errCallback) => {
                 console.log("Favorite clicked!");
