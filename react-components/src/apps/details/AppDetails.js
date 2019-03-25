@@ -25,8 +25,9 @@ import style from "../../apps/style";
 import Delete from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Book from "../../resources/images/book.png";
 
-
+const AGAVE = "agave";
 function Favorite(props) {
     const {is_favorite} = props.details;
     const {classes, isExternal, onFavoriteClick} = props;
@@ -105,7 +106,7 @@ class AppDetails extends Component {
 
     render() {
         const {details, intl, classes} = this.props;
-        const {loading} = this.state;
+        const {loading, dialogOpen} = this.state;
         const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
         const {average, user, total} = details.rating;
@@ -154,9 +155,10 @@ class AppDetails extends Component {
                             <span>
                                 {
                                     user &&
-                                    <IconButton onClick={this.onDeleteRatingClick}><Delete
-                                        style={{height: 12, width: 12}}/> </IconButton>
-
+                                    <IconButton onClick={this.onDeleteRatingClick}
+                                                className={classes.ratingDelete}>
+                                        <Delete fontSize="small"/>
+                                    </IconButton>
                                 }
                             </span>
                             <span>
@@ -180,19 +182,29 @@ class AppDetails extends Component {
                                                                          "url")}/>
                         </Grid>
                         }
-                        <Grid item xs={12}>
-                            <b>{getMessage("category")}</b>
-                        </Grid>
                         {details.hierarchies &&
-                        <Grid item xs={12}>
-                            <CategoryTree hierarchies={details.hierarchies}/>
-                        </Grid>
+                        <React.Fragment>
+                            <Grid item xs={12}>
+                                <b>{getMessage("category")}</b>
+                                <CategoryTree hierarchies={details.hierarchies}/>
+                            </Grid>
+                        </React.Fragment>
+                        }
+                        {
+                            details.system_id === AGAVE &&
+                            <React.Fragment>
+                                <Grid item xs={12}>
+                                    <b>{getMessage("category")}</b>
+                                    <br/>
+                                    <img src={Book} alt={AGAVE}/> {getMessage("hpc")}
+                                </Grid>
+                            </React.Fragment>
                         }
                     </Grid>
                 </Paper>
-                    <Dialog open={this.state.dialogOpen}
+                    <Dialog open={dialogOpen}
                             fullWidth>
-                        <DEDialogHeader heading="Copy App URL"
+                        <DEDialogHeader heading={formatMessage(intl, "copyAppUrl")}
                                         onClose={() => this.setState({dialogOpen: false})}/>
                         <DialogContent>
                             <CopyTextArea text={this.state.appURL}/>

@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import showdown from "showdown";
 import sanitizeHtml from "sanitize-html";
 import { Paper, withStyles } from "@material-ui/core";
@@ -21,13 +21,13 @@ import TextField from "@material-ui/core/TextField";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
 function References(props) {
-    const {doc} = props;
-    if (doc && doc.references) {
+    const {references} = props;
+    if (references) {
         return (
             <React.Fragment>
                 <Typography variant="subtitle1">{getMessage("references")}</Typography>
                 {
-                    doc.references.map((ref) => {
+                    references.map((ref) => {
                         return <div key={ref}>{ref}</div>
                     })
                 }
@@ -52,8 +52,8 @@ function WikiUrl(props) {
 function AppDoc(props) {
     const {
         appName,
-        doc,
         documentation,
+        references,
         wiki_url,
         editable,
         saveDoc,
@@ -63,7 +63,6 @@ function AppDoc(props) {
         classes,
         mode,
         onModeChange,
-        intl
     } = props;
 
     const markDownToHtml = () => {
@@ -97,7 +96,7 @@ function AppDoc(props) {
             {mode === VIEW_MODE &&
             <React.Fragment>
                 <div dangerouslySetInnerHTML={{__html: markDownToHtml()}}/>
-                <References doc={doc}/>
+                <References references={references}/>
             </React.Fragment>
             }
             {mode === EDIT_MODE &&

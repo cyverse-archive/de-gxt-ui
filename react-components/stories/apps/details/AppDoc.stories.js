@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import AppDoc from "../../../src/apps/details/AppDoc";
 import { VIEW_MODE } from "../../../src/apps/details/AppInfoDialog";
+import { boolean } from '@storybook/addon-knobs';
 
 class AppDocTest extends Component {
     render() {
@@ -165,16 +166,16 @@ class AppDocTest extends Component {
         };
         const doc = {
             documentation: "### APPLES_rbh \n" +
-                "> #### Description and Quick Start \n" +
-                ">> The APPLES (Analysis of Plant Promoter-Linked Elements) software package is a set of tools to analyse promoter sequences on a genome-wide scale. The RBH tool is part of the APPLES package which searches for orthologous as Reciprocal Best Hits (RBH). \n" +
-                "> #### Test Data \n" +
-                ">> /iplant/home/shared/iplantcollaborative/example_data/cyverseuk/apples_testdata/apples_rbh \n" +
-                "> #### Input File(s) \n" +
-                ">> 2 x Protein fasta \n" +
-                "> #### Parameters Used in App \n" +
-                ">> inputs \n" +
-                "> #### Output File(s) \n" +
-                ">> outputs",
+                "#### Description and Quick Start \n" +
+                "The APPLES (Analysis of Plant Promoter-Linked Elements) software package is a set of tools to analyse promoter sequences on a genome-wide scale. The RBH tool is part of the APPLES package which searches for orthologous as Reciprocal Best Hits (RBH). \n" +
+                "#### Test Data \n" +
+                "/iplant/home/shared/iplantcollaborative/example_data/cyverseuk/apples_testdata/apples_rbh \n" +
+                "#### Input File(s) \n" +
+                "2 x Protein fasta \n" +
+                "#### Parameters Used in App \n" +
+                "inputs \n" +
+                "#### Output File(s) \n" +
+                "outputs",
             references: ["http://google.com", "http://cyverse.org"]
         };
 
@@ -192,8 +193,9 @@ class AppDocTest extends Component {
 
         return (
             <AppDoc appName={appDetals.name}
-                    doc={doc}
-                    editable={true}
+                    documentation={doc.documentation}
+                    references={doc.references}
+                    editable={boolean('Editable', true)}
                     saveDoc={saveDoc}
                     onDocChange={onDocChange}
                     loading={false}

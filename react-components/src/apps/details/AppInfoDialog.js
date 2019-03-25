@@ -36,12 +36,14 @@ function AppInfoDialog(props) {
     const [error, setError] = useState(false);
     const [mode, setMode] = useState(VIEW_MODE);
     const [documentation, setDocumentation] = useState(null);
+    const [references, setReferences] = useState(null);
 
     useEffect(() => {
         function handleSuccess(doc) {
             setLoading(false);
             setDoc(doc);
             setDocumentation(doc.documentation);
+            setReferences(doc.references);
         }
 
         function handleFailure(statusCode, message) {
@@ -94,7 +96,10 @@ function AppInfoDialog(props) {
             <Dialog open={dialogOpen} fullWidth={true}>
                 <DEDialogHeader heading={app.name} onClose={onClose}/>
                 <DialogContent style={{minHeight: 600}}>
-                    <Tabs value={value} onChange={handleTabChange}>
+                    <Tabs indicatorColor="primary"
+                          textColor="primary"
+                          value={value}
+                          onChange={handleTabChange}>
                         <Tab label={appInfoLabel}/>
                         <Tab label={toolInfoLabel}/>
                         <Tab label={appDocLabel}/>
@@ -105,6 +110,7 @@ function AppInfoDialog(props) {
                     {value === 2 &&
                     <AppDoc doc={doc}
                             documentation={documentation}
+                            references={references}
                             wiki_url={app.wiki_url}
                             appName={app.name}
                             onDocChange={(doc) => onDocChange(doc)}
