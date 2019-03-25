@@ -4,9 +4,6 @@ import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
@@ -25,9 +22,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -243,35 +238,5 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
                }
             }
         });
-    }
-
-    @Override
-    public HandlerRegistration addAppFavoriteSelectedEventHandlers(AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler handler) {
-        return ensureHandlers().addHandler(AppFavoriteSelectedEvent.TYPE, handler);
-    }
-
-    @Override
-    public HandlerRegistration addAppRatingDeselectedHandler(AppRatingDeselected.AppRatingDeselectedHandler handler) {
-
-        return ensureHandlers().addHandler(AppRatingDeselected.TYPE, handler);
-    }
-
-    @Override
-    public HandlerRegistration addAppRatingSelectedHandler(AppRatingSelected.AppRatingSelectedHandler handler) {
-        return ensureHandlers().addHandler(AppRatingSelected.TYPE, handler);
-    }
-
-    HandlerManager createHandlerManager() {
-        return new HandlerManager(this);
-    }
-
-    HandlerManager ensureHandlers() {
-        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
-    }
-
-    void fireEvent(GwtEvent<?> event) {
-        if (handlerManager != null) {
-            handlerManager.fireEvent(event);
-        }
     }
 }

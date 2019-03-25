@@ -1,10 +1,6 @@
 package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -29,9 +25,7 @@ import jsinterop.annotations.JsType;
  * @author jstroot
  */
 @JsType
-public interface AppDetailsView extends IsWidget,
-                                        AppUpdatedEvent.AppUpdatedEventHandler,
-                                        SaveMarkdownSelected.HasSaveMarkdownSelectedHandlers {
+public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEventHandler {
 
     @JsType
     interface AppDetailsAppearance {
@@ -114,9 +108,7 @@ public interface AppDetailsView extends IsWidget,
     }
 
     @JsType
-    interface Presenter extends AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers {
+    interface Presenter {
 
         void go(App app,
                 String searchRegexPattern,
