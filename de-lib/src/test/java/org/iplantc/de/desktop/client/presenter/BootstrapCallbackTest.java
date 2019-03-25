@@ -1,5 +1,6 @@
 package org.iplantc.de.desktop.client.presenter;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -73,7 +74,7 @@ public class BootstrapCallbackTest {
         /** CALL METHOD UNDER TEST **/
         uut.onFailure(throwableMock);
 
-        verify(presenterMock).onBootstrapError(eq(statusCode));
+        verify(presenterMock).onBootstrapError(eq(statusCode), anyString());
     }
 
     @Test
@@ -84,7 +85,7 @@ public class BootstrapCallbackTest {
         /** CALL METHOD UNDER TEST **/
         uut.onFailure(throwableMock);
 
-        verify(presenterMock).onBootstrapError(eq(statusCode));
+        verify(presenterMock).onBootstrapError(eq(statusCode), anyString());
     }
 
     @Test

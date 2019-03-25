@@ -1,5 +1,6 @@
 package org.iplantc.de.desktop.client.presenter;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -66,7 +67,7 @@ public class PropertyServiceCallbackTest {
         /** CALL METHOD UNDER TEST **/
         uut.onFailure(throwableMock);
 
-        verify(presenterMock).onBootstrapError(eq(statusCode));
+        verify(presenterMock).onBootstrapError(eq(statusCode), anyString());
     }
 
     @Test
@@ -77,7 +78,7 @@ public class PropertyServiceCallbackTest {
         /** CALL METHOD UNDER TEST **/
         uut.onFailure(throwableMock);
 
-        verify(presenterMock).onBootstrapError(eq(statusCode));
+        verify(presenterMock).onBootstrapError(eq(statusCode), anyString());
     }
 
     @Test
