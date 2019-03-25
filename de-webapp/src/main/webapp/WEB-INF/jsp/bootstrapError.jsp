@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="react_include.jsp" %>
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 
@@ -127,7 +126,7 @@ a:hover {
     );;
 }
 </style>
-
+<%@ include file="react_include.jsp" %>
 </head>
 <body>
 
