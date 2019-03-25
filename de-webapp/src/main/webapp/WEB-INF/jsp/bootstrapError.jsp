@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 
@@ -126,18 +126,7 @@ a:hover {
     );;
 }
 </style>
-
-<script type="text/javascript">
-    <%--If the user refreshes their browser, redirect to /de --%>
-    if (sessionStorage.getItem("is_reloaded")) {
-        window.location.replace('${login_url}');
-        sessionStorage.removeItem("is_reloaded");
-    } else {
-        sessionStorage.setItem("is_reloaded", 1);
-    }
-
-</script>
-
+<%@ include file="react_include.jsp" %>
 </head>
 <body>
 
@@ -156,16 +145,14 @@ a:hover {
 
     <p>
         If the error persists and you want to learn more about what's going on
-        and when it may be resolved, you can:
-    <ul>
-        <li>Contact Support at <a href="mailto:support@cyverse.org">support@cyverse.org</a></li>
-        <li>Check <a href="${ask_url}">Ask CyVerse</a></li>
-    </ul>
-
+        and when it may be resolved, you can contact support with the below error details at <a href="mailto:support@cyverse.org">support@cyverse.org</a>
     </p>
 
+    <div id="errorPanel"></div>
+
     <p>
-        You can also learn more about goings-on at CyVerse, as well as scheduled maintenance events, upcoming
+        You can also learn more about goings-on at CyVerse, as well as
+        <a href="${maintenance_cal_url}">scheduled maintenance</a> events, upcoming
         workshops, and more by checking our <a href="${facebook_url}">CyVerse Facebook</a> page,
         following us on <a href="${twitter_url}">CyVerse Twitter</a>, and making sure you're subscribed
         to our newsletter, <a href="${newsletter_url}">The Node</a>.
@@ -173,10 +160,36 @@ a:hover {
 
     <hr/>
 
-    <div style="float: left"><a href="${login_url}">Go back to ${app_name}</a></div>
     <div style="float: right"><a href="http://www.cyverse.org">CyVerse Home Page</a></div>
+    <div><a href="${login_url}">Go back to ${app_name}</a></div>
+    <div><a href="${logout_url}">Log Out</a></div>
 
 </div>
 
 </body>
 </html>
+
+<script type="text/javascript">
+    <%--If the user refreshes their browser, redirect to /de --%>
+    if (sessionStorage.getItem("is_reloaded")) {
+        window.location.replace('${login_url}');
+        sessionStorage.removeItem("is_reloaded");
+    } else {
+        sessionStorage.setItem("is_reloaded", 1);
+    }
+
+    ReactDOM.render(
+        React.createElement(
+            CyVerseReactComponents.util.ErrorExpansionPanel,
+            {
+                errMsg: '${error_message}',
+                username: '${username}',
+                userAgent: '${user_agent}',
+                date: '${date}',
+                host: '${request_url}'
+            }
+        ),
+        document.getElementById("errorPanel")
+    );
+
+</script>
