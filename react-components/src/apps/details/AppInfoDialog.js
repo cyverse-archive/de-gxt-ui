@@ -17,13 +17,15 @@ import AppDetails from "./AppDetails";
 import { injectIntl } from "react-intl";
 import AppDoc from "./AppDoc";
 import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
 
 
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
 function AppInfoDialog(props) {
-    const {dialogOpen, app, presenter, docEditable, intl} = props;
+    const {dialogOpen, app, presenter, docEditable, baseDebugId, intl} = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
@@ -31,7 +33,6 @@ function AppInfoDialog(props) {
     const [value, setValue] = useState(0);
     const [dirty, setDirty] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-    const [doc, setDoc] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [mode, setMode] = useState(VIEW_MODE);
@@ -41,7 +42,6 @@ function AppInfoDialog(props) {
     useEffect(() => {
         function handleSuccess(doc) {
             setLoading(false);
-            setDoc(doc);
             setDocumentation(doc.documentation);
             setReferences(doc.references);
         }
@@ -88,12 +88,11 @@ function AppInfoDialog(props) {
     const onDocChange = (updatedDoc) => {
         setDirty(true);
         setDocumentation(updatedDoc);
-        setDoc(doc);
     };
 
     return (
         <React.Fragment>
-            <Dialog open={dialogOpen} fullWidth={true}>
+            <Dialog open={dialogOpen} fullWidth={true} id={baseDebugId}>
                 <DEDialogHeader heading={app.name} onClose={onClose}/>
                 <DialogContent style={{minHeight: 600}}>
                     <Tabs indicatorColor="primary"
@@ -104,11 +103,13 @@ function AppInfoDialog(props) {
                         <Tab label={toolInfoLabel}/>
                         <Tab label={appDocLabel}/>
                     </Tabs>
-                    {value === 0 && <AppDetails details={app}
+                    {value === 0 && <AppDetails baseDebugId={baseDebugId}
+                                                details={app}
                                                 presenter={presenter}/>}
-                    {value === 1 && <ToolDetails details={app.tools}/>}
+                    {value === 1 && <ToolDetails baseDebugId={build(baseDebugId, ids.DETAILS.APP_TOOLS)}
+                                                 details={app.tools}/>}
                     {value === 2 &&
-                    <AppDoc doc={doc}
+                    <AppDoc baseDebugId={build(baseDebugId, ids.DETAILS.APP_DOCUMENTATION)}
                             documentation={documentation}
                             references={references}
                             wiki_url={app.wiki_url}

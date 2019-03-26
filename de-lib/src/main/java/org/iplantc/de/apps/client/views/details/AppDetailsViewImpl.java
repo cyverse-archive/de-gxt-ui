@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent.AppUpdatedEventHandler;
 import org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
@@ -67,6 +68,7 @@ public class AppDetailsViewImpl extends Composite implements
         props.presenter = presenter;
         props.dialogOpen = true;
         props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
+        props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 

@@ -173,7 +173,11 @@ class AppInfoDialogTest extends Component {
             }
         };
         return (
-            <AppInfoDialog app={appDetals} dialogOpen={true} presenter={presenter} editable={false}/>
+            <AppInfoDialog baseDebugId="appDetails"
+                           app={appDetals}
+                           dialogOpen={true}
+                           presenter={presenter}
+                           editable={false}/>
         )
     }
 }

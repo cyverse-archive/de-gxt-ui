@@ -26,6 +26,7 @@ public class ReactAppDetails {
         public AppDetailsView.Presenter presenter;
         public boolean dialogOpen;
         public boolean docEditable;
+        public String baseDebugId;
     }
 
 }

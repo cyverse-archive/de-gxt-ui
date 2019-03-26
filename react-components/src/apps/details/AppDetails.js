@@ -26,19 +26,23 @@ import Delete from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Book from "../../resources/images/book.png";
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
+
 
 const AGAVE = "agave";
 function Favorite(props) {
-    const {is_favorite} = props.details;
+    const {is_favorite, id} = props.details;
     const {classes, isExternal, onFavoriteClick} = props;
     let className = classes.disableFavorite;
-
+    const debugId = build(props.baseDebugId, id);
     if (!isExternal) {
         className = is_favorite ? classes.favorite : classes.notFavorite;
     }
 
     return (
-        <div className={className} onClick={() => onFavoriteClick(isExternal)}></div>
+        <div id={build(debugId, ids.DETAILS.APP_FAVORITE_CELL)} className={className}
+             onClick={() => onFavoriteClick(isExternal)}></div>
     );
 }
 
@@ -105,7 +109,7 @@ class AppDetails extends Component {
     }
 
     render() {
-        const {details, intl, classes} = this.props;
+        const {details, baseDebugId, intl, classes} = this.props;
         const {loading, dialogOpen} = this.state;
         const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
@@ -114,13 +118,14 @@ class AppDetails extends Component {
         if (details) {
             return (
                 <React.Fragment>
-                    <Paper style={{padding: 5, fontSize: 11}}>
+                    <Paper id={baseDebugId} style={{padding: 5, fontSize: 11}}>
                         {loading &&
                         <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                         }
                     <Grid container spacing={24} style={{paddingLeft: 5}}>
                         <Grid item xs={12}>
-                            <Favorite details={details}
+                            <Favorite baseDebugId={baseDebugId}
+                                      details={details}
                                       isExternal={isExternal}
                                       classes={classes}
                                       onFavoriteClick={this.onFavoriteClick}/>
@@ -184,7 +189,7 @@ class AppDetails extends Component {
                         }
                         {details.hierarchies &&
                         <React.Fragment>
-                            <Grid item xs={12}>
+                            <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
                                 <b>{getMessage("category")}</b>
                                 <CategoryTree hierarchies={details.hierarchies}/>
                             </Grid>
@@ -193,7 +198,7 @@ class AppDetails extends Component {
                         {
                             details.system_id === AGAVE &&
                             <React.Fragment>
-                                <Grid item xs={12}>
+                                <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
                                     <b>{getMessage("category")}</b>
                                     <br/>
                                     <img src={Book} alt={AGAVE}/> {getMessage("hpc")}

@@ -19,6 +19,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
+import LoadingOverlay from 'react-loading-overlay'
 
 function References(props) {
     const {references} = props;
@@ -40,9 +41,9 @@ function References(props) {
 }
 
 function WikiUrl(props) {
-    const {wiki_url, name} = props;
+    const {id, wiki_url, name} = props;
     return (
-        <div style={{padding: 5}}>
+        <div id={id} style={{padding: 5}}>
             <Typography variant="subtitle1">{getMessage("documentation")}</Typography>
             <DEHyperLink text={name} onClick={() => window.open(wiki_url, "_blank")}/>
         </div>
@@ -51,6 +52,7 @@ function WikiUrl(props) {
 
 function AppDoc(props) {
     const {
+        baseDebugId,
         appName,
         documentation,
         references,
@@ -81,18 +83,20 @@ function AppDoc(props) {
 
 
     if (wiki_url) {
-        return (<WikiUrl wiki_url={wiki_url} name={appName}/>);
+        return (<WikiUrl id={baseDebugId} wiki_url={wiki_url} name={appName}/>);
     }
 
     if (error) {
-        return (<div>{getMessage("docFetchError")}</div>);
+        return (<div id={baseDebugId} >{getMessage("docFetchError")}</div>);
     }
 
+
     return (
-        <Paper style={{padding: 5, fontSize:12}}>
-            {loading &&
-            <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-            }
+        <Paper id={baseDebugId} style={{padding: 5, fontSize:12}}>
+            <LoadingOverlay
+                active={loading}
+                spinner={<CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>}
+            >
             {mode === VIEW_MODE &&
             <React.Fragment>
                 <div dangerouslySetInnerHTML={{__html: markDownToHtml()}}/>
@@ -125,6 +129,7 @@ function AppDoc(props) {
                 <SaveIcon/>
             </Fab>
             }
+            </LoadingOverlay>
         </Paper>
     );
 }
