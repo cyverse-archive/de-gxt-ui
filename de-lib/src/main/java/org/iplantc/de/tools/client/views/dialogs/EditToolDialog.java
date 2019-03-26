@@ -29,6 +29,7 @@ public class EditToolDialog extends IPlantDialog {
        this.appearance = appearance;
        setHeading(appearance.create());
        setHideOnButtonClick(false);
+       setResizable(true);
 
        getOkButton().addSelectHandler(new SelectEvent.SelectHandler() {
            @Override
