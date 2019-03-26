@@ -3,13 +3,11 @@ package org.iplantc.de.apps.client.views.details;
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent.AppUpdatedEventHandler;
-import org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,8 +31,6 @@ public class AppDetailsViewImpl extends Composite implements
     private String searchRegexPattern;
     HTMLPanel panel;
 
-    @Inject
-    AsyncProviderWrapper<AppDocMarkdownDialog> markdownDialogProvider;
     @Inject
     EventBus eventBus;
     @Inject
@@ -76,12 +72,6 @@ public class AppDetailsViewImpl extends Composite implements
     public void onClose() {
         props.dialogOpen = false;
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
-    }
-
-
-    @Override
-    public void onDetailsCategoryClicked(String modelKey) {
-
     }
 
 
