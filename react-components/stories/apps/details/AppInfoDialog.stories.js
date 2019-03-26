@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AppInfoDialog from "../../../src/apps/details/AppInfoDialog";
+import { text } from '@storybook/addon-knobs';
 
 
 class AppInfoDialogTest extends Component {
@@ -174,6 +175,7 @@ class AppInfoDialogTest extends Component {
         };
         return (
             <AppInfoDialog baseDebugId="appDetails"
+                           searchRegexPattern={text('Search Pattern', 'roger')}
                            app={appDetals}
                            dialogOpen={true}
                            presenter={presenter}

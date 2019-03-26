@@ -25,7 +25,7 @@ export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
 function AppInfoDialog(props) {
-    const {dialogOpen, app, presenter, docEditable, baseDebugId, intl} = props;
+    const {dialogOpen, app, presenter, docEditable, searchRegexPattern, baseDebugId, intl} = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
@@ -104,9 +104,11 @@ function AppInfoDialog(props) {
                         <Tab label={appDocLabel}/>
                     </Tabs>
                     {value === 0 && <AppDetails baseDebugId={baseDebugId}
+                                                searchRegexPattern={searchRegexPattern}
                                                 details={app}
                                                 presenter={presenter}/>}
                     {value === 1 && <ToolDetails baseDebugId={build(baseDebugId, ids.DETAILS.APP_TOOLS)}
+                                                 searchRegexPattern={searchRegexPattern}
                                                  details={app.tools}/>}
                     {value === 2 &&
                     <AppDoc baseDebugId={build(baseDebugId, ids.DETAILS.APP_DOCUMENTATION)}

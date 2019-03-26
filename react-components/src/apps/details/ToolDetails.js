@@ -13,6 +13,7 @@ import injectSheet from "react-jss";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Typography from "@material-ui/core/Typography";
 import build from "../../util/DebugIDUtil";
+import Highlighter from "../../util/Highlighter";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {
@@ -37,13 +38,18 @@ class ToolDetailsV1 extends Component {
         let tools = this.props.details,
             labelClass = classes.toolDetailsLabel,
             valueClass = classes.toolDetailsValue;
-        const {baseDebugId} = this.props;
+        const {baseDebugId, searchRegexPattern} = this.props;
         return (
                     tools.map((toolInfo, index) => (
                         <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography variant="caption"> {toolInfo.name}:
-                                    {toolInfo.description}</Typography>
+                                <Typography variant="caption"> <Highlighter
+                                    search={searchRegexPattern}>{toolInfo.name} </Highlighter>:
+                                    <Highlighter
+                                        search={searchRegexPattern}>
+                                        {toolInfo.description}
+                                    </Highlighter>
+                                </Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <table>

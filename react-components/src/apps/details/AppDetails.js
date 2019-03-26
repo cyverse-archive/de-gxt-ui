@@ -28,6 +28,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Book from "../../resources/images/book.png";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
+import Highlighter from "../../util/Highlighter";
 
 
 const AGAVE = "agave";
@@ -109,7 +110,7 @@ class AppDetails extends Component {
     }
 
     render() {
-        const {details, baseDebugId, intl, classes} = this.props;
+        const {details, searchRegexPattern, baseDebugId, intl, classes} = this.props;
         const {loading, dialogOpen} = this.state;
         const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
@@ -131,19 +132,29 @@ class AppDetails extends Component {
                                       onFavoriteClick={this.onFavoriteClick}/>
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("descriptionLabel")}:</b> {details.description}
+                            <b>{getMessage("descriptionLabel")}:</b>
+                            <Highlighter
+                                search={searchRegexPattern}>{details.description}</Highlighter>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6">{getMessage("detailsLabel")}</Typography>
+                            <Typography variant="h6">
+                                {getMessage("detailsLabel")}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("publishedOn")}</b> {formatDate(details.integration_date)}
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("integratorName")}</b> {details.integrator_name}
+                            <b>{getMessage("integratorName")}</b>
+                            <Highlighter
+                                search={searchRegexPattern}>{details.integrator_name}
+                            </Highlighter>
                         </Grid>
                         <Grid item xs={12}>
-                            <b>{getMessage("integratorEmail")}</b> {details.integrator_email}
+                            <b>{getMessage("integratorEmail")}</b>
+                            <Highlighter search={searchRegexPattern}>
+                                {details.integrator_email}
+                            </Highlighter>
                         </Grid>
                         <Grid item xs={12}>
                             <b>{getMessage("detailsRatingLbl")} </b>
@@ -182,16 +193,17 @@ class AppDetails extends Component {
                         </Grid>
                         {showAppURL &&
                         <Grid item xs={12}>
-                            <b>{getMessage("url")}:</b> <DEHyperLink onClick={this.onAppUrlClick}
-                                                                     text={formatMessage(intl,
-                                                                         "url")}/>
+                            <b>{getMessage("url")}:</b>
+                            <DEHyperLink onClick={this.onAppUrlClick}
+                                         text={formatMessage(intl, "url")}/>
                         </Grid>
                         }
                         {details.hierarchies &&
                         <React.Fragment>
                             <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
                                 <b>{getMessage("category")}</b>
-                                <CategoryTree hierarchies={details.hierarchies}/>
+                                <CategoryTree searchRegexPattern={searchRegexPattern}
+                                              hierarchies={details.hierarchies}/>
                             </Grid>
                         </React.Fragment>
                         }
@@ -212,7 +224,8 @@ class AppDetails extends Component {
                         <DEDialogHeader heading={formatMessage(intl, "copyAppUrl")}
                                         onClose={() => this.setState({dialogOpen: false})}/>
                         <DialogContent>
-                            <CopyTextArea text={this.state.appURL}/>
+                            <CopyTextArea id={build(baseDebugId, ids.DETAILS.APP_URL_TEXT)}
+                                          text={this.state.appURL}/>
                         </DialogContent>
                     </Dialog>
                 </React.Fragment>

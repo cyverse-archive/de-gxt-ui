@@ -7,6 +7,7 @@ import "rc-tree/assets/index.css";
 import Book from "../../resources/images/book.png";
 import Book_Open from "../../resources/images/book_open.png";
 import Book_Add from "../../resources/images/book_add.png";
+import Highlighter from "../../util/Highlighter";
 
 
 const Icon = (props) => {
@@ -23,31 +24,36 @@ const Icon = (props) => {
     }
 };
 class CategoryTree extends Component {
-    renderHierarchyNode(hierarchyClass, parentKey) {
-        let modelKey =
-            (parentKey ? parentKey + "/" : "") + hierarchyClass.label;
+
+    renderHierarchyNode(hierarchyClass, parentKey, searchRegexPattern) {
+        let modelKey = (parentKey ? parentKey + "/" : "") + hierarchyClass.label;
         return (
             <TreeNode key={modelKey}
-                      title={hierarchyClass.label}
+                      title={<Highlighter
+                          search={searchRegexPattern}>{hierarchyClass.label}</Highlighter>}
                       icon={Icon}
                       isLeaf={hierarchyClass.subclasses ? false : true}>
                 {
                     hierarchyClass.subclasses ?
-                        hierarchyClass.subclasses.map( (subclass) => this.renderHierarchyNode(subclass, modelKey) )
+                        hierarchyClass.subclasses.map((subclass) => this.renderHierarchyNode(subclass,
+                            modelKey,
+                            searchRegexPattern))
                         : null
                 }
             </TreeNode>
         );
     }
     render() {
-        let hierarchies = this.props.hierarchies;
+        const {hierarchies, searchRegexPattern} = this.props;
 
         return (
             <Tree
                 id={this.props.id}
                 defaultExpandAll={false}
                 onExpand={this.onExpand}>
-                {hierarchies.map( (hierarchyClass) => this.renderHierarchyNode(hierarchyClass) )}
+                {hierarchies.map((hierarchyClass) => this.renderHierarchyNode(hierarchyClass,
+                    "",
+                    searchRegexPattern))}
             </Tree>
         );
     }

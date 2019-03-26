@@ -27,6 +27,7 @@ public class ReactAppDetails {
         public boolean dialogOpen;
         public boolean docEditable;
         public String baseDebugId;
+        public String searchRegexPattern;
     }
 
 }
