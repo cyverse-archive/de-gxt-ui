@@ -28,7 +28,6 @@ export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
 function AppInfoDialog(props) {
-
     const {
         dialogOpen,
         app,
@@ -182,7 +181,6 @@ function AppInfoDialog(props) {
                 cancelLabel={formatMessage(intl, "discardChanges")}
             />
         </React.Fragment>
-
     );
 }
 
