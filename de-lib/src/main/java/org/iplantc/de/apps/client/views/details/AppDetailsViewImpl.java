@@ -65,7 +65,7 @@ public class AppDetailsViewImpl extends Composite implements
         props.dialogOpen = true;
         props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
-        props.searchRegexPattern = this.searchRegexPattern;
+        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 
