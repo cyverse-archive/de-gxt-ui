@@ -49,6 +49,10 @@ const intlData = {
         "docSavePrompt": "You have unsaved changes in app documentation. Save now?",
         "copyAppUrl": "Copy App URL",
         "hpc": "High-Performance Computing",
+        "yes": "Yes",
+        "cancel": "Cancel",
+        "closeNoSave": "Close without saving",
+        "save": "Save",
     }
 };
 

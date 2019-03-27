@@ -14,17 +14,24 @@ import PropTypes from "prop-types";
 import ids from "./ids";
 import build from "../DebugIDUtil";
 
+export const TWO_BUTTON_VARIANT = "twoButtonVariant";
+export const THREE_BUTTON_VARIANT = "threeButtonVariant";
+
 class DEConfirmationDialog extends Component {
     render() {
         const {
             heading,
             message,
             dialogOpen,
+            variant,
             onOkBtnClick,
             onCancelBtnClick,
+            onOptionalBtnClick,
             debugId,
             okLabel,
-            messages,
+            cancelLabel,
+            optionalLabel,
+            messages
         } = this.props;
         const dialogTitleID = build(debugId, "title");
 
@@ -42,12 +49,21 @@ class DEConfirmationDialog extends Component {
                 />
                 <DialogContent>{message}</DialogContent>
                 <DialogActions>
-                    <Button
-                        id={build(debugId, ids.CANCEL)}
-                        onClick={onCancelBtnClick}
-                        color="primary"
+                    { variant === THREE_BUTTON_VARIANT &&
+                    <Button id={build(debugId, ids.OPTIONAL)}
+                            onClick={() => {
+                                if (onOptionalBtnClick) {
+                                    onOptionalBtnClick();
+                                }
+                            }} color="primary">
+                        {optionalLabel}
+                    </Button>
+                   }
+                    <Button id={build(debugId, ids.CANCEL)}
+                            onClick={onCancelBtnClick}
+                            color="primary"
                     >
-                        {getMessage("cancelBtnText")}
+                        {cancelLabel}
                     </Button>
                     <Button
                         id={build(debugId, ids.OK)}
@@ -65,6 +81,9 @@ class DEConfirmationDialog extends Component {
 
 DEConfirmationDialog.defaultProps = {
     okLabel: getMessage("okBtnText"),
+    cancelLabel: getMessage("cancelBtnText"),
+    closeLabel: getMessage("closeBtnText"),
+    variant: TWO_BUTTON_VARIANT,
 };
 
 DEConfirmationDialog.propTypes = {
@@ -75,6 +94,11 @@ DEConfirmationDialog.propTypes = {
         .isRequired,
     onOkBtnClick: PropTypes.func.isRequired,
     onCancelBtnClick: PropTypes.func.isRequired,
+    onOptionalBtnClick: PropTypes.func,
     debugId: PropTypes.string.isRequired,
+    okLabel: PropTypes.string,
+    cancelLabel: PropTypes.string,
+    optionalLabel: PropTypes.string,
+    variant:  PropTypes.oneOf([TWO_BUTTON_VARIANT, THREE_BUTTON_VARIANT]),
 };
 export default withI18N(DEConfirmationDialog, intlData);

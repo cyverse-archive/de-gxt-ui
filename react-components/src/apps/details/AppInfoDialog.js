@@ -16,9 +16,9 @@ import ToolDetails from "./ToolDetails";
 import AppDetails from "./AppDetails";
 import { injectIntl } from "react-intl";
 import AppDoc from "./AppDoc";
-import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
+import DEConfirmationDialog, { THREE_BUTTON_VARIANT } from "../../util/dialog/DEConfirmationDialog";
 
 
 export const EDIT_MODE = "edit";
@@ -75,9 +75,11 @@ function AppInfoDialog(props) {
             setLoading(false);
             setMode(VIEW_MODE);
             setDirty(false);
+            setConfirmDialogOpen(false);
         }, (statusCode, errorMessage) => {
             setLoading(false);
             setError(true);
+            setConfirmDialogOpen(false);
         });
     };
 
@@ -126,19 +128,21 @@ function AppInfoDialog(props) {
                     />}
                 </DialogContent>
             </Dialog>
-            <ConfirmCloseDialog open={confirmDialogOpen}
-                                parentId="AppInfoDialog"
-                                onConfirm={saveDoc}
-                                onClose={() => {
-                                    setConfirmDialogOpen(false);
-                                    presenter.onClose();
-                                }}
-                                onCancel={() => setConfirmDialogOpen(false)}
-                                title={getMessage("save")}
-                                dialogContent={getMessage("docSavePrompt")}
-                                confirmLabel={getMessage("yes")}
-                                closeLabel={getMessage("no")}
-                                cancelLabel={getMessage("cancel")}/>
+            <DEConfirmationDialog dialogOpen={confirmDialogOpen}
+                                  variant={THREE_BUTTON_VARIANT}
+                                  messages={intlData}
+                                  debugId={baseDebugId}
+                                  onOkBtnClick={saveDoc}
+                                  onCancelBtnClick={() => setConfirmDialogOpen(false)}
+                                  onOptionalBtnClick={() => {
+                                      setConfirmDialogOpen(false);
+                                      presenter.onClose();
+                                  }}
+                                  heading={formatMessage(intl, "save")}
+                                  message={formatMessage(intl,"docSavePrompt")}
+                                  okLabel={formatMessage(intl, "yes")}
+                                  cancelLabel={formatMessage(intl, "cancel")}
+                                  optionalLabel={formatMessage(intl, "closeNoSave")}/>
         </React.Fragment>
     );
 }
