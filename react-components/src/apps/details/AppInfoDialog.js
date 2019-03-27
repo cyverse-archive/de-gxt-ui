@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import Tabs from "@material-ui/core/Tabs";
@@ -18,7 +18,7 @@ import { injectIntl } from "react-intl";
 import AppDoc from "./AppDoc";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
-import DEConfirmationDialog, { THREE_BUTTON_VARIANT } from "../../util/dialog/DEConfirmationDialog";
+import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 
 
 export const EDIT_MODE = "edit";
@@ -92,6 +92,12 @@ function AppInfoDialog(props) {
         setDocumentation(updatedDoc);
     };
 
+    const onDiscardChanges = () => {
+        setDirty(false);
+        setConfirmDialogOpen(false);
+        presenter.onClose();
+    };
+
     return (
         <React.Fragment>
             <Dialog open={dialogOpen} fullWidth={true} id={baseDebugId}>
@@ -129,20 +135,15 @@ function AppInfoDialog(props) {
                 </DialogContent>
             </Dialog>
             <DEConfirmationDialog dialogOpen={confirmDialogOpen}
-                                  variant={THREE_BUTTON_VARIANT}
                                   messages={intlData}
                                   debugId={baseDebugId}
                                   onOkBtnClick={saveDoc}
-                                  onCancelBtnClick={() => setConfirmDialogOpen(false)}
-                                  onOptionalBtnClick={() => {
-                                      setConfirmDialogOpen(false);
-                                      presenter.onClose();
-                                  }}
+                                  onCancelBtnClick={onDiscardChanges}
                                   heading={formatMessage(intl, "save")}
                                   message={formatMessage(intl,"docSavePrompt")}
-                                  okLabel={formatMessage(intl, "yes")}
-                                  cancelLabel={formatMessage(intl, "cancel")}
-                                  optionalLabel={formatMessage(intl, "closeNoSave")}/>
+                                  okLabel={formatMessage(intl, "save")}
+                                  cancelLabel={formatMessage(intl, "discardChanges")}
+            />
         </React.Fragment>
     );
 }
