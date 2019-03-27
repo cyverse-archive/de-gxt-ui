@@ -55,7 +55,8 @@ const intlData = {
         save: "Save",
         discardChanges: "Discard changes",
         edit: "Edit",
-    },
+    }
+
 };
 
 export default intlData;
