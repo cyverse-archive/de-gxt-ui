@@ -50,7 +50,8 @@ const intlData = {
         "copyAppUrl": "Copy App URL",
         "hpc": "High-Performance Computing",
         "save": "Save",
-        "discardChanges": "Discard changes"
+        "discardChanges": "Discard changes",
+        "edit":"Edit",
     }
 };
 

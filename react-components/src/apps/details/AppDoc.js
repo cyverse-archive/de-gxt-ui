@@ -9,7 +9,7 @@ import sanitizeHtml from "sanitize-html";
 import { Paper, withStyles } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import style from "../style";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import { injectIntl } from "react-intl";
 import intlData from "../messages";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
@@ -20,6 +20,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 import LoadingOverlay from 'react-loading-overlay'
+import Tooltip from "@material-ui/core/Tooltip";
 
 function References(props) {
     const {references} = props;
@@ -65,6 +66,7 @@ function AppDoc(props) {
         classes,
         mode,
         onModeChange,
+        intl
     } = props;
 
     const markDownToHtml = () => {
@@ -112,22 +114,26 @@ function AppDoc(props) {
                        onChange={docChange}/>
             }
             {(editable && mode === VIEW_MODE) &&
-            <Fab color="primary"
-                 aria-label="Edit"
-                 style={{float: 'right'}}
-                 size="medium"
-                 onClick={() => onModeChange(EDIT_MODE)}>
-                <EditIcon/>
-            </Fab>
+            <Tooltip title={formatMessage(intl, "edit")} aria-label={formatMessage(intl, "edit")}>
+                <Fab color="primary"
+                     aria-label="Edit"
+                     style={{float: 'right'}}
+                     size="medium"
+                     onClick={() => onModeChange(EDIT_MODE)}>
+                    <EditIcon/>
+                </Fab>
+            </Tooltip>
             }
             {(editable && mode === EDIT_MODE) &&
-            <Fab color="primary"
-                 aria-label="Save"
-                 style={{float: 'right'}}
-                 size="medium"
-                 onClick={saveDoc}>
-                <SaveIcon/>
-            </Fab>
+            <Tooltip title={formatMessage(intl, "save")} aria-label={formatMessage(intl, "save")}>
+                <Fab color="primary"
+                     aria-label="Save"
+                     style={{float: 'right'}}
+                     size="medium"
+                     onClick={saveDoc}>
+                    <SaveIcon/>
+                </Fab>
+            </Tooltip>
             }
             </LoadingOverlay>
         </Paper>
