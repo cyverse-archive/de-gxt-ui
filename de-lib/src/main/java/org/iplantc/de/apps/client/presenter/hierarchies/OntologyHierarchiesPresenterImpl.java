@@ -236,8 +236,8 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
-                App app = event.getApp();
-                appUserService.getAppDetails(app, new AppDetailsCallback(app));
+        App app = event.getApp();
+        appUserService.getAppDetails(app, new AppDetailsCallback(app));
     }
 
     void createViewTabs(final OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {
