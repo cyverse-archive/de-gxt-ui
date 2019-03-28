@@ -1,13 +1,15 @@
 /**
- * @author psarando
+ * @author psarando, sriram
  */
 import React, { Component } from "react";
 import Tree, { TreeNode } from "rc-tree";
 import "rc-tree/assets/index.css";
+
+import Highlighter from "../../util/Highlighter";
+
 import Book from "../../resources/images/book.png";
 import Book_Open from "../../resources/images/book_open.png";
 import Book_Add from "../../resources/images/book_add.png";
-import Highlighter from "../../util/Highlighter";
 
 
 const Icon = (props) => {

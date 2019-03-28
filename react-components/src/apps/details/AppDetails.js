@@ -4,31 +4,38 @@
  **/
 
 import React, { Component } from 'react';
-import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+
+import Rating from "react-rating";
+import { injectIntl } from "react-intl";
+
+import ids from "../ids";
+import constants from "../../constants";
+import formatDate from "../../util/DateFormatter";
+import intlData from "../../apps/messages";
+import style from "../../apps/style";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
-import Grid from "@material-ui/core/Grid";
-import Rating from "react-rating";
+import CategoryTree from "./CategoryTree";
+import CopyTextArea from "../../util/CopyTextArea";
+import DEHyperLink from "../../util/hyperlink/DEHyperLink";
+import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+
+import Book from "../../resources/images/book.png";
+import build from "../../util/DebugIDUtil";
+import Highlighter from "../../util/Highlighter";
+
 import goldstar from "../../../src/resources/images/star-gold.gif";
 import whitestar from "../../../src/resources/images/star-white.gif";
 import redstar from "../../../src/resources/images/star-red.gif";
-import intlData from "../../apps/messages";
-import CategoryTree from "./CategoryTree";
-import formatDate from "../../util/DateFormatter";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import { injectIntl } from "react-intl";
-import CopyTextArea from "../../util/CopyTextArea";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import constants from "../../constants";
-import style from "../../apps/style";
-import Delete from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Book from "../../resources/images/book.png";
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
-import Highlighter from "../../util/Highlighter";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import Delete from "@material-ui/icons/Delete";
+
+
 
 
 const AGAVE = "agave";

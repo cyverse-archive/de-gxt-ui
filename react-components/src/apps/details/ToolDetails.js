@@ -3,17 +3,21 @@
  *
  */
 import React, { Component } from "react";
+
+import build from "../../util/DebugIDUtil";
+import intlData from "../messages";
+import style from "../style";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import Highlighter from "../../util/Highlighter";
+
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import intlData from "../messages";
-import styles from "../style";
-import injectSheet from "react-jss";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+
 import Typography from "@material-ui/core/Typography";
-import build from "../../util/DebugIDUtil";
-import Highlighter from "../../util/Highlighter";
+import { withStyles } from "@material-ui/core";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {
@@ -106,4 +110,4 @@ class ToolDetailsV1 extends Component {
     }
 }
 
-export default injectSheet(styles)(withI18N(ToolDetailsV1, intlData));
+export default withStyles(style)(withI18N(ToolDetailsV1, intlData));

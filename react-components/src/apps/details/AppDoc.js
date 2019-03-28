@@ -4,23 +4,28 @@
  **/
 
 import React from 'react';
-import showdown from "showdown";
+
+import LoadingOverlay from 'react-loading-overlay'
 import sanitizeHtml from "sanitize-html";
-import { Paper, withStyles } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import showdown from "showdown";
+import { injectIntl } from "react-intl";
+
+import intlData from "../messages";
 import style from "../style";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
-import { injectIntl } from "react-intl";
-import intlData from "../messages";
+import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
+
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import Typography from "@material-ui/core/Typography";
+
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
+import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import { Paper, withStyles } from "@material-ui/core";
+
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
-import TextField from "@material-ui/core/TextField";
-import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
-import LoadingOverlay from 'react-loading-overlay'
-import Tooltip from "@material-ui/core/Tooltip";
 
 function References(props) {
     const {references} = props;
