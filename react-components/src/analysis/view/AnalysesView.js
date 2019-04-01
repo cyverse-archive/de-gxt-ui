@@ -68,17 +68,17 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                <ToolTip title={getMessage("htDetails")}>
-                    <img
-                        src={analysesExpandIcon}
-                        alt={altAnalysesExpandIcon}
-                        onClick={handleBatchIconClick}
-                        style={{ height: 16 }}
-                        id={build(baseId, ids.ICONS.BATCH)}
-                    />
-                </ToolTip>
-                <sup>{name}</sup>
-            </span>
+        <ToolTip title={getMessage("htDetails")}>
+          <img
+              src={analysesExpandIcon}
+              alt={altAnalysesExpandIcon}
+              onClick={handleBatchIconClick}
+              style={{ height: 16 }}
+              id={build(baseId, ids.ICONS.BATCH)}
+          />
+        </ToolTip>
+        <sup>{name}</sup>
+      </span>
         );
     } else if (
         (status === analysisStatus.SUBMITTED ||
@@ -92,15 +92,13 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                <LaunchIcon
-                    onClick={() =>
-                        handleInteractiveUrlClick(interactiveUrls[0])
-                    }
-                    id={build(baseId, ids.ICONS.INTERACTIVE)}
-                    style={{ color: Color.darkBlue }}
-                />
-                <sup>{name}</sup>
-            </span>
+        <LaunchIcon
+            onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
+            id={build(baseId, ids.ICONS.INTERACTIVE)}
+            style={{ color: Color.darkBlue }}
+        />
+        <sup>{name}</sup>
+      </span>
         );
     } else if (parentId) {
         return (
@@ -109,17 +107,17 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                <ToolTip title={getMessage("viewAll")}>
-                    <img
-                        src={analysesCollapseIcon}
-                        alt={altAnalysesCollapseIcon}
-                        onClick={handleViewAllIconClick}
-                        id={build(baseId, ids.ICONS.COLLAPSE)}
-                        style={{ height: 16 }}
-                    />
-                </ToolTip>
-                <sup>{name}</sup>
-            </span>
+        <ToolTip title={getMessage("viewAll")}>
+          <img
+              src={analysesCollapseIcon}
+              alt={altAnalysesCollapseIcon}
+              onClick={handleViewAllIconClick}
+              id={build(baseId, ids.ICONS.COLLAPSE)}
+              style={{ height: 16 }}
+          />
+        </ToolTip>
+        <sup>{name}</sup>
+      </span>
         );
     } else {
         return (
@@ -128,8 +126,8 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                {name}
-            </span>
+        {name}
+      </span>
         );
     }
 }
@@ -143,12 +141,9 @@ function AppName(props) {
 
     if (!isDisabled) {
         return (
-            <span
-                className={className}
-                onClick={() => handleRelaunch(analysis)}
-            >
-                {name}
-            </span>
+            <span className={className} onClick={() => handleRelaunch(analysis)}>
+        {name}
+      </span>
         );
     } else {
         return <span>{name}</span>;
@@ -163,15 +158,15 @@ function Status(props) {
     ) {
         return (
             <DEHyperLink
-                onClick={(analysis) => onClick(analysis)}
+                onClick={analysis => onClick(analysis)}
                 text={analysis.status}
             />
         );
     } else {
         return (
             <span style={{ textAlign: "left", fontSize: "11px" }}>
-                {analysis.status}
-            </span>
+        {analysis.status}
+      </span>
         );
     }
 }
@@ -182,59 +177,59 @@ const columnData = [
         name: "Name",
         numeric: false,
         enableSorting: true,
-        key: "name",
+        key: "name"
     },
     {
         id: ids.OWNER,
         name: "Owner",
         numeric: false,
         enableSorting: false,
-        key: "owner",
+        key: "owner"
     },
     {
         id: ids.APP,
         name: "App",
         numeric: false,
         enableSorting: false,
-        key: "app",
+        key: "app"
     },
     {
         id: ids.START_DATE,
         name: "Start Date",
         numeric: false,
         enableSorting: true,
-        key: "startdate",
+        key: "startdate"
     },
     {
         id: ids.END_DATE,
         name: "End Date",
         numeric: false,
         enableSorting: true,
-        key: "enddate",
+        key: "enddate"
     },
     {
         id: ids.STATUS,
         name: "Status",
         numeric: false,
         enableSorting: true,
-        key: "status",
+        key: "status"
     },
     {
         name: "",
         numeric: false,
-        enableSorting: false,
-    },
+        enableSorting: false
+    }
 ];
 
 const IPLANT = "iplantcollaborative";
 
 const filter = {
     field: "",
-    value: "",
+    value: ""
 };
 
 const filterList = {
-    filters: [],
+    filters: []
 };
 
 const ALL = "all";
@@ -270,7 +265,7 @@ class AnalysesView extends Component {
             commentsDialogOpen: false,
             viewParamsDialogOpen: false,
             shareWithSupportDialogOpen: false,
-            confirmDeleteDialogOpen: false,
+            confirmDeleteDialogOpen: false
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -307,9 +302,7 @@ class AnalysesView extends Component {
         );
         this.handleSearch = this.handleSearch.bind(this);
         this.getSearchFilter = this.getSearchFilter.bind(this);
-        this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(
-            this
-        );
+        this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(this);
         this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
@@ -363,16 +356,16 @@ class AnalysesView extends Component {
             filtersObj,
             orderBy,
             order.toUpperCase(),
-            (analysesList) => {
+            analysesList => {
                 this.setState({
                     loading: false,
                     data: analysesList.analyses,
-                    total: analysesList.total ? analysesList.total : 0,
+                    total: analysesList.total ? analysesList.total : 0
                 });
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
@@ -399,7 +392,7 @@ class AnalysesView extends Component {
         this.setState(
             {
                 order,
-                orderBy,
+                orderBy
             },
             () => this.fetchAnalyses(false)
         );
@@ -497,9 +490,7 @@ class AnalysesView extends Component {
 
     handleSelectAllClick(event, checked) {
         if (checked) {
-            this.setState((state) => ({
-                selected: state.data.map((n) => n.id),
-            }));
+            this.setState(state => ({ selected: state.data.map(n => n.id) }));
             return;
         }
         this.setState({ selected: [] });
@@ -525,20 +516,17 @@ class AnalysesView extends Component {
                 comment,
                 () => {
                     this.setState({
-                        loading: false,
+                        loading: false
                     });
                 },
                 (errorCode, errorMessage) => {
                     this.setState({
-                        loading: false,
+                        loading: false
                     });
                 }
             );
         } else {
-            this.setState({
-                loading: false,
-                shareWithSupportDialogOpen: false,
-            });
+            this.setState({ loading: false, shareWithSupportDialogOpen: false });
         }
     }
 
@@ -576,9 +564,7 @@ class AnalysesView extends Component {
 
     handleGoToOutputFolder(analysis) {
         if (analysis) {
-            this.props.presenter.onAnalysisNameSelected(
-                analysis.resultfolderid
-            );
+            this.props.presenter.onAnalysisNameSelected(analysis.resultfolderid);
         } else {
             this.props.presenter.onAnalysisNameSelected(
                 this.findAnalysis(this.state.selected[0]).resultfolderid
@@ -595,16 +581,16 @@ class AnalysesView extends Component {
         this.setState({ loading: true });
         this.props.paramPresenter.fetchAnalysisParameters(
             selected,
-            (params) => {
+            params => {
                 this.setState({
                     loading: false,
                     parameters: params.parameters,
-                    viewParamsDialogOpen: true,
+                    viewParamsDialogOpen: true
                 });
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
@@ -623,11 +609,11 @@ class AnalysesView extends Component {
             parameters.forEach(function(param) {
                 contents = contents.concat(
                     param.param_name +
-                        "\t" +
-                        param.param_type +
-                        "\t" +
-                        param.displayValue +
-                        "\t\n"
+                    "\t" +
+                    param.param_type +
+                    "\t" +
+                    param.displayValue +
+                    "\t\n"
                 );
             });
             this.props.paramPresenter.saveParamsToFile(
@@ -635,13 +621,13 @@ class AnalysesView extends Component {
                 () => {
                     this.setState({
                         loading: false,
-                        viewParamsDialogOpen: true,
+                        viewParamsDialogOpen: true
                     });
                 },
                 (errorCode, errorMessage) => {
                     this.setState({
                         loading: false,
-                        viewParamsDialogOpen: true,
+                        viewParamsDialogOpen: true
                     });
                 }
             );
@@ -668,23 +654,23 @@ class AnalysesView extends Component {
         this.setState({ loading: true });
         this.props.presenter.onAnalysisJobInfoSelected(
             id,
-            (info) => {
+            info => {
                 this.setState({
                     loading: false,
                     info: info,
-                    infoDialogOpen: true,
+                    infoDialogOpen: true
                 });
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
     }
 
     handleShare() {
-        const selectedAnalyses = this.state.selected.map((id) =>
+        const selectedAnalyses = this.state.selected.map(id =>
             this.findAnalysis(id)
         );
         this.props.presenter.onShareAnalysisSelected(selectedAnalyses);
@@ -692,7 +678,7 @@ class AnalysesView extends Component {
 
     handleCancel() {
         this.setState({ loading: true });
-        const selectedAnalyses = this.state.selected.map((id) =>
+        const selectedAnalyses = this.state.selected.map(id =>
             this.findAnalysis(id)
         );
         const presenter = this.props.presenter;
@@ -716,11 +702,11 @@ class AnalysesView extends Component {
             });
 
             Promise.all(promises)
-                .then((value) => {
+                .then(value => {
                     this.setState({ loading: false });
                     this.fetchAnalyses();
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.setState({ loading: false });
                     this.fetchAnalyses();
                 });
@@ -729,7 +715,7 @@ class AnalysesView extends Component {
 
     handleSaveAndComplete() {
         this.setState({ loading: true });
-        const selectedAnalyses = this.state.selected.map((id) =>
+        const selectedAnalyses = this.state.selected.map(id =>
             this.findAnalysis(id)
         );
         const presenter = this.props.presenter;
@@ -753,11 +739,11 @@ class AnalysesView extends Component {
             });
 
             Promise.all(promises)
-                .then((value) => {
+                .then(value => {
                     this.setState({ loading: false });
                     this.fetchAnalyses();
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.setState({ loading: false });
                     this.fetchAnalyses();
                 });
@@ -775,14 +761,14 @@ class AnalysesView extends Component {
                 this.setState(
                     {
                         loading: false,
-                        selected: [],
+                        selected: []
                     },
                     () => this.fetchAnalyses()
                 );
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
@@ -803,13 +789,13 @@ class AnalysesView extends Component {
             newName,
             () => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
                 this.update(this.state.selected[0], newName);
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
@@ -822,14 +808,14 @@ class AnalysesView extends Component {
             comments,
             () => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
                 let analysis = this.findAnalysis(this.state.selected[0]);
                 analysis.description = comments;
             },
             (errorCode, errorMessage) => {
                 this.setState({
-                    loading: false,
+                    loading: false
                 });
             }
         );
@@ -883,8 +869,7 @@ class AnalysesView extends Component {
                 }
                 if (
                     found.batch &&
-                    (found.batch_status.running > 0 ||
-                        found.batch_status.submitted > 0)
+                    (found.batch_status.running > 0 || found.batch_status.submitted > 0)
                 ) {
                     return false;
                 }
@@ -933,7 +918,7 @@ class AnalysesView extends Component {
             viewFilter,
             appTypeFilter,
             nameFilter,
-            parentId,
+            parentId
         } = this.props;
         const {
             rowsPerPage,
@@ -948,7 +933,7 @@ class AnalysesView extends Component {
             confirmDeleteDialogOpen,
             parameters,
             info,
-            infoDialogOpen,
+            infoDialogOpen
         } = this.state;
 
         const selectedAnalysis = this.findAnalysis(selected[0]);
@@ -1000,19 +985,16 @@ class AnalysesView extends Component {
                     <div className={classes.table}>
                         <Table>
                             <TableBody>
-                                {data.map((analysis) => {
+                                {data.map(analysis => {
                                     const id = analysis.id;
                                     const isSelected = this.isSelected(id);
                                     const user =
-                                        analysis.username &&
-                                        analysis.username.includes(IPLANT)
+                                        analysis.username && analysis.username.includes(IPLANT)
                                             ? analysis.username.split("@")[0]
                                             : analysis.username;
                                     return (
                                         <TableRow
-                                            onClick={() =>
-                                                this.handleRowClick(id)
-                                            }
+                                            onClick={() => this.handleRowClick(id)}
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
@@ -1023,110 +1005,62 @@ class AnalysesView extends Component {
                                         >
                                             <TableCell padding="none">
                                                 <Checkbox
-                                                    id={build(
-                                                        gridId,
-                                                        id + ids.CHECKBOX
-                                                    )}
+                                                    id={build(gridId, id + ids.CHECKBOX)}
                                                     onClick={(event, n) =>
-                                                        this.handleCheckBoxClick(
-                                                            event,
-                                                            id
-                                                        )
+                                                        this.handleCheckBoxClick(event, id)
                                                     }
                                                     checked={isSelected}
                                                 />
                                             </TableCell>
                                             <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.ANALYSIS_NAME_CELL
-                                                )}
+                                                id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
                                                 padding="none"
                                             >
                                                 <AnalysisName
                                                     classes={classes}
                                                     intl={intl}
                                                     analysis={analysis}
-                                                    baseId={build(
-                                                        gridId,
-                                                        id +
-                                                            ids.ANALYSIS_NAME_CELL
-                                                    )}
+                                                    baseId={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
                                                     parentId={parentId}
-                                                    handleGoToOutputFolder={
-                                                        this
-                                                            .handleGoToOutputFolder
-                                                    }
+                                                    handleGoToOutputFolder={this.handleGoToOutputFolder}
                                                     handleInteractiveUrlClick={
-                                                        this
-                                                            .handleInteractiveUrlClick
+                                                        this.handleInteractiveUrlClick
                                                     }
-                                                    handleBatchIconClick={(
-                                                        event
-                                                    ) =>
-                                                        this.handleBatchIconClick(
-                                                            event,
-                                                            id,
-                                                            analysis.name
-                                                        )
+                                                    handleBatchIconClick={event =>
+                                                        this.handleBatchIconClick(event, id, analysis.name)
                                                     }
-                                                    handleViewAllIconClick={(
-                                                        event
-                                                    ) =>
-                                                        this.handleViewAllIconClick(
-                                                            event
-                                                        )
+                                                    handleViewAllIconClick={event =>
+                                                        this.handleViewAllIconClick(event)
                                                     }
                                                 />
                                             </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
+                                            <TableCell className={classes.cellText} padding="none">
                                                 {user}
                                             </TableCell>
                                             <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.APP_NAME_CELL
-                                                )}
+                                                id={build(gridId, id + ids.APP_NAME_CELL)}
                                                 className={classes.cellText}
                                                 padding="none"
                                             >
                                                 <AppName
                                                     analysis={analysis}
-                                                    handleRelaunch={
-                                                        this.handleRelaunch
-                                                    }
+                                                    handleRelaunch={this.handleRelaunch}
                                                     classes={classes}
                                                 />
                                             </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
+                                            <TableCell className={classes.cellText} padding="none">
                                                 {formatDate(analysis.startdate)}
                                             </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
+                                            <TableCell className={classes.cellText} padding="none">
                                                 {formatDate(analysis.enddate)}
                                             </TableCell>
                                             <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.SUPPORT_CELL
-                                                )}
+                                                id={build(gridId, id + ids.SUPPORT_CELL)}
                                                 padding="none"
                                             >
                                                 <Status
                                                     analysis={analysis}
-                                                    onClick={() =>
-                                                        this.statusClick(
-                                                            analysis
-                                                        )
-                                                    }
+                                                    onClick={() => this.statusClick(analysis)}
                                                     username={username}
                                                 />
                                             </TableCell>
@@ -1134,59 +1068,27 @@ class AnalysesView extends Component {
                                                 <DotMenu
                                                     baseDebugId={build(
                                                         gridId,
-                                                        id +
-                                                            ids.ANALYSIS_DOT_MENU
+                                                        id + ids.ANALYSIS_DOT_MENU
                                                     )}
-                                                    handleGoToOutputFolder={
-                                                        this
-                                                            .handleGoToOutputFolder
-                                                    }
-                                                    handleViewParams={
-                                                        this.handleViewParams
-                                                    }
-                                                    handleRelaunch={
-                                                        this.handleRelaunch
-                                                    }
-                                                    handleViewInfo={
-                                                        this.handleViewInfo
-                                                    }
-                                                    handleShare={
-                                                        this.handleShare
-                                                    }
-                                                    handleCancel={
-                                                        this.handleCancel
-                                                    }
-                                                    handleDeleteClick={
-                                                        this.handleDeleteClick
-                                                    }
-                                                    handleRename={
-                                                        this.handleRename
-                                                    }
-                                                    handleUpdateComments={
-                                                        this
-                                                            .handleUpdateComments
-                                                    }
+                                                    handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                    handleViewParams={this.handleViewParams}
+                                                    handleRelaunch={this.handleRelaunch}
+                                                    handleViewInfo={this.handleViewInfo}
+                                                    handleShare={this.handleShare}
+                                                    handleCancel={this.handleCancel}
+                                                    handleDeleteClick={this.handleDeleteClick}
+                                                    handleRename={this.handleRename}
+                                                    handleUpdateComments={this.handleUpdateComments}
                                                     isDisabled={this.isDisabled}
-                                                    isMultiSelect={
-                                                        this.isMultiSelect
-                                                    }
-                                                    shouldDisableCancel={
-                                                        this.shouldDisableCancel
-                                                    }
+                                                    isMultiSelect={this.isMultiSelect}
+                                                    shouldDisableCancel={this.shouldDisableCancel}
                                                     isOwner={this.isOwner}
                                                     isSharable={this.isSharable}
-                                                    handleSaveAndComplete={
-                                                        this
-                                                            .handleSaveAndComplete
-                                                    }
-                                                    selectionCount={
-                                                        selectionCount
-                                                    }
+                                                    handleSaveAndComplete={this.handleSaveAndComplete}
+                                                    selectionCount={selectionCount}
                                                     owner={owner}
                                                     sharable={sharable}
-                                                    disableCancel={
-                                                        disableCancel
-                                                    }
+                                                    disableCancel={disableCancel}
                                                 />
                                             </TableCell>
                                         </TableRow>
@@ -1208,10 +1110,7 @@ class AnalysesView extends Component {
                         </Table>
                         {!hasData && (
                             <Typography
-                                style={{
-                                    margin: "0, auto, 0, auto",
-                                    width: 600,
-                                }}
+                                style={{ margin: "0, auto, 0, auto", width: 600 }}
                                 align="center"
                                 variant="subtitle1"
                             >
@@ -1240,9 +1139,7 @@ class AnalysesView extends Component {
                         heading={formatMessage(intl, "renameDlgHeader")}
                         prompt={formatMessage(intl, "renamePrompt")}
                         onOkBtnClick={this.doRename}
-                        onCancelBtnClick={() =>
-                            this.setState({ renameDialogOpen: false })
-                        }
+                        onCancelBtnClick={() => this.setState({ renameDialogOpen: false })}
                         dialogOpen={this.state.renameDialogOpen}
                     />
                 )}
@@ -1285,11 +1182,10 @@ class AnalysesView extends Component {
                 )}
                 {info && (
                     <AnalysisInfoDialog
+                        baseDebugId={baseDebugId}
                         info={info}
                         dialogOpen={infoDialogOpen}
-                        onInfoDialogClose={() =>
-                            this.setState({ infoDialogOpen: false })
-                        }
+                        onInfoDialogClose={() => this.setState({ infoDialogOpen: false })}
                     />
                 )}
                 <DEConfirmationDialog
@@ -1319,7 +1215,7 @@ AnalysesView.propTypes = {
     appNameFilter: PropTypes.string,
     viewFilter: PropTypes.string.isRequired,
     appTypeFilter: PropTypes.string.isRequired,
-    idFilter: PropTypes.string,
+    idFilter: PropTypes.string
 };
 
 export default withStyles(exStyles)(
