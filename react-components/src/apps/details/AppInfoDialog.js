@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -23,6 +24,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+
 
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
@@ -194,4 +196,9 @@ AppInfoDialog.propTypes = {
     intl: PropTypes.object.isRequired,
 };
 
+<<<<<<< HEAD
 export default withI18N(injectIntl(AppInfoDialog), intlData);
+=======
+export default (withI18N(injectIntl(AppInfoDialog), intlData));
+
+>>>>>>> 9c8c494... core-52 address PR comments.
