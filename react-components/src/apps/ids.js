@@ -6,6 +6,7 @@ export default ({
        APP_FAVORITE_CELL: "favorite",
        CATEGORIES_TREE : "tree",
        APP_URL_TEXT : ".appUrlText",
+       APP_DOC_EDITOR: "docEditor",
     }
 
 });

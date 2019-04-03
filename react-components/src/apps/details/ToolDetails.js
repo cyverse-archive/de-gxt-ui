@@ -47,8 +47,9 @@ class ToolDetailsV1 extends Component {
                     tools.map((toolInfo, index) => (
                         <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography variant="caption"> <Highlighter
-                                    search={searchRegexPattern}>{toolInfo.name} </Highlighter>:
+                                <Typography variant="caption">
+                                    <Highlighter
+                                        search={searchRegexPattern}>{toolInfo.name} </Highlighter>:
                                     <Highlighter
                                         search={searchRegexPattern}>
                                         {toolInfo.description}

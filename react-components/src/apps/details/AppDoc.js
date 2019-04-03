@@ -5,11 +5,13 @@
 
 import React from 'react';
 
-import LoadingOverlay from 'react-loading-overlay'
+import LoadingOverlay from 'react-loading-overlay';
 import sanitizeHtml from "sanitize-html";
 import showdown from "showdown";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
 import intlData from "../messages";
 import style from "../style";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
@@ -26,6 +28,8 @@ import { Paper, withStyles } from "@material-ui/core";
 
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
+
+
 
 function References(props) {
     const {references} = props;
@@ -111,7 +115,7 @@ function AppDoc(props) {
             </React.Fragment>
             }
             {mode === EDIT_MODE &&
-            <TextField id="docEditor"
+            <TextField id={build(baseDebugId, ids.DETAILS.APP_DOC_EDITOR)}
                        multiline={true}
                        rows={20}
                        value={documentation}

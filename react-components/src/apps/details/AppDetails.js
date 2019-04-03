@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 
+import PropTypes from "prop-types";
 import Rating from "react-rating";
 import { injectIntl } from "react-intl";
 
@@ -36,9 +37,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
 
 
-
-
-const AGAVE = "agave";
 function Favorite(props) {
     const {is_favorite, id} = props.details;
     const {classes, isExternal, onFavoriteClick} = props;
@@ -130,101 +128,101 @@ class AppDetails extends Component {
                         {loading &&
                         <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                         }
-                    <Grid container spacing={24} style={{paddingLeft: 5}}>
-                        <Grid item xs={12}>
-                            <Favorite baseDebugId={baseDebugId}
-                                      details={details}
-                                      isExternal={isExternal}
-                                      classes={classes}
-                                      onFavoriteClick={this.onFavoriteClick}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("descriptionLabel")}:</b>
-                            <Highlighter
-                                search={searchRegexPattern}>{details.description}</Highlighter>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6">
-                                {getMessage("detailsLabel")}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("publishedOn")}</b> {formatDate(details.integration_date)}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("integratorName")}</b>
-                            <Highlighter
-                                search={searchRegexPattern}>{details.integrator_name}
-                            </Highlighter>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("integratorEmail")}</b>
-                            <Highlighter search={searchRegexPattern}>
-                                {details.integrator_email}
-                            </Highlighter>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("detailsRatingLbl")} </b>
-                            <Rating
-                                placeholderRating={average}
-                                emptySymbol={<img src={whitestar} className="icon" alt="white star"/>}
-                                fullSymbol={<img src={goldstar} className="icon" alt="gold star"/>}
-                                placeholderSymbol={<img src={redstar} className="icon"
-                                                        alt="red star"/>}
-                                fractions={2}
-                                readonly={isExternal}
-                                onChange={this.onRatingChange}
-                            />
-                            <span>
-                                {
-                                    user &&
-                                    <IconButton onClick={this.onDeleteRatingClick}
-                                                className={classes.ratingDelete}>
-                                        <Delete fontSize="small"/>
-                                    </IconButton>
-                                }
-                            </span>
-                            <span>
-                                    ({total ? total : 0})
-                            </span>
-
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("analysesCompleted")}</b>
-                            {details.job_stats.job_count_completed ?
-                                details.job_stats.job_count_completed :
-                                0}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <b>{getMessage("detailsLastCompleted")}</b> {formatDate(details.job_stats.job_last_completed)}
-                        </Grid>
-                        {showAppURL &&
-                        <Grid item xs={12}>
-                            <b>{getMessage("url")}:</b>
-                            <DEHyperLink onClick={this.onAppUrlClick}
-                                         text={formatMessage(intl, "url")}/>
-                        </Grid>
-                        }
-                        {details.hierarchies &&
-                        <React.Fragment>
-                            <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
-                                <b>{getMessage("category")}</b>
-                                <CategoryTree searchRegexPattern={searchRegexPattern}
-                                              hierarchies={details.hierarchies}/>
+                        <Grid container spacing={24} style={{paddingLeft: 5}}>
+                            <Grid item xs={12}>
+                                <Favorite baseDebugId={baseDebugId}
+                                          details={details}
+                                          isExternal={isExternal}
+                                          classes={classes}
+                                          onFavoriteClick={this.onFavoriteClick}/>
                             </Grid>
-                        </React.Fragment>
-                        }
-                        {
-                            details.system_id === AGAVE &&
+                            <Grid item xs={12}>
+                                <b>{getMessage("descriptionLabel")}:</b>
+                                <Highlighter
+                                    search={searchRegexPattern}>{details.description}</Highlighter>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6">
+                                    {getMessage("detailsLabel")}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("publishedOn")}</b> {formatDate(details.integration_date)}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("integratorName")}</b>
+                                <Highlighter
+                                    search={searchRegexPattern}>{details.integrator_name}
+                                </Highlighter>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("integratorEmail")}</b>
+                                <Highlighter search={searchRegexPattern}>
+                                    {details.integrator_email}
+                                </Highlighter>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("detailsRatingLbl")} </b>
+                                <Rating
+                                    placeholderRating={average}
+                                    emptySymbol={<img src={whitestar} className="icon" alt="white star"/>}
+                                    fullSymbol={<img src={goldstar} className="icon" alt="gold star"/>}
+                                    placeholderSymbol={<img src={redstar} className="icon"
+                                                            alt="red star"/>}
+                                    fractions={2}
+                                    readonly={isExternal}
+                                    onChange={this.onRatingChange}
+                                />
+                                <span>
+                                    {
+                                        user &&
+                                        <IconButton onClick={this.onDeleteRatingClick}
+                                                    className={classes.ratingDelete}>
+                                            <Delete fontSize="small"/>
+                                        </IconButton>
+                                    }
+                                </span>
+                                <span>
+                                        ({total ? total : 0})
+                                </span>
+
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("analysesCompleted")}</b>
+                                {details.job_stats.job_count_completed ?
+                                    details.job_stats.job_count_completed :
+                                    0}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <b>{getMessage("detailsLastCompleted")}</b> {formatDate(details.job_stats.job_last_completed)}
+                            </Grid>
+                            {showAppURL &&
+                            <Grid item xs={12}>
+                                <b>{getMessage("url")}:</b>
+                                <DEHyperLink onClick={this.onAppUrlClick}
+                                             text={formatMessage(intl, "url")}/>
+                            </Grid>
+                            }
+                            {details.hierarchies &&
                             <React.Fragment>
                                 <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
                                     <b>{getMessage("category")}</b>
-                                    <br/>
-                                    <img src={Book} alt={AGAVE}/> {getMessage("hpc")}
+                                    <CategoryTree searchRegexPattern={searchRegexPattern}
+                                                  hierarchies={details.hierarchies}/>
                                 </Grid>
                             </React.Fragment>
-                        }
-                    </Grid>
+                            }
+                            {
+                                details.system_id === constants.AGAVE &&
+                                <React.Fragment>
+                                    <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
+                                        <b>{getMessage("category")}</b>
+                                        <br/>
+                                        <img src={Book} alt={constants.AGAVE}/> {getMessage("hpc")}
+                                    </Grid>
+                                </React.Fragment>
+                            }
+                        </Grid>
                 </Paper>
                     <Dialog open={dialogOpen}
                             fullWidth>
@@ -243,6 +241,12 @@ class AppDetails extends Component {
     }
 }
 
-AppDetails.propTypes = {};
+AppDetails.propTypes = {
+    details: PropTypes.object.isRequired,
+    searchRegexPattern: PropTypes.string.isRequired,
+    baseDebugId: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(style)((withI18N(injectIntl(AppDetails), intlData)));

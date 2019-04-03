@@ -24,5 +24,6 @@ export default {
     STATE: "state",
     APPS: "apps",
     DATA: "data",
+    AGAVE: "agave",
 };
 
