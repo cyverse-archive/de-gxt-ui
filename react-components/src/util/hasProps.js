@@ -8,9 +8,7 @@ import React, { Component } from "react";
 export default function hasProps(WrappedComponent, injectedProps) {
     return class extends Component {
         render() {
-            return (
-                <WrappedComponent {...injectedProps} {...this.props} />
-            )
+            return <WrappedComponent {...injectedProps} {...this.props} />;
         }
-    }
-};
+    };
+}

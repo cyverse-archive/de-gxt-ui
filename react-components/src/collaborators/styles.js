@@ -1,15 +1,15 @@
-const style = theme => ({
+const style = (theme) => ({
     searchField: {
-        padding: '2px',
-        '&:hover': {
+        padding: "2px",
+        "&:hover": {
             background: theme.palette.action.hover,
-            cursor: 'pointer'
-        }
+            cursor: "pointer",
+        },
     },
 
     searchIcon: {
-        margin: '0px 2px 0px 2px',
-    }
+        margin: "0px 2px 0px 2px",
+    },
 });
 
 export default style;

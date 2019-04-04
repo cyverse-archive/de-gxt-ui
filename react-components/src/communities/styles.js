@@ -1,6 +1,6 @@
 import palette from "../util/CyVersePalette";
 
-const styles = theme => ({
+const styles = (theme) => ({
     column: {
         display: "flex",
         flexDirection: "column",
@@ -9,7 +9,7 @@ const styles = theme => ({
 
     subjectSearch: {
         flexGrow: 1,
-        flexBasis: '200px'
+        flexBasis: "200px",
     },
 
     formItem: {
@@ -25,7 +25,7 @@ const styles = theme => ({
     },
 
     textBlurb: {
-        margin: '10px',
+        margin: "10px",
     },
 
     wrapper: {
@@ -34,11 +34,14 @@ const styles = theme => ({
     },
 
     hidden: {
-        visibility: "hidden"
+        visibility: "hidden",
     },
 
     table: {
-        height: "calc(100% - " + theme.mixins.toolbar['@media (min-width:600px)'].minHeight + "px)",
+        height:
+            "calc(100% - " +
+            theme.mixins.toolbar["@media (min-width:600px)"].minHeight +
+            "px)",
         overflow: "auto",
     },
 
@@ -46,7 +49,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.error.main,
         "&:hover": {
             backgroundColor: theme.palette.error.dark,
-        }
+        },
     },
 
     grow: {
@@ -54,11 +57,11 @@ const styles = theme => ({
     },
 
     loading: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
         color: palette.orange,
-    }
+    },
 });
 
 export default styles;

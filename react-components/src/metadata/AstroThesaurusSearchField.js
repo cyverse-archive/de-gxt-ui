@@ -1,35 +1,26 @@
 /**
  * @author psarando
  */
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import PropTypes from "prop-types";
 
 import { getMessage } from "../util/I18NWrapper";
 import { FormSearchField } from "../util/FormField";
 
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
 
 const customStyles = {
-    menu: base => ({
+    menu: (base) => ({
         ...base,
         position: "relative",
         zIndex: 888888,
     }),
 };
 
-const AstroThesaurusOption = ({
-    innerRef,
-    isFocused,
-    innerProps,
-    data,
-}) => (
-    <MenuItem
-        buttonRef={innerRef}
-        selected={isFocused}
-        {...innerProps}
-    >
+const AstroThesaurusOption = ({ innerRef, isFocused, innerProps, data }) => (
+    <MenuItem buttonRef={innerRef} selected={isFocused} {...innerProps}>
         <ListItemText primary={data.label} secondary={data.iri} />
     </MenuItem>
 );
@@ -48,25 +39,30 @@ class AstroThesaurusSearchField extends Component {
     };
 
     loadOptions(inputValue, callback) {
-        this.props.presenter.searchAstroThesaurusTerms(inputValue, (results) => callback(results && results.items));
+        this.props.presenter.searchAstroThesaurusTerms(inputValue, (results) =>
+            callback(results && results.items)
+        );
     }
 
     formatCreateLabel(inputValue) {
-        return getMessage("formatMetadataTermFreeTextOption", {values: { inputValue } });
+        return getMessage("formatMetadataTermFreeTextOption", {
+            values: { inputValue },
+        });
     }
 
     render() {
         const { presenter, ...props } = this.props;
 
         return (
-            <FormSearchField loadOptions={this.loadOptions}
-                             variant="asyncCreatable"
-                             labelKey="label"
-                             valueKey="label"
-                             CustomOption={AstroThesaurusOption}
-                             formatCreateLabel={this.formatCreateLabel}
-                             styles={customStyles}
-                             {...props}
+            <FormSearchField
+                loadOptions={this.loadOptions}
+                variant="asyncCreatable"
+                labelKey="label"
+                valueKey="label"
+                CustomOption={AstroThesaurusOption}
+                formatCreateLabel={this.formatCreateLabel}
+                styles={customStyles}
+                {...props}
             />
         );
     }

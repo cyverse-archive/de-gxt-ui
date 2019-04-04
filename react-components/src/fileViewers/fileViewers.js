@@ -1,5 +1,3 @@
 import VideoViewer from "./VideoViewer";
 
-export {
-    VideoViewer
-};
+export { VideoViewer };

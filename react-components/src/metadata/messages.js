@@ -1,13 +1,13 @@
-import constants from "./constants"
+import constants from "./constants";
 
-const importIRODSMetadataMsg =
-    `This will import your existing metadata to the CyVerse metadata database. This cannot be undone.
+const importIRODSMetadataMsg = `This will import your existing metadata to the CyVerse metadata database. This cannot be undone.
 For more information, please see
-<a href='${constants.IMPORT_IRODS_METADATA_LINK}' target='_blank'>Using Metadata with the CyVerse Data Store</a>.
+<a href='${
+    constants.IMPORT_IRODS_METADATA_LINK
+}' target='_blank'>Using Metadata with the CyVerse Data Store</a>.
 Continue?`;
 
-const helpText =
-    `<p>An attribute is a changeable property or characteristic of the file or folder you have selected that can be set to a value.</p>
+const helpText = `<p>An attribute is a changeable property or characteristic of the file or folder you have selected that can be set to a value.</p>
 <p>For example, "filetype" is an attribute of a file and "text" would be its value.</p>
 <p>
 By entering this information, you are describing the contents and context of the data.
@@ -31,7 +31,8 @@ export default {
         back: "Back",
         close: "Close",
         confirmDiscardChangesDialogHeader: "Discard Changes?",
-        confirmDiscardChangesDialogMsg: "You have unsaved changes. Do you wish to continue without saving?",
+        confirmDiscardChangesDialogMsg:
+            "You have unsaved changes. Do you wish to continue without saving?",
         dialogTitleEditEnumValue: "Edit Enum Value",
         dialogTitleEditMetadataFor: "Edit Metadata for { targetName }",
         dialogTitleEditMetadataTemplate: "Edit Metadata Template",
@@ -44,7 +45,8 @@ export default {
         enumDefaultLabel: "Default Selection?",
         enumValues: "Enum Values",
         errAVUEditFormTooltip: "Please fix all errors.",
-        errAttrHasErrors: "Attribute (or a child attribute) has 1 or more errors.",
+        errAttrHasErrors:
+            "Attribute (or a child attribute) has 1 or more errors.",
         errAttrNameMustBeUnique: "Attribute name must be unique",
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",
@@ -53,7 +55,8 @@ export default {
         helpText,
         importIRODSMetadata: "Import to User Metadata",
         importIRODSMetadataMsg,
-        importIRODSMetadataTooltip: "Imports your existing metadata to the CyVerse metadata database. This action cannot be undone.",
+        importIRODSMetadataTooltip:
+            "Imports your existing metadata to the CyVerse metadata database. This action cannot be undone.",
         markAsDeleted: "Mark as Deleted?",
         metadataChildrenLabel: "Child Metadata",
         metadataUnitLabel: "Unit",
@@ -62,12 +65,15 @@ export default {
         newAttrName: "New attribute { count }",
         newValue: "New value { count }",
         olsQueryParams: "Ontology Lookup Service Query Params",
-        olsSettingAllChildrenOfHelpLabel: "Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):",
+        olsSettingAllChildrenOfHelpLabel:
+            "Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):",
         olsSettingAllChildrenOfTitle: "All Children",
-        olsSettingChildrenOfHelpLabel: "Restrict searches to all children of a given term (subclassOf/is-a relation only):",
+        olsSettingChildrenOfHelpLabel:
+            "Restrict searches to all children of a given term (subclassOf/is-a relation only):",
         olsSettingChildrenOfTitle: "Children",
         olsSettingIRIColumnLabel: "IRI",
-        olsSettingOntologyHelpLabel: "Restrict searches to a set of ontologies:",
+        olsSettingOntologyHelpLabel:
+            "Restrict searches to a set of ontologies:",
         olsSettingOntologyColumnLabel: "OLS Ontology ID",
         olsSettingOntologyTitle: "Ontologies",
         olsSettingTypeLabel: "Restrict searches to an entity type:",
@@ -78,9 +84,10 @@ export default {
         templateNameLabel: "Name",
         templateValidationErrMsgNumber: "Please enter a valid number.",
         templateValidationErrMsgTimestamp: "Please enter a valid date/time.",
-        templateValidationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
+        templateValidationErrMsgURL:
+            "A valid URL must begin with either ftp or http or https.",
         userMetadata: "User Metadata",
         value: "Value",
         viewInTemplate: "View in Template",
-    }
+    },
 };

@@ -7,21 +7,23 @@ export default (theme) => ({
         // height: 250,
     },
     input: {
-        display: 'flex',
+        display: "flex",
         padding: 0,
     },
     valueContainer: {
-        display: 'flex',
+        display: "flex",
         flex: 1,
-        alignItems: 'center',
+        alignItems: "center",
     },
     chip: {
         margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
     },
     chipFocused: {
         backgroundColor: emphasize(
-            theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
-            0.08,
+            theme.palette.type === "light"
+                ? theme.palette.grey[300]
+                : theme.palette.grey[700],
+            0.08
         ),
     },
     noOptionsMessage: {
@@ -32,7 +34,7 @@ export default (theme) => ({
         fontSize: 16,
     },
     placeholder: {
-        position: 'absolute',
+        position: "absolute",
         left: 2,
         fontSize: 16,
     },

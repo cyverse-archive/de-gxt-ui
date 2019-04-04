@@ -13,12 +13,12 @@ import { withStyles } from "@material-ui/core/styles";
  * An icon used to visually indicate a Collaborator List, also uses a tooltip
  */
 function CollaboratorListIcon(props) {
-    const {classes} = props;
+    const { classes } = props;
     return (
-        <ToolTip title={getMessage('collaboratorListToolTip')}>
-            <ListAlt className={classes.searchIcon}/>
+        <ToolTip title={getMessage("collaboratorListToolTip")}>
+            <ListAlt className={classes.searchIcon} />
         </ToolTip>
-    )
+    );
 }
 
 export default withStyles(styles)(withI18N(CollaboratorListIcon, messages));

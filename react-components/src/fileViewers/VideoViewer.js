@@ -7,10 +7,7 @@ import ReactPlayer from "react-player";
  * A simple component that will play the video at the given URL
  */
 function VideoViewer(props) {
-    return (
-        <ReactPlayer url={props.url}
-                     controls={true}/>
-    );
+    return <ReactPlayer url={props.url} controls={true} />;
 }
 
 VideoViewer.propTypes = {

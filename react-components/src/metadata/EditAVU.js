@@ -72,7 +72,9 @@ class EditAVU extends Component {
         const dialogTitleID = build(formID, ids.TITLE);
 
         const title = getMessage(
-            editable ? "dialogTitleEditMetadataFor" : "dialogTitleViewMetadataFor",
+            editable
+                ? "dialogTitleEditMetadataFor"
+                : "dialogTitleViewMetadataFor",
             { values: { targetName } }
         );
 
@@ -96,77 +98,110 @@ class EditAVU extends Component {
                         enterDelay={200}
                     >
                         <Toolbar>
-                            <IconButton id={build(formID, ids.BUTTONS.CLOSE)}
-                                        color="inherit"
-                                        aria-label={formatMessage(intl, "close")}
-                                        disabled={!!error}
-                                        onClick={this.props.closeAttrDialog}
+                            <IconButton
+                                id={build(formID, ids.BUTTONS.CLOSE)}
+                                color="inherit"
+                                aria-label={formatMessage(intl, "close")}
+                                disabled={!!error}
+                                onClick={this.props.closeAttrDialog}
                             >
                                 <ArrowBack />
                             </IconButton>
-                            <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
+                            <Typography
+                                id={dialogTitleID}
+                                variant="h6"
+                                color="inherit"
+                                className={classes.flex}
+                            >
                                 {title}
                             </Typography>
                         </Toolbar>
                     </Tooltip>
                 </AppBar>
                 <DialogContent>
-
-                    <FastField name={`${field}.attr`}
-                               label={getMessage("attribute")}
-                               id={build(formID, ids.AVU_ATTR)}
-                               required={editable}
-                               autoFocus={editable}
-                               InputProps={{ readOnly: !editable }}
-                               component={FormTextField}
+                    <FastField
+                        name={`${field}.attr`}
+                        label={getMessage("attribute")}
+                        id={build(formID, ids.AVU_ATTR)}
+                        required={editable}
+                        autoFocus={editable}
+                        InputProps={{ readOnly: !editable }}
+                        component={FormTextField}
                     />
-                    <FastField name={`${field}.value`}
-                               label={getMessage("value")}
-                               id={build(formID, ids.AVU_VALUE)}
-                               InputProps={{ readOnly: !editable }}
-                               component={FormTextField}
+                    <FastField
+                        name={`${field}.value`}
+                        label={getMessage("value")}
+                        id={build(formID, ids.AVU_VALUE)}
+                        InputProps={{ readOnly: !editable }}
+                        component={FormTextField}
                     />
-                    <FastField name={`${field}.unit`}
-                               label={getMessage("metadataUnitLabel")}
-                               id={build(formID, ids.AVU_UNIT)}
-                               InputProps={{ readOnly: !editable }}
-                               component={FormTextField}
+                    <FastField
+                        name={`${field}.unit`}
+                        label={getMessage("metadataUnitLabel")}
+                        id={build(formID, ids.AVU_UNIT)}
+                        InputProps={{ readOnly: !editable }}
+                        component={FormTextField}
                     />
 
-                    {(editable || hasChildren) &&
-                    <Fragment>
-                        <Divider/>
+                    {(editable || hasChildren) && (
+                        <Fragment>
+                            <Divider />
 
-                        <ExpansionPanel defaultExpanded={hasChildren}>
-                            <ExpansionPanelSummary
-                                expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.AVU_GRID)}/>}>
-                                <Typography variant="subtitle1">{getMessage("metadataChildrenLabel")}</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails className={classes.childAVUsContainer}>
-                                <FieldArray name={`${field}.avus`}
-                                            render={arrayHelpers => (
-                                                <MetadataList {...arrayHelpers}
-                                                              editable={editable}
-                                                              parentID={formID}
-                                                              onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
-                                                />
+                            <ExpansionPanel defaultExpanded={hasChildren}>
+                                <ExpansionPanelSummary
+                                    expandIcon={
+                                        <ExpandMoreIcon
+                                            id={build(
+                                                formID,
+                                                ids.BUTTONS.EXPAND,
+                                                ids.AVU_GRID
                                             )}
-                                />
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-
-
-                        <FieldArray name={`${field}.avus`}
-                                    render={arrayHelpers => (
-                                        <FormDialogEditAVU {...arrayHelpers}
-                                                           editingAttrIndex={editingAttrIndex}
-                                                           editable={editable}
-                                                           targetName={attr}
-                                                           closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
                                         />
-                                    )}
-                        />
-                    </Fragment>}
+                                    }
+                                >
+                                    <Typography variant="subtitle1">
+                                        {getMessage("metadataChildrenLabel")}
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails
+                                    className={classes.childAVUsContainer}
+                                >
+                                    <FieldArray
+                                        name={`${field}.avus`}
+                                        render={(arrayHelpers) => (
+                                            <MetadataList
+                                                {...arrayHelpers}
+                                                editable={editable}
+                                                parentID={formID}
+                                                onEditAVU={(index) =>
+                                                    this.setState({
+                                                        editingAttrIndex: index,
+                                                    })
+                                                }
+                                            />
+                                        )}
+                                    />
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
+
+                            <FieldArray
+                                name={`${field}.avus`}
+                                render={(arrayHelpers) => (
+                                    <FormDialogEditAVU
+                                        {...arrayHelpers}
+                                        editingAttrIndex={editingAttrIndex}
+                                        editable={editable}
+                                        targetName={attr}
+                                        closeAttrDialog={() =>
+                                            this.setState({
+                                                editingAttrIndex: -1,
+                                            })
+                                        }
+                                    />
+                                )}
+                            />
+                        </Fragment>
+                    )}
                 </DialogContent>
             </Dialog>
         );
@@ -181,33 +216,30 @@ const FormDialogEditAVU = ({
     targetName,
     closeAttrDialog,
     name,
-    form: {
-        touched,
-        errors,
-        values,
-    },
+    form: { touched, errors, values },
 }) => {
     const avus = getIn(values, name);
 
     return (
         <Fragment>
-            {avus && avus.map((avu, index) => {
-                const field = `${name}[${index}]`;
+            {avus &&
+                avus.map((avu, index) => {
+                    const field = `${name}[${index}]`;
 
-                return (
-                    <EditAVU key={field}
-                             field={field}
-                             touched={touched}
-                             errors={errors}
-                             avu={avu}
-                             open={editingAttrIndex === index}
-                             editable={editable}
-                             targetName={targetName}
-                             closeAttrDialog={closeAttrDialog}
-                    />
-                );
-            })
-            }
+                    return (
+                        <EditAVU
+                            key={field}
+                            field={field}
+                            touched={touched}
+                            errors={errors}
+                            avu={avu}
+                            open={editingAttrIndex === index}
+                            editable={editable}
+                            targetName={targetName}
+                            closeAttrDialog={closeAttrDialog}
+                        />
+                    );
+                })}
         </Fragment>
     );
 };

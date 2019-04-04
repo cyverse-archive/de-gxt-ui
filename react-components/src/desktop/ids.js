@@ -1,4 +1,4 @@
-export default ({
+export default {
     DESKTOP: "desktop",
     NOTIFICATION_BUTTON: "notificationButton",
     USER_PREF_MENU: "userPrefMenu",
@@ -26,8 +26,8 @@ export default ({
     RETRY_BTN: "retryBtn",
     NOTIFICATION_LIST: "notificationList",
     NEW_NOTIFICATIONS: "newNotificationsLink",
-    NOTIFICATION_MENU_ANCHOR : "notificationMenuAnchor",
+    NOTIFICATION_MENU_ANCHOR: "notificationMenuAnchor",
     USER_MENU_ANCHOR: "userMenuAnchor",
     HELP_MENU_ANCHOR: "helpMenuAnchor",
     UNSEEN_NOTIFICATION_COUNT: "unSeenCount",
-});
+};

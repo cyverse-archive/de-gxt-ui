@@ -1,5 +1,3 @@
 import SubjectSearchField from "./SubjectSearchField";
 
-export {
-    SubjectSearchField,
-}
+export { SubjectSearchField };

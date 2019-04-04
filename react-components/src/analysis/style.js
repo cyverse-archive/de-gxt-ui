@@ -4,7 +4,7 @@ export default (theme) => ({
     table: {
         overflow: "auto",
         height: "80%",
-        width: "100%"
+        width: "100%",
     },
     tableHead: {
         backgroundColor: Color.blue,
@@ -12,9 +12,9 @@ export default (theme) => ({
         top: 0,
     },
     loadingStyle: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
         color: Color.orange,
     },
     container: {
@@ -26,31 +26,31 @@ export default (theme) => ({
     toolbarButton: {
         marginRight: 10,
         marginLeft: 10,
-        textTransform: 'none',
+        textTransform: "none",
         fontSize: 10,
     },
     toolbar: {
         backgroundColor: Color.lightGray,
-        borderBottom: 'solid 2px',
+        borderBottom: "solid 2px",
         borderColor: Color.gray,
         height: 55,
     },
     dialogCloseButton: {
-        position: 'absolute',
+        position: "absolute",
         right: 0,
         top: 10,
         color: Color.white,
     },
     analysisName: {
         fontSize: 12,
-        '&:hover': {
-            textDecoration: 'underline',
-            cursor: 'pointer',
+        "&:hover": {
+            textDecoration: "underline",
+            cursor: "pointer",
         },
     },
     menuItem: {
         fontSize: 10,
-        padding:5,
+        padding: 5,
     },
     cellText: {
         fontSize: 12,
@@ -69,10 +69,10 @@ export default (theme) => ({
     dropDown: {
         margin: 3,
         height: 40,
-        flexDirection: 'unset',
+        flexDirection: "unset",
     },
     dropDownLabel: {
         paddingLeft: 5,
-        fontSize:10
-    }
+        fontSize: 10,
+    },
 });

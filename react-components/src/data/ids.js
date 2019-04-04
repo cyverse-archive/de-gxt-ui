@@ -1,4 +1,4 @@
-export default ({
+export default {
     DETAILS_LAST_MODIFIED: "lastModified",
     DETAILS_DATE_SUBMITTED: "dateSubmitted",
     DETAILS_PERMISSIONS: "permissions",
@@ -12,4 +12,4 @@ export default ({
     DETAILS_TAGS: "tags",
     INFO_TYPE_DLG: "infoTypeDlg",
     INFO_TYPE_DROPDOWN: "infoTypeList",
-});
+};

@@ -2,7 +2,7 @@ import styles from "./style";
 
 import Highlight from "react-highlighter";
 import PropTypes from "prop-types";
-import React from 'react';
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 
 /**
@@ -11,18 +11,13 @@ import { withStyles } from "@material-ui/core/styles";
  * and highlight the search term within the text
  */
 function Highlighter(props) {
-    let {
-        search,
-        children,
-        classes
-    } = props;
+    let { search, children, classes } = props;
 
     return (
-        <Highlight matchClass={classes.highlightColor}
-                   search={search}>
+        <Highlight matchClass={classes.highlightColor} search={search}>
             {children}
         </Highlight>
-    )
+    );
 }
 
 Highlighter.propTypes = {

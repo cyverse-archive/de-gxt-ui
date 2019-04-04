@@ -1,6 +1,6 @@
 import palette from "../util/CyVersePalette";
 
-const styles = theme => ({
+const styles = (theme) => ({
     loadingStyle: {
         color: palette.orange,
         position: "relative",
@@ -24,7 +24,7 @@ const styles = theme => ({
     tableHead: {
         backgroundColor: palette.lightGray,
         position: "sticky",
-        top: 0
+        top: 0,
     },
     deleteIcon: {
         margin: 5,
@@ -37,14 +37,14 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit,
     },
     spacer: {
-        flex: '1 1 100%',
+        flex: "1 1 100%",
     },
     actions: {
         color: theme.palette.text.secondary,
     },
     title: {
         paddingLeft: theme.spacing.unit,
-        flex: '0 0 auto',
+        flex: "0 0 auto",
         maxWidth: "25rem",
     },
     errorSubTitle: {
