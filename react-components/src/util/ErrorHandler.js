@@ -13,16 +13,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ErrorIcon from "@material-ui/icons/Error";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
 class ErrorHandler extends Component {
-
     constructor(props) {
         super(props);
 
@@ -34,51 +33,53 @@ class ErrorHandler extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        this.setState({open: true})
+        this.setState({ open: true });
     }
 
     onClose() {
-        this.setState({open: false})
+        this.setState({ open: false });
     }
 
     render() {
-        const {open} = this.state;
-        const {
-            errorSummary,
-            errorDetails,
-            classes,
-        } = this.props;
+        const { open } = this.state;
+        const { errorSummary, errorDetails, classes } = this.props;
 
         return (
-            <Dialog open={open}
-                    onClose={this.onClose}
-                    id={ids.errorHandlerDlg}
-            >
+            <Dialog open={open} onClose={this.onClose} id={ids.errorHandlerDlg}>
                 <DialogTitle>
                     <div className={classes.errorHandlerTitle}>
-                        <ErrorIcon color='error'
-                                   className={classes.errorIconPadding}/>
-                        {getMessage('error')}
+                        <ErrorIcon
+                            color="error"
+                            className={classes.errorIconPadding}
+                        />
+                        {getMessage("error")}
                     </div>
                 </DialogTitle>
                 <DialogContent>
-                    <div dangerouslySetInnerHTML={{__html: errorSummary}}/>
-                    <ExpansionPanel defaultExpanded
-                                    style={{marginTop: '40px'}}>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                            {getMessage('details')}
+                    <div dangerouslySetInnerHTML={{ __html: errorSummary }} />
+                    <ExpansionPanel
+                        defaultExpanded
+                        style={{ marginTop: "40px" }}
+                    >
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            {getMessage("details")}
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <div dangerouslySetInnerHTML={{__html: errorDetails}}/>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: errorDetails,
+                                }}
+                            />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                 </DialogContent>
                 <DialogActions>
-                    <Button id={build(ids.errorHandlerDlg, ids.okBtn)}
-                            color="primary"
-                            onClick={this.onClose}
+                    <Button
+                        id={build(ids.errorHandlerDlg, ids.okBtn)}
+                        color="primary"
+                        onClick={this.onClose}
                     >
-                        {getMessage('ok')}
+                        {getMessage("ok")}
                     </Button>
                 </DialogActions>
             </Dialog>

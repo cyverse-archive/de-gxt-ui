@@ -17,7 +17,7 @@ class SearchField extends Component {
         super(props);
 
         this.state = {
-            inputValue: this.props.value
+            inputValue: this.props.value,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -32,9 +32,9 @@ class SearchField extends Component {
     }
 
     componentDidUpdate(prevProps) {
-       if(this.props.value !== prevProps.value) {
-           this.setState({inputValue: this.props.value});
-       }
+        if (this.props.value !== prevProps.value) {
+            this.setState({ inputValue: this.props.value });
+        }
     }
 
     handleChange(event) {
@@ -42,20 +42,22 @@ class SearchField extends Component {
         if (!inputValue) {
             //handlekeypress not called on backspace. So when the search field is cleared,
             //parent components should be notified.
-            this.setState({inputValue: inputValue}, this.handleSearch);
+            this.setState({ inputValue: inputValue }, this.handleSearch);
         } else {
-            this.setState({inputValue});
+            this.setState({ inputValue });
         }
-
     }
 
     handleKeyPress(event) {
         clearTimeout(this.keyPressTimer);
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
             this.handleSearch();
             event.preventDefault();
         } else {
-            this.keyPressTimer = setTimeout(this.handleSearch, this.props.keyPressTimer)
+            this.keyPressTimer = setTimeout(
+                this.handleSearch,
+                this.props.keyPressTimer
+            );
         }
     }
 
@@ -64,11 +66,11 @@ class SearchField extends Component {
     }
 
     handleShow(event) {
-        this.setState({anchorEl: event.currentTarget});
+        this.setState({ anchorEl: event.currentTarget });
     }
 
     handleHide() {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     }
 
     render() {
@@ -86,24 +88,25 @@ class SearchField extends Component {
 
         return (
             <div>
-                <TextField id={id}
-                           style={{height:height, flexDirection: 'unset',}}
-                           variant="outlined"
-                           label={label}
-                           placeholder={placeholder}
-                           value={inputValue}
-                           onKeyPress={this.handleKeyPress}
-                           onChange={this.handleChange}
-                           InputProps={{
-                               disableUnderline: true,
-                               startAdornment: startAdornment,
-                               endAdornment: endAdornment,
-                               className: classes.searchInput
-                           }}>
-                </TextField>
+                <TextField
+                    id={id}
+                    style={{ height: height, flexDirection: "unset" }}
+                    variant="outlined"
+                    label={label}
+                    placeholder={placeholder}
+                    value={inputValue}
+                    onKeyPress={this.handleKeyPress}
+                    onChange={this.handleChange}
+                    InputProps={{
+                        disableUnderline: true,
+                        startAdornment: startAdornment,
+                        endAdornment: endAdornment,
+                        className: classes.searchInput,
+                    }}
+                />
                 {children}
             </div>
-        )
+        );
     }
 }
 
@@ -120,12 +123,16 @@ SearchField.propTypes = {
 };
 
 SearchField.defaultProps = {
-    label: '',
+    label: "",
     height: 38,
     helperText: "",
     keyPressTimer: 1000,
-    startAdornment: <InputAdornment position='start'><Search style={{color:CyVersePalette.darkBlue}}/></InputAdornment>,
-    endAdornment: null
+    startAdornment: (
+        <InputAdornment position="start">
+            <Search style={{ color: CyVersePalette.darkBlue }} />
+        </InputAdornment>
+    ),
+    endAdornment: null,
 };
 
 export default injectSheet(styles)(SearchField);

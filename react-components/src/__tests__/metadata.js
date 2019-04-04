@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
 import { getDefaultTheme, MuiThemeProvider } from "../lib";
 
@@ -17,101 +17,101 @@ import {
     MetadataTemplateViewTest,
 } from "../../stories/metadata/MetadataTemplate.stories";
 
-it('renders EditMetadataTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders EditMetadataTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <EditMetadataTest/>
+            <EditMetadataTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders ViewMetadataTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders ViewMetadataTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <ViewMetadataTest/>
+            <ViewMetadataTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders EditDataCiteMetadataTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders EditDataCiteMetadataTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <EditDataCiteMetadataTest/>
+            <EditDataCiteMetadataTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders EditNestedAttrMetadataTemplateTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders EditNestedAttrMetadataTemplateTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <EditNestedAttrMetadataTemplateTest/>
+            <EditNestedAttrMetadataTemplateTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders EditDataCiteMetadataTemplateTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders EditDataCiteMetadataTemplateTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <EditDataCiteMetadataTemplateTest/>
+            <EditDataCiteMetadataTemplateTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders MetadataTemplateViewTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders MetadataTemplateViewTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <MetadataTemplateViewTest/>
+            <MetadataTemplateViewTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders MetadataTemplateReadOnlyViewTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders MetadataTemplateReadOnlyViewTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <MetadataTemplateReadOnlyViewTest/>
+            <MetadataTemplateReadOnlyViewTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders DataCiteMetadataTemplateViewNoValuesTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders DataCiteMetadataTemplateViewNoValuesTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <DataCiteMetadataTemplateViewNoValuesTest/>
+            <DataCiteMetadataTemplateViewNoValuesTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders DataCiteMetadataTemplateViewTest without crashing', () => {
-    const div = document.createElement('div');
+it("renders DataCiteMetadataTemplateViewTest without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
-            <DataCiteMetadataTemplateViewTest/>
+            <DataCiteMetadataTemplateViewTest />
         </MuiThemeProvider>,
-        div,
+        div
     );
     ReactDOM.unmountComponentAtNode(div);
 });

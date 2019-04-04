@@ -10,7 +10,7 @@ export default function withStoreProvider(WrappedComponent) {
                 <Provider store={store}>
                     <WrappedComponent {...this.props} />
                 </Provider>
-            )
+            );
         }
-    }
+    };
 }

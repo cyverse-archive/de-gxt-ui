@@ -18,7 +18,7 @@ class TriggerField extends Component {
         super(props);
 
         this.state = {
-            anchorEl: null
+            anchorEl: null,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,15 +28,15 @@ class TriggerField extends Component {
     }
 
     handleChange(event) {
-        this.setState({inputValue: event.target.value})
+        this.setState({ inputValue: event.target.value });
     }
 
     handleShow(event) {
-        this.setState({anchorEl: event.currentTarget});
+        this.setState({ anchorEl: event.currentTarget });
     }
 
     handleHide() {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     }
 
     handleSearch(value) {
@@ -45,38 +45,34 @@ class TriggerField extends Component {
 
     render() {
         let { anchorEl } = this.state;
-        let {
-            children,
-            startAdornment,
-            triggerButton,
-            classes
-        } = this.props;
+        let { children, startAdornment, triggerButton, classes } = this.props;
 
         return (
             <SearchField
                 handleSearch={this.handleSearch}
                 startAdornment={startAdornment}
                 endAdornment={
-                    <InputAdornment position='end'>
+                    <InputAdornment position="end">
                         <IconButton onClick={this.handleShow}>
                             {triggerButton}
                         </IconButton>
                     </InputAdornment>
                 }
             >
-                <Popover open={Boolean(anchorEl)}
-                         anchorEl={anchorEl}
-                         classes={classes}
-                         onClose={this.handleHide}
-                         anchorOrigin={{
-                             vertical: 'bottom',
-                             horizontal: 'left'
-                         }}
+                <Popover
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    classes={classes}
+                    onClose={this.handleHide}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
                 >
                     {children}
                 </Popover>
             </SearchField>
-        )
+        );
     }
 }
 
@@ -85,11 +81,11 @@ TriggerField.propTypes = {
     triggerButton: PropTypes.object,
     classes: PropTypes.object,
     handleSearch: PropTypes.func.isRequired,
-    children: PropTypes.object.isRequired
+    children: PropTypes.object.isRequired,
 };
 
 TriggerField.defaultProps = {
-    triggerButton: <Filter/>
+    triggerButton: <Filter />,
 };
 
 export default TriggerField;

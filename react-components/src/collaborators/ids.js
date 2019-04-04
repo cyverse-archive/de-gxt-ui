@@ -1,7 +1,7 @@
 export default {
-    subjectSearchField: 'subjectSearchField',
+    subjectSearchField: "subjectSearchField",
     TABLE_HEADER: {
         NAME: "name",
         DESCRIPTION: "description",
     },
-}
+};

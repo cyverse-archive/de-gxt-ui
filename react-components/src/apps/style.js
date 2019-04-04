@@ -1,9 +1,9 @@
 export default (theme) => ({
     loadingStyle: {
-        position: 'absolute',
+        position: "absolute",
         top: 400,
         left: 400,
-        color: '#DB6619',
+        color: "#DB6619",
     },
     statFilterButton: {
         margin: 1,
@@ -15,21 +15,21 @@ export default (theme) => ({
     statTableHead: {
         backgroundColor: "#e2e2e2",
         position: "sticky",
-        top: 0
+        top: 0,
     },
     statTablePager: {
         flexShrink: 0,
     },
     toolDetailsLabel: {
-        fontWeight: 'bold',
+        fontWeight: "bold",
         fontSize: 10,
         width: 90,
-        paddingBottom: '0.5em'
+        paddingBottom: "0.5em",
     },
     toolDetailsValue: {
         fontSize: 10,
         paddingLeft: 2,
-        paddingBottom: '0.5em'
+        paddingBottom: "0.5em",
     },
     statContainer: {
         width: "100%",

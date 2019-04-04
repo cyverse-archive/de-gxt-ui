@@ -3,7 +3,7 @@
  */
 import React from "react";
 
-import { getIn } from 'formik';
+import { getIn } from "formik";
 import moment from "moment";
 
 import build from "./DebugIDUtil";
@@ -45,7 +45,7 @@ const FormTextField = ({
             {...field}
             {...custom}
         />
-    )
+    );
 };
 
 const FormSearchField = ({
@@ -56,24 +56,25 @@ const FormSearchField = ({
     ...props
 }) => {
     const errorMsg = getFormError(field.name, touched, errors);
-    const onOptionSelected = option => {
+    const onOptionSelected = (option) => {
         setFieldValue(field.name, option ? option[props.valueKey] : "");
     };
-    const onSearchBlur = event => {
+    const onSearchBlur = (event) => {
         setFieldTouched(field.name, true);
     };
 
     return (
         <FormControl fullWidth error={!!errorMsg}>
-            <Autocomplete label={label}
-                          controlShouldRenderValue
-                          isClearable={!required}
-                          cacheOptions
-                          defaultInputValue={value}
-                          onChange={onOptionSelected}
-                          onBlur={onSearchBlur}
-                          {...field}
-                          {...props}
+            <Autocomplete
+                label={label}
+                controlShouldRenderValue
+                isClearable={!required}
+                cacheOptions
+                defaultInputValue={value}
+                onChange={onOptionSelected}
+                onBlur={onSearchBlur}
+                {...field}
+                {...props}
             />
             <FormHelperText>{errorMsg}</FormHelperText>
         </FormControl>
@@ -93,10 +94,11 @@ const FormCheckbox = ({
 }) => (
     <FormControlLabel
         control={
-            <Checkbox checked={!!value}
-                      onChange={onCheckboxChange(setFieldValue, field.name)}
-                      {...field}
-                      {...custom}
+            <Checkbox
+                checked={!!value}
+                onChange={onCheckboxChange(setFieldValue, field.name)}
+                {...field}
+                {...custom}
             />
         }
         label={label}
@@ -109,16 +111,17 @@ const FormCheckboxTableCell = ({
     ...custom
 }) => (
     <TableCell padding="checkbox">
-        <Checkbox color="primary"
-                  checked={!!value}
-                  onClick={event => event.stopPropagation()}
-                  onChange={onCheckboxChange(setFieldValue, field.name)}
-                  {...custom}
+        <Checkbox
+            color="primary"
+            checked={!!value}
+            onClick={(event) => event.stopPropagation()}
+            onChange={onCheckboxChange(setFieldValue, field.name)}
+            {...custom}
         />
     </TableCell>
 );
 
-const onNumberChange = onChange => (event) => {
+const onNumberChange = (onChange) => (event) => {
     const newValue = event.target.value;
     let intVal = Number(newValue);
     if (!isNaN(intVal)) {
@@ -126,7 +129,7 @@ const onNumberChange = onChange => (event) => {
     }
 };
 
-const onIntegerChange = onChange => (event) => {
+const onIntegerChange = (onChange) => (event) => {
     const newValue = event.target.value;
     let intVal = Number(newValue);
     if (!isNaN(intVal) && Number.isInteger(intVal)) {
@@ -134,35 +137,28 @@ const onIntegerChange = onChange => (event) => {
     }
 };
 
-const FormNumberField = ({
-    field: { onChange, ...field },
-    ...props
-}) => (
-    <FormTextField type="number"
-                   step="any"
-                   onChange={onNumberChange(onChange)}
-                   field={field}
-                   {...props}
+const FormNumberField = ({ field: { onChange, ...field }, ...props }) => (
+    <FormTextField
+        type="number"
+        step="any"
+        onChange={onNumberChange(onChange)}
+        field={field}
+        {...props}
     />
 );
 
-const FormIntegerField = ({
-    field: { onChange, ...field },
-    ...props
-}) => (
-    <FormTextField type="number"
-                   step={1}
-                   onChange={onIntegerChange(onChange)}
-                   field={field}
-                   {...props}
+const FormIntegerField = ({ field: { onChange, ...field }, ...props }) => (
+    <FormTextField
+        type="number"
+        step={1}
+        onChange={onIntegerChange(onChange)}
+        field={field}
+        {...props}
     />
 );
 
 const FormMultilineTextField = (props) => (
-    <FormTextField multiline
-                   rows={3}
-                   {...props}
-    />
+    <FormTextField multiline rows={3} {...props} />
 );
 
 const onDateChange = (prevDate, fieldName, setFieldValue) => (event) => {
@@ -194,30 +190,32 @@ const FormTimestampField = ({
 
     return (
         <FormControl error={!!errorMsg}>
-            <TextField id={build(id, "date")}
-                       type="date"
-                       variant="outlined"
-                       label={label}
-                       error={!!errorMsg}
-                       required={required}
-                       value={date ? moment(date).format("YYYY-MM-DD") : ""}
-                       onChange={onDateChange(date, field.name, setFieldValue)}
-                       {...field}
-                       {...custom}
+            <TextField
+                id={build(id, "date")}
+                type="date"
+                variant="outlined"
+                label={label}
+                error={!!errorMsg}
+                required={required}
+                value={date ? moment(date).format("YYYY-MM-DD") : ""}
+                onChange={onDateChange(date, field.name, setFieldValue)}
+                {...field}
+                {...custom}
             />
-            <TextField id={build(id, "time")}
-                       type="time"
-                       variant="outlined"
-                       error={!!errorMsg}
-                       required={required}
-                       value={date ? moment(date).format("HH:mm:ss") : ""}
-                       onChange={onTimeChange(date, field.name, setFieldValue)}
-                       {...field}
-                       {...custom}
+            <TextField
+                id={build(id, "time")}
+                type="time"
+                variant="outlined"
+                error={!!errorMsg}
+                required={required}
+                value={date ? moment(date).format("HH:mm:ss") : ""}
+                onChange={onTimeChange(date, field.name, setFieldValue)}
+                {...field}
+                {...custom}
             />
             <FormHelperText>{errorMsg}</FormHelperText>
         </FormControl>
-    )
+    );
 };
 
 const FormSelectField = ({
@@ -227,26 +225,20 @@ const FormSelectField = ({
     required,
     form: { touched, errors },
     children,
-    ...custom,
+    ...custom
 }) => {
     const errorMsg = getFormError(field.name, touched, errors);
     return (
         <FormControl fullWidth error={!!errorMsg}>
-            <InputLabel htmlFor={id}
-                        required={required}
-            >
+            <InputLabel htmlFor={id} required={required}>
                 {label}
             </InputLabel>
-            <Select id={id}
-                    value={value || ""}
-                    {...field}
-                    {...custom}
-            >
+            <Select id={id} value={value || ""} {...field} {...custom}>
                 {children}
             </Select>
             <FormHelperText>{errorMsg}</FormHelperText>
         </FormControl>
-    )
+    );
 };
 
 export {

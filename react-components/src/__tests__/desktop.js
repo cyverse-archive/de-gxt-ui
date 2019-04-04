@@ -16,18 +16,24 @@ it('renders DesktopViewTest without crashing', () => {
 });
 */
 
-it('renders TaskbarTest without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><TaskbarTest /></MuiThemeProvider>, div);
+it("renders TaskbarTest without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <TaskbarTest />
+        </MuiThemeProvider>,
+        div
+    );
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders TaskButtonTest without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<MuiThemeProvider
-        theme={getDefaultTheme()}><TaskButtonTest /></MuiThemeProvider>, div);
+it("renders TaskButtonTest without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <TaskButtonTest />
+        </MuiThemeProvider>,
+        div
+    );
     ReactDOM.unmountComponentAtNode(div);
 });
-
-
-

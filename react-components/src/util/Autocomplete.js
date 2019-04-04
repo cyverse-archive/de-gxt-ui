@@ -1,15 +1,15 @@
 import styles from "./AutocompleteStyles";
 
-import Async from 'react-select/lib/Async';
-import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
-import Chip from '@material-ui/core/Chip';
-import classNames from 'classnames';
+import Async from "react-select/lib/Async";
+import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
+import Chip from "@material-ui/core/Chip";
+import classNames from "classnames";
 import MenuItem from "@material-ui/core/MenuItem";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Select, { Creatable } from "react-select";
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 /**
@@ -31,18 +31,21 @@ class Autocomplete extends Component {
 
     getOptionLabel(option) {
         let labelKey = this.props.labelKey;
-        return option[labelKey]
+        return option[labelKey];
     }
 
     getOptionValue(option) {
         let valueKey = this.props.valueKey;
-        return option[valueKey]
+        return option[valueKey];
     }
 
     //This should hopefully be not needed in v2.1 for Creatable
     isValidNewOption(inputValue, selectValue, selectOptions) {
         let labelKey = this.props.labelKey;
-        if (inputValue.trim().length === 0 || selectOptions.find(option => option[labelKey] === inputValue)) {
+        if (
+            inputValue.trim().length === 0 ||
+            selectOptions.find((option) => option[labelKey] === inputValue)
+        ) {
             return false;
         }
         return true;
@@ -53,8 +56,8 @@ class Autocomplete extends Component {
         let labelKey = this.props.labelKey;
         return {
             id: inputValue,
-            [labelKey]: optionLabel
-        }
+            [labelKey]: optionLabel,
+        };
     }
 
     render() {
@@ -75,13 +78,13 @@ class Autocomplete extends Component {
         let SelectComponent = null;
 
         switch (variant) {
-            case 'creatable':
+            case "creatable":
                 SelectComponent = Creatable;
                 break;
-            case 'async':
+            case "async":
                 SelectComponent = Async;
                 break;
-            case 'asyncCreatable':
+            case "asyncCreatable":
                 SelectComponent = AsyncCreatableSelect;
                 break;
             default:
@@ -101,16 +104,18 @@ class Autocomplete extends Component {
 
         return (
             <div className={classes.root}>
-                <SelectComponent classes={classes}
-                                 components={components}
-                                 getOptionLabel={this.getOptionLabel}
-                                 getOptionValue={this.getOptionValue}
-                                 isValidNewOption={this.isValidNewOption}
-                                 getNewOptionData={this.getNewOptionData}
-                                 controlShouldRenderValue={controlShouldRenderValue}
-                                 {...custom} />
+                <SelectComponent
+                    classes={classes}
+                    components={components}
+                    getOptionLabel={this.getOptionLabel}
+                    getOptionValue={this.getOptionValue}
+                    isValidNewOption={this.isValidNewOption}
+                    getNewOptionData={this.getNewOptionData}
+                    controlShouldRenderValue={controlShouldRenderValue}
+                    {...custom}
+                />
             </div>
-        )
+        );
     }
 }
 
@@ -126,7 +131,7 @@ function NoOptionsMessage(props) {
     );
 }
 
-function inputComponent({inputRef, ...props}) {
+function inputComponent({ inputRef, ...props }) {
     return <div ref={inputRef} {...props} />;
 }
 
@@ -177,14 +182,21 @@ function Placeholder(props) {
 
 function SingleValue(props) {
     return (
-        <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+        <Typography
+            className={props.selectProps.classes.singleValue}
+            {...props.innerProps}
+        >
             {props.children}
         </Typography>
     );
 }
 
 function ValueContainer(props) {
-    return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+    return (
+        <div className={props.selectProps.classes.valueContainer}>
+            {props.children}
+        </div>
+    );
 }
 
 function MultiValue(props) {
@@ -195,7 +207,7 @@ function MultiValue(props) {
             className={classNames(props.selectProps.classes.chip, {
                 [props.selectProps.classes.chipFocused]: props.isFocused,
             })}
-            onDelete={event => {
+            onDelete={(event) => {
                 props.removeProps.onClick();
                 props.removeProps.onMouseDown(event);
             }}
@@ -212,10 +224,10 @@ Autocomplete.propTypes = {
     valueKey: PropTypes.string.isRequired, // value for each option
     controlShouldRenderValue: PropTypes.bool, // determines if a selected option will then display in the input/text field
     variant: PropTypes.oneOf([
-        'creatable',
-        'async',
-        'asyncCreatable',
-        'default'
+        "creatable",
+        "async",
+        "asyncCreatable",
+        "default",
     ]).isRequired,
     CustomOption: PropTypes.func,
     CustomControl: PropTypes.func,
@@ -227,7 +239,7 @@ Autocomplete.propTypes = {
 };
 
 Autocomplete.defaultProps = {
-    variant: 'default',
+    variant: "default",
     controlShouldRenderValue: false,
     CustomOption: Option,
     CustomControl: Control,

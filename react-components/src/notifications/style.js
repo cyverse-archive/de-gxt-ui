@@ -6,14 +6,14 @@ export default (theme) => ({
         height: "75%",
     },
     tableHead: {
-        backgroundColor:  Color.blue,
+        backgroundColor: Color.blue,
         position: "sticky",
-        top: 0
+        top: 0,
     },
     loadingStyle: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
         color: Color.orange,
     },
     container: {
@@ -24,17 +24,17 @@ export default (theme) => ({
     },
     toolbarButton: {
         marginRight: 20,
-        textTransform: 'none',
+        textTransform: "none",
     },
     toolbar: {
         backgroundColor: Color.lightGray,
-        borderBottom: 'solid 2px',
+        borderBottom: "solid 2px",
         borderColor: Color.gray,
         height: 55,
     },
     notification: {
-        textDecoration: 'underline',
-        cursor: 'pointer',
+        textDecoration: "underline",
+        cursor: "pointer",
     },
     unSeenNotificationBackground: {
         backgroundColor: Color.lightBlue,
@@ -42,10 +42,10 @@ export default (theme) => ({
     dropDown: {
         margin: 3,
         height: 40,
-        flexDirection: 'unset',
+        flexDirection: "unset",
     },
     dropDownLabel: {
         paddingLeft: 5,
-        fontSize:10
-    }
+        fontSize: 10,
+    },
 });

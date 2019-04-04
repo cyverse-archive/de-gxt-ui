@@ -1,9 +1,9 @@
 /**
  * @author psarando
  */
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from "react";
 
-import { FastField, FieldArray, withFormik } from 'formik';
+import { FastField, FieldArray, withFormik } from "formik";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
@@ -31,32 +31,33 @@ import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
 import SlideUpTransition from "./SlideUpTransition";
 
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar/AppBar";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from '@material-ui/core/DialogContent';
+import DialogContent from "@material-ui/core/DialogContent";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Fab from '@material-ui/core/Fab';
-import Grid from '@material-ui/core/Grid';
+import Fab from "@material-ui/core/Fab";
+import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
-import ContentAdd from '@material-ui/icons/Add';
+import ContentAdd from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
-import ContentRemove from '@material-ui/icons/Delete';
+import ContentRemove from "@material-ui/icons/Delete";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const ConfirmationDialog = withI18N(DEConfirmationDialog, intlData);
 
-const newAVU = attrTemplate => {
-    const attr = attrTemplate.name, unit = "";
+const newAVU = (attrTemplate) => {
+    const attr = attrTemplate.name,
+        unit = "";
 
     let value;
     switch (attrTemplate.type) {
@@ -65,7 +66,9 @@ const newAVU = attrTemplate => {
             break;
 
         case "Enum":
-            value = attrTemplate.values && attrTemplate.values.find(enumVal => enumVal.is_default);
+            value =
+                attrTemplate.values &&
+                attrTemplate.values.find((enumVal) => enumVal.is_default);
             value = value ? value.value : "";
             break;
 
@@ -91,7 +94,7 @@ class MetadataTemplateAttributeView extends Component {
         // Set all attrs as expanded in the state,
         // even if there is no matching attribute name in the template
         // and no expansion panel will be rendered for that attr.
-        avus && avus.forEach(avu => expanded[avu.attr] = true);
+        avus && avus.forEach((avu) => (expanded[avu.attr] = true));
 
         this.state = { expanded };
     }
@@ -112,10 +115,12 @@ class MetadataTemplateAttributeView extends Component {
     }
 
     addSubAVUs(attribute, avu) {
-        const requiredAttrs = attribute.attributes && attribute.attributes.filter(subAttr => subAttr.required);
+        const requiredAttrs =
+            attribute.attributes &&
+            attribute.attributes.filter((subAttr) => subAttr.required);
 
         if (requiredAttrs && requiredAttrs.length > 0) {
-            avu.avus = requiredAttrs.map(subAttr => {
+            avu.avus = requiredAttrs.map((subAttr) => {
                 const subAVU = newAVU(subAttr);
 
                 this.addSubAVUs(subAttr, subAVU);
@@ -126,195 +131,293 @@ class MetadataTemplateAttributeView extends Component {
     }
 
     render() {
-        const { classes, intl, field, touched, errors, attributes, avus, presenter, writable } = this.props;
+        const {
+            classes,
+            intl,
+            field,
+            touched,
+            errors,
+            attributes,
+            avus,
+            presenter,
+            writable,
+        } = this.props;
         const { expanded } = this.state;
 
         return (
-            <FieldArray name={`${field}.avus`}
-                        render={(arrayHelpers) => {
-                            return attributes.map((attribute) => {
-                                const attrFieldId = build(ids.METADATA_TEMPLATE_VIEW, field, attribute.name);
+            <FieldArray
+                name={`${field}.avus`}
+                render={(arrayHelpers) => {
+                    return attributes.map((attribute) => {
+                        const attrFieldId = build(
+                            ids.METADATA_TEMPLATE_VIEW,
+                            field,
+                            attribute.name
+                        );
 
-                                let attrErrors = false;
-                                let canRemove = !attribute.required,
-                                    FieldComponent,
-                                    fieldProps = {
-                                        label: attribute.name,
-                                        required: attribute.required && writable,
-                                        inputProps: { readOnly: !writable }
-                                    };
+                        let attrErrors = false;
+                        let canRemove = !attribute.required,
+                            FieldComponent,
+                            fieldProps = {
+                                label: attribute.name,
+                                required: attribute.required && writable,
+                                inputProps: { readOnly: !writable },
+                            };
 
-                                switch (attribute.type) {
-                                    case "Boolean":
-                                        FieldComponent = FormCheckbox;
-                                        break;
-                                    case "Number":
-                                        FieldComponent = FormNumberField;
-                                        break;
-                                    case "Integer":
-                                        FieldComponent = FormIntegerField;
-                                        break;
-                                    case "Multiline Text":
-                                        FieldComponent = FormMultilineTextField;
-                                        break;
-                                    case "Timestamp":
-                                        FieldComponent = FormTimestampField;
-                                        break;
+                        switch (attribute.type) {
+                            case "Boolean":
+                                FieldComponent = FormCheckbox;
+                                break;
+                            case "Number":
+                                FieldComponent = FormNumberField;
+                                break;
+                            case "Integer":
+                                FieldComponent = FormIntegerField;
+                                break;
+                            case "Multiline Text":
+                                FieldComponent = FormMultilineTextField;
+                                break;
+                            case "Timestamp":
+                                FieldComponent = FormTimestampField;
+                                break;
 
-                                    case "Enum":
-                                        FieldComponent = FormSelectField;
-                                        fieldProps = {
-                                            ...fieldProps,
-                                            children: attribute.values &&
-                                                attribute.values.map((enumVal, index) =>
-                                                    (<MenuItem key={index} value={enumVal.value}>
-                                                        {enumVal.value}
-                                                    </MenuItem>)),
-                                        };
-                                        break;
+                            case "Enum":
+                                FieldComponent = FormSelectField;
+                                fieldProps = {
+                                    ...fieldProps,
+                                    children:
+                                        attribute.values &&
+                                        attribute.values.map(
+                                            (enumVal, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={enumVal.value}
+                                                >
+                                                    {enumVal.value}
+                                                </MenuItem>
+                                            )
+                                        ),
+                                };
+                                break;
 
-                                    case "UAT Ontology Term":
-                                        FieldComponent = AstroThesaurusSearchField;
-                                        fieldProps = {
-                                            ...fieldProps,
-                                            presenter,
-                                            isDisabled: !writable,
-                                        };
-                                        break;
+                            case "UAT Ontology Term":
+                                FieldComponent = AstroThesaurusSearchField;
+                                fieldProps = {
+                                    ...fieldProps,
+                                    presenter,
+                                    isDisabled: !writable,
+                                };
+                                break;
 
-                                    case "OLS Ontology Term":
-                                        FieldComponent = OntologyLookupServiceSearchField;
-                                        fieldProps = {
-                                            ...fieldProps,
-                                            presenter,
-                                            attribute,
-                                            isDisabled: !writable,
-                                        };
-                                        break;
+                            case "OLS Ontology Term":
+                                FieldComponent = OntologyLookupServiceSearchField;
+                                fieldProps = {
+                                    ...fieldProps,
+                                    presenter,
+                                    attribute,
+                                    isDisabled: !writable,
+                                };
+                                break;
 
-                                    case "Grouping":
-                                        FieldComponent = "span";
-                                        fieldProps = {};
-                                        break;
+                            case "Grouping":
+                                FieldComponent = "span";
+                                fieldProps = {};
+                                break;
 
-                                    default:
-                                        FieldComponent = FormTextField;
-                                        break;
+                            default:
+                                FieldComponent = FormTextField;
+                                break;
+                        }
+
+                        let avuFields =
+                            avus &&
+                            avus.map((avu, index) => {
+                                if (avu.attr !== attribute.name) {
+                                    return null;
                                 }
 
-                                let avuFields = avus && avus.map((avu, index) => {
-                                    if (avu.attr !== attribute.name) {
-                                        return null;
-                                    }
+                                let avuFieldName = `${field}.avus[${index}]`;
+                                const avuError = getFormError(
+                                    avuFieldName,
+                                    touched,
+                                    errors
+                                );
+                                attrErrors = attrErrors || avuError;
 
-                                    let avuFieldName = `${field}.avus[${index}]`;
-                                    const avuError = getFormError(avuFieldName, touched, errors);
-                                    attrErrors = attrErrors || avuError;
+                                const rowID = build(
+                                    ids.METADATA_TEMPLATE_VIEW,
+                                    avuFieldName
+                                );
 
-                                    const rowID = build(ids.METADATA_TEMPLATE_VIEW, avuFieldName);
-
-                                    let avuField = (
-                                        <Fragment key={avuFieldName}>
-                                            <Grid item
-                                                  container
-                                                  spacing={16}
-                                                  justify="flex-start"
-                                                  alignItems="center"
-                                            >
-                                                <Grid item xs>
-                                                    <FastField id={rowID}
-                                                               name={`${avuFieldName}.value`}
-                                                               component={FieldComponent}
-                                                               {...fieldProps}
-                                                    />
-                                                </Grid>
-                                                {canRemove && writable &&
+                                let avuField = (
+                                    <Fragment key={avuFieldName}>
+                                        <Grid
+                                            item
+                                            container
+                                            spacing={16}
+                                            justify="flex-start"
+                                            alignItems="center"
+                                        >
+                                            <Grid item xs>
+                                                <FastField
+                                                    id={rowID}
+                                                    name={`${avuFieldName}.value`}
+                                                    component={FieldComponent}
+                                                    {...fieldProps}
+                                                />
+                                            </Grid>
+                                            {canRemove && writable && (
                                                 <Grid item xs={1}>
-                                                    <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                                aria-label={formatMessage(intl, "delete")}
-                                                                classes={{root: classes.deleteIcon}}
-                                                                onClick={() => arrayHelpers.remove(index)}
+                                                    <IconButton
+                                                        id={build(
+                                                            rowID,
+                                                            ids.BUTTONS.DELETE
+                                                        )}
+                                                        aria-label={formatMessage(
+                                                            intl,
+                                                            "delete"
+                                                        )}
+                                                        classes={{
+                                                            root:
+                                                                classes.deleteIcon,
+                                                        }}
+                                                        onClick={() =>
+                                                            arrayHelpers.remove(
+                                                                index
+                                                            )
+                                                        }
                                                     >
                                                         <ContentRemove />
                                                     </IconButton>
                                                 </Grid>
-                                                }
-                                            </Grid>
-                                            {attribute.attributes && attribute.attributes.length > 0 &&
-                                            <Grid item>
-                                                <MetadataTemplateAttributeForm field={avuFieldName}
-                                                                               errors={errors}
-                                                                               touched={touched}
-                                                                               presenter={this.props.presenter}
-                                                                               attributes={attribute.attributes}
-                                                                               avus={avu.avus}
-                                                                               writable={writable}
-                                                />
-                                            </Grid>}
-                                        </Fragment>
-                                    );
-
-                                    canRemove = true;
-
-                                    return avuField;
-                                });
-
-
-                                const hasAVUs = avuFields && avuFields.filter(avuField => avuField).length > 0;
-
-                                return ((writable || hasAVUs) &&
-                                    <ExpansionPanel key={attribute.name}
-                                                    expanded={!!expanded[attribute.name]}
-                                                    onChange={(event, attrExpanded) => this.onAttrExpandedChange(expanded, attribute.name, attrExpanded)}
-                                    >
-                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
-                                            {writable &&
-                                            <Fab id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                 size="small"
-                                                 color="primary"
-                                                 aria-label={formatMessage(intl, "addRow")}
-                                                 onClick={event => {
-                                                     event.stopPropagation();
-                                                     this.onAddAVU(arrayHelpers, attribute);
-                                                 }}
-                                            >
-                                                <ContentAdd/>
-                                            </Fab>
-                                            }
-                                            <div className={classes.title}>
-                                                <Typography variant="h6" color="inherit" >
-                                                    {attribute.name}
-                                                </Typography>
-                                                <Typography variant="subtitle1" className={classes.errorSubTitle}>
-                                                    {attrErrors && attrErrors.error && getMessage("errAttrHasErrors")}
-                                                </Typography>
-                                            </div>
-                                        </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails>
-                                            <Grid container
-                                                  spacing={16}
-                                                  direction="column"
-                                                  justify="flex-start"
-                                                  alignItems="stretch"
-                                            >
-                                                <Grid item xs>
-                                                    <Typography variant="subtitle1">
-                                                        {attribute.description}
-                                                    </Typography>
+                                            )}
+                                        </Grid>
+                                        {attribute.attributes &&
+                                            attribute.attributes.length > 0 && (
+                                                <Grid item>
+                                                    <MetadataTemplateAttributeForm
+                                                        field={avuFieldName}
+                                                        errors={errors}
+                                                        touched={touched}
+                                                        presenter={
+                                                            this.props.presenter
+                                                        }
+                                                        attributes={
+                                                            attribute.attributes
+                                                        }
+                                                        avus={avu.avus}
+                                                        writable={writable}
+                                                    />
                                                 </Grid>
-                                                {avuFields}
-                                            </Grid>
-                                        </ExpansionPanelDetails>
-                                    </ExpansionPanel>
+                                            )}
+                                    </Fragment>
                                 );
+
+                                canRemove = true;
+
+                                return avuField;
                             });
-                        }}
+
+                        const hasAVUs =
+                            avuFields &&
+                            avuFields.filter((avuField) => avuField).length > 0;
+
+                        return (
+                            (writable || hasAVUs) && (
+                                <ExpansionPanel
+                                    key={attribute.name}
+                                    expanded={!!expanded[attribute.name]}
+                                    onChange={(event, attrExpanded) =>
+                                        this.onAttrExpandedChange(
+                                            expanded,
+                                            attribute.name,
+                                            attrExpanded
+                                        )
+                                    }
+                                >
+                                    <ExpansionPanelSummary
+                                        expandIcon={
+                                            <ExpandMoreIcon
+                                                id={build(
+                                                    attrFieldId,
+                                                    ids.BUTTONS.EXPAND
+                                                )}
+                                            />
+                                        }
+                                    >
+                                        {writable && (
+                                            <Fab
+                                                id={build(
+                                                    attrFieldId,
+                                                    ids.BUTTONS.ADD
+                                                )}
+                                                size="small"
+                                                color="primary"
+                                                aria-label={formatMessage(
+                                                    intl,
+                                                    "addRow"
+                                                )}
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    this.onAddAVU(
+                                                        arrayHelpers,
+                                                        attribute
+                                                    );
+                                                }}
+                                            >
+                                                <ContentAdd />
+                                            </Fab>
+                                        )}
+                                        <div className={classes.title}>
+                                            <Typography
+                                                variant="h6"
+                                                color="inherit"
+                                            >
+                                                {attribute.name}
+                                            </Typography>
+                                            <Typography
+                                                variant="subtitle1"
+                                                className={
+                                                    classes.errorSubTitle
+                                                }
+                                            >
+                                                {attrErrors &&
+                                                    attrErrors.error &&
+                                                    getMessage(
+                                                        "errAttrHasErrors"
+                                                    )}
+                                            </Typography>
+                                        </div>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Grid
+                                            container
+                                            spacing={16}
+                                            direction="column"
+                                            justify="flex-start"
+                                            alignItems="stretch"
+                                        >
+                                            <Grid item xs>
+                                                <Typography variant="subtitle1">
+                                                    {attribute.description}
+                                                </Typography>
+                                            </Grid>
+                                            {avuFields}
+                                        </Grid>
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+                            )
+                        );
+                    });
+                }}
             />
         );
     }
 }
 
-const MetadataTemplateAttributeForm = withStyles(styles)(withI18N(injectIntl(MetadataTemplateAttributeView), intlData));
+const MetadataTemplateAttributeForm = withStyles(styles)(
+    withI18N(injectIntl(MetadataTemplateAttributeView), intlData)
+);
 
 class MetadataTemplateView extends Component {
     constructor(props) {
@@ -328,7 +431,9 @@ class MetadataTemplateView extends Component {
             "closeMetadataTemplateDialog",
             "confirmCloseMetadataTemplateDialog",
             "closeConfirmationDialog",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
+        ].forEach(
+            (methodName) => (this[methodName] = this[methodName].bind(this))
+        );
     }
 
     static propTypes = {
@@ -341,9 +446,9 @@ class MetadataTemplateView extends Component {
     closeMetadataTemplateDialog() {
         const { dirty, writable, presenter } = this.props;
 
-        (dirty && writable) ?
-            this.setState({ showConfirmationDialog: true }) :
-            presenter.closeMetadataTemplateDialog()
+        dirty && writable
+            ? this.setState({ showConfirmationDialog: true })
+            : presenter.closeMetadataTemplateDialog();
     }
 
     confirmCloseMetadataTemplateDialog() {
@@ -352,7 +457,7 @@ class MetadataTemplateView extends Component {
     }
 
     closeConfirmationDialog() {
-        this.setState({showConfirmationDialog: false});
+        this.setState({ showConfirmationDialog: false });
     }
 
     render() {
@@ -362,7 +467,11 @@ class MetadataTemplateView extends Component {
             open,
             writable,
             // from formik
-            values, handleSubmit, isSubmitting, errors, touched,
+            values,
+            handleSubmit,
+            isSubmitting,
+            errors,
+            touched,
         } = this.props;
 
         const { showConfirmationDialog } = this.state;
@@ -370,23 +479,33 @@ class MetadataTemplateView extends Component {
         const dialogTitleID = build(ids.METADATA_TEMPLATE_VIEW, ids.TITLE);
 
         return (
-            <Dialog open={open}
-                    fullWidth={true}
-                    maxWidth="md"
-                    disableBackdropClick
-                    disableEscapeKeyDown
-                    aria-labelledby={dialogTitleID}
-                    TransitionComponent={SlideUpTransition}
+            <Dialog
+                open={open}
+                fullWidth={true}
+                maxWidth="md"
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby={dialogTitleID}
+                TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
+                        <Typography
+                            id={dialogTitleID}
+                            variant="h6"
+                            color="inherit"
+                            className={classes.flex}
+                        >
                             {values.template.name}
                         </Typography>
-                        <IconButton id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE_ICON)}
-                                    aria-label={formatMessage(intl, "close")}
-                                    onClick={this.closeMetadataTemplateDialog}
-                                    color="inherit"
+                        <IconButton
+                            id={build(
+                                ids.METADATA_TEMPLATE_VIEW,
+                                ids.BUTTONS.CLOSE_ICON
+                            )}
+                            aria-label={formatMessage(intl, "close")}
+                            onClick={this.closeMetadataTemplateDialog}
+                            color="inherit"
                         >
                             <CloseIcon />
                         </IconButton>
@@ -394,86 +513,104 @@ class MetadataTemplateView extends Component {
                 </AppBar>
 
                 <DialogContent>
-                    <MetadataTemplateAttributeForm field="metadata"
-                                                   errors={errors}
-                                                   touched={touched}
-                                                   presenter={this.props.presenter}
-                                                   attributes={values.template.attributes}
-                                                   avus={values.metadata.avus}
-                                                   writable={writable}
+                    <MetadataTemplateAttributeForm
+                        field="metadata"
+                        errors={errors}
+                        touched={touched}
+                        presenter={this.props.presenter}
+                        attributes={values.template.attributes}
+                        avus={values.metadata.avus}
+                        writable={writable}
                     />
                 </DialogContent>
 
                 <DialogActions>
-                    <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE)}
-                            onClick={this.closeMetadataTemplateDialog}
-                            color="primary"
+                    <Button
+                        id={build(
+                            ids.METADATA_TEMPLATE_VIEW,
+                            ids.BUTTONS.CLOSE
+                        )}
+                        onClick={this.closeMetadataTemplateDialog}
+                        color="primary"
                     >
                         {getMessage("close")}
                     </Button>
-                    {writable &&
-                    <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}
+                    {writable && (
+                        <Button
+                            id={build(
+                                ids.METADATA_TEMPLATE_VIEW,
+                                ids.BUTTONS.SAVE
+                            )}
                             disabled={!writable || isSubmitting || errors.error}
                             onClick={handleSubmit}
                             color="primary"
                             variant="contained"
-                    >
-                        {getMessage("save")}
-                    </Button>}
+                        >
+                            {getMessage("save")}
+                        </Button>
+                    )}
                 </DialogActions>
 
-                <ConfirmationDialog dialogOpen={showConfirmationDialog}
-                                    debugId={ids.METADATA_TEMPLATE_VIEW}
-                                    heading={getMessage("confirmDiscardChangesDialogHeader")}
-                                    message={getMessage("confirmDiscardChangesDialogMsg")}
-                                    onOkBtnClick={this.confirmCloseMetadataTemplateDialog}
-                                    onCancelBtnClick={this.closeConfirmationDialog}
+                <ConfirmationDialog
+                    dialogOpen={showConfirmationDialog}
+                    debugId={ids.METADATA_TEMPLATE_VIEW}
+                    heading={getMessage("confirmDiscardChangesDialogHeader")}
+                    message={getMessage("confirmDiscardChangesDialogMsg")}
+                    onOkBtnClick={this.confirmCloseMetadataTemplateDialog}
+                    onCancelBtnClick={this.closeConfirmationDialog}
                 />
             </Dialog>
         );
     }
 }
 
-const mapPropsToValues = props => {
+const mapPropsToValues = (props) => {
     const { template } = props;
     const metadata = { ...props.metadata };
 
     const attributeMap = {};
-    const mapAttributesToAttrMap = (attrMap, attributes) => attributes.forEach(attribute => {
-        const attrCopy = { ...attribute };
-        attrMap[attribute.name] = attrCopy;
+    const mapAttributesToAttrMap = (attrMap, attributes) =>
+        attributes.forEach((attribute) => {
+            const attrCopy = { ...attribute };
+            attrMap[attribute.name] = attrCopy;
 
-        if (attrCopy.attributes && attrCopy.attributes.length > 0) {
-            const subAttrMap = {};
-            mapAttributesToAttrMap(subAttrMap, attrCopy.attributes);
-            attrCopy.attributes = subAttrMap;
-        }
-    });
+            if (attrCopy.attributes && attrCopy.attributes.length > 0) {
+                const subAttrMap = {};
+                mapAttributesToAttrMap(subAttrMap, attrCopy.attributes);
+                attrCopy.attributes = subAttrMap;
+            }
+        });
 
     mapAttributesToAttrMap(attributeMap, template.attributes);
 
     const mapAttributesToAVUs = (attributes, propsAVUs) => {
-
         let avus = propsAVUs ? [...propsAVUs] : [];
 
-        attributes.filter((attribute) => attribute.required).forEach((attribute) => {
-            if (avus.filter((avu) => avu.attr === attribute.name).length < 1) {
-                avus.push(newAVU(attribute));
-            }
+        attributes
+            .filter((attribute) => attribute.required)
+            .forEach((attribute) => {
+                if (
+                    avus.filter((avu) => avu.attr === attribute.name).length < 1
+                ) {
+                    avus.push(newAVU(attribute));
+                }
 
-            const { attributes } = attribute;
-            if (attributes && attributes.length > 0) {
-                avus = avus.map(propsAVU => {
-                    let avu = { ...propsAVU };
+                const { attributes } = attribute;
+                if (attributes && attributes.length > 0) {
+                    avus = avus.map((propsAVU) => {
+                        let avu = { ...propsAVU };
 
-                    if (avu.attr === attribute.name) {
-                        avu.avus = mapAttributesToAVUs(attributes, avu.avus);
-                    }
+                        if (avu.attr === attribute.name) {
+                            avu.avus = mapAttributesToAVUs(
+                                attributes,
+                                avu.avus
+                            );
+                        }
 
-                    return avu;
-                });
-            }
-        });
+                        return avu;
+                    });
+                }
+            });
 
         return avus;
     };
@@ -505,7 +642,9 @@ const validateAVUs = (avus, attributeMap) => {
                 case "Integer":
                     let numVal = Number(value);
                     if (isNaN(numVal)) {
-                        avuErrors.value = getMessage("templateValidationErrMsgNumber");
+                        avuErrors.value = getMessage(
+                            "templateValidationErrMsgNumber"
+                        );
                         avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
@@ -517,7 +656,9 @@ const validateAVUs = (avus, attributeMap) => {
 
                 case "Timestamp":
                     if (!Date.parse(value)) {
-                        avuErrors.value = getMessage("templateValidationErrMsgTimestamp");
+                        avuErrors.value = getMessage(
+                            "templateValidationErrMsgTimestamp"
+                        );
                         avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
@@ -526,7 +667,9 @@ const validateAVUs = (avus, attributeMap) => {
 
                 case "URL/URI":
                     if (!constants.URL_REGEX.test(value)) {
-                        avuErrors.value = getMessage("templateValidationErrMsgURL");
+                        avuErrors.value = getMessage(
+                            "templateValidationErrMsgURL"
+                        );
                         avuErrors.error = true;
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
@@ -539,7 +682,10 @@ const validateAVUs = (avus, attributeMap) => {
         }
 
         if (attrTemplate.attributes && avu.avus && avu.avus.length > 0) {
-            const subAttrErros = validateAVUs(avu.avus, attrTemplate.attributes);
+            const subAttrErros = validateAVUs(
+                avu.avus,
+                attrTemplate.attributes
+            );
             if (subAttrErros.length > 0) {
                 avuErrors.avus = subAttrErros;
                 avuErrors.error = true;
@@ -551,7 +697,7 @@ const validateAVUs = (avus, attributeMap) => {
     return avuArrayErrors;
 };
 
-const validate = values => {
+const validate = (values) => {
     const errors = {};
     const { attributeMap, metadata } = values;
 
@@ -579,15 +725,13 @@ const handleSubmit = ({ metadata }, { props, setSubmitting, setStatus }) => {
     props.presenter.updateMetadataFromTemplateView(
         metadata,
         resolve,
-        errorCallback,
+        errorCallback
     );
 };
 
-export default withFormik(
-    {
-        enableReinitialize: true,
-        mapPropsToValues,
-        validate,
-        handleSubmit,
-    }
-)(withStyles(styles)(withI18N(injectIntl(MetadataTemplateView), intlData)));
+export default withFormik({
+    enableReinitialize: true,
+    mapPropsToValues,
+    validate,
+    handleSubmit,
+})(withStyles(styles)(withI18N(injectIntl(MetadataTemplateView), intlData)));

@@ -2,15 +2,15 @@ import palette from "./CyVersePalette";
 
 export default {
     highlightColor: {
-        background: '#FF0'
+        background: "#FF0",
     },
 
     errorHandlerTitle: {
-        display: 'flex'
+        display: "flex",
     },
 
     errorIconPadding: {
-        paddingRight: '5px'
+        paddingRight: "5px",
     },
 
     expansionPanel: {
@@ -31,4 +31,4 @@ export default {
         color: palette.blue,
         marginTop: "10px",
     },
-}
+};

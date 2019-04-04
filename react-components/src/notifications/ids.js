@@ -1,4 +1,4 @@
-export default ({
+export default {
     CANCEL_BTN: "cancelBtn",
     JOIN_REQUEST_DLG: "joinRequestDlg",
     JOIN_REQUEST_VIEW: ".view",
@@ -9,8 +9,8 @@ export default ({
     TOOLBAR: ".toolbar",
     REFRESH_BTN: "refreshBtn",
     MARK_ALL_SEEN_BTN: "markAllSeenBtn",
-    DELETE_BTN:"deleteBtn",
-    FILTER:"categoryCbo",
+    DELETE_BTN: "deleteBtn",
+    FILTER: "categoryCbo",
     NOTIFICATION_VIEW: ".notificationView",
     CATEGORY: "categoryColumn",
     MESSAGE: "messageColumn",
@@ -19,4 +19,4 @@ export default ({
     DENY_REQUEST_DLG: "denyRequestDlg",
     STATUS: "requestStatusColumn",
     COMMENT: "commentColumn",
-});
+};
