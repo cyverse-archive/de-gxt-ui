@@ -3,22 +3,20 @@
  *
  **/
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { injectIntl } from "react-intl";
 
 import constants from "../../constants";
-import exStyles from "../../tools/style";
 import intlData from "../../tools/messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import { FormMultilineTextField, FormTextField } from "../../util/FormField";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core";
 
 
 /**
@@ -142,4 +140,4 @@ class NewToolRequestForm extends Component {
     }
 }
 
-export default withStyles(exStyles)(withI18N(injectIntl(NewToolRequestForm), intlData));
+export default withI18N(injectIntl(NewToolRequestForm), intlData);
