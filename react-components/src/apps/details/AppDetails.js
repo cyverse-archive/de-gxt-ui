@@ -21,7 +21,7 @@ import CopyTextArea from "../../util/CopyTextArea";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 
-import Book from "../../resources/images/book.png";
+import Book from "../../resources/images/bookIcon.png";
 import build from "../../util/DebugIDUtil";
 import Highlighter from "../../util/Highlighter";
 

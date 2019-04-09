@@ -149,16 +149,8 @@ public interface IplantResources extends ClientBundle,
      * 
      * @return image.
      */
-    @Source("book.png")
+    @Source("bookIcon.png")
     ImageResource subCategory();
-
-    /**
-     * Image resource.
-     * 
-     * @return image.
-     */
-    @Source("book_edit.png")
-    ImageResource cat_edit();
 
     /**
      * Image resource.
@@ -268,7 +260,7 @@ public interface IplantResources extends ClientBundle,
      * @return image.
      */
     @Override
-    @Source("book_add.png")
+    @Source("bookIcon-inbetween.png")
     ImageResource category();
 
     /**
@@ -277,7 +269,7 @@ public interface IplantResources extends ClientBundle,
      * @return image.
      */
     @Override
-    @Source("book_open.png")
+    @Source("bookIcon-open.png")
     ImageResource category_open();
 
     /**

@@ -7,23 +7,27 @@ import "rc-tree/assets/index.css";
 
 import Highlighter from "../../util/Highlighter";
 
-import Book from "../../resources/images/book.png";
-import Book_Open from "../../resources/images/book_open.png";
-import Book_Add from "../../resources/images/book_add.png";
+import Book from "../../resources/images/bookIcon.png";
+import Book_Open from "../../resources/images/bookIcon-open.png";
+import Book_Add from "../../resources/images/bookIcon-inbetween.png";
 
 
 const Icon = (props) => {
     const {expanded, isLeaf, title} = props;
+    const height = 16;
+    const width = 16;
+    let src = Book;
     if (expanded) {
-        return <img src={Book_Open} alt={title}/>
+        src = Book_Open;
     } else {
         if (isLeaf) {
-            return <img src={Book} alt={title}/>;
+            src = Book;
         } else {
-            return <img src={Book_Add} alt={title}/>;
+            src = Book_Add;
         }
-
     }
+
+    return <img src={src} alt={title} height={height} width={width} />;
 };
 class CategoryTree extends Component {
 
