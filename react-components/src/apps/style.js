@@ -6,10 +6,10 @@ import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
     loadingStyle: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        color: Color.orange
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        color: Color.orange,
     },
     statFilterButton: {
         margin: 1,
@@ -52,8 +52,8 @@ export default (theme) => ({
         backgroundImage: `url(${fav})`,
         height: 16,
         width: 16,
-        cursor: 'pointer',
-        '&:hover': {
+        cursor: "pointer",
+        "&:hover": {
             backgroundImage: `url(${favRemove})`,
         },
     },
@@ -61,8 +61,8 @@ export default (theme) => ({
         backgroundImage: `url(${notFav})`,
         height: 16,
         width: 16,
-        cursor: 'pointer',
-        '&:hover': {
+        cursor: "pointer",
+        "&:hover": {
             backgroundImage: `url(${favAdd})`,
         },
     },
@@ -75,5 +75,5 @@ export default (theme) => ({
         "&:hover": {
             backgroundColor: theme.palette.error.dark,
         },
-    }
+    },
 });

@@ -39,7 +39,7 @@ class CopyTextArea extends Component {
     }
 
     render() {
-        const {multiline, btnText} = this.props;
+        const { multiline, btnText } = this.props;
         return (
             <div>
                 <TextField
