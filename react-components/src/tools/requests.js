@@ -1,4 +1,2 @@
 import NewToolRequestForm from "./requests/NewToolRequestForm";
-export {
-    NewToolRequestForm,
-};
+export { NewToolRequestForm };
