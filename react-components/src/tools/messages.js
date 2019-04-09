@@ -76,12 +76,13 @@ export default {
         toolNameLabel: "What is the name of the tool?",
         toolDescLabel: "Briefly describe the tool:",
         toolSrcLinkLabel:
-            "Enter link for your tool's source (GitHub, BitBucket, DockerHub etc...):",
+            "Provide a link for your tool's source (GitHub, BitBucket, DockerHub etc...):",
         toolVersionLabel: "What is your tool's version?",
-        toolDocumentationLabel: "Enter link for your tool's documentation:",
+        toolDocumentationLabel: "Provide a link for your tool's documentation:",
         toolInstructionsLabel:
             "Enter any other instructions or relevant information:",
         toolTestDataLabel: "Enter link for your tool's test data:",
-        validationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
+        validationErrMsgURL:
+            "A valid URL must begin with either ftp or http or https.",
     },
 };

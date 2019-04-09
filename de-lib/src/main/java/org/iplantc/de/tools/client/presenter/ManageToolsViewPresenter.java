@@ -67,12 +67,41 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     ReactToolViews.EditToolProps editToolProps;
     ManageToolsView.ManageToolsViewAppearance appearance;
     ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
+<<<<<<< HEAD
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
     @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
     @Inject EventBus eventBus;
     @Inject ToolAutoBeanFactory factory;
     @Inject DEProperties deProperties;
+=======
+
+    @Inject
+    AsyncProviderWrapper<EditToolDialog> editDialogProvider;
+
+    @Inject
+    IplantAnnouncer announcer;
+
+    @Inject
+    AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
+
+    @Inject
+    AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
+
+    @Inject
+    EventBus eventBus;
+
+    @Inject
+    ToolAutoBeanFactory factory;
+
+    @Inject
+    DEProperties deProperties;
+
+    protected List<Tool> currentSelection = Lists.newArrayList();
+
+    private List<String> toolTypes = Lists.newArrayList();
+
+>>>>>>> 2684989... core-99 Address PR comments.
     private final NewToolRequestFormView requestFormView;
     private final ToolRequestServiceFacade reqServices =
             ServicesInjector.INSTANCE.getToolRequestServiceProvider();

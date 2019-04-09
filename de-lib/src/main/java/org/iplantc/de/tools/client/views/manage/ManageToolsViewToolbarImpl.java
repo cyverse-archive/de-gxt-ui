@@ -142,7 +142,6 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         delete.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_DELETE);
         useInApp.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_USE_IN_APPS);
 
-        shareCollab.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_SHARE);
         shareCollab.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_COLLABS);
 
         refreshButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_REFRESH);

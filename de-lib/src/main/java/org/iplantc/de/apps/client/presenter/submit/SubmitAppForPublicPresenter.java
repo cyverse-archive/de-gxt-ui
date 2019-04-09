@@ -39,7 +39,6 @@ import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -202,12 +201,9 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             public void onSuccess(App result) {
                 view.loadReferences(parseRefLinks(result.getReferences()));
                 List<Tool> toolsLst = result.getTools();
-                List<Tool> interactiveList = toolsLst.stream()
-                                                     .filter(t -> t.getType()
-                                                                   .equalsIgnoreCase(AppTypeFilter.INTERACTIVE
-                                                                                             .getFilterString()))
-                                                     .collect(Collectors.toList());
-                view.setIsInteractive(interactiveList != null && interactiveList.size() > 0);
+                boolean isInteractive = toolsLst.stream().anyMatch(tool -> tool.getType().equalsIgnoreCase(
+                        AppTypeFilter.INTERACTIVE.getFilterString()));
+                view.setIsInteractive(isInteractive);
             }
         });
     }
