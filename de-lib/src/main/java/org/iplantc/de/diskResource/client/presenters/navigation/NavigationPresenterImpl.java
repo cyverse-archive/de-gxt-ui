@@ -492,7 +492,7 @@ public class NavigationPresenterImpl implements
     public Folder getFolderByPath(String path) {
         if (treeStore.getRootItems() != null) {
             for (Folder folder : treeStore.getAll()) {
-                if (folder.getPath().equals(path)) {
+                if (folder.getPath() != null && folder.getPath().equals(path)) {
                     return folder;
                 }
             }
