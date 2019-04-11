@@ -36,20 +36,20 @@ const columnData = [
         id: ids.INFO.TIMESTAMP,
         name: "Date",
         numeric: false,
-        enableSorting: false
+        enableSorting: false,
     },
     {
         id: ids.INFO.MESSAGE,
         name: "Message",
         numeric: false,
-        enableSorting: false
+        enableSorting: false,
     },
     {
         id: ids.INFO.STATUS,
         name: "Status",
         numeric: false,
-        enableSorting: false
-    }
+        enableSorting: false,
+    },
 ];
 
 function Updates(props) {
@@ -71,10 +71,10 @@ function Updates(props) {
                             </TableCell>
                             <TableCell className={classes.analysisInfoFont}>
                                 {status[0].toUpperCase() +
-                                status
-                                    .slice(1)
-                                    .toLowerCase()
-                                    .replace(/[_]/gi, " ")}
+                                    status
+                                        .slice(1)
+                                        .toLowerCase()
+                                        .replace(/[_]/gi, " ")}
                             </TableCell>
                         </TableRow>
                     );
@@ -99,12 +99,19 @@ function Step(props) {
                 <Typography className={classes.heading}>
                     {step_number}: {step_type} - {status}
                 </Typography>
-                <Typography className={classes.secondaryHeading} variant="subtitle2">
+                <Typography
+                    className={classes.secondaryHeading}
+                    variant="subtitle2"
+                >
                     {getMessage("analysisId")}: {external_id}
                 </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                <Updates updates={updates} classes={classes} debugId={debugId} />
+                <Updates
+                    updates={updates}
+                    classes={classes}
+                    debugId={debugId}
+                />
             </ExpansionPanelDetails>
         </ExpansionPanel>
     );
@@ -118,7 +125,7 @@ class AnalysisInfoDialog extends Component {
             onInfoDialogClose,
             intl,
             classes,
-            baseDebugId
+            baseDebugId,
         } = this.props;
         const debugId = build(baseDebugId, ids.INFO.info);
         return (
@@ -130,7 +137,12 @@ class AnalysisInfoDialog extends Component {
                 <DialogContent>
                     {info.steps.map((s, index) => {
                         return (
-                            <Step key={index} step={s} classes={classes} debugId={debugId} />
+                            <Step
+                                key={index}
+                                step={s}
+                                classes={classes}
+                                debugId={debugId}
+                            />
                         );
                     })}
                 </DialogContent>
