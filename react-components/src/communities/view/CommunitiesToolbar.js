@@ -29,17 +29,25 @@ function CommunitiesToolbar(props) {
 
     let toolbarId = build(parentId, ids.TOOLBAR);
     return (
-        <Toolbar id={toolbarId} classes={{root: classes.toolbar}}>
-            <CreateCommunitiesBtn parentId={toolbarId}
-                                  className={classes.toolbarItem}
-                                  onClick={onCreateCommunityClicked}/>
-            <Select value={currentCommunityType}
-                    onChange={handleCommunityFilterChange}>
-                <MenuItem value={CommunityFilter.MY_COMMUNITIES}>{getMessage('myCommunities')}</MenuItem>
-                <MenuItem value={CommunityFilter.ALL_COMMUNITIES}>{getMessage('allCommunities')}</MenuItem>
+        <Toolbar id={toolbarId} classes={{ root: classes.toolbar }}>
+            <CreateCommunitiesBtn
+                parentId={toolbarId}
+                className={classes.toolbarItem}
+                onClick={onCreateCommunityClicked}
+            />
+            <Select
+                value={currentCommunityType}
+                onChange={handleCommunityFilterChange}
+            >
+                <MenuItem value={CommunityFilter.MY_COMMUNITIES}>
+                    {getMessage("myCommunities")}
+                </MenuItem>
+                <MenuItem value={CommunityFilter.ALL_COMMUNITIES}>
+                    {getMessage("allCommunities")}
+                </MenuItem>
             </Select>
         </Toolbar>
-    )
+    );
 }
 
 CommunitiesToolbar.propTypes = {

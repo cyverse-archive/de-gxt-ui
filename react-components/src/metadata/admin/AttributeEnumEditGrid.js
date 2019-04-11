@@ -12,7 +12,12 @@ import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import { FormCheckbox, FormCheckboxTableCell, FormTextField, getFormError } from "../../util/FormField";
+import {
+    FormCheckbox,
+    FormCheckboxTableCell,
+    FormTextField,
+    getFormError,
+} from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";
@@ -31,7 +36,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
-const normalizeDefault = (enumValues, replace) => event => {
+const normalizeDefault = (enumValues, replace) => (event) => {
     event.stopPropagation();
 
     const is_default = event.target.checked;
@@ -39,7 +44,7 @@ const normalizeDefault = (enumValues, replace) => event => {
     if (is_default) {
         enumValues.forEach((attrEnum, index) => {
             if (attrEnum.is_default) {
-                replace(index, {...attrEnum, is_default: false});
+                replace(index, { ...attrEnum, is_default: false });
             }
         });
     }
@@ -53,7 +58,15 @@ class AttributeEnumEditDialog extends Component {
     };
 
     render() {
-        const { open, intl, field, error, replace, enumValues, onClose } = this.props;
+        const {
+            open,
+            intl,
+            field,
+            error,
+            replace,
+            enumValues,
+            onClose,
+        } = this.props;
 
         const dialogID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
         const dialogTitleID = build(dialogID, ids.TITLE);
@@ -65,28 +78,33 @@ class AttributeEnumEditDialog extends Component {
                 disableEscapeKeyDown
                 aria-labelledby={dialogTitleID}
             >
-                <DialogTitle id={dialogTitleID}>{getMessage("dialogTitleEditEnumValue")}</DialogTitle>
+                <DialogTitle id={dialogTitleID}>
+                    {getMessage("dialogTitleEditEnumValue")}
+                </DialogTitle>
                 <DialogContent>
-                    <FastField name={`${field}.value`}
-                               label={formatMessage(intl, "value")}
-                               id={build(dialogID, ids.ENUM_VALUE)}
-                               required={true}
-                               autoFocus
-                               component={FormTextField}
+                    <FastField
+                        name={`${field}.value`}
+                        label={formatMessage(intl, "value")}
+                        id={build(dialogID, ids.ENUM_VALUE)}
+                        required={true}
+                        autoFocus
+                        component={FormTextField}
                     />
-                    <Field name={`${field}.is_default`}
-                           label={formatMessage(intl, "enumDefaultLabel")}
-                           id={build(dialogID, ids.ENUM_VALUE_DEFAULT)}
-                           color="primary"
-                           component={FormCheckbox}
-                           onClick={normalizeDefault(enumValues, replace)}
+                    <Field
+                        name={`${field}.is_default`}
+                        label={formatMessage(intl, "enumDefaultLabel")}
+                        id={build(dialogID, ids.ENUM_VALUE_DEFAULT)}
+                        color="primary"
+                        component={FormCheckbox}
+                        onClick={normalizeDefault(enumValues, replace)}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button id={build(dialogID, ids.BUTTONS.CLOSE)}
-                            color="primary"
-                            disabled={!!error}
-                            onClick={onClose}
+                    <Button
+                        id={build(dialogID, ids.BUTTONS.CLOSE)}
+                        color="primary"
+                        disabled={!!error}
+                        onClick={onClose}
                     >
                         {getMessage("done")}
                     </Button>
@@ -107,15 +125,15 @@ class AttributeEnumEditGrid extends Component {
             editingEnumIndex: -1,
         };
 
-        [
-            "onAddEnum",
-            "moveUp",
-            "moveDown",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
+        ["onAddEnum", "moveUp", "moveDown"].forEach(
+            (methodName) => (this[methodName] = this[methodName].bind(this))
+        );
     }
 
     newEnumValue() {
-        return formatMessage(this.props.intl, "newValue", {count: this.newEnumCount++});
+        return formatMessage(this.props.intl, "newValue", {
+            count: this.newEnumCount++,
+        });
     }
 
     onAddEnum() {
@@ -124,12 +142,12 @@ class AttributeEnumEditGrid extends Component {
 
         let value = this.newEnumValue();
 
-        const valuesMatch = attrEnum => (attrEnum.value === value);
+        const valuesMatch = (attrEnum) => attrEnum.value === value;
         while (attributeEnums.findIndex(valuesMatch) > -1) {
             value = this.newEnumValue();
         }
 
-        this.setState({selected: 0});
+        this.setState({ selected: 0 });
 
         this.props.unshift({
             value,
@@ -147,7 +165,7 @@ class AttributeEnumEditGrid extends Component {
             selected--;
         }
 
-        this.setState({selected});
+        this.setState({ selected });
 
         this.props.remove(index);
     }
@@ -168,7 +186,7 @@ class AttributeEnumEditGrid extends Component {
     moveSelectedEnum(offset) {
         const { selected } = this.state;
 
-        this.setState({selected: selected + offset});
+        this.setState({ selected: selected + offset });
 
         this.props.move(selected, selected + offset);
     }
@@ -180,11 +198,7 @@ class AttributeEnumEditGrid extends Component {
             parentID,
             name,
             replace,
-            form: {
-                touched,
-                errors,
-                values,
-            },
+            form: { touched, errors, values },
         } = this.props;
         const { selected, editingEnumIndex } = this.state;
         const attributeEnums = getIn(values, name);
@@ -195,100 +209,155 @@ class AttributeEnumEditGrid extends Component {
 
         return (
             <div className={classes.attributeTableContainer}>
-
-                <OrderedGridToolbar title={getMessage("enumValues")}
-                                    error={error}
-                                    parentID={tableID}
-                                    onAddItem={this.onAddEnum}
-                                    moveUp={this.moveUp}
-                                    moveUpDisabled={selected <= 0}
-                                    moveDown={this.moveDown}
-                                    moveDownDisabled={!attributeEnums || selected < 0 || (attributeEnums.length - 1) <= selected}
+                <OrderedGridToolbar
+                    title={getMessage("enumValues")}
+                    error={error}
+                    parentID={tableID}
+                    onAddItem={this.onAddEnum}
+                    moveUp={this.moveUp}
+                    moveUpDisabled={selected <= 0}
+                    moveDown={this.moveDown}
+                    moveDownDisabled={
+                        !attributeEnums ||
+                        selected < 0 ||
+                        attributeEnums.length - 1 <= selected
+                    }
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
-                            {attributeEnums && attributeEnums.map(({ value }, index) => {
-                                const isSelected = (index === selected);
-                                const field = `${name}[${index}]`;
+                            {attributeEnums &&
+                                attributeEnums.map(({ value }, index) => {
+                                    const isSelected = index === selected;
+                                    const field = `${name}[${index}]`;
 
-                                const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
+                                    const rowID = build(
+                                        ids.METADATA_TEMPLATE_FORM,
+                                        field
+                                    );
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        tabIndex={-1}
-                                        key={field}
-                                        selected={isSelected}
-                                        onClick={() => this.handleSelect(index)}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {value}
-                                        </TableCell>
-                                        <Field name={`${field}.is_default`}
-                                               id={build(rowID, ids.ENUM_VALUE_DEFAULT)}
-                                               component={FormCheckboxTableCell}
-                                               onClick={normalizeDefault(attributeEnums, replace)}
-                                        />
-                                        <TableCell padding="none">
-                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
-                                                        aria-label={formatMessage(intl, "edit")}
-                                                        className={classes.button}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.setState({editingEnumIndex: index});
-                                                        }}
+                                    return (
+                                        <TableRow
+                                            hover
+                                            tabIndex={-1}
+                                            key={field}
+                                            selected={isSelected}
+                                            onClick={() =>
+                                                this.handleSelect(index)
+                                            }
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
                                             >
-                                                <ContentEdit />
-                                            </IconButton>
-                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                        aria-label={formatMessage(intl, "delete")}
-                                                        classes={{root: classes.deleteIcon}}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.onEnumRemoved(index);
-                                                        }}
-                                            >
-                                                <ContentRemove />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                                {value}
+                                            </TableCell>
+                                            <Field
+                                                name={`${field}.is_default`}
+                                                id={build(
+                                                    rowID,
+                                                    ids.ENUM_VALUE_DEFAULT
+                                                )}
+                                                component={
+                                                    FormCheckboxTableCell
+                                                }
+                                                onClick={normalizeDefault(
+                                                    attributeEnums,
+                                                    replace
+                                                )}
+                                            />
+                                            <TableCell padding="none">
+                                                <IconButton
+                                                    id={build(
+                                                        rowID,
+                                                        ids.BUTTONS.EDIT
+                                                    )}
+                                                    aria-label={formatMessage(
+                                                        intl,
+                                                        "edit"
+                                                    )}
+                                                    className={classes.button}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        this.setState({
+                                                            editingEnumIndex: index,
+                                                        });
+                                                    }}
+                                                >
+                                                    <ContentEdit />
+                                                </IconButton>
+                                                <IconButton
+                                                    id={build(
+                                                        rowID,
+                                                        ids.BUTTONS.DELETE
+                                                    )}
+                                                    aria-label={formatMessage(
+                                                        intl,
+                                                        "delete"
+                                                    )}
+                                                    classes={{
+                                                        root:
+                                                            classes.deleteIcon,
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        this.onEnumRemoved(
+                                                            index
+                                                        );
+                                                    }}
+                                                >
+                                                    <ContentRemove />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
                         <TableHead className={classes.tableHead}>
                             <TableRow>
-                                <TableCell component="th" scope="row">{getMessage("value")}</TableCell>
-                                <TableCell padding="checkbox">{getMessage("default")}</TableCell>
+                                <TableCell component="th" scope="row">
+                                    {getMessage("value")}
+                                </TableCell>
+                                <TableCell padding="checkbox">
+                                    {getMessage("default")}
+                                </TableCell>
                                 <TableCell padding="none" />
                             </TableRow>
                         </TableHead>
                     </Table>
                 </div>
 
-                {attributeEnums && attributeEnums.map((value, index) => {
-                    const field = `${name}[${index}]`;
-                    const attrEnumError = getFormError(field, touched, errors);
-                    const error = attrEnumError && attrEnumError.error;
+                {attributeEnums &&
+                    attributeEnums.map((value, index) => {
+                        const field = `${name}[${index}]`;
+                        const attrEnumError = getFormError(
+                            field,
+                            touched,
+                            errors
+                        );
+                        const error = attrEnumError && attrEnumError.error;
 
-                    return (
-                        <AttributeEnumEditDialog key={field}
-                                                 open={editingEnumIndex === index}
-                                                 field={field}
-                                                 error={error}
-                                                 replace={replace}
-                                                 enumValues={attributeEnums}
-                                                 intl={intl}
-                                                 onClose={() => this.setState({ editingEnumIndex: -1 })}
-                        />
-                    );
-                    }
-                )
-                }
+                        return (
+                            <AttributeEnumEditDialog
+                                key={field}
+                                open={editingEnumIndex === index}
+                                field={field}
+                                error={error}
+                                replace={replace}
+                                enumValues={attributeEnums}
+                                intl={intl}
+                                onClose={() =>
+                                    this.setState({ editingEnumIndex: -1 })
+                                }
+                            />
+                        );
+                    })}
             </div>
         );
     }
 }
 
-export default withStyles(styles)(withI18N(injectIntl(AttributeEnumEditGrid), intlData));
+export default withStyles(styles)(
+    withI18N(injectIntl(AttributeEnumEditGrid), intlData)
+);

@@ -30,96 +30,99 @@ function Permissions(props) {
 
     const permissions = [
         {
-            value: 'read',
-            label: getMessage('read')
+            value: "read",
+            label: getMessage("read"),
         },
         {
-            value: 'write',
-            label: getMessage('write')
+            value: "write",
+            label: getMessage("write"),
         },
         {
-            value: 'own',
-            label: getMessage('own')
-        }
+            value: "own",
+            label: getMessage("own"),
+        },
     ];
 
     const {
         parentId,
         classes,
-        helperProps: {
-            presenter,
-            collaboratorsUtil
-        }
+        helperProps: { presenter, collaboratorsUtil },
     } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}
-                            parentId={parentId}/>
-            <Field name='permission'
-                   permissions={permissions}
-                   id={build(parentId, ids.permissionList)}
-                   component={renderSelect}/>
-            <FieldArray name='users'
-                        presenter={presenter}
-                        classes={classes}
-                        collaboratorsUtil={collaboratorsUtil}
-                        parentId={parentId}
-                        validate={[]}
-                        component={renderSubjectSearch}/>
+            <SelectOperator operators={operators} parentId={parentId} />
+            <Field
+                name="permission"
+                permissions={permissions}
+                id={build(parentId, ids.permissionList)}
+                component={renderSelect}
+            />
+            <FieldArray
+                name="users"
+                presenter={presenter}
+                classes={classes}
+                collaboratorsUtil={collaboratorsUtil}
+                parentId={parentId}
+                validate={[]}
+                component={renderSubjectSearch}
+            />
         </Fragment>
-    )
+    );
 }
 
 function renderSelect(props) {
-    const {
-        input,
-        permissions,
-        id
-    } = props;
+    const { input, permissions, id } = props;
 
     if (input.value === "") {
-        input.onChange(permissions[0].value)
+        input.onChange(permissions[0].value);
     }
 
     return (
         <Grid item>
             <FormControl id={id}>
-                <Select value={input.value}
-                        id={build(id, ids.inputField)}
-                        onChange={(event) => input.onChange(event.target.value)}>
-                    {permissions && permissions.map((permission, index) => {
-                        return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
-                    })}
+                <Select
+                    value={input.value}
+                    id={build(id, ids.inputField)}
+                    onChange={(event) => input.onChange(event.target.value)}
+                >
+                    {permissions &&
+                        permissions.map((permission, index) => {
+                            return (
+                                <MenuItem key={index} value={permission.value}>
+                                    {permission.label}
+                                </MenuItem>
+                            );
+                        })}
                 </Select>
             </FormControl>
         </Grid>
-    )
+    );
 }
 
 function renderSubjectSearch(props) {
-    const {
-        presenter,
-        collaboratorsUtil,
-        fields,
-        parentId,
-        classes
-    } = props;
+    const { presenter, collaboratorsUtil, fields, parentId, classes } = props;
 
     const users = fields.getAll();
 
     return (
         <Grid item className={classes.autocompleteField}>
-            <SubjectSearchField presenter={presenter}
-                                collaboratorsUtil={collaboratorsUtil}
-                                parentId={parentId}
-                                onSelect={(collaborator) => fields.push(collaborator)}/>
-            {users && users.length > 0 && <UserPanel users={users}
-                                                     id={build(parentId, ids.userList)}
-                                                     collaboratorsUtil={collaboratorsUtil}
-                                                     onDelete={fields.remove}/>}
+            <SubjectSearchField
+                presenter={presenter}
+                collaboratorsUtil={collaboratorsUtil}
+                parentId={parentId}
+                onSelect={(collaborator) => fields.push(collaborator)}
+            />
+            {users && users.length > 0 && (
+                <UserPanel
+                    users={users}
+                    id={build(parentId, ids.userList)}
+                    collaboratorsUtil={collaboratorsUtil}
+                    onDelete={fields.remove}
+                />
+            )}
         </Grid>
-    )
+    );
 }
 
 export default withStyles(styles)(withI18N(Permissions, messages));

@@ -21,110 +21,110 @@ import Tags from "./Tags";
 
 const labels = [
     {
-        value: 'all',
-        label: getMessage('all'),
-        id: ids.conditionAll
+        value: "all",
+        label: getMessage("all"),
+        id: ids.conditionAll,
     },
     {
-        value: 'any',
-        label: getMessage('any'),
-        id: ids.conditionAny
+        value: "any",
+        label: getMessage("any"),
+        id: ids.conditionAny,
     },
     {
-        value: 'label',
-        label: getMessage('label'),
-        id: ids.conditionLabel
+        value: "label",
+        label: getMessage("label"),
+        id: ids.conditionLabel,
     },
     {
-        value: 'owner',
-        label: getMessage('owner'),
-        id: ids.conditionOwner
+        value: "owner",
+        label: getMessage("owner"),
+        id: ids.conditionOwner,
     },
     {
-        value: 'path',
-        label: getMessage('path'),
-        id: ids.conditionPath
+        value: "path",
+        label: getMessage("path"),
+        id: ids.conditionPath,
     },
     {
-        value: 'created',
-        label: getMessage('created'),
-        id: ids.conditionCreated
+        value: "created",
+        label: getMessage("created"),
+        id: ids.conditionCreated,
     },
     {
-        value: 'modified',
-        label: getMessage('modified'),
-        id: ids.conditionModified
+        value: "modified",
+        label: getMessage("modified"),
+        id: ids.conditionModified,
     },
     {
-        value: 'tag',
-        label: getMessage('tags'),
-        id: ids.conditionTags
+        value: "tag",
+        label: getMessage("tags"),
+        id: ids.conditionTags,
     },
     {
-        value: 'size',
-        label: getMessage('fileSize'),
-        id: ids.conditionFileSize
+        value: "size",
+        label: getMessage("fileSize"),
+        id: ids.conditionFileSize,
     },
     {
-        value: 'metadata',
-        label: getMessage('metadata'),
-        id: ids.conditionMetadata
+        value: "metadata",
+        label: getMessage("metadata"),
+        id: ids.conditionMetadata,
     },
     {
-        value: 'permissions',
-        label: getMessage('permissions'),
-        id: ids.conditionPermissions
+        value: "permissions",
+        label: getMessage("permissions"),
+        id: ids.conditionPermissions,
     },
 ];
 
 let componentMap = {
     label: {
         isGroup: false,
-        component: Label
+        component: Label,
     },
     owner: {
         isGroup: false,
-        component: Owner
+        component: Owner,
     },
     path: {
         isGroup: false,
-        component: Path
+        component: Path,
     },
     created: {
         isGroup: false,
-        component: Date
+        component: Date,
     },
     modified: {
         isGroup: false,
-        component: Date
+        component: Date,
     },
     tag: {
         isGroup: false,
-        component: Tags
+        component: Tags,
     },
     size: {
         isGroup: false,
-        component: FileSize
+        component: FileSize,
     },
     metadata: {
         isGroup: false,
-        component: Metadata
+        component: Metadata,
     },
     permissions: {
         isGroup: false,
-        component: Permissions
+        component: Permissions,
     },
     all: {
         isGroup: true,
-        component: Group
+        component: Group,
     },
     any: {
         isGroup: true,
-        component: Group
-    }
+        component: Group,
+    },
 };
 
 export default {
     labels,
-    componentMap
+    componentMap,
 };

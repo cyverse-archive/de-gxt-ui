@@ -3,15 +3,14 @@
  *
  **/
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import { injectIntl } from "react-intl";
 import intlData from "./messages";
 import withI18N from "../../util/I18NWrapper";
 import exStyles from "./style";
 
-
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
@@ -22,20 +21,17 @@ import IconButton from "@material-ui/core/IconButton";
 
 class DEDialogHeader extends Component {
     render() {
-        const {classes, heading, onClose, intl, id} = this.props;
+        const { classes, heading, onClose, intl, id } = this.props;
         return (
             <DialogTitle id={id} className={classes.header}>
-                <Typography
-                    className={classes.title}>
-                    {heading}
-                </Typography>
+                <Typography className={classes.title}>{heading}</Typography>
                 <IconButton
-                    aria-label={intl.formatMessage({id: "more"})}
+                    aria-label={intl.formatMessage({ id: "more" })}
                     aria-haspopup="true"
                     onClick={onClose}
                     className={classes.dialogCloseButton}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
             </DialogTitle>
         );
@@ -43,11 +39,11 @@ class DEDialogHeader extends Component {
 }
 
 DEDialogHeader.propTypes = {
-    heading: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object
-    ]).isRequired,
+    heading: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+        .isRequired,
     onClose: PropTypes.func.isRequired,
 };
 
-export default withStyles(exStyles)(withI18N(injectIntl(DEDialogHeader), intlData));
+export default withStyles(exStyles)(
+    withI18N(injectIntl(DEDialogHeader), intlData)
+);

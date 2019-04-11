@@ -12,24 +12,22 @@ import React, { Fragment } from "react";
  * A component which allows users to specify a path prefix in QueryBuilder
  */
 function Path(props) {
-    const operators = [
-        options.Begins,
-        options.BeginsNot,
-    ];
+    const operators = [options.Begins, options.BeginsNot];
 
-    const {parentId} = props;
+    const { parentId } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}
-                            parentId={parentId}/>
-            <Field name='prefix'
-                   operators={operators}
-                   id={build(parentId, ids.path)}
-                   validate={Validations.nonEmptyField}
-                   component={ReduxTextField}/>
+            <SelectOperator operators={operators} parentId={parentId} />
+            <Field
+                name="prefix"
+                operators={operators}
+                id={build(parentId, ids.path)}
+                validate={Validations.nonEmptyField}
+                component={ReduxTextField}
+            />
         </Fragment>
-    )
+    );
 }
 
 export default Path;

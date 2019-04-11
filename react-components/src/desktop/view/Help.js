@@ -34,51 +34,58 @@ class Help extends Component {
     }
 
     handleClick(event) {
-        this.setState({anchorEl: document.getElementById(this.props.anchor)});
-    };
+        this.setState({ anchorEl: document.getElementById(this.props.anchor) });
+    }
 
     handleClose() {
-        this.setState({anchorEl: null});
-    };
+        this.setState({ anchorEl: null });
+    }
 
     render() {
-        const {anchorEl} = this.state;
-        const {classes, presenter} = this.props;
+        const { anchorEl } = this.state;
+        const { classes, presenter } = this.props;
         return (
             <span>
-                   <HelpIcon
-                       id={build(ids.DESKTOP, ids.HELP_MENU)}
-                       className={classes.menuIcon}
-                       onClick={this.handleClick}
-                       ref={this.helpBtn}
-                   />
-                 <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
-                       anchorEl={anchorEl}
-                       open={Boolean(anchorEl)}
-                       onClose={this.handleClose}
-                 >
-                 <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)}
-                           onClick={() => {
-                               presenter.onFaqSelect();
-                               this.handleClose();
-                           }}>
-                     <DEHyperlink text={getMessage("faqLink")}/>
-                 </MenuItem>
-                 <MenuItem id={build(ids.DESKTOP, ids.FORUMS_LINK)}
-                           onClick={() => {
-                               presenter.onForumsBtnSelect();
-                               this.handleClose();
-                           }}>
-                     <DEHyperlink text={getMessage("forumsLink")}/>
-                 </MenuItem>
-                 <MenuItem id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
-                           onClick={() => {
-                               presenter.onFeedbackSelect();
-                               this.handleClose();
-                           }}>
-                     <DEHyperlink text={getMessage("feedbackLink")}/>
-                 </MenuItem>
-             </Menu>
+                <HelpIcon
+                    id={build(ids.DESKTOP, ids.HELP_MENU)}
+                    className={classes.menuIcon}
+                    onClick={this.handleClick}
+                    ref={this.helpBtn}
+                />
+                <Menu
+                    id={build(ids.DESKTOP, ids.HELP_MENU)}
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                >
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.FAQS_LINK)}
+                        onClick={() => {
+                            presenter.onFaqSelect();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("faqLink")} />
+                    </MenuItem>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.FORUMS_LINK)}
+                        onClick={() => {
+                            presenter.onForumsBtnSelect();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("forumsLink")} />
+                    </MenuItem>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
+                        onClick={() => {
+                            presenter.onFeedbackSelect();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("feedbackLink")} />
+                    </MenuItem>
+                </Menu>
             </span>
         );
     }

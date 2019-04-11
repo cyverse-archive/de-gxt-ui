@@ -28,32 +28,33 @@ class DenyJoinRequestDetailsDialog extends Component {
     }
 
     render() {
-        const {teamName, adminMessage} = this.props;
+        const { teamName, adminMessage } = this.props;
         const baseId = ids.DENY_REQUEST_DLG;
         return (
-            <Dialog
-                id={baseId}
-                open={this.state.dialogOpen}
-            >
-                <DialogTitle style={{backgroundColor: Color.blue}}>
-                    <Typography
-                        style={{color: Color.white}}> {getMessage("denyDetailsHeader")}</Typography>
+            <Dialog id={baseId} open={this.state.dialogOpen}>
+                <DialogTitle style={{ backgroundColor: Color.blue }}>
+                    <Typography style={{ color: Color.white }}>
+                        {" "}
+                        {getMessage("denyDetailsHeader")}
+                    </Typography>
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <Typography>{getMessage("denyDetailsMessage", {
-                            values: {
-                                team: teamName
-                            }
-                        })}</Typography>
-                        <p style={{marginTop: 10}}>
+                        <Typography>
+                            {getMessage("denyDetailsMessage", {
+                                values: {
+                                    team: teamName,
+                                },
+                            })}
+                        </Typography>
+                        <p style={{ marginTop: 10 }}>
                             {getMessage("denyAdminLabel")}
                             <TextField
                                 InputLabelProps={{
-                                    shrink: true
+                                    shrink: true,
                                 }}
                                 InputProps={{
-                                    readOnly: true
+                                    readOnly: true,
                                 }}
                                 fullWidth
                                 margin="normal"
@@ -66,9 +67,10 @@ class DenyJoinRequestDetailsDialog extends Component {
                     <Button
                         id={build(baseId, ids.OK_BTN)}
                         onClick={() => {
-                            this.setState({dialogOpen: false})
+                            this.setState({ dialogOpen: false });
                         }}
-                        color="primary">
+                        color="primary"
+                    >
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

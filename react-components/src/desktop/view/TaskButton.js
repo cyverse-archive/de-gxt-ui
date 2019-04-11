@@ -17,20 +17,25 @@ class TaskButton extends Component {
     }
 
     render() {
-        const {classes, windowConfig: {minimized, windowTitle}} = this.props;
+        const {
+            classes,
+            windowConfig: { minimized, windowTitle },
+        } = this.props;
         const variant = minimized ? "raised" : "contained";
-        const className = minimized ? classes.taskbarButtonMinimized : classes.taskbarButton;
+        const className = minimized
+            ? classes.taskbarButtonMinimized
+            : classes.taskbarButton;
 
         return (
-            <Button variant={variant}
-                    className={className}
-                    onClick={this.onClick}
+            <Button
+                variant={variant}
+                className={className}
+                onClick={this.onClick}
             >
                 {windowTitle}
             </Button>
         );
     }
-
 }
 
 export default withStyles(styles)(TaskButton); //need to use withStyles here instead of injectSheet

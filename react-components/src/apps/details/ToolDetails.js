@@ -2,23 +2,22 @@
  * @author sriram
  *
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import intlData from "../messages";
 import styles from "../style";
-import injectSheet from 'react-jss';
-import withI18N, {getMessage} from "../../util/I18NWrapper";
-
+import injectSheet from "react-jss";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedToolIndex: 0
+            selectedToolIndex: 0,
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -27,7 +26,7 @@ class ToolDetailsV1 extends Component {
 
     onToolSelectionChange(event, selectedToolIndex) {
         this.setState({
-            selectedToolIndex: selectedToolIndex
+            selectedToolIndex: selectedToolIndex,
         });
     }
 
@@ -38,20 +37,17 @@ class ToolDetailsV1 extends Component {
             valueClass = classes.toolDetailsValue;
         return (
             <div>
-                {
-                    tools.map((toolInfo, index) => (
-                        <ExpansionPanel key={index}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <p className={labelClass}>{toolInfo.name}:</p>
-                                <p className={valueClass}>{toolInfo.description}</p>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                <table>
-                                    <tbody>
+                {tools.map((toolInfo, index) => (
+                    <ExpansionPanel key={index}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <p className={labelClass}>{toolInfo.name}:</p>
+                            <p className={valueClass}>{toolInfo.description}</p>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <table>
+                                <tbody>
                                     <tr>
-                                        <td>
-                                            {getMessage("detailsLabel")}
-                                        </td>
+                                        <td>{getMessage("detailsLabel")}</td>
                                     </tr>
                                     <tr>
                                         <td className={labelClass}>
@@ -93,15 +89,14 @@ class ToolDetailsV1 extends Component {
                                             {toolInfo.attribution}
                                         </td>
                                     </tr>
-                                    </tbody>
-                                </table>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                    ))
-                }
+                                </tbody>
+                            </table>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                ))}
             </div>
         );
     }
 }
 
-export default injectSheet(styles)(withI18N(ToolDetailsV1,intlData));
+export default injectSheet(styles)(withI18N(ToolDetailsV1, intlData));

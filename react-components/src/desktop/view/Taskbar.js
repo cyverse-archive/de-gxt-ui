@@ -7,17 +7,20 @@ import TaskButton from "./TaskButton";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 
-
 class Taskbar extends Component {
     render() {
-        const {windows, classes} = this.props;
+        const { windows, classes } = this.props;
         return (
             <Toolbar className={classes.taskbar}>
-                {windows.map(n => {
+                {windows.map((n) => {
                     return (
-                        <TaskButton key={n.tag}
-                                    windowConfig={n}
-                                    taskButtonClickHandler={this.props.taskButtonClickHandler}/>
+                        <TaskButton
+                            key={n.tag}
+                            windowConfig={n}
+                            taskButtonClickHandler={
+                                this.props.taskButtonClickHandler
+                            }
+                        />
                     );
                 })}
             </Toolbar>
@@ -26,4 +29,4 @@ class Taskbar extends Component {
 }
 
 export default withStyles(styles)(Taskbar); //need use to withStyles here instead of injectSheet
-                                           // of react-jss to override default mui component styles.
+// of react-jss to override default mui component styles.

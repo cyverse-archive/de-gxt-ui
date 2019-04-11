@@ -2,15 +2,15 @@ import Color from "../CyVersePalette";
 
 export default (theme) => ({
     dialogCloseButton: {
-        position: 'absolute',
+        position: "absolute",
         right: 0,
         top: 10,
         color: Color.white,
     },
     header: {
-        backgroundColor: Color.darkBlue
+        backgroundColor: Color.darkBlue,
     },
     title: {
-        color: Color.white
-    }
+        color: Color.white,
+    },
 });

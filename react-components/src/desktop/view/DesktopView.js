@@ -21,9 +21,7 @@ import { injectIntl } from "react-intl";
 import withI18N from "../../util/I18NWrapper";
 import messages from "../messages";
 
-
 class DesktopView extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -39,8 +37,12 @@ class DesktopView extends Component {
         this.handleMessage = this.handleMessage.bind(this);
         this.displayNotification = this.displayNotification.bind(this);
         this.onMarkAllAsSeenClicked = this.onMarkAllAsSeenClicked.bind(this);
-        this.onViewAllNotificationsClicked = this.onViewAllNotificationsClicked.bind(this);
-        this.onViewNewNotificationsClicked = this.onViewNewNotificationsClicked.bind(this);
+        this.onViewAllNotificationsClicked = this.onViewAllNotificationsClicked.bind(
+            this
+        );
+        this.onViewNewNotificationsClicked = this.onViewNewNotificationsClicked.bind(
+            this
+        );
         this.onTaskButtonClick = this.onTaskButtonClick.bind(this);
         this.updateApplicationTitle = this.updateApplicationTitle.bind(this);
         this.getNotifications = this.getNotifications.bind(this);
@@ -56,51 +58,78 @@ class DesktopView extends Component {
         new Sockette(this.getWebSocketUrl(), {
             maxAttempts: 10,
             onmessage: this.handleMessage,
-            onreconnect: e => console.log('Reconnecting...', e),
-            onmaximum: e => console.log('Stop Attempting!', e),
-            onerror: e => console.log('Error:', e)
+            onreconnect: (e) => console.log("Reconnecting...", e),
+            onmaximum: (e) => console.log("Stop Attempting!", e),
+            onerror: (e) => console.log("Error:", e),
         });
 
         this.initIntro();
     }
 
     initIntro() {
-        this.dataBtn.current.setAttribute("data-intro", tour.DataWindow.message);
-        this.dataBtn.current.setAttribute("data-position", tour.DataWindow.position);
+        this.dataBtn.current.setAttribute(
+            "data-intro",
+            tour.DataWindow.message
+        );
+        this.dataBtn.current.setAttribute(
+            "data-position",
+            tour.DataWindow.position
+        );
         this.dataBtn.current.setAttribute("data-step", tour.DataWindow.step);
-        this.appsBtn.current.setAttribute("data-intro", tour.AppsWindow.message);
-        this.appsBtn.current.setAttribute("data-position", tour.AppsWindow.position);
+        this.appsBtn.current.setAttribute(
+            "data-intro",
+            tour.AppsWindow.message
+        );
+        this.appsBtn.current.setAttribute(
+            "data-position",
+            tour.AppsWindow.position
+        );
         this.appsBtn.current.setAttribute("data-step", tour.AppsWindow.step);
-        this.analysesBtn.current.setAttribute("data-intro", tour.AnalysesWindow.message);
-        this.analysesBtn.current.setAttribute("data-position", tour.AnalysesWindow.position);
-        this.analysesBtn.current.setAttribute("data-step", tour.AnalysesWindow.step);
+        this.analysesBtn.current.setAttribute(
+            "data-intro",
+            tour.AnalysesWindow.message
+        );
+        this.analysesBtn.current.setAttribute(
+            "data-position",
+            tour.AnalysesWindow.position
+        );
+        this.analysesBtn.current.setAttribute(
+            "data-step",
+            tour.AnalysesWindow.step
+        );
     }
 
     getNotifications() {
-        this.setState({notificationLoading: true});
-        this.props.presenter.getNotifications((notifications) => {
-            this.setState({
-                unSeenCount: parseInt(notifications.unseen_total, 10),
-                notifications: notifications,
-                notificationsError: false,
-                notificationLoading: false,
-            });
-        }, (httpStatusCode, errMsg) => {
-            this.setState({
-                notifications: {},
-                unSeenCount: 0,
-                notificationsError: true,
-                notificationLoading: false
-            });
-        });
+        this.setState({ notificationLoading: true });
+        this.props.presenter.getNotifications(
+            (notifications) => {
+                this.setState({
+                    unSeenCount: parseInt(notifications.unseen_total, 10),
+                    notifications: notifications,
+                    notificationsError: false,
+                    notificationLoading: false,
+                });
+            },
+            (httpStatusCode, errMsg) => {
+                this.setState({
+                    notifications: {},
+                    unSeenCount: 0,
+                    notificationsError: true,
+                    notificationLoading: false,
+                });
+            }
+        );
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({windows: nextProps.windowConfigList});
-        if (nextProps.unseen_count > -1 && nextProps.unseen_count !== this.state.unSeenCount) {
-            this.setState({unSeenCount: nextProps.unseen_count}); //if -1, do not update count;
+        this.setState({ windows: nextProps.windowConfigList });
+        if (
+            nextProps.unseen_count > -1 &&
+            nextProps.unseen_count !== this.state.unSeenCount
+        ) {
+            this.setState({ unSeenCount: nextProps.unseen_count }); //if -1, do not update count;
         }
-        if(nextProps.isNewUser) {
+        if (nextProps.isNewUser) {
             this.doIntro();
         }
     }
@@ -124,20 +153,24 @@ class DesktopView extends Component {
     }
 
     onNotificationClicked(messageId) {
-        const {notifications} = this.state;
-        if(notifications && notifications.messages){
-            let found = notifications.messages.find(function (n) {
-               return n.message.id === messageId;
+        const { notifications } = this.state;
+        if (notifications && notifications.messages) {
+            let found = notifications.messages.find(function(n) {
+                return n.message.id === messageId;
             });
-            if(found) {
-                this.props.presenter.onNotificationSelected(found,(updatedUnSeenCount) => {
-                    this.setState({
-                        unSeenCount: updatedUnSeenCount,
-                    });
-                    found.seen = true;
-                }, (httpStatusCode, errMsg) => {
-                    // do nothing for now
-                });
+            if (found) {
+                this.props.presenter.onNotificationSelected(
+                    found,
+                    (updatedUnSeenCount) => {
+                        this.setState({
+                            unSeenCount: updatedUnSeenCount,
+                        });
+                        found.seen = true;
+                    },
+                    (httpStatusCode, errMsg) => {
+                        // do nothing for now
+                    }
+                );
             }
         }
     }
@@ -151,45 +184,59 @@ class DesktopView extends Component {
             return;
         }
         if (push_msg.total) {
-            this.setState({unSeenCount: push_msg.total});
+            this.setState({ unSeenCount: push_msg.total });
         }
 
         let message = push_msg.message;
         if (message) {
             let category = message.type;
             if (category === "team") {
-                message.message.text = message.message.text + message.payload.team_name;  // attach team name to team notifications.
+                message.message.text =
+                    message.message.text + message.payload.team_name; // attach team name to team notifications.
             }
 
             let notifyQueue = this.state.notifications;
-            if(notifyQueue.messages) {
+            if (notifyQueue.messages) {
                 notifyQueue.messages.push(message);
             } else {
                 notifyQueue.messages = [];
-                notifyQueue.messages.push(message)
+                notifyQueue.messages.push(message);
             }
-            this.setState({notifications: notifyQueue});
+            this.setState({ notifications: notifyQueue });
             this.displayNotification(message, category);
-            if (notifyQueue.messages.length > constants.NEW_NOTIFICATIONS_LIMIT) { //max 10 notifications in notifications menu
+            if (
+                notifyQueue.messages.length > constants.NEW_NOTIFICATIONS_LIMIT
+            ) {
+                //max 10 notifications in notifications menu
                 notifyQueue.messages.shift();
             }
         }
-
     }
 
     displayNotification(notification, category) {
         let displayText = notification.message.text;
-        let analysisStatus = (notification.type==="analysis")? notification.payload.status : "";
-        this.props.presenter.displayNotificationPopup(displayText, category, analysisStatus);
+        let analysisStatus =
+            notification.type === "analysis" ? notification.payload.status : "";
+        this.props.presenter.displayNotificationPopup(
+            displayText,
+            category,
+            analysisStatus
+        );
     }
-
 
     getWebSocketUrl() {
         let location = window.location;
-        let protocol = (location.protocol.toLowerCase() === "https:") ? constants.WSS_PROTOCOL : constants.WS_PROTOCOL;
+        let protocol =
+            location.protocol.toLowerCase() === "https:"
+                ? constants.WSS_PROTOCOL
+                : constants.WS_PROTOCOL;
         let host = location.hostname;
         let port = location.port;
-        const notificationUrl = protocol + host + (port ? ':' + port : '') + constants.NOTIFICATION_WS;
+        const notificationUrl =
+            protocol +
+            host +
+            (port ? ":" + port : "") +
+            constants.NOTIFICATION_WS;
         return notificationUrl;
     }
 
@@ -198,21 +245,25 @@ class DesktopView extends Component {
     }
 
     onViewAllNotificationsClicked() {
-       this.props.presenter.doSeeAllNotifications();
+        this.props.presenter.doSeeAllNotifications();
     }
 
     onMarkAllAsSeenClicked(shouldNotifyUser) {
-        this.props.presenter.doMarkAllSeen(shouldNotifyUser, (updatedUnSeenCount) => {
-            this.setState({
-                unSeenCount: updatedUnSeenCount,
-            });
-           const {notifications} = this.state;
-           notifications.messages.forEach(function (n) {
-               n.seen = true;
-           });
-        }, (httpStatusCode, errMsg) => {
-            // do nothing for now
-        });
+        this.props.presenter.doMarkAllSeen(
+            shouldNotifyUser,
+            (updatedUnSeenCount) => {
+                this.setState({
+                    unSeenCount: updatedUnSeenCount,
+                });
+                const { notifications } = this.state;
+                notifications.messages.forEach(function(n) {
+                    n.seen = true;
+                });
+            },
+            (httpStatusCode, errMsg) => {
+                // do nothing for now
+            }
+        );
     }
 
     onTaskButtonClick(windowConfig) {
@@ -230,81 +281,132 @@ class DesktopView extends Component {
     doIntro() {
         introJs().setOption("showStepNumbers", false);
         introJs().setOption("skipLabel", "Exit");
-        introJs().setOption("overlayOpacity",0);
+        introJs().setOption("overlayOpacity", 0);
         introJs().start();
     }
 
     render() {
-        const {windows, unSeenCount, notifications, notificationsError, notificationLoading}  = this.state;
-        const {classes, intl} = this.props;
+        const {
+            windows,
+            unSeenCount,
+            notifications,
+            notificationsError,
+            notificationLoading,
+        } = this.state;
+        const { classes, intl } = this.props;
         this.updateApplicationTitle(unSeenCount);
         return (
             <div className={classes.body}>
                 <div className={classes.header}>
                     <div className={classes.logo}>
-                        <span className={classes.logoContainer}>{constants.CYVERSE_DE}</span>
+                        <span className={classes.logoContainer}>
+                            {constants.CYVERSE_DE}
+                        </span>
                         <span className={classes.userMenuContainer}>
                             <nav>
                                 <Notifications
-                                    anchor={build(ids.DESKTOP, ids.NOTIFICATION_MENU_ANCHOR)}
+                                    anchor={build(
+                                        ids.DESKTOP,
+                                        ids.NOTIFICATION_MENU_ANCHOR
+                                    )}
                                     notifications={notifications}
                                     unSeenCount={unSeenCount}
-                                    notificationClicked={this.onNotificationClicked}
-                                    viewNewNotification={this.onViewNewNotificationsClicked}
-                                    viewAllNotification={this.onViewAllNotificationsClicked}
+                                    notificationClicked={
+                                        this.onNotificationClicked
+                                    }
+                                    viewNewNotification={
+                                        this.onViewNewNotificationsClicked
+                                    }
+                                    viewAllNotification={
+                                        this.onViewAllNotificationsClicked
+                                    }
                                     markAllAsSeen={this.onMarkAllAsSeenClicked}
                                     error={notificationsError}
                                     notificationLoading={notificationLoading}
-                                    fetchNotifications={this.getNotifications}/>
-                                <UserMenu anchor={build(ids.DESKTOP, ids.USER_MENU_ANCHOR)}
-                                          presenter={this.props.presenter}
-                                          doIntro={this.doIntro} />
-                                <Help anchor={build(ids.DESKTOP, ids.HELP_MENU_ANCHOR)}
-                                      presenter={this.props.presenter}/>
-                                <span id={build(ids.DESKTOP, ids.NOTIFICATION_MENU_ANCHOR)}
-                                      className={classes.notificationMenuPosition}/>
-                                <span id={build(ids.DESKTOP, ids.USER_MENU_ANCHOR)}
-                                      className={classes.userMenuPosition}/>
-                                <span id={build(ids.DESKTOP, ids.HELP_MENU_ANCHOR)}
-                                      className={classes.helpMenuPosition}/>
+                                    fetchNotifications={this.getNotifications}
+                                />
+                                <UserMenu
+                                    anchor={build(
+                                        ids.DESKTOP,
+                                        ids.USER_MENU_ANCHOR
+                                    )}
+                                    presenter={this.props.presenter}
+                                    doIntro={this.doIntro}
+                                />
+                                <Help
+                                    anchor={build(
+                                        ids.DESKTOP,
+                                        ids.HELP_MENU_ANCHOR
+                                    )}
+                                    presenter={this.props.presenter}
+                                />
+                                <span
+                                    id={build(
+                                        ids.DESKTOP,
+                                        ids.NOTIFICATION_MENU_ANCHOR
+                                    )}
+                                    className={classes.notificationMenuPosition}
+                                />
+                                <span
+                                    id={build(
+                                        ids.DESKTOP,
+                                        ids.USER_MENU_ANCHOR
+                                    )}
+                                    className={classes.userMenuPosition}
+                                />
+                                <span
+                                    id={build(
+                                        ids.DESKTOP,
+                                        ids.HELP_MENU_ANCHOR
+                                    )}
+                                    className={classes.helpMenuPosition}
+                                />
                             </nav>
                         </span>
                     </div>
                 </div>
                 {/*getMessge wont work with title attribute*/}
-                <div id={this.props.desktopContainerId}
-                     className={classes.desktop}>
-                    <img className={classes.data}
-                         id={build(ids.DESKTOP, ids.DATA_BTN)}
-                         alt="data"
-                         onClick={this.handleDesktopClick}
-                         src={dataImg}
-                         ref={this.dataBtn}
-                         title={intl.formatMessage({id: "dataToolTip"})}>
-                    </img>
-                    <img className={classes.apps}
-                         id={build(ids.DESKTOP, ids.APPS_BTN)}
-                         alt="apps"
-                         onClick={this.handleDesktopClick}
-                         src={appsImg}
-                         ref={this.appsBtn}
-                         title={intl.formatMessage({id: "appsToolTip"})}>
-
-                    </img>
-                    <img className={classes.analyses}
-                         id={build(ids.DESKTOP, ids.ANALYSES_BTN)}
-                         onClick={this.handleDesktopClick}
-                         alt="analyses"
-                         src={analysesImg}
-                         ref={this.analysesBtn}
-                         title={intl.formatMessage({id: "analysesTip"})}>
-                    </img>
+                <div
+                    id={this.props.desktopContainerId}
+                    className={classes.desktop}
+                >
+                    <img
+                        className={classes.data}
+                        id={build(ids.DESKTOP, ids.DATA_BTN)}
+                        alt="data"
+                        onClick={this.handleDesktopClick}
+                        src={dataImg}
+                        ref={this.dataBtn}
+                        title={intl.formatMessage({ id: "dataToolTip" })}
+                    />
+                    <img
+                        className={classes.apps}
+                        id={build(ids.DESKTOP, ids.APPS_BTN)}
+                        alt="apps"
+                        onClick={this.handleDesktopClick}
+                        src={appsImg}
+                        ref={this.appsBtn}
+                        title={intl.formatMessage({ id: "appsToolTip" })}
+                    />
+                    <img
+                        className={classes.analyses}
+                        id={build(ids.DESKTOP, ids.ANALYSES_BTN)}
+                        onClick={this.handleDesktopClick}
+                        alt="analyses"
+                        src={analysesImg}
+                        ref={this.analysesBtn}
+                        title={intl.formatMessage({ id: "analysesTip" })}
+                    />
                 </div>
                 <div>
-                    <Taskbar windows={windows} taskButtonClickHandler={this.onTaskButtonClick}/>
+                    <Taskbar
+                        windows={windows}
+                        taskButtonClickHandler={this.onTaskButtonClick}
+                    />
                 </div>
-            </div>);
+            </div>
+        );
     }
 }
 
-export default (withStyles(styles)(withI18N(injectIntl(DesktopView), messages)));
+export default withStyles(styles)(withI18N(injectIntl(DesktopView), messages));

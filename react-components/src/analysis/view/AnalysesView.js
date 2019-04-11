@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -44,7 +44,7 @@ import LaunchIcon from "@material-ui/icons/Launch";
 import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
 import analysesCollapseIcon from "../../resources/images/analyses-collapseList.svg";
 import altAnalysesExpandIcon from "../../resources/images/analyses-expandList.png";
-import altAnalysesCollapseIcon  from "../../resources/images/analyses-collapseList.png";
+import altAnalysesCollapseIcon from "../../resources/images/analyses-collapseList.png";
 
 function AnalysisName(props) {
     const name = props.analysis.name;
@@ -63,51 +63,71 @@ function AnalysisName(props) {
 
     if (isBatch) {
         return (
-            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
-                  className={className}
-                  onClick={() => handleGoToOutputFolder(analysis)}>
-                 <ToolTip title={getMessage('htDetails')}>
-                    <img src={analysesExpandIcon}
-                         alt={altAnalysesExpandIcon}
-                         onClick={handleBatchIconClick}
-                         style={{height: 16}}
-                         id={build(baseId, ids.ICONS.BATCH)}/>
-                 </ToolTip>
+            <span
+                title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                className={className}
+                onClick={() => handleGoToOutputFolder(analysis)}
+            >
+                <ToolTip title={getMessage("htDetails")}>
+                    <img
+                        src={analysesExpandIcon}
+                        alt={altAnalysesExpandIcon}
+                        onClick={handleBatchIconClick}
+                        style={{ height: 16 }}
+                        id={build(baseId, ids.ICONS.BATCH)}
+                    />
+                </ToolTip>
                 <sup>{name}</sup>
             </span>
         );
-    } else if ((status === analysisStatus.SUBMITTED || status === analysisStatus.RUNNING) &&
-        interactiveUrls && interactiveUrls.length > 0) {
+    } else if (
+        (status === analysisStatus.SUBMITTED ||
+            status === analysisStatus.RUNNING) &&
+        interactiveUrls &&
+        interactiveUrls.length > 0
+    ) {
         return (
-            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
-                  className={className}
-                  onClick={() => handleGoToOutputFolder(analysis)}>
-                <LaunchIcon onClick={() => handleInteractiveUrlClick(interactiveUrls[0])}
-                            id={build(baseId, ids.ICONS.INTERACTIVE)}
-                            style={{color: Color.darkBlue}}/>
+            <span
+                title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                className={className}
+                onClick={() => handleGoToOutputFolder(analysis)}
+            >
+                <LaunchIcon
+                    onClick={() =>
+                        handleInteractiveUrlClick(interactiveUrls[0])
+                    }
+                    id={build(baseId, ids.ICONS.INTERACTIVE)}
+                    style={{ color: Color.darkBlue }}
+                />
                 <sup>{name}</sup>
             </span>
-        )
+        );
     } else if (parentId) {
         return (
-            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
-                  className={className}
-                  onClick={() => handleGoToOutputFolder(analysis)}>
-                 <ToolTip title={getMessage('viewAll')}>
-                     <img src={analysesCollapseIcon}
-                          alt={altAnalysesCollapseIcon}
-                          onClick={handleViewAllIconClick}
-                          id={build(baseId, ids.ICONS.COLLAPSE)}
-                          style={{height: 16}}/>
-                 </ToolTip>
+            <span
+                title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                className={className}
+                onClick={() => handleGoToOutputFolder(analysis)}
+            >
+                <ToolTip title={getMessage("viewAll")}>
+                    <img
+                        src={analysesCollapseIcon}
+                        alt={altAnalysesCollapseIcon}
+                        onClick={handleViewAllIconClick}
+                        id={build(baseId, ids.ICONS.COLLAPSE)}
+                        style={{ height: 16 }}
+                    />
+                </ToolTip>
                 <sup>{name}</sup>
             </span>
         );
     } else {
         return (
-            <span title={formatMessage(intl, "goOutputFolderOf") + " " + name}
-                  className={className}
-                  onClick={() => handleGoToOutputFolder(analysis)}>
+            <span
+                title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                className={className}
+                onClick={() => handleGoToOutputFolder(analysis)}
+            >
                 {name}
             </span>
         );
@@ -123,28 +143,36 @@ function AppName(props) {
 
     if (!isDisabled) {
         return (
-            <span className={className} onClick={() => handleRelaunch(analysis)}>
+            <span
+                className={className}
+                onClick={() => handleRelaunch(analysis)}
+            >
                 {name}
             </span>
         );
     } else {
-        return (
-            <span>
-                {name}
-            </span>
-        );
+        return <span>{name}</span>;
     }
-
 }
 
 function Status(props) {
-    const {analysis, onClick, username} = props;
-    if (username === analysis.username && analysis.status !== analysisStatus.CANCELED) {
-        return (<DEHyperLink
-            onClick={(analysis) => onClick(analysis)}
-            text={analysis.status}/>);
+    const { analysis, onClick, username } = props;
+    if (
+        username === analysis.username &&
+        analysis.status !== analysisStatus.CANCELED
+    ) {
+        return (
+            <DEHyperLink
+                onClick={(analysis) => onClick(analysis)}
+                text={analysis.status}
+            />
+        );
     } else {
-        return (<span style={{textAlign: 'left', fontSize: '11px'}}>{analysis.status}</span>);
+        return (
+            <span style={{ textAlign: "left", fontSize: "11px" }}>
+                {analysis.status}
+            </span>
+        );
     }
 }
 
@@ -206,7 +234,7 @@ const filter = {
 };
 
 const filterList = {
-    filters: []
+    filters: [],
 };
 
 const ALL = "all";
@@ -224,19 +252,17 @@ const ID = "id";
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
-        const {analysesList} = props;
+        const { analysesList } = props;
         this.state = {
             data: analysesList ? analysesList.analyses : [],
             loading: true,
-            total: analysesList && analysesList.total ?
-                analysesList.total :
-                0,
+            total: analysesList && analysesList.total ? analysesList.total : 0,
             offset: 0,
             page: 0,
             rowsPerPage: 100,
             selected: [],
-            order: 'desc',
-            orderBy: 'startdate',
+            order: "desc",
+            orderBy: "startdate",
             parameters: [],
             info: null,
             infoDialogOpen: false,
@@ -276,10 +302,14 @@ class AnalysesView extends Component {
         this.onTypeFilterChange = this.onTypeFilterChange.bind(this);
         this.onViewFilterChange = this.onViewFilterChange.bind(this);
         this.handleParamValueClick = this.handleParamValueClick.bind(this);
-        this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(this);
+        this.handleSaveParamsToFileClick = this.handleSaveParamsToFileClick.bind(
+            this
+        );
         this.handleSearch = this.handleSearch.bind(this);
         this.getSearchFilter = this.getSearchFilter.bind(this);
-        this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(this);
+        this.handleInteractiveUrlClick = this.handleInteractiveUrlClick.bind(
+            this
+        );
         this.handleSaveAndComplete = this.handleSaveAndComplete.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
@@ -291,12 +321,14 @@ class AnalysesView extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.viewFilter !== this.props.viewFilter ||
+        if (
+            prevProps.viewFilter !== this.props.viewFilter ||
             prevProps.appTypeFilter !== this.props.appTypeFilter ||
             prevProps.appNameFilter !== this.props.appNameFilter ||
             prevProps.nameFilter !== this.props.nameFilter ||
             prevProps.parentId !== this.props.parentId ||
-            prevProps.idFilter !== this.props.idFilter) {
+            prevProps.idFilter !== this.props.idFilter
+        ) {
             this.fetchAnalyses();
         }
     }
@@ -306,8 +338,8 @@ class AnalysesView extends Component {
      *
      */
     fetchAnalyses() {
-        const {rowsPerPage, offset, order, orderBy} = this.state;
-        this.setState({loading: true});
+        const { rowsPerPage, offset, order, orderBy } = this.state;
+        this.setState({ loading: true });
 
         const parentFilter = this.getParentIdFilter();
         const typeFilter = this.getTypeFilter();
@@ -325,7 +357,8 @@ class AnalysesView extends Component {
             filtersObj.filters = [parentFilter, typeFilter, viewFilter];
         }
 
-        this.props.presenter.getAnalyses(rowsPerPage,
+        this.props.presenter.getAnalyses(
+            rowsPerPage,
             offset,
             filtersObj,
             orderBy,
@@ -335,13 +368,13 @@ class AnalysesView extends Component {
                     loading: false,
                     data: analysesList.analyses,
                     total: analysesList.total ? analysesList.total : 0,
-                })
+                });
             },
             (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
-            },
+            }
         );
     }
 
@@ -363,10 +396,13 @@ class AnalysesView extends Component {
             order = "asc";
         }
 
-        this.setState({
-            order,
-            orderBy,
-        }, () => this.fetchAnalyses(false));
+        this.setState(
+            {
+                order,
+                orderBy,
+            },
+            () => this.fetchAnalyses(false)
+        );
     }
 
     getParentIdFilter() {
@@ -398,10 +434,10 @@ class AnalysesView extends Component {
         }
 
         switch (viewFilter1) {
-            case viewFilter.all :
+            case viewFilter.all:
                 val = ALL;
                 break;
-            case viewFilter.mine :
+            case viewFilter.mine:
                 val = MINE;
                 break;
             case viewFilter.theirs:
@@ -418,7 +454,7 @@ class AnalysesView extends Component {
     }
 
     getSearchFilter() {
-        const {nameFilter, appNameFilter, idFilter} = this.props;
+        const { nameFilter, appNameFilter, idFilter } = this.props;
         const searchFilters = [];
         if (nameFilter) {
             const nameFilterObj = Object.create(filter);
@@ -438,49 +474,56 @@ class AnalysesView extends Component {
             const idFilterObj = Object.create(filter);
             idFilterObj.field = ID;
             idFilterObj.value = idFilter;
-            searchFilters.push(idFilterObj);           
+            searchFilters.push(idFilterObj);
         }
 
         return searchFilters;
-
     }
 
-
     handleChangePage(event, page) {
-        const {rowsPerPage} = this.state;
+        const { rowsPerPage } = this.state;
         //reset selection between pages
-        this.setState({page: page, offset: rowsPerPage * page, selected: []},
-            () => this.fetchAnalyses());
+        this.setState(
+            { page: page, offset: rowsPerPage * page, selected: [] },
+            () => this.fetchAnalyses()
+        );
     }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value}, () => this.fetchAnalyses());
+        this.setState({ rowsPerPage: event.target.value }, () =>
+            this.fetchAnalyses()
+        );
     }
 
     handleSelectAllClick(event, checked) {
         if (checked) {
-            this.setState(state => ({selected: state.data.map(n => n.id)}));
+            this.setState((state) => ({
+                selected: state.data.map((n) => n.id),
+            }));
             return;
         }
-        this.setState({selected: []});
+        this.setState({ selected: [] });
     }
 
     isSelected(id) {
-        return this.state.selected.indexOf(id) !== -1
+        return this.state.selected.indexOf(id) !== -1;
     }
 
     statusClick(analysis) {
         this.handleRowClick(analysis.id);
         this.setState((prevState, props) => {
-            return {shareWithSupportDialogOpen: true}
+            return { shareWithSupportDialogOpen: true };
         });
     }
 
     onShareWithSupport(analysis, comment, supportRequested) {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         if (supportRequested) {
-            this.setState({loading: true, shareWithSupportDialogOpen: false});
-            this.props.presenter.onUserSupportRequested(analysis, comment, () => {
+            this.setState({ loading: true, shareWithSupportDialogOpen: false });
+            this.props.presenter.onUserSupportRequested(
+                analysis,
+                comment,
+                () => {
                     this.setState({
                         loading: false,
                     });
@@ -489,25 +532,28 @@ class AnalysesView extends Component {
                     this.setState({
                         loading: false,
                     });
-                });
+                }
+            );
         } else {
-            this.setState({loading: false, shareWithSupportDialogOpen: false});
+            this.setState({
+                loading: false,
+                shareWithSupportDialogOpen: false,
+            });
         }
     }
 
     handleRowClick(id) {
         this.setState((prevState, props) => {
-            const {selected} = prevState;
+            const { selected } = prevState;
             if (selected.indexOf(id) < 0) {
-                return {selected: [id]};
+                return { selected: [id] };
             }
         });
-
     }
 
     handleCheckBoxClick(event, id) {
         this.setState((prevState, props) => {
-            const {selected} = prevState;
+            const { selected } = prevState;
             const selectedIndex = selected.indexOf(id);
             let newSelected = [];
 
@@ -520,30 +566,36 @@ class AnalysesView extends Component {
             } else if (selectedIndex > 0) {
                 newSelected = newSelected.concat(
                     selected.slice(0, selectedIndex),
-                    selected.slice(selectedIndex + 1),
+                    selected.slice(selectedIndex + 1)
                 );
             }
-            return {selected: newSelected};
+            return { selected: newSelected };
         });
         event.stopPropagation();
     }
 
     handleGoToOutputFolder(analysis) {
         if (analysis) {
-            this.props.presenter.onAnalysisNameSelected(analysis.resultfolderid);
+            this.props.presenter.onAnalysisNameSelected(
+                analysis.resultfolderid
+            );
         } else {
-            this.props.presenter.onAnalysisNameSelected(this.findAnalysis(this.state.selected[0]).resultfolderid);
+            this.props.presenter.onAnalysisNameSelected(
+                this.findAnalysis(this.state.selected[0]).resultfolderid
+            );
         }
     }
 
     handleInteractiveUrlClick(url) {
-        window.open(url, '_blank');
+        window.open(url, "_blank");
     }
 
     handleViewParams() {
         let selected = this.state.selected[0];
-        this.setState({loading: true});
-        this.props.paramPresenter.fetchAnalysisParameters(selected, (params) => {
+        this.setState({ loading: true });
+        this.props.paramPresenter.fetchAnalysisParameters(
+            selected,
+            (params) => {
                 this.setState({
                     loading: false,
                     parameters: params.parameters,
@@ -554,25 +606,33 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                 });
-            });
+            }
+        );
     }
     handleParamValueClick(parameter) {
         //have to close viewFilter params otherwise file viewer wont show up front
-        this.setState({viewParamsDialogOpen: false});
+        this.setState({ viewParamsDialogOpen: false });
         this.props.paramPresenter.onAnalysisParamValueSelected(parameter);
     }
 
     handleSaveParamsToFileClick(parameters) {
         //close viewFilter params temporarily so that save as dialog opens on top of the screen
-        this.setState({loading: true, viewParamsDialogOpen: false});
+        this.setState({ loading: true, viewParamsDialogOpen: false });
         if (parameters && parameters.length > 0) {
             let contents = "Name\t" + "Type\t" + "Value\t\n";
-            parameters.forEach(function(param){
-                contents =
-                    contents.concat(param.param_name + "\t" + param.param_type + "\t" +
-                        param.displayValue + "\t\n");
+            parameters.forEach(function(param) {
+                contents = contents.concat(
+                    param.param_name +
+                        "\t" +
+                        param.param_type +
+                        "\t" +
+                        param.displayValue +
+                        "\t\n"
+                );
             });
-            this.props.paramPresenter.saveParamsToFile(contents, () => {
+            this.props.paramPresenter.saveParamsToFile(
+                contents,
+                () => {
                     this.setState({
                         loading: false,
                         viewParamsDialogOpen: true,
@@ -583,13 +643,20 @@ class AnalysesView extends Component {
                         loading: false,
                         viewParamsDialogOpen: true,
                     });
-                });
+                }
+            );
         }
     }
 
     handleRelaunch(analysis) {
-        let selected = analysis ? analysis : this.findAnalysis(this.state.selected[0]);
-        this.props.presenter.onAnalysisAppSelected(selected.id, selected.system_id, selected.app_id);
+        let selected = analysis
+            ? analysis
+            : this.findAnalysis(this.state.selected[0]);
+        this.props.presenter.onAnalysisAppSelected(
+            selected.id,
+            selected.system_id,
+            selected.app_id
+        );
     }
 
     handleRelaunchFromMenu() {
@@ -598,117 +665,143 @@ class AnalysesView extends Component {
 
     handleViewInfo() {
         let id = this.state.selected[0];
-        this.setState({loading: true});
-        this.props.presenter.onAnalysisJobInfoSelected(id, (info) => {
+        this.setState({ loading: true });
+        this.props.presenter.onAnalysisJobInfoSelected(
+            id,
+            (info) => {
                 this.setState({
                     loading: false,
                     info: info,
-                    infoDialogOpen: true
+                    infoDialogOpen: true,
                 });
             },
             (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
-            });
+            }
+        );
     }
 
     handleShare() {
-        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        const selectedAnalyses = this.state.selected.map((id) =>
+            this.findAnalysis(id)
+        );
         this.props.presenter.onShareAnalysisSelected(selectedAnalyses);
     }
 
     handleCancel() {
-        this.setState({loading: true});
-        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        this.setState({ loading: true });
+        const selectedAnalyses = this.state.selected.map((id) =>
+            this.findAnalysis(id)
+        );
         const presenter = this.props.presenter;
         let promises = [];
 
         if (selectedAnalyses && selectedAnalyses.length > 0) {
-            selectedAnalyses.forEach(function (analysis) {
+            selectedAnalyses.forEach(function(analysis) {
                 let p = new Promise((resolve, reject) => {
-                    presenter.onCancelAnalysisSelected(analysis.id, analysis.name, () => {
+                    presenter.onCancelAnalysisSelected(
+                        analysis.id,
+                        analysis.name,
+                        () => {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
                             reject(errorMessage);
-                        });
+                        }
+                    );
                 });
                 promises.push(p);
             });
 
             Promise.all(promises)
-                .then(value => {
-                    this.setState({loading: false});
+                .then((value) => {
+                    this.setState({ loading: false });
                     this.fetchAnalyses();
                 })
-                .catch(error => {
-                    this.setState({loading: false});
+                .catch((error) => {
+                    this.setState({ loading: false });
                     this.fetchAnalyses();
                 });
         }
     }
 
     handleSaveAndComplete() {
-        this.setState({loading: true});
-        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        this.setState({ loading: true });
+        const selectedAnalyses = this.state.selected.map((id) =>
+            this.findAnalysis(id)
+        );
         const presenter = this.props.presenter;
         let promises = [];
 
         if (selectedAnalyses && selectedAnalyses.length > 0) {
-            selectedAnalyses.forEach(function (analysis) {
+            selectedAnalyses.forEach(function(analysis) {
                 let p = new Promise((resolve, reject) => {
-                    presenter.onCompleteAnalysisSelected(analysis.id, analysis.name, () => {
+                    presenter.onCompleteAnalysisSelected(
+                        analysis.id,
+                        analysis.name,
+                        () => {
                             resolve("");
                         },
                         (errorCode, errorMessage) => {
                             reject(errorMessage);
-                        });
+                        }
+                    );
                 });
                 promises.push(p);
             });
 
             Promise.all(promises)
-                .then(value => {
-                    this.setState({loading: false});
+                .then((value) => {
+                    this.setState({ loading: false });
                     this.fetchAnalyses();
                 })
-                .catch(error => {
-                    this.setState({loading: false});
+                .catch((error) => {
+                    this.setState({ loading: false });
                     this.fetchAnalyses();
                 });
         }
     }
 
     handleDeleteClick() {
-        this.setState({confirmDeleteDialogOpen: true});
+        this.setState({ confirmDeleteDialogOpen: true });
     }
     handleDelete() {
-        this.setState({loading: true, confirmDeleteDialogOpen: false});
-        this.props.presenter.deleteAnalyses(this.state.selected, () => {
-                this.setState({
-                    loading: false,
-                    selected: []
-                }, () => this.fetchAnalyses());
+        this.setState({ loading: true, confirmDeleteDialogOpen: false });
+        this.props.presenter.deleteAnalyses(
+            this.state.selected,
+            () => {
+                this.setState(
+                    {
+                        loading: false,
+                        selected: [],
+                    },
+                    () => this.fetchAnalyses()
+                );
             },
             (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
-            });
+            }
+        );
     }
 
     handleRename() {
-        this.setState({renameDialogOpen: true});
+        this.setState({ renameDialogOpen: true });
     }
 
     handleUpdateComments() {
-        this.setState({commentsDialogOpen: true});
+        this.setState({ commentsDialogOpen: true });
     }
 
     doRename(newName) {
-        this.setState({loading: true, renameDialogOpen: false});
-        this.props.presenter.renameAnalysis(this.state.selected[0], newName, () => {
+        this.setState({ loading: true, renameDialogOpen: false });
+        this.props.presenter.renameAnalysis(
+            this.state.selected[0],
+            newName,
+            () => {
                 this.setState({
                     loading: false,
                 });
@@ -718,12 +811,16 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                 });
-            });
+            }
+        );
     }
 
     doComments(comments) {
-        this.setState({loading: true, commentsDialogOpen: false});
-        this.props.presenter.updateAnalysisComments(this.state.selected[0], comments, () => {
+        this.setState({ loading: true, commentsDialogOpen: false });
+        this.props.presenter.updateAnalysisComments(
+            this.state.selected[0],
+            comments,
+            () => {
                 this.setState({
                     loading: false,
                 });
@@ -734,9 +831,9 @@ class AnalysesView extends Component {
                 this.setState({
                     loading: false,
                 });
-            });
+            }
+        );
     }
-
 
     isOwner() {
         let selection = this.state.selected;
@@ -772,18 +869,23 @@ class AnalysesView extends Component {
         return false;
     }
 
-
     shouldDisableCancel() {
         let selection = this.state.selected;
         for (let i = 0; i < selection.length; i++) {
             let found = this.findAnalysis(selection[i]);
             if (found) {
-                if (found.status === analysisStatus.RUNNING ||
+                if (
+                    found.status === analysisStatus.RUNNING ||
                     found.status === analysisStatus.IDLE ||
-                    found.status === analysisStatus.SUBMITTED) {
+                    found.status === analysisStatus.SUBMITTED
+                ) {
                     return false;
                 }
-                if (found.batch && (found.batch_status.running > 0 || found.batch_status.submitted > 0)) {
+                if (
+                    found.batch &&
+                    (found.batch_status.running > 0 ||
+                        found.batch_status.submitted > 0)
+                ) {
                     return false;
                 }
             }
@@ -792,7 +894,7 @@ class AnalysesView extends Component {
     }
 
     findAnalysis(id) {
-        return this.state.data.find(function (n) {
+        return this.state.data.find(function(n) {
             return n.id === id;
         });
     }
@@ -801,23 +903,22 @@ class AnalysesView extends Component {
         let analysis = this.findAnalysis(id);
         analysis.name = newName;
         this.setState((prevState, props) => {
-            return {data: prevState.data};   // make it display the updated name
+            return { data: prevState.data }; // make it display the updated name
         });
-
     }
 
     onViewFilterChange(viewFilter) {
-        const {appTypeFilter, presenter} = this.props;
+        const { appTypeFilter, presenter } = this.props;
         presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     onTypeFilterChange(appTypeFilter) {
-        const {viewFilter, presenter} = this.props;
+        const { viewFilter, presenter } = this.props;
         presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     handleSearch(searchText) {
-        const {presenter} = this.props;
+        const { presenter } = this.props;
         presenter.handleSearch(searchText);
     }
 
@@ -855,7 +956,7 @@ class AnalysesView extends Component {
         const gridId = baseDebugId + ids.ANALYSES_VIEW + ids.GRID;
         const toolbarId = build(baseId, ids.TOOLBAR);
 
-        const selectionCount = selected? selected.length : 0;
+        const selectionCount = selected ? selected.length : 0;
         const owner = this.isOwner(),
             sharable = this.isSharable(),
             disableCancel = this.shouldDisableCancel();
@@ -864,218 +965,342 @@ class AnalysesView extends Component {
         return (
             <React.Fragment>
                 <div id={baseId} className={classes.container}>
-                    {this.state.loading &&
-                    <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                    }
-                    <AnalysesToolbar baseDebugId={build(toolbarId, ids.MENUITEM_ANALYSES)}
-                                     baseToolbarId={toolbarId}
-                                     handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                     handleViewParams={this.handleViewParams}
-                                     handleRelaunch={this.handleRelaunchFromMenu}
-                                     handleViewInfo={this.handleViewInfo}
-                                     handleShare={this.handleShare}
-                                     handleCancel={this.handleCancel}
-                                     handleDeleteClick={this.handleDeleteClick}
-                                     handleRename={this.handleRename}
-                                     handleUpdateComments={this.handleUpdateComments}
-                                     handleSaveAndComplete={this.handleSaveAndComplete}
-                                     handleRefresh={this.fetchAnalyses}
-                                     viewFilter={viewFilter}
-                                     typeFilter={appTypeFilter}
-                                     onViewFilterChange={this.onViewFilterChange}
-                                     onTypeFilterChange={this.onTypeFilterChange}
-                                     onSearch={this.handleSearch}
-                                     searchInputValue={nameFilter}
-                                     selectionCount={selectionCount}
-                                     owner={owner}
-                                     sharable={sharable}
-                                     disableCancel={disableCancel}
+                    {this.state.loading && (
+                        <CircularProgress
+                            size={30}
+                            className={classes.loadingStyle}
+                            thickness={7}
+                        />
+                    )}
+                    <AnalysesToolbar
+                        baseDebugId={build(toolbarId, ids.MENUITEM_ANALYSES)}
+                        baseToolbarId={toolbarId}
+                        handleGoToOutputFolder={this.handleGoToOutputFolder}
+                        handleViewParams={this.handleViewParams}
+                        handleRelaunch={this.handleRelaunchFromMenu}
+                        handleViewInfo={this.handleViewInfo}
+                        handleShare={this.handleShare}
+                        handleCancel={this.handleCancel}
+                        handleDeleteClick={this.handleDeleteClick}
+                        handleRename={this.handleRename}
+                        handleUpdateComments={this.handleUpdateComments}
+                        handleSaveAndComplete={this.handleSaveAndComplete}
+                        handleRefresh={this.fetchAnalyses}
+                        viewFilter={viewFilter}
+                        typeFilter={appTypeFilter}
+                        onViewFilterChange={this.onViewFilterChange}
+                        onTypeFilterChange={this.onTypeFilterChange}
+                        onSearch={this.handleSearch}
+                        searchInputValue={nameFilter}
+                        selectionCount={selectionCount}
+                        owner={owner}
+                        sharable={sharable}
+                        disableCancel={disableCancel}
                     />
                     <div className={classes.table}>
                         <Table>
                             <TableBody>
-                                {data.map(analysis => {
+                                {data.map((analysis) => {
                                     const id = analysis.id;
                                     const isSelected = this.isSelected(id);
-                                    const user = analysis.username && analysis.username.includes(IPLANT) ?
-                                        analysis.username.split('@')[0] :
-                                        analysis.username;
+                                    const user =
+                                        analysis.username &&
+                                        analysis.username.includes(IPLANT)
+                                            ? analysis.username.split("@")[0]
+                                            : analysis.username;
                                     return (
-                                        <TableRow onClick={() => this.handleRowClick(id)}
-                                                  role="checkbox"
-                                                  aria-checked={isSelected}
-                                                  tabIndex={-1}
-                                                  selected={isSelected}
-                                                  hover
-                                                  key={id}
-                                                  title={analysis.name}
+                                        <TableRow
+                                            onClick={() =>
+                                                this.handleRowClick(id)
+                                            }
+                                            role="checkbox"
+                                            aria-checked={isSelected}
+                                            tabIndex={-1}
+                                            selected={isSelected}
+                                            hover
+                                            key={id}
+                                            title={analysis.name}
                                         >
                                             <TableCell padding="none">
                                                 <Checkbox
-                                                    id={build(gridId, id + ids.CHECKBOX)}
-                                                    onClick={(event, n) => this.handleCheckBoxClick(
-                                                        event,
-                                                        id)}
-                                                    checked={isSelected}/>
+                                                    id={build(
+                                                        gridId,
+                                                        id + ids.CHECKBOX
+                                                    )}
+                                                    onClick={(event, n) =>
+                                                        this.handleCheckBoxClick(
+                                                            event,
+                                                            id
+                                                        )
+                                                    }
+                                                    checked={isSelected}
+                                                />
                                             </TableCell>
                                             <TableCell
-                                                id={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
-                                                padding="none">
-                                                <AnalysisName classes={classes}
-                                                              intl={intl}
-                                                              analysis={analysis}
-                                                              baseId={build(gridId, id + ids.ANALYSIS_NAME_CELL)}
-                                                              parentId={parentId}
-                                                              handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                                              handleInteractiveUrlClick={this.handleInteractiveUrlClick}
-                                                              handleBatchIconClick={(event) => this.handleBatchIconClick(
-                                                                  event,
-                                                                  id,
-                                                                  analysis.name)}
-                                                              handleViewAllIconClick={(event) => this.handleViewAllIconClick(
-                                                                  event)}/>
+                                                id={build(
+                                                    gridId,
+                                                    id + ids.ANALYSIS_NAME_CELL
+                                                )}
+                                                padding="none"
+                                            >
+                                                <AnalysisName
+                                                    classes={classes}
+                                                    intl={intl}
+                                                    analysis={analysis}
+                                                    baseId={build(
+                                                        gridId,
+                                                        id +
+                                                            ids.ANALYSIS_NAME_CELL
+                                                    )}
+                                                    parentId={parentId}
+                                                    handleGoToOutputFolder={
+                                                        this
+                                                            .handleGoToOutputFolder
+                                                    }
+                                                    handleInteractiveUrlClick={
+                                                        this
+                                                            .handleInteractiveUrlClick
+                                                    }
+                                                    handleBatchIconClick={(
+                                                        event
+                                                    ) =>
+                                                        this.handleBatchIconClick(
+                                                            event,
+                                                            id,
+                                                            analysis.name
+                                                        )
+                                                    }
+                                                    handleViewAllIconClick={(
+                                                        event
+                                                    ) =>
+                                                        this.handleViewAllIconClick(
+                                                            event
+                                                        )
+                                                    }
+                                                />
                                             </TableCell>
-                                            <TableCell className={classes.cellText}
-                                                       padding="none">
+                                            <TableCell
+                                                className={classes.cellText}
+                                                padding="none"
+                                            >
                                                 {user}
                                             </TableCell>
-                                            <TableCell id={build(gridId, id + ids.APP_NAME_CELL)}
-                                                       className={classes.cellText}
-                                                       padding="none">
-                                                <AppName analysis={analysis}
-                                                         handleRelaunch={this.handleRelaunch}
-                                                         classes={classes}/>
+                                            <TableCell
+                                                id={build(
+                                                    gridId,
+                                                    id + ids.APP_NAME_CELL
+                                                )}
+                                                className={classes.cellText}
+                                                padding="none"
+                                            >
+                                                <AppName
+                                                    analysis={analysis}
+                                                    handleRelaunch={
+                                                        this.handleRelaunch
+                                                    }
+                                                    classes={classes}
+                                                />
                                             </TableCell>
-                                            <TableCell className={classes.cellText} padding="none">
+                                            <TableCell
+                                                className={classes.cellText}
+                                                padding="none"
+                                            >
                                                 {formatDate(analysis.startdate)}
                                             </TableCell>
-                                            <TableCell className={classes.cellText} padding="none">
+                                            <TableCell
+                                                className={classes.cellText}
+                                                padding="none"
+                                            >
                                                 {formatDate(analysis.enddate)}
                                             </TableCell>
-                                            <TableCell id={build(gridId, id + ids.SUPPORT_CELL)}
-                                                       padding="none">
-                                                <Status analysis={analysis}
-                                                        onClick={() => this.statusClick(analysis)}
-                                                        username={username}/>
-                                            </TableCell>
-                                            <TableCell padding="none"
+                                            <TableCell
+                                                id={build(
+                                                    gridId,
+                                                    id + ids.SUPPORT_CELL
+                                                )}
+                                                padding="none"
                                             >
+                                                <Status
+                                                    analysis={analysis}
+                                                    onClick={() =>
+                                                        this.statusClick(
+                                                            analysis
+                                                        )
+                                                    }
+                                                    username={username}
+                                                />
+                                            </TableCell>
+                                            <TableCell padding="none">
                                                 <DotMenu
-                                                    baseDebugId={build(gridId,
-                                                        id + ids.ANALYSIS_DOT_MENU)}
-                                                    handleGoToOutputFolder={this.handleGoToOutputFolder}
-                                                    handleViewParams={this.handleViewParams}
-                                                    handleRelaunch={this.handleRelaunch}
-                                                    handleViewInfo={this.handleViewInfo}
-                                                    handleShare={this.handleShare}
-                                                    handleCancel={this.handleCancel}
-                                                    handleDeleteClick={this.handleDeleteClick}
-                                                    handleRename={this.handleRename}
-                                                    handleUpdateComments={this.handleUpdateComments}
+                                                    baseDebugId={build(
+                                                        gridId,
+                                                        id +
+                                                            ids.ANALYSIS_DOT_MENU
+                                                    )}
+                                                    handleGoToOutputFolder={
+                                                        this
+                                                            .handleGoToOutputFolder
+                                                    }
+                                                    handleViewParams={
+                                                        this.handleViewParams
+                                                    }
+                                                    handleRelaunch={
+                                                        this.handleRelaunch
+                                                    }
+                                                    handleViewInfo={
+                                                        this.handleViewInfo
+                                                    }
+                                                    handleShare={
+                                                        this.handleShare
+                                                    }
+                                                    handleCancel={
+                                                        this.handleCancel
+                                                    }
+                                                    handleDeleteClick={
+                                                        this.handleDeleteClick
+                                                    }
+                                                    handleRename={
+                                                        this.handleRename
+                                                    }
+                                                    handleUpdateComments={
+                                                        this
+                                                            .handleUpdateComments
+                                                    }
                                                     isDisabled={this.isDisabled}
-                                                    isMultiSelect={this.isMultiSelect}
-                                                    shouldDisableCancel={this.shouldDisableCancel}
+                                                    isMultiSelect={
+                                                        this.isMultiSelect
+                                                    }
+                                                    shouldDisableCancel={
+                                                        this.shouldDisableCancel
+                                                    }
                                                     isOwner={this.isOwner}
                                                     isSharable={this.isSharable}
-                                                    handleSaveAndComplete={this.handleSaveAndComplete}
-                                                    selectionCount={selectionCount}
+                                                    handleSaveAndComplete={
+                                                        this
+                                                            .handleSaveAndComplete
+                                                    }
+                                                    selectionCount={
+                                                        selectionCount
+                                                    }
                                                     owner={owner}
                                                     sharable={sharable}
-                                                    disableCancel={disableCancel}
+                                                    disableCancel={
+                                                        disableCancel
+                                                    }
                                                 />
                                             </TableCell>
                                         </TableRow>
                                     );
-                                })
-
-                                }
+                                })}
                             </TableBody>
-                            <EnhancedTableHead selectable={true}
-                                               numSelected={selected.length}
-                                               order={order}
-                                               orderBy={orderBy}
-                                               onSelectAllClick={this.handleSelectAllClick}
-                                               onRequestSort={this.handleRequestSort}
-                                               columnData={columnData}
-                                               baseId={baseId}
-                                               padding="none"
-                                               rowsInPage={data.length}
+                            <EnhancedTableHead
+                                selectable={true}
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={this.handleSelectAllClick}
+                                onRequestSort={this.handleRequestSort}
+                                columnData={columnData}
+                                baseId={baseId}
+                                padding="none"
+                                rowsInPage={data.length}
                             />
                         </Table>
-                        {
-                            !hasData &&
-                            <Typography style={{margin: '0, auto, 0, auto', width: 600}}
-                                        align="center"
-                                        variant="subtitle1">
+                        {!hasData && (
+                            <Typography
+                                style={{
+                                    margin: "0, auto, 0, auto",
+                                    width: 600,
+                                }}
+                                align="center"
+                                variant="subtitle1"
+                            >
                                 {getMessage("noAnalysis")}
                             </Typography>
-                        }
+                        )}
                     </div>
-                    <TablePagination style={{height: 40}}
-                                     colSpan={3}
-                                     component="div"
-                                     count={total}
-                                     rowsPerPage={rowsPerPage}
-                                     page={page}
-                                     onChangePage={this.handleChangePage}
-                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                     ActionsComponent={TablePaginationActions}
-                                     rowsPerPageOptions={[100, 500, 1000]}
+                    <TablePagination
+                        style={{ height: 40 }}
+                        colSpan={3}
+                        component="div"
+                        count={total}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                        rowsPerPageOptions={[100, 500, 1000]}
                     />
                 </div>
-                {selectedAnalysis &&
-                <DEPromptDialog multiline={false}
-                                initialValue={selectedAnalysis.name}
-                                isRequired={true}
-                                heading={formatMessage(intl, "renameDlgHeader")}
-                                prompt={formatMessage(intl, "renamePrompt")}
-                                onOkBtnClick={this.doRename}
-                                onCancelBtnClick={() => this.setState({renameDialogOpen: false})}
-                                dialogOpen={this.state.renameDialogOpen}/>
-
-                }
-                {selectedAnalysis &&
-                <DEPromptDialog multiline={true}
-                                initialValue={selectedAnalysis.description}
-                                isRequired={true}
-                                heading={formatMessage(intl, "commentsDlgHeader")}
-                                prompt={formatMessage(intl, "commentsPrompt")}
-                                onOkBtnClick={this.doComments}
-                                onCancelBtnClick={() => this.setState({commentsDialogOpen: false})}
-                                dialogOpen={this.state.commentsDialogOpen}/>
-                }
-                {selectedAnalysis &&
-                <ShareWithSupportDialog dialogOpen={shareWithSupportDialogOpen}
-                                        analysis={selectedAnalysis}
-                                        name={name}
-                                        email={email}
-                                        onShareWithSupport={this.onShareWithSupport}
-                                        baseId={baseId}/>
-                }
-                {selectedAnalysis &&
-                <AnalysisParametersDialog dialogOpen={viewParamsDialogOpen}
-                                          analysisName={selectedAnalysis.name}
-                                          parameters={parameters}
-                                          diskResourceUtil={this.props.diskResourceUtil}
-                                          onViewParamDialogClose={() => this.setState({viewParamsDialogOpen: false})}
-                                          onValueClick={this.handleParamValueClick}
-                                          onSaveClick={this.handleSaveParamsToFileClick}
-                />
-                }
-                {info &&
-                <AnalysisInfoDialog info={info}
-                                    dialogOpen={infoDialogOpen}
-                                    onInfoDialogClose={() => this.setState({infoDialogOpen: false})}
-                />
-                }
-                <DEConfirmationDialog debugId={build(baseId, ids.MENUITEM_DELETE)}
-                                      dialogOpen={confirmDeleteDialogOpen}
-                                      message={formatMessage(intl, "analysesExecDeleteWarning")}
-                                      heading={formatMessage(intl,"delete")}
-                                      onOkBtnClick={this.handleDelete}
-                                      onCancelBtnClick={() => {
-                                          this.setState({confirmDeleteDialogOpen: false})
-                                      }}
+                {selectedAnalysis && (
+                    <DEPromptDialog
+                        multiline={false}
+                        initialValue={selectedAnalysis.name}
+                        isRequired={true}
+                        heading={formatMessage(intl, "renameDlgHeader")}
+                        prompt={formatMessage(intl, "renamePrompt")}
+                        onOkBtnClick={this.doRename}
+                        onCancelBtnClick={() =>
+                            this.setState({ renameDialogOpen: false })
+                        }
+                        dialogOpen={this.state.renameDialogOpen}
+                    />
+                )}
+                {selectedAnalysis && (
+                    <DEPromptDialog
+                        multiline={true}
+                        initialValue={selectedAnalysis.description}
+                        isRequired={true}
+                        heading={formatMessage(intl, "commentsDlgHeader")}
+                        prompt={formatMessage(intl, "commentsPrompt")}
+                        onOkBtnClick={this.doComments}
+                        onCancelBtnClick={() =>
+                            this.setState({ commentsDialogOpen: false })
+                        }
+                        dialogOpen={this.state.commentsDialogOpen}
+                    />
+                )}
+                {selectedAnalysis && (
+                    <ShareWithSupportDialog
+                        dialogOpen={shareWithSupportDialogOpen}
+                        analysis={selectedAnalysis}
+                        name={name}
+                        email={email}
+                        onShareWithSupport={this.onShareWithSupport}
+                        baseId={baseId}
+                    />
+                )}
+                {selectedAnalysis && (
+                    <AnalysisParametersDialog
+                        dialogOpen={viewParamsDialogOpen}
+                        analysisName={selectedAnalysis.name}
+                        parameters={parameters}
+                        diskResourceUtil={this.props.diskResourceUtil}
+                        onViewParamDialogClose={() =>
+                            this.setState({ viewParamsDialogOpen: false })
+                        }
+                        onValueClick={this.handleParamValueClick}
+                        onSaveClick={this.handleSaveParamsToFileClick}
+                    />
+                )}
+                {info && (
+                    <AnalysisInfoDialog
+                        info={info}
+                        dialogOpen={infoDialogOpen}
+                        onInfoDialogClose={() =>
+                            this.setState({ infoDialogOpen: false })
+                        }
+                    />
+                )}
+                <DEConfirmationDialog
+                    debugId={build(baseId, ids.MENUITEM_DELETE)}
+                    dialogOpen={confirmDeleteDialogOpen}
+                    message={formatMessage(intl, "analysesExecDeleteWarning")}
+                    heading={formatMessage(intl, "delete")}
+                    onOkBtnClick={this.handleDelete}
+                    onCancelBtnClick={() => {
+                        this.setState({ confirmDeleteDialogOpen: false });
+                    }}
                 />
             </React.Fragment>
         );
@@ -1097,4 +1322,6 @@ AnalysesView.propTypes = {
     idFilter: PropTypes.string,
 };
 
-export default withStyles(exStyles)(withI18N(injectIntl(AnalysesView), intlData));
+export default withStyles(exStyles)(
+    withI18N(injectIntl(AnalysesView), intlData)
+);

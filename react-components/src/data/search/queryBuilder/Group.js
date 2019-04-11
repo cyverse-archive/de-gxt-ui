@@ -16,30 +16,35 @@ function Group(props) {
         fields,
         onRemove,
         helperProps,
-        helperProps: {
-            parentId,
-            classes
-        }
+        helperProps: { parentId, classes },
     } = props;
 
     let baseId = build(parentId, fields.name);
 
     return (
         <Fragment>
-            <AddBtn onClick={() => fields.push({})}
-                    id={build(baseId, ids.addConditionBtn)}/>
-            {!root && <DeleteBtn onClick={onRemove}
-                                 id={build(baseId, ids.deleteConditionBtn)}/>}
+            <AddBtn
+                onClick={() => fields.push({})}
+                id={build(baseId, ids.addConditionBtn)}
+            />
+            {!root && (
+                <DeleteBtn
+                    onClick={onRemove}
+                    id={build(baseId, ids.deleteConditionBtn)}
+                />
+            )}
             {fields.map((field, index) => (
                 <div key={index} className={classes.condition}>
-                    <Condition field={field}
-                               parentId={baseId}
-                               onRemove={() => fields.remove(index)}
-                               helperProps={helperProps}/>
+                    <Condition
+                        field={field}
+                        parentId={baseId}
+                        onRemove={() => fields.remove(index)}
+                        helperProps={helperProps}
+                    />
                 </div>
             ))}
         </Fragment>
-    )
+    );
 }
 
 export default Group;

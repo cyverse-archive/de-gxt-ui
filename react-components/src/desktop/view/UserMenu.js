@@ -35,84 +35,103 @@ class UserMenu extends Component {
     }
 
     handleClose() {
-        this.setState({anchorEl: null});
-    };
+        this.setState({ anchorEl: null });
+    }
 
     onUserMenuClick(event) {
-        this.setState({anchorEl: document.getElementById(this.props.anchor)});
+        this.setState({ anchorEl: document.getElementById(this.props.anchor) });
     }
 
     render() {
-        const {anchorEl} = this.state;
-        const {classes, presenter, doIntro} = this.props;
+        const { anchorEl } = this.state;
+        const { classes, presenter, doIntro } = this.props;
         return (
             <span>
-                <PersonIcon id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
-                            className={classes.menuIcon}
-                            onClick={this.onUserMenuClick}
-                            ref={this.userBtn}
+                <PersonIcon
+                    id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                    className={classes.menuIcon}
+                    onClick={this.onUserMenuClick}
+                    ref={this.userBtn}
                 />
-                <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={this.handleClose}>
-                    <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
-                              onClick={() => {
-                                  presenter.onPreferencesClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("preferences")}/>
+                <Menu
+                    id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                >
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
+                        onClick={() => {
+                            presenter.onPreferencesClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("preferences")} />
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
-                              onClick={() => {
-                                  presenter.onCollaboratorsClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("collaborators")}/>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
+                        onClick={() => {
+                            presenter.onCollaboratorsClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("collaborators")} />
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.TEAMS_LINK)}
-                              onClick={() => {
-                                  presenter.onTeamsClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("teams")}/>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.TEAMS_LINK)}
+                        onClick={() => {
+                            presenter.onTeamsClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("teams")} />
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.COMMUNITIES_LINK)}
-                              onClick={() => {
-                                  presenter.onCommunitiesClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("communities")}/>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.COMMUNITIES_LINK)}
+                        onClick={() => {
+                            presenter.onCommunitiesClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("communities")} />
                     </MenuItem>
-                    <Divider/>
-                    <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
-                              onClick={() => {
-                                  presenter.onDocumentationClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("documentation")}/>
+                    <Divider />
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
+                        onClick={() => {
+                            presenter.onDocumentationClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("documentation")} />
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                              onClick={() => {
-                                  doIntro();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("introduction")}/>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.INTRO_LINK)}
+                        onClick={() => {
+                            doIntro();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("introduction")} />
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
-                              onClick={() => {
-                                  presenter.onAboutClick();
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("about")}/>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.ABOUT_LINK)}
+                        onClick={() => {
+                            presenter.onAboutClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("about")} />
                     </MenuItem>
-                    <Divider/>
-                    <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
-                              onClick={() => {
-                                  presenter.doLogout(false);
-                                  this.handleClose();
-                              }}>
-                        <DEHyperlink text={getMessage("logout")}/>
+                    <Divider />
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
+                        onClick={() => {
+                            presenter.doLogout(false);
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("logout")} />
                     </MenuItem>
                 </Menu>
             </span>

@@ -55,7 +55,7 @@
     "test:ci": "CI=true react-scripts test --env=jsdom --ci --testResultsProcessor ./node_modules/jest-junit-reporter",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prettier": "prettier --write {src,__{tests}__}/**/*.js"
+    "prettier": "prettier --write 'src/**/*.js' 'stories/**/*.js'"
   },
   "babel": {
     "presets": [

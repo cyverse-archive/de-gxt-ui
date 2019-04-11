@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -18,11 +18,11 @@ import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import AnalysesMenuItems from "./AnalysesMenuItems";
 import SearchField from "../../util/SearchField";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
-import Menu from '@material-ui/core/Menu';
+import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Select from "@material-ui/core/Select";
 import ToolbarGroup from "@material-ui/core/Toolbar";
@@ -36,115 +36,177 @@ class AnalysesToolbar extends Component {
         super(props);
         this.state = {
             anchorEl: null,
-        }
-
+        };
     }
 
-    handleClick = event => {
-        this.setState({anchorEl: event.currentTarget});
+    handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleClose = () => {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     };
 
-
     render() {
-        const {classes, baseDebugId, baseToolbarId, intl, searchInputValue} = this.props;
-        const {anchorEl} = this.state;
+        const {
+            classes,
+            baseDebugId,
+            baseToolbarId,
+            intl,
+            searchInputValue,
+        } = this.props;
+        const { anchorEl } = this.state;
         return (
             <div className={classes.toolbar}>
-                <ToolbarGroup style={{paddingLeft: 0}}>
+                <ToolbarGroup style={{ paddingLeft: 0 }}>
                     <Button
                         id={baseDebugId}
-                        aria-owns={anchorEl ? 'simple-menu' : null}
+                        aria-owns={anchorEl ? "simple-menu" : null}
                         aria-haspopup="true"
                         onClick={this.handleClick}
                         className={classes.toolbarButton}
-                        variant="outlined">
-                        <MenuIcon className={classes.toolbarItemColor}/>
+                        variant="outlined"
+                    >
+                        <MenuIcon className={classes.toolbarItemColor} />
                         {getMessage("analyses")}
                     </Button>
                     <Menu
                         id={baseDebugId}
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
-                        onClose={this.handleClose}>
+                        onClose={this.handleClose}
+                    >
                         <AnalysesMenuItems
                             handleClose={this.handleClose}
-                            {...this.props}/>
+                            {...this.props}
+                        />
                     </Menu>
                     <Button
                         id={build(baseToolbarId, ids.BUTTON_REFRESH)}
                         variant="raised"
                         className={classes.toolbarButton}
-                        onClick={this.props.handleRefresh}>
-                        <RefreshIcon className={classes.toolbarItemColor}/>
+                        onClick={this.props.handleRefresh}
+                    >
+                        <RefreshIcon className={classes.toolbarItemColor} />
                         {getMessage("refresh")}
                     </Button>
                     <form autoComplete="off">
                         <FormControl
                             id={build(baseToolbarId, ids.VIEW_FILTER)}
-                            className={classes.dropDown}>
+                            className={classes.dropDown}
+                        >
                             <InputLabel className={classes.dropDownLabel}>
                                 {getMessage("viewFilter")}
                             </InputLabel>
                             <Select
                                 value={this.props.viewFilter}
-                                onChange={(e) => this.props.onViewFilterChange(e.target.value)}
-                                input={
-                                    <OutlinedInput name="permission"/>
+                                onChange={(e) =>
+                                    this.props.onViewFilterChange(
+                                        e.target.value
+                                    )
                                 }
-                                style={{minWidth: 200}}>
+                                input={<OutlinedInput name="permission" />}
+                                style={{ minWidth: 200 }}
+                            >
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.ALL)}
-                                    value={viewFilter.all}>{viewFilter.all}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.VIEW_FILTER + ids.ALL
+                                    )}
+                                    value={viewFilter.all}
+                                >
+                                    {viewFilter.all}
+                                </MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.MINE)}
-                                    value={viewFilter.mine}>{viewFilter.mine}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.VIEW_FILTER + ids.MINE
+                                    )}
+                                    value={viewFilter.mine}
+                                >
+                                    {viewFilter.mine}
+                                </MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.VIEW_FILTER + ids.THEIRS)}
-                                    value={viewFilter.theirs}>{viewFilter.theirs}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.VIEW_FILTER + ids.THEIRS
+                                    )}
+                                    value={viewFilter.theirs}
+                                >
+                                    {viewFilter.theirs}
+                                </MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl
                             id={build(baseToolbarId, ids.APP_TYPE)}
-                            className={classes.dropDown}>
+                            className={classes.dropDown}
+                        >
                             <InputLabel className={classes.dropDownLabel}>
                                 {getMessage("type")}
                             </InputLabel>
                             <Select
                                 value={this.props.typeFilter}
-                                onChange={(e) => this.props.onTypeFilterChange(e.target.value)}
-                                input={
-                                    <OutlinedInput name="type"/>
-                                } style={{minWidth: 120}}>
+                                onChange={(e) =>
+                                    this.props.onTypeFilterChange(
+                                        e.target.value
+                                    )
+                                }
+                                input={<OutlinedInput name="type" />}
+                                style={{ minWidth: 120 }}
+                            >
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.TYPE + ids.ALL)}
-                                    value={"All"}>{appType.all}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.TYPE + ids.ALL
+                                    )}
+                                    value={"All"}
+                                >
+                                    {appType.all}
+                                </MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.TYPE + ids.AGAVE)}
-                                    value={"Agave"}>{appType.agave}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.TYPE + ids.AGAVE
+                                    )}
+                                    value={"Agave"}
+                                >
+                                    {appType.agave}
+                                </MenuItem>
                                 <MenuItem
                                     id={build(baseToolbarId, ids.TYPE + ids.DE)}
-                                    value={"DE"}>{appType.de}</MenuItem>
+                                    value={"DE"}
+                                >
+                                    {appType.de}
+                                </MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.TYPE + ids.INTERACTIVE)}
-                                    value={"Interactive"}>{appType.interactive}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.TYPE + ids.INTERACTIVE
+                                    )}
+                                    value={"Interactive"}
+                                >
+                                    {appType.interactive}
+                                </MenuItem>
                                 <MenuItem
-                                    id={build(baseToolbarId, ids.TYPE + ids.OSG)}
-                                    value={"OSG"}>{appType.osg}</MenuItem>
+                                    id={build(
+                                        baseToolbarId,
+                                        ids.TYPE + ids.OSG
+                                    )}
+                                    value={"OSG"}
+                                >
+                                    {appType.osg}
+                                </MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl style={{margin: 5}}>
-                            <SearchField id={build(baseToolbarId, ids.FIELD_SEARCH)}
-                                         handleSearch={this.props.onSearch}
-                                         value={searchInputValue}
-                                         placeholder={formatMessage(intl, "search")}/>
+                        <FormControl style={{ margin: 5 }}>
+                            <SearchField
+                                id={build(baseToolbarId, ids.FIELD_SEARCH)}
+                                handleSearch={this.props.onSearch}
+                                value={searchInputValue}
+                                placeholder={formatMessage(intl, "search")}
+                            />
                         </FormControl>
-
                     </form>
-
                 </ToolbarGroup>
             </div>
         );
@@ -176,4 +238,6 @@ AnalysesToolbar.propTypes = {
     disableCancel: PropTypes.bool.isRequired,
 };
 
-export default withStyles(exStyles)(withI18N(injectIntl(AnalysesToolbar), intlData));
+export default withStyles(exStyles)(
+    withI18N(injectIntl(AnalysesToolbar), intlData)
+);

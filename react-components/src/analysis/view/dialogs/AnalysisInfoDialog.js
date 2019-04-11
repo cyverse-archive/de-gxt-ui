@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import ids from "../../ids";
-import intlData from "../../messages"
+import intlData from "../../messages";
 import exStyles from "../../style";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
 import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
 
-import Button from '@material-ui/core/Button';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
+import Button from "@material-ui/core/Button";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Dialog from "@material-ui/core/Dialog";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -37,16 +37,17 @@ const columnData = [
 
 class AnalysisInfoDialog extends Component {
     render() {
-        const {info, dialogOpen, onInfoDialogClose, intl} = this.props;
+        const { info, dialogOpen, onInfoDialogClose, intl } = this.props;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
-                    heading={intl.formatMessage({id:"analysisInfo"})}
-                    onClose={onInfoDialogClose}/>
+                    heading={intl.formatMessage({ id: "analysisInfo" })}
+                    onClose={onInfoDialogClose}
+                />
                 <DialogContent>
                     <Table>
                         <TableBody>
-                            {info.steps.map(n => {
+                            {info.steps.map((n) => {
                                 return (
                                     <TableRow key={n.step_number}>
                                         <TableCell>{n.external_id}</TableCell>
@@ -55,15 +56,14 @@ class AnalysisInfoDialog extends Component {
                                 );
                             })}
                         </TableBody>
-                        <EnhancedTableHead columnData={columnData}
-                                           baseId="analysis"
+                        <EnhancedTableHead
+                            columnData={columnData}
+                            baseId="analysis"
                         />
                     </Table>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={onInfoDialogClose}
-                        color="primary">
+                    <Button onClick={onInfoDialogClose} color="primary">
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>
@@ -72,4 +72,6 @@ class AnalysisInfoDialog extends Component {
     }
 }
 
-export default withStyles(exStyles)(withI18N(injectIntl(AnalysisInfoDialog), intlData));
+export default withStyles(exStyles)(
+    withI18N(injectIntl(AnalysisInfoDialog), intlData)
+);

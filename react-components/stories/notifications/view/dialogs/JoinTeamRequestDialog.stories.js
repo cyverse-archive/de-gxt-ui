@@ -8,7 +8,9 @@ import JoinTeamRequestDialog from "../../../../src/notifications/view/dialogs/Jo
 
 class JoinTeamRequestDialogTest extends Component {
     render() {
-        const logger = this.props.logger || ((Notification) => {
+        const logger =
+            this.props.logger ||
+            ((Notification) => {
                 console.log(Notification);
             });
         const request = {
@@ -21,22 +23,26 @@ class JoinTeamRequestDialogTest extends Component {
             team_name: "sriram:sriram-test",
         };
 
-        const presenter =  {
-            addMemberWithPrivilege: (privilegeType, callback, errorCallback) => {
+        const presenter = {
+            addMemberWithPrivilege: (
+                privilegeType,
+                callback,
+                errorCallback
+            ) => {
                 logger("Add member with Privilege: " + privilegeType);
             },
 
             denyRequest: (msg, callback, errorCallbck) => {
-               logger("Request Denied: " + msg);
+                logger("Request Denied: " + msg);
             },
-
         };
         return (
-            <JoinTeamRequestDialog dialogOpen={true}
-                                   handleJoinTeamRequestDialogClose={() => logger("dialog closed")}
-                                   presenter = {presenter}
-                                   request={request}
-                                   />
+            <JoinTeamRequestDialog
+                dialogOpen={true}
+                handleJoinTeamRequestDialogClose={() => logger("dialog closed")}
+                presenter={presenter}
+                request={request}
+            />
         );
     }
 }

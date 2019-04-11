@@ -45,55 +45,55 @@ class OrderedGridToolbar extends Component {
         } = this.props;
 
         return (
-            <Toolbar
-                className={classes.toolbar}
-            >
+            <Toolbar className={classes.toolbar}>
                 <div className={classes.actions}>
-                    <Fab id={build(parentID, ids.BUTTONS.ADD)}
-                         size="small"
-                         color="primary"
-                         aria-label={formatMessage(intl, "addRow")}
-                         onClick={onAddItem}
+                    <Fab
+                        id={build(parentID, ids.BUTTONS.ADD)}
+                        size="small"
+                        color="primary"
+                        aria-label={formatMessage(intl, "addRow")}
+                        onClick={onAddItem}
                     >
-                        <ContentAdd/>
+                        <ContentAdd />
                     </Fab>
                 </div>
                 <div className={classes.title}>
-                    <Typography id={build(parentID, ids.TITLE)}
-                                variant="h6"
-                    >
+                    <Typography id={build(parentID, ids.TITLE)} variant="h6">
                         {title}
                     </Typography>
-                    <Typography id={build(parentID, ids.TITLE_ERR)}
-                                variant="subtitle1"
-                                className={classes.errorSubTitle}
+                    <Typography
+                        id={build(parentID, ids.TITLE_ERR)}
+                        variant="subtitle1"
+                        className={classes.errorSubTitle}
                     >
                         {error}
                     </Typography>
                 </div>
-                <div className={classes.spacer}/>
+                <div className={classes.spacer} />
                 <div className={classes.actions}>
-                    <Fab id={build(parentID, ids.BUTTONS.MOVE_UP)}
-                         size="small"
-                         color="secondary"
-                         aria-label={formatMessage(intl, "moveUp")}
-                         className={classes.button}
-                         disabled={moveUpDisabled}
-                         onClick={() => moveUp()}
+                    <Fab
+                        id={build(parentID, ids.BUTTONS.MOVE_UP)}
+                        size="small"
+                        color="secondary"
+                        aria-label={formatMessage(intl, "moveUp")}
+                        className={classes.button}
+                        disabled={moveUpDisabled}
+                        onClick={() => moveUp()}
                     >
-                        <KeyboardArrowUp/>
+                        <KeyboardArrowUp />
                     </Fab>
                 </div>
                 <div className={classes.actions}>
-                    <Fab id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
-                         size="small"
-                         color="secondary"
-                         aria-label={formatMessage(intl, "moveDown")}
-                         className={classes.button}
-                         disabled={moveDownDisabled}
-                         onClick={() => moveDown()}
+                    <Fab
+                        id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
+                        size="small"
+                        color="secondary"
+                        aria-label={formatMessage(intl, "moveDown")}
+                        className={classes.button}
+                        disabled={moveDownDisabled}
+                        onClick={() => moveDown()}
                     >
-                        <KeyboardArrowDown/>
+                        <KeyboardArrowDown />
                     </Fab>
                 </div>
             </Toolbar>
@@ -101,4 +101,6 @@ class OrderedGridToolbar extends Component {
     }
 }
 
-export default withStyles(styles)(withI18N(injectIntl(OrderedGridToolbar), intlData));
+export default withStyles(styles)(
+    withI18N(injectIntl(OrderedGridToolbar), intlData)
+);

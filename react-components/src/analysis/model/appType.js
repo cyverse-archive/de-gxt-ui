@@ -4,6 +4,5 @@ const appType = {
     de: "DE",
     interactive: "Interactive",
     osg: "OSG",
-
 };
 export default appType;

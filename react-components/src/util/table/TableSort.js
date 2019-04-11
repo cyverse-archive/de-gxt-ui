@@ -12,7 +12,6 @@
  *     {name: "Integrated By", numeric: false, enableSorting: true, key: "integrator_name"},
  */
 
-
 /**
  * Will sort the data supplied.  Example usage:
  * stableSort(data, getSorting(order, orderBy)).map(n => {
@@ -35,7 +34,7 @@ function stableSort(array, cmp) {
             if (order !== 0) return order;
             return a[1] - b[1];
         });
-        return stabilizedThis.map(el => el[0]);
+        return stabilizedThis.map((el) => el[0]);
     } else {
         return array;
     }
@@ -52,10 +51,9 @@ function desc(a, b, orderBy) {
 }
 
 function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy.toLowerCase()) : (a, b) => -desc(a, b, orderBy.toLowerCase());
+    return order === "desc"
+        ? (a, b) => desc(a, b, orderBy.toLowerCase())
+        : (a, b) => -desc(a, b, orderBy.toLowerCase());
 }
 
-export {
-    stableSort,
-    getSorting,
-}
+export { stableSort, getSorting };

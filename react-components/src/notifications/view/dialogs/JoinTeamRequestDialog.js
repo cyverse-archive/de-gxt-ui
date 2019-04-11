@@ -34,10 +34,10 @@ import privilegeType from "../../model/privilegeType";
 import build from "../../../util/DebugIDUtil";
 import ids from "../../ids";
 
-const styles = theme => ({
+const styles = (theme) => ({
     paper: {
         padding: theme.spacing.unit * 1,
-        textAlign: 'inherit',
+        textAlign: "inherit",
         color: theme.palette.text.secondary,
     },
     formControl: {
@@ -51,7 +51,6 @@ const styles = theme => ({
 const APPROVE = "approve";
 const DENY = "deny";
 
-
 function TeamDetails(props) {
     const {
         requester_name,
@@ -64,20 +63,24 @@ function TeamDetails(props) {
         <div className={classes.root}>
             <Grid container spacing={12}>
                 <Grid item xs={12}>
-                    <Paper
-                        className={classes.paper}>{getMessage("teamLabel")}: {team_name}</Paper>
+                    <Paper className={classes.paper}>
+                        {getMessage("teamLabel")}: {team_name}
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper
-                        className={classes.paper}>{getMessage("name")}: {requester_name}</Paper>
+                    <Paper className={classes.paper}>
+                        {getMessage("name")}: {requester_name}
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper
-                        className={classes.paper}>{getMessage("email")}: {requester_email}</Paper>
+                    <Paper className={classes.paper}>
+                        {getMessage("email")}: {requester_email}
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper
-                        className={classes.paper}>{getMessage("message")}: {requester_message}</Paper>
+                    <Paper className={classes.paper}>
+                        {getMessage("message")}: {requester_message}
+                    </Paper>
                 </Grid>
             </Grid>
         </div>
@@ -85,9 +88,13 @@ function TeamDetails(props) {
 }
 
 function RequestOptions(props) {
-    const {classes, action, onChange} = props;
+    const { classes, action, onChange } = props;
     return (
-        <FormControl component="fieldset" required className={classes.formControl}>
+        <FormControl
+            component="fieldset"
+            required
+            className={classes.formControl}
+        >
             <RadioGroup
                 aria-label="action"
                 name="action"
@@ -95,16 +102,21 @@ function RequestOptions(props) {
                 value={action}
                 onChange={onChange}
             >
-                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.APPROVE_BTN)}
-                                  value={APPROVE} control={<Radio/>}
-                                  label={getMessage("approveBtnText")}/>
-                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.DENY_BTN)}
-                                  value={DENY} control={<Radio/>}
-                                  label={getMessage("denyBtnText")}/>
+                <FormControlLabel
+                    id={build(ids.JOIN_REQUEST_DLG, ids.APPROVE_BTN)}
+                    value={APPROVE}
+                    control={<Radio />}
+                    label={getMessage("approveBtnText")}
+                />
+                <FormControlLabel
+                    id={build(ids.JOIN_REQUEST_DLG, ids.DENY_BTN)}
+                    value={DENY}
+                    control={<Radio />}
+                    label={getMessage("denyBtnText")}
+                />
             </RadioGroup>
         </FormControl>
     );
-
 }
 
 function ApproveRequest(props) {
@@ -114,19 +126,19 @@ function ApproveRequest(props) {
         onChange,
         requester_name,
         team_name,
-        privilege
+        privilege,
     } = props;
     return (
-        <div style={{display: action === APPROVE ? "block" : "none"}}>
+        <div style={{ display: action === APPROVE ? "block" : "none" }}>
             <Card className={classes.card} raised={true}>
-                <CardHeader title={getMessage("setPrivilegesHeading")}/>
+                <CardHeader title={getMessage("setPrivilegesHeading")} />
                 <CardContent>
                     <Typography paragraph>
                         {getMessage("setPrivilegesText", {
                             values: {
                                 name: requester_name,
-                                team: team_name
-                            }
+                                team: team_name,
+                            },
                         })}
                     </Typography>
                 </CardContent>
@@ -137,14 +149,19 @@ function ApproveRequest(props) {
                                 value={privilege}
                                 onChange={onChange}
                                 inputProps={{
-                                    name: 'privilege',
-                                    id: 'privilege-simple',
+                                    name: "privilege",
+                                    id: "privilege-simple",
                                 }}
                             >
-                                <MenuItem value="admin">{privilegeType.admin}</MenuItem>
-                                <MenuItem
-                                    value="readOptin">{privilegeType.readOptin}</MenuItem>
-                                <MenuItem value="read">{privilegeType.read}</MenuItem>
+                                <MenuItem value="admin">
+                                    {privilegeType.admin}
+                                </MenuItem>
+                                <MenuItem value="readOptin">
+                                    {privilegeType.readOptin}
+                                </MenuItem>
+                                <MenuItem value="read">
+                                    {privilegeType.read}
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </form>
@@ -155,24 +172,18 @@ function ApproveRequest(props) {
 }
 
 function DenyRequest(props) {
-    const {
-        classes,
-        action,
-        onChange,
-        requester_name,
-        team_name
-    } = props;
+    const { classes, action, onChange, requester_name, team_name } = props;
     return (
-        <div style={{display: action === DENY ? "block" : "none"}}>
+        <div style={{ display: action === DENY ? "block" : "none" }}>
             <Card className={classes.card} raised={true}>
-                <CardHeader title={getMessage("denyRequestHeader")}/>
+                <CardHeader title={getMessage("denyRequestHeader")} />
                 <CardContent>
                     <Typography paragraph>
                         {getMessage("denyRequestMessage", {
                             values: {
                                 name: requester_name,
-                                team: team_name
-                            }
+                                team: team_name,
+                            },
                         })}
                     </Typography>
                 </CardContent>
@@ -198,7 +209,7 @@ class JoinTeamRequestDialog extends Component {
         this.state = {
             dialogOpen: props.dialogOpen,
             action: APPROVE,
-            privilege:"read",
+            privilege: "read",
             message: "",
             loading: false,
         };
@@ -207,38 +218,43 @@ class JoinTeamRequestDialog extends Component {
     }
 
     handleCancelClick() {
-        this.setState({dialogOpen: false});
+        this.setState({ dialogOpen: false });
     }
 
     handleOkClick() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         if (this.state.action === APPROVE) {
-            this.props.presenter.addMemberWithPrivilege(this.state.privilege, (result) => {
-                this.setState({dialogOpen: false});
-            }, (errorCode, errorMessage) => {
-                this.setState({
-                    dialogOpen: false,
-                    loading: false
-                });
-            });
+            this.props.presenter.addMemberWithPrivilege(
+                this.state.privilege,
+                (result) => {
+                    this.setState({ dialogOpen: false });
+                },
+                (errorCode, errorMessage) => {
+                    this.setState({
+                        dialogOpen: false,
+                        loading: false,
+                    });
+                }
+            );
         } else {
-            this.props.presenter.denyRequest(this.state.message, (result) => {
-                this.setState({dialogOpen: false});
-            }, (errorCode, errorMessage) => {
-                this.setState({
-                    dialogOpen: false,
-                    loading: false
-                });
-            });
+            this.props.presenter.denyRequest(
+                this.state.message,
+                (result) => {
+                    this.setState({ dialogOpen: false });
+                },
+                (errorCode, errorMessage) => {
+                    this.setState({
+                        dialogOpen: false,
+                        loading: false,
+                    });
+                }
+            );
         }
     }
     render() {
         const classes = this.props.classes;
-        const {
-            requester_name,
-            team_name,
-        } = this.props.request;
-        const {dialogOpen} = this.state;
+        const { requester_name, team_name } = this.props.request;
+        const { dialogOpen } = this.state;
         return (
             <React.Fragment>
                 <Dialog
@@ -246,9 +262,9 @@ class JoinTeamRequestDialog extends Component {
                     open={dialogOpen}
                     onClose={this.props.handleJoinTeamRequestDialogClose}
                 >
-                    <DialogTitle style={{backgroundColor: Color.blue}}>
-                        <Typography
-                            style={{color: Color.white}}>{getMessage("joinTeamRequestHeader")}
+                    <DialogTitle style={{ backgroundColor: Color.blue }}>
+                        <Typography style={{ color: Color.white }}>
+                            {getMessage("joinTeamRequestHeader")}
                         </Typography>
                     </DialogTitle>
                     <DialogContent>
@@ -256,45 +272,56 @@ class JoinTeamRequestDialog extends Component {
                             <Typography paragraph>
                                 {getMessage("joinRequestIntro")}
                             </Typography>
-                            {this.state.loading &&
-                            <CircularProgress
-                                size={30}
-                                className={classes.loadingStyle}
-                                thickness={7}/>
-                            }
-                            <TeamDetails {...this.props}/>
+                            {this.state.loading && (
+                                <CircularProgress
+                                    size={30}
+                                    className={classes.loadingStyle}
+                                    thickness={7}
+                                />
+                            )}
+                            <TeamDetails {...this.props} />
                         </DialogContentText>
-                        <RequestOptions classes={classes}
-                                        action={this.state.action}
-                                        onChange={(e) => {
-                                            this.setState({action: e.target.value})
-                                        }}/>
-                        <ApproveRequest classes={classes}
-                                        action={this.state.action}
-                                        requester_name={requester_name}
-                                        team_name={team_name}
-                                        privilege={this.state.privilege}
-                                        onChange={(e) => {
-                                            this.setState({privilege: e.target.value})
-                                        }}/>
-                        <DenyRequest classes={classes}
-                                     action={this.state.action}
-                                     requester_name={requester_name}
-                                     team_name={team_name}
-                                     onChange={(e) => {
-                                         this.setState({message: e.target.value})
-                                     }}/>
+                        <RequestOptions
+                            classes={classes}
+                            action={this.state.action}
+                            onChange={(e) => {
+                                this.setState({ action: e.target.value });
+                            }}
+                        />
+                        <ApproveRequest
+                            classes={classes}
+                            action={this.state.action}
+                            requester_name={requester_name}
+                            team_name={team_name}
+                            privilege={this.state.privilege}
+                            onChange={(e) => {
+                                this.setState({ privilege: e.target.value });
+                            }}
+                        />
+                        <DenyRequest
+                            classes={classes}
+                            action={this.state.action}
+                            requester_name={requester_name}
+                            team_name={team_name}
+                            onChange={(e) => {
+                                this.setState({ message: e.target.value });
+                            }}
+                        />
                     </DialogContent>
                     <DialogActions>
-                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)}
-                                onClick={this.handleOkClick}
-                                color="primary">
+                        <Button
+                            id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)}
+                            onClick={this.handleOkClick}
+                            color="primary"
+                        >
                             {getMessage("okBtnText")}
                         </Button>
-                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
-                                onClick={this.handleCancelClick}
-                                color="primary"
-                                autoFocus>
+                        <Button
+                            id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
+                            onClick={this.handleCancelClick}
+                            color="primary"
+                            autoFocus
+                        >
                             {getMessage("cancelBtnText")}
                         </Button>
                     </DialogActions>

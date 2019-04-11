@@ -13,7 +13,7 @@ import withI18N, { getMessage } from "../I18NWrapper";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
-const actionsStyles = theme => ({
+const actionsStyles = (theme) => ({
     root: {
         flexShrink: 0,
         color: theme.palette.text.secondary,
@@ -22,53 +22,76 @@ const actionsStyles = theme => ({
 });
 
 class TablePaginationActions extends React.Component {
-    handleFirstPageButtonClick = event => {
+    handleFirstPageButtonClick = (event) => {
         this.props.onChangePage(event, 0);
     };
 
-    handleBackButtonClick = event => {
+    handleBackButtonClick = (event) => {
         this.props.onChangePage(event, this.props.page - 1);
     };
 
-    handleNextButtonClick = event => {
+    handleNextButtonClick = (event) => {
         this.props.onChangePage(event, this.props.page + 1);
     };
 
-    handleLastPageButtonClick = event => {
+    handleLastPageButtonClick = (event) => {
         this.props.onChangePage(
             event,
-            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
+            Math.max(
+                0,
+                Math.ceil(this.props.count / this.props.rowsPerPage) - 1
+            )
         );
     };
 
     render() {
-        const {count, page, rowsPerPage, theme} = this.props;
+        const { count, page, rowsPerPage, theme } = this.props;
 
         return (
-            <div style={{flexShrink: 0,}}>
+            <div style={{ flexShrink: 0 }}>
                 <IconButton
                     onClick={this.handleFirstPageButtonClick}
                     disabled={page === 0}
-                    aria-label={getMessage("firstPage")}>
-                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                    aria-label={getMessage("firstPage")}
+                >
+                    {theme.direction === "rtl" ? (
+                        <LastPageIcon />
+                    ) : (
+                        <FirstPageIcon />
+                    )}
                 </IconButton>
                 <IconButton
                     onClick={this.handleBackButtonClick}
                     disabled={page === 0}
-                    aria-label={getMessage("prevPage")}>
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                    aria-label={getMessage("prevPage")}
+                >
+                    {theme.direction === "rtl" ? (
+                        <KeyboardArrowRight />
+                    ) : (
+                        <KeyboardArrowLeft />
+                    )}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label={getMessage("nextPage")}>
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                    aria-label={getMessage("nextPage")}
+                >
+                    {theme.direction === "rtl" ? (
+                        <KeyboardArrowLeft />
+                    ) : (
+                        <KeyboardArrowRight />
+                    )}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label={getMessage("lastPage")}>
-                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                    aria-label={getMessage("lastPage")}
+                >
+                    {theme.direction === "rtl" ? (
+                        <FirstPageIcon />
+                    ) : (
+                        <LastPageIcon />
+                    )}
                 </IconButton>
             </div>
         );
@@ -83,6 +106,6 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(actionsStyles, {withTheme: true})(withI18N(
-    TablePaginationActions,
-    intlData));
+export default withStyles(actionsStyles, { withTheme: true })(
+    withI18N(TablePaginationActions, intlData)
+);

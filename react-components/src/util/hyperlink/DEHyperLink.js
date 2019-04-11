@@ -1,27 +1,17 @@
-import React, { Component } from 'react';
-import styles from './style';
-import injectSheet from 'react-jss';
+import React, { Component } from "react";
+import styles from "./style";
+import injectSheet from "react-jss";
 import PropTypes from "prop-types";
 
-
 class DEHyperLink extends Component {
-
     render() {
-        const {
-            classes,
-            text,
-            onClick,
-            ...custom
-        } = this.props;
+        const { classes, text, onClick, ...custom } = this.props;
         return (
-            <span onClick={onClick}
-                  {...custom}
-                  className={classes.normal}>
+            <span onClick={onClick} {...custom} className={classes.normal}>
                 {text}
             </span>
         );
     }
-
 }
 
 DEHyperLink.propTypes = {

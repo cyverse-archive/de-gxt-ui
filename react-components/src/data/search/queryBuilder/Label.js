@@ -19,19 +19,20 @@ function Label(props) {
         options.IsNot,
     ];
 
-    const {parentId} = props;
+    const { parentId } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}
-                            parentId={parentId}/>
-            <Field name='label'
-                   id={build(parentId, ids.fileName)}
-                   validate={Validations.nonEmptyField}
-                   operators={operators}
-                   component={ReduxTextField}/>
+            <SelectOperator operators={operators} parentId={parentId} />
+            <Field
+                name="label"
+                id={build(parentId, ids.fileName)}
+                validate={Validations.nonEmptyField}
+                operators={operators}
+                component={ReduxTextField}
+            />
         </Fragment>
-    )
+    );
 }
 
 export default Label;

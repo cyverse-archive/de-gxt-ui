@@ -6,9 +6,10 @@ const hasClipboardAPI = () => {
     let result = false;
 
     try {
-        result = document.queryCommandSupported &&
-                 document.queryCommandSupported('copy');
-    } catch (e) { }
+        result =
+            document.queryCommandSupported &&
+            document.queryCommandSupported("copy");
+    } catch (e) {}
 
     return result;
 };
@@ -21,8 +22,8 @@ const copySelection = () => {
 
     if (hasClipboardAPI()) {
         try {
-            copied = document.execCommand('copy');
-        } catch (e) { }
+            copied = document.execCommand("copy");
+        } catch (e) {}
     }
 
     return copied;

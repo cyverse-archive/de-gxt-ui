@@ -23,7 +23,7 @@ class SaveSearchButton extends Component {
         super(props);
 
         this.state = {
-            open: false
+            open: false,
         };
 
         this.handleClose = this.handleClose.bind(this);
@@ -33,64 +33,70 @@ class SaveSearchButton extends Component {
 
     handleSave() {
         this.props.handleSave();
-        this.setState({open: false})
+        this.setState({ open: false });
     }
 
     handleOpen() {
-        this.setState({open: true})
+        this.setState({ open: true });
     }
 
     handleClose() {
-        this.setState({open: false})
+        this.setState({ open: false });
     }
 
     render() {
-        let {
-            value,
-            onChange,
-            parentId,
-            disabled,
-            classes
-        } = this.props;
+        let { value, onChange, parentId, disabled, classes } = this.props;
 
         return (
             <Fragment>
-                <Button variant="raised"
-                        className={classes.searchButton}
-                        id={build(parentId, ids.saveSearchBtn)}
-                        disabled={!!disabled}
-                        onClick={this.handleOpen}>
-                    {getMessage('saveBtn')}
+                <Button
+                    variant="raised"
+                    className={classes.searchButton}
+                    id={build(parentId, ids.saveSearchBtn)}
+                    disabled={!!disabled}
+                    onClick={this.handleOpen}
+                >
+                    {getMessage("saveBtn")}
                 </Button>
-                <Dialog open={this.state.open}
-                        onClose={this.handleClose}>
+                <Dialog open={this.state.open} onClose={this.handleClose}>
                     <DialogTitle id={ids.saveSearchDlg}>
-                        {getMessage('saveSearchTitle')}
+                        {getMessage("saveSearchTitle")}
                     </DialogTitle>
                     <DialogContent>
-                        <TextField id={ids.saveTextField}
-                                   label={value ? getMessage('filterName') : getMessage('requiredField')}
-                                   value={value}
-                                   onChange={onChange}/>
+                        <TextField
+                            id={ids.saveTextField}
+                            label={
+                                value
+                                    ? getMessage("filterName")
+                                    : getMessage("requiredField")
+                            }
+                            value={value}
+                            onChange={onChange}
+                        />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="flat"
-                                disabled={!value}
-                                id={ids.saveBtn}
-                                color="primary"
-                                onClick={this.handleSave}>
-                            {getMessage('saveBtn')}
-                        </Button>,
-                        <Button variant="flat"
-                                id={ids.cancelBtn}
-                                color="primary"
-                                onClick={this.handleClose}>
-                            {getMessage('cancelBtn')}
+                        <Button
+                            variant="flat"
+                            disabled={!value}
+                            id={ids.saveBtn}
+                            color="primary"
+                            onClick={this.handleSave}
+                        >
+                            {getMessage("saveBtn")}
+                        </Button>
+                        ,
+                        <Button
+                            variant="flat"
+                            id={ids.cancelBtn}
+                            color="primary"
+                            onClick={this.handleClose}
+                        >
+                            {getMessage("cancelBtn")}
                         </Button>
                     </DialogActions>
                 </Dialog>
             </Fragment>
-        )
+        );
     }
 }
 
@@ -99,7 +105,7 @@ SaveSearchButton.propTypes = {
     disabled: PropTypes.bool,
     handleSave: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(withI18N(SaveSearchButton, messages));

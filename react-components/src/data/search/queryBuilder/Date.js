@@ -13,31 +13,31 @@ import React, { Fragment } from "react";
  * to choose either a Creation date range or Modified date range
  */
 function Date(props) {
-    const operators = [
-        options.Between,
-        options.BetweenNot,
-    ];
+    const operators = [options.Between, options.BetweenNot];
 
-    const {parentId} = props;
+    const { parentId } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}
-                            parentId={parentId}/>
-            <Field name='from'
-                   type='date'
-                   helperText={getMessage('startDate')}
-                   id={build(parentId, ids.fromDate)}
-                   validate={[]}
-                   component={ReduxTextField}/>
-            <Field name='to'
-                   type='date'
-                   helperText={getMessage('endDate')}
-                   id={build(parentId, ids.toDate)}
-                   validate={[]}
-                   component={ReduxTextField}/>
+            <SelectOperator operators={operators} parentId={parentId} />
+            <Field
+                name="from"
+                type="date"
+                helperText={getMessage("startDate")}
+                id={build(parentId, ids.fromDate)}
+                validate={[]}
+                component={ReduxTextField}
+            />
+            <Field
+                name="to"
+                type="date"
+                helperText={getMessage("endDate")}
+                id={build(parentId, ids.toDate)}
+                validate={[]}
+                component={ReduxTextField}
+            />
         </Fragment>
-    )
+    );
 }
 
 export default Date;

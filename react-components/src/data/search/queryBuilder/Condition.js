@@ -20,29 +20,28 @@ import Select from "@material-ui/core/Select";
  * fully fill out that condition.
  */
 function Condition(props) {
-    const {
-        field,
-        root,
-        onRemove,
-        helperProps
-    } = props;
+    const { field, root, onRemove, helperProps } = props;
 
-    let selectOptions = root ? Conditions.labels.filter((item) => {
-        return isGroup(item.value);
-    }) : Conditions.labels;
+    let selectOptions = root
+        ? Conditions.labels.filter((item) => {
+              return isGroup(item.value);
+          })
+        : Conditions.labels;
 
-    let fieldType = root ? 'type' : `${field}.type`;
-    let fieldArgs = root ? 'args' : `${field}.args`;
+    let fieldType = root ? "type" : `${field}.type`;
+    let fieldArgs = root ? "args" : `${field}.args`;
 
     return (
-        <Fields names={[fieldType, fieldArgs]}
-                field={field}
-                root={root}
-                selectOptions={selectOptions}
-                onRemove={onRemove}
-                helperProps={helperProps}
-                component={renderCondition}/>
-    )
+        <Fields
+            names={[fieldType, fieldArgs]}
+            field={field}
+            root={root}
+            selectOptions={selectOptions}
+            onRemove={onRemove}
+            helperProps={helperProps}
+            component={renderCondition}
+        />
+    );
 }
 
 function renderCondition(props) {
@@ -52,14 +51,11 @@ function renderCondition(props) {
         selectOptions,
         onRemove,
         helperProps,
-        helperProps: {
-            resetSection,
-            parentId
-        }
+        helperProps: { resetSection, parentId },
     } = props;
 
-    let fieldType = root ? 'type' : `${field}.type`;
-    let fieldArgs = root ? 'args' : `${field}.args`;
+    let fieldType = root ? "type" : `${field}.type`;
+    let fieldArgs = root ? "args" : `${field}.args`;
     let fieldTypeObj = getTargetProp(props, fieldType);
 
     if (!fieldTypeObj.input.value) {
@@ -71,12 +67,30 @@ function renderCondition(props) {
 
     let ConditionSelector = () => (
         <FormControl id={build(baseId, ids.conditionSelector)}>
-            <Select value={selection}
-                    id={build(baseId, ids.conditionSelector, ids.inputField)}
-                    onChange={(event) => handleUpdateCondition(fieldTypeObj, fieldArgs, event, resetSection)}>
-                {selectOptions && selectOptions.map((item, index) => {
-                    return <MenuItem key={index} value={item.value} id={item.id}>{item.label}</MenuItem>
-                })}
+            <Select
+                value={selection}
+                id={build(baseId, ids.conditionSelector, ids.inputField)}
+                onChange={(event) =>
+                    handleUpdateCondition(
+                        fieldTypeObj,
+                        fieldArgs,
+                        event,
+                        resetSection
+                    )
+                }
+            >
+                {selectOptions &&
+                    selectOptions.map((item, index) => {
+                        return (
+                            <MenuItem
+                                key={index}
+                                value={item.value}
+                                id={item.id}
+                            >
+                                {item.label}
+                            </MenuItem>
+                        );
+                    })}
             </Select>
         </FormControl>
     );
@@ -84,30 +98,38 @@ function renderCondition(props) {
     if (isGroup(selection)) {
         return (
             <Fragment>
-                <ConditionSelector/>
-                <FieldArray name={fieldArgs}
-                            root={root}
-                            onRemove={onRemove}
-                            parentId={parentId}
-                            selectOptions={selectOptions}
-                            helperProps={helperProps}
-                            component={Group}/>
+                <ConditionSelector />
+                <FieldArray
+                    name={fieldArgs}
+                    root={root}
+                    onRemove={onRemove}
+                    parentId={parentId}
+                    selectOptions={selectOptions}
+                    helperProps={helperProps}
+                    component={Group}
+                />
             </Fragment>
-        )
+        );
     } else {
         return (
             <Grid container spacing={16}>
-                {!root && <DeleteBtn onClick={onRemove}
-                                     id={build(baseId, ids.deleteConditionBtn)}/>}
+                {!root && (
+                    <DeleteBtn
+                        onClick={onRemove}
+                        id={build(baseId, ids.deleteConditionBtn)}
+                    />
+                )}
                 <Grid item>
-                    <ConditionSelector/>
+                    <ConditionSelector />
                 </Grid>
-                <FormSection name={fieldArgs}
-                             parentId={baseId}
-                             helperProps={helperProps}
-                             component={ConditionComponent(selection)}/>
+                <FormSection
+                    name={fieldArgs}
+                    parentId={baseId}
+                    helperProps={helperProps}
+                    component={ConditionComponent(selection)}
+                />
             </Grid>
-        )
+        );
     }
 }
 
@@ -117,7 +139,7 @@ function handleUpdateCondition(fieldType, fieldArgs, event, resetSection) {
     let groupSwitch = isGroup(currentCondition) && isGroup(newCondition);
 
     if (!groupSwitch) {
-        resetSection('dataQueryBuilder', true, true, fieldArgs);
+        resetSection("dataQueryBuilder", true, true, fieldArgs);
     }
     fieldType.input.onChange(newCondition);
 }
@@ -130,7 +152,7 @@ function handleUpdateCondition(fieldType, fieldArgs, event, resetSection) {
  * @returns {*}
  */
 function getTargetProp(propsObj, target) {
-    let obj = Object.assign('{}', propsObj);
+    let obj = Object.assign("{}", propsObj);
     let targets = target.split(/[[\].]+/);
 
     for (let i = 0; i < targets.length; i++) {
@@ -146,7 +168,7 @@ function isGroup(condition) {
 }
 
 function ConditionComponent(condition) {
-    if (condition === "") return 'undefined';
+    if (condition === "") return "undefined";
     return Conditions.componentMap[condition].component;
 }
 

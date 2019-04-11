@@ -13,24 +13,23 @@ import React from "react";
  * A simple button that allows users to create communities
  */
 function CreateCommunitiesBtn(props) {
-    const {
-        parentId,
-        ...custom
-    } = props;
+    const { parentId, ...custom } = props;
     return (
         <div>
-            <Button variant="contained"
-                    id={build(parentId, ids.BUTTONS.CREATE)}
-                    {...custom}>
-                <AddIcon/>
-                {getMessage('createCommunity')}
+            <Button
+                variant="contained"
+                id={build(parentId, ids.BUTTONS.CREATE)}
+                {...custom}
+            >
+                <AddIcon />
+                {getMessage("createCommunity")}
             </Button>
         </div>
-    )
+    );
 }
 
 CreateCommunitiesBtn.propTypes = {
-    parentId: PropTypes.string.isRequired
+    parentId: PropTypes.string.isRequired,
 };
 
 export default withI18N(CreateCommunitiesBtn, messages);

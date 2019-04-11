@@ -38,7 +38,14 @@ class StringEditorDialog extends Component {
     };
 
     render() {
-        const { open, parentID, title, valueLabel, field, onClose } = this.props;
+        const {
+            open,
+            parentID,
+            title,
+            valueLabel,
+            field,
+            onClose,
+        } = this.props;
 
         const fieldID = build(parentID, field);
         const dialogID = build(fieldID, ids.DIALOG);
@@ -53,17 +60,19 @@ class StringEditorDialog extends Component {
             >
                 <DialogTitle id={dialogTitleID}>{title}</DialogTitle>
                 <DialogContent>
-                    <FastField name={field}
-                               component={FormTextField}
-                               id={fieldID}
-                               label={valueLabel || getMessage("value")}
-                               autoFocus
+                    <FastField
+                        name={field}
+                        component={FormTextField}
+                        id={fieldID}
+                        label={valueLabel || getMessage("value")}
+                        autoFocus
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button id={build(dialogID, ids.BUTTONS.CLOSE)}
-                            color="primary"
-                            onClick={onClose}
+                    <Button
+                        id={build(dialogID, ids.BUTTONS.CLOSE)}
+                        color="primary"
+                        onClick={onClose}
                     >
                         {getMessage("done")}
                     </Button>
@@ -84,15 +93,15 @@ class StringListEditor extends Component {
             editingIndex: -1,
         };
 
-        [
-            "onAddValue",
-            "moveUp",
-            "moveDown",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
+        ["onAddValue", "moveUp", "moveDown"].forEach(
+            (methodName) => (this[methodName] = this[methodName].bind(this))
+        );
     }
 
     newValue() {
-        return formatMessage(this.props.intl, "newValue", {count: this.newValueCount++});
+        return formatMessage(this.props.intl, "newValue", {
+            count: this.newValueCount++,
+        });
     }
 
     onAddValue() {
@@ -101,12 +110,12 @@ class StringListEditor extends Component {
 
         let value = this.newValue();
 
-        const valuesMatch = v => (v === value);
+        const valuesMatch = (v) => v === value;
         while (values.findIndex(valuesMatch) > -1) {
             value = this.newValue();
         }
 
-        this.setState({selected: 0});
+        this.setState({ selected: 0 });
 
         this.props.unshift(value);
     }
@@ -121,7 +130,7 @@ class StringListEditor extends Component {
             selected--;
         }
 
-        this.setState({selected});
+        this.setState({ selected });
 
         this.props.remove(index);
     }
@@ -142,7 +151,7 @@ class StringListEditor extends Component {
     moveSelectedValue(offset) {
         const { selected } = this.state;
 
-        this.setState({selected: selected + offset});
+        this.setState({ selected: selected + offset });
 
         this.props.move(selected, selected + offset);
     }
@@ -156,9 +165,7 @@ class StringListEditor extends Component {
             helpLabel,
             columnLabel,
             name,
-            form: {
-                values
-            },
+            form: { values },
         } = this.props;
         const { selected, editingIndex } = this.state;
 
@@ -170,82 +177,121 @@ class StringListEditor extends Component {
 
                 <Typography variant="subtitle1">{helpLabel}</Typography>
 
-                <OrderedGridToolbar title={columnLabel}
-                                    parentID={parentID}
-                                    onAddItem={this.onAddValue}
-                                    moveUp={this.moveUp}
-                                    moveUpDisabled={selected <= 0}
-                                    moveDown={this.moveDown}
-                                    moveDownDisabled={!listValues || selected < 0 || (listValues.length - 1) <= selected}
+                <OrderedGridToolbar
+                    title={columnLabel}
+                    parentID={parentID}
+                    onAddItem={this.onAddValue}
+                    moveUp={this.moveUp}
+                    moveUpDisabled={selected <= 0}
+                    moveDown={this.moveDown}
+                    moveDownDisabled={
+                        !listValues ||
+                        selected < 0 ||
+                        listValues.length - 1 <= selected
+                    }
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby={build(parentID, ids.TITLE)}>
                         <TableBody>
-                            {listValues && listValues.map((value, index) => {
-                                const isSelected = (index === selected);
-                                const field = `${name}[${index}]`;
-                                const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
+                            {listValues &&
+                                listValues.map((value, index) => {
+                                    const isSelected = index === selected;
+                                    const field = `${name}[${index}]`;
+                                    const rowID = build(
+                                        ids.METADATA_TEMPLATE_FORM,
+                                        field
+                                    );
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        tabIndex={-1}
-                                        key={field}
-                                        selected={isSelected}
-                                        onClick={() => this.handleSelect(index)}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {value}
-                                        </TableCell>
-                                        <TableCell padding="none">
-                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
-                                                        aria-label={formatMessage(intl, "edit")}
-                                                        className={classes.button}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.setState({editingIndex: index});
-                                                        }}
+                                    return (
+                                        <TableRow
+                                            hover
+                                            tabIndex={-1}
+                                            key={field}
+                                            selected={isSelected}
+                                            onClick={() =>
+                                                this.handleSelect(index)
+                                            }
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
                                             >
-                                                <ContentEdit />
-                                            </IconButton>
-                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
-                                                        aria-label={formatMessage(intl, "delete")}
-                                                        classes={{root: classes.deleteIcon}}
-                                                        onClick={event => {
-                                                            event.stopPropagation();
-                                                            this.onValueRemoved(index);
-                                                        }}
-                                            >
-                                                <ContentRemove />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                                {value}
+                                            </TableCell>
+                                            <TableCell padding="none">
+                                                <IconButton
+                                                    id={build(
+                                                        rowID,
+                                                        ids.BUTTONS.EDIT
+                                                    )}
+                                                    aria-label={formatMessage(
+                                                        intl,
+                                                        "edit"
+                                                    )}
+                                                    className={classes.button}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        this.setState({
+                                                            editingIndex: index,
+                                                        });
+                                                    }}
+                                                >
+                                                    <ContentEdit />
+                                                </IconButton>
+                                                <IconButton
+                                                    id={build(
+                                                        rowID,
+                                                        ids.BUTTONS.DELETE
+                                                    )}
+                                                    aria-label={formatMessage(
+                                                        intl,
+                                                        "delete"
+                                                    )}
+                                                    classes={{
+                                                        root:
+                                                            classes.deleteIcon,
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        this.onValueRemoved(
+                                                            index
+                                                        );
+                                                    }}
+                                                >
+                                                    <ContentRemove />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
                     </Table>
                 </div>
 
-                {listValues && listValues.map((value, index) => {
-                    const field = `${name}[${index}]`;
+                {listValues &&
+                    listValues.map((value, index) => {
+                        const field = `${name}[${index}]`;
 
-                    return (
-                        <StringEditorDialog key={field}
-                                            open={editingIndex === index}
-                                            parentID={parentID}
-                                            field={field}
-                                            title={title}
-                                            valueLabel={columnLabel}
-                                            onClose={() => this.setState({ editingIndex: -1 })}
-                        />
-                    );
-                    }
-                )}
-
+                        return (
+                            <StringEditorDialog
+                                key={field}
+                                open={editingIndex === index}
+                                parentID={parentID}
+                                field={field}
+                                title={title}
+                                valueLabel={columnLabel}
+                                onClose={() =>
+                                    this.setState({ editingIndex: -1 })
+                                }
+                            />
+                        );
+                    })}
             </fieldset>
         );
     }
 }
 
-export default withStyles(styles)(withI18N(injectIntl(StringListEditor), intlData));
+export default withStyles(styles)(
+    withI18N(injectIntl(StringListEditor), intlData)
+);

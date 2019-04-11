@@ -1,7 +1,4 @@
 import * as details from "./data/details";
-import * as search from './data/search';
+import * as search from "./data/search";
 
-export {
-    details,
-    search,
-};
+export { details, search };

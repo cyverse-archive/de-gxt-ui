@@ -25,17 +25,17 @@ class ManageCommunitiesView extends Component {
             editDlgOpen: false,
             isCommunityAdmin: false,
             isCommunityMember: false,
-            selectedCommunity: null
+            selectedCommunity: null,
         };
 
         [
-            'handleCommunityFilterChange',
-            'onCreateCommunityClicked',
-            'handleCloseEditDlg',
-            'onCommunityClicked',
-            'onCommunitySaved',
-            'refreshCommunityList',
-        ].forEach((fn) => this[fn] = this[fn].bind(this));
+            "handleCommunityFilterChange",
+            "onCreateCommunityClicked",
+            "handleCloseEditDlg",
+            "onCommunityClicked",
+            "onCommunitySaved",
+            "refreshCommunityList",
+        ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
     componentDidMount() {
@@ -43,7 +43,7 @@ class ManageCommunitiesView extends Component {
     }
 
     handleCommunityFilterChange(selection) {
-        this.setState({communityType: selection});
+        this.setState({ communityType: selection });
 
         this.refreshCommunityList(selection);
     }
@@ -53,28 +53,32 @@ class ManageCommunitiesView extends Component {
             selection = this.state.communityType;
         }
 
-        this.setState({loadingListing: true});
+        this.setState({ loadingListing: true });
 
         if (selection === CommunityFilter.MY_COMMUNITIES) {
             new Promise((resolve, reject) => {
                 this.props.presenter.fetchMyCommunities(resolve, reject);
-            }).then(listing => {
-                this.setState({
-                    communitiesList: listing.groups,
-                    loadingListing: false,
+            })
+                .then((listing) => {
+                    this.setState({
+                        communitiesList: listing.groups,
+                        loadingListing: false,
+                    });
                 })
-            }).catch(() => {
-                this.setState({loadingListing: false})
-            });
+                .catch(() => {
+                    this.setState({ loadingListing: false });
+                });
         } else {
             new Promise((resolve, reject) => {
                 this.props.presenter.fetchAllCommunities(resolve, reject);
-            }).then(listing => {
-                this.setState({
-                    communitiesList: listing.groups,
-                    loadingListing: false,
+            })
+                .then((listing) => {
+                    this.setState({
+                        communitiesList: listing.groups,
+                        loadingListing: false,
+                    });
                 })
-            }).catch(() => this.setState({loadingListing: false}));
+                .catch(() => this.setState({ loadingListing: false }));
         }
     }
 
@@ -83,37 +87,47 @@ class ManageCommunitiesView extends Component {
             editDlgOpen: true,
             isCommunityAdmin: true,
             isCommunityMember: true,
-            selectedCommunity: null
-        })
+            selectedCommunity: null,
+        });
     }
 
     onCommunityClicked(community) {
         let promises = [];
         let fetchAdminStatus = new Promise((resolve, reject) => {
-            this.props.presenter.getCommunityAdmins(community.name, resolve, reject);
+            this.props.presenter.getCommunityAdmins(
+                community.name,
+                resolve,
+                reject
+            );
         });
 
         let fetchMemberStatus = new Promise((resolve, reject) => {
-            this.props.presenter.getCommunityMembers(community.name, resolve, reject);
+            this.props.presenter.getCommunityMembers(
+                community.name,
+                resolve,
+                reject
+            );
         });
 
         promises.push(fetchAdminStatus, fetchMemberStatus);
-        Promise.all(promises).then(value => {
-            this.setState({
-                isCommunityAdmin: value[0],
-                isCommunityMember: value[1],
-                editDlgOpen: true,
-                selectedCommunity: community
+        Promise.all(promises)
+            .then((value) => {
+                this.setState({
+                    isCommunityAdmin: value[0],
+                    isCommunityMember: value[1],
+                    editDlgOpen: true,
+                    selectedCommunity: community,
+                });
             })
-        }).catch(() => this.setState({loadingListing: false}));
+            .catch(() => this.setState({ loadingListing: false }));
     }
 
     onCommunitySaved(community) {
-        this.setState({selectedCommunity: community})
+        this.setState({ selectedCommunity: community });
     }
 
     handleCloseEditDlg() {
-        this.setState({editDlgOpen: false});
+        this.setState({ editDlgOpen: false });
         this.refreshCommunityList();
     }
 
@@ -137,26 +151,34 @@ class ManageCommunitiesView extends Component {
 
         return (
             <div className={classes.wrapper}>
-                <CommunitiesToolbar parentId={parentId}
-                                    currentCommunityType={this.state.communityType}
-                                    onCreateCommunityClicked={this.onCreateCommunityClicked}
-                                    handleCommunityFilterChange={(event) => this.handleCommunityFilterChange(event.target.value)}/>
-                <CommunityListing collaboratorsUtil={collaboratorsUtil}
-                                  parentId={parentId}
-                                  data={communitiesList}
-                                  loading={loadingListing}
-                                  onCommunityClicked={this.onCommunityClicked}/>
-                <EditCommunityDialog open={editDlgOpen}
-                                     collaboratorsUtil={collaboratorsUtil}
-                                     presenter={presenter}
-                                     currentUser={currentUser}
-                                     community={selectedCommunity}
-                                     isCommunityAdmin={isCommunityAdmin}
-                                     isMember={isCommunityMember}
-                                     onCommunitySaved={this.onCommunitySaved}
-                                     onClose={this.handleCloseEditDlg}/>
+                <CommunitiesToolbar
+                    parentId={parentId}
+                    currentCommunityType={this.state.communityType}
+                    onCreateCommunityClicked={this.onCreateCommunityClicked}
+                    handleCommunityFilterChange={(event) =>
+                        this.handleCommunityFilterChange(event.target.value)
+                    }
+                />
+                <CommunityListing
+                    collaboratorsUtil={collaboratorsUtil}
+                    parentId={parentId}
+                    data={communitiesList}
+                    loading={loadingListing}
+                    onCommunityClicked={this.onCommunityClicked}
+                />
+                <EditCommunityDialog
+                    open={editDlgOpen}
+                    collaboratorsUtil={collaboratorsUtil}
+                    presenter={presenter}
+                    currentUser={currentUser}
+                    community={selectedCommunity}
+                    isCommunityAdmin={isCommunityAdmin}
+                    isMember={isCommunityMember}
+                    onCommunitySaved={this.onCommunitySaved}
+                    onClose={this.handleCloseEditDlg}
+                />
             </div>
-        )
+        );
     }
 }
 
@@ -175,7 +197,7 @@ ManageCommunitiesView.propTypes = {
         getCommunityAdmins: PropTypes.func.isRequired,
         getCommunityMembers: PropTypes.func.isRequired,
         searchCollaborators: PropTypes.func.isRequired,
-    })
+    }),
 };
 
 export default withStyles(styles)(ManageCommunitiesView);

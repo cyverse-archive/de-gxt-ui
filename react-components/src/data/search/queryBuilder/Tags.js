@@ -10,54 +10,43 @@ import React, { Fragment } from "react";
  * A component which allows users to specify tags in QueryBuilder
  */
 function Tags(props) {
-    const operators = [
-        options.Are,
-        options.AreNot
-    ];
+    const operators = [options.Are, options.AreNot];
 
     const {
         parentId,
-        helperProps: {
-            array,
-            presenter,
-            classes
-        }
+        helperProps: { array, presenter, classes },
     } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}
-                            parentId={parentId}/>
-            <Field name='tags'
-                   parentId={parentId}
-                   placeholder={''}
-                   array={array}
-                   classes={classes}
-                   presenter={presenter}
-                   validate={[]}
-                   component={renderTagSearchField}/>
+            <SelectOperator operators={operators} parentId={parentId} />
+            <Field
+                name="tags"
+                parentId={parentId}
+                placeholder={""}
+                array={array}
+                classes={classes}
+                presenter={presenter}
+                validate={[]}
+                component={renderTagSearchField}
+            />
         </Fragment>
-    )
+    );
 }
 
 function renderTagSearchField(props) {
-    const {
-        input,
-        array,
-        parentId,
-        placeholder,
-        presenter,
-        classes
-    } = props;
+    const { input, array, parentId, placeholder, presenter, classes } = props;
     return (
         <Grid item className={classes.autocompleteField}>
-            <SearchFormTagPanel parentId={parentId}
-                                placeholder={placeholder}
-                                presenter={presenter}
-                                array={array}
-                                tagQuery={input}/>
+            <SearchFormTagPanel
+                parentId={parentId}
+                placeholder={placeholder}
+                presenter={presenter}
+                array={array}
+                tagQuery={input}
+            />
         </Grid>
-    )
+    );
 }
 
 export default Tags;

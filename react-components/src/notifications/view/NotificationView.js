@@ -46,20 +46,23 @@ const columnData = [
     },
 ];
 
-
 function Message(props) {
-    const {message, seen, presenter, classes} = props;
-    let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
+    const { message, seen, presenter, classes } = props;
+    let className = seen
+        ? classes.notification
+        : classnames(
+              classes.notification,
+              classes.unSeenNotificationBackground
+          );
     return (
-        <TableCell
-            padding="none"
-            className={className}>
-            <div
-                onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
+        <TableCell padding="none" className={className}>
+            <div onClick={(event) => presenter.onMessageClicked(message)}>
+                {" "}
+                {message.text}
+            </div>
         </TableCell>
     );
 }
-
 
 class NotificationView extends Component {
     constructor(props) {
@@ -72,9 +75,9 @@ class NotificationView extends Component {
             page: 0,
             rowsPerPage: 100,
             selected: [],
-            order: 'desc',
-            orderBy: 'Date',
-            filter: (props.category) ? props.category : notificationCategory.all,
+            order: "desc",
+            orderBy: "Date",
+            filter: props.category ? props.category : notificationCategory.all,
             markAsSeenDisabled: true,
         };
         this.fetchNotifications = this.fetchNotifications.bind(this);
@@ -96,21 +99,25 @@ class NotificationView extends Component {
     }
 
     fetchNotifications() {
-        const {rowsPerPage, offset, filter, order}  = this.state;
-        this.setState({loading: true});
-        this.props.presenter.getNotifications(rowsPerPage, offset, filter, order,
+        const { rowsPerPage, offset, filter, order } = this.state;
+        this.setState({ loading: true });
+        this.props.presenter.getNotifications(
+            rowsPerPage,
+            offset,
+            filter,
+            order,
             (notifications, total) => {
                 this.setState({
                     loading: false,
                     data: notifications.messages,
                     total: total,
-                })
+                });
             },
             (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
-            },
+            }
         );
     }
 
@@ -119,47 +126,62 @@ class NotificationView extends Component {
     }
 
     handleMarkSeenClick() {
-        this.setState({loading: true});
-        this.props.presenter.onNotificationToolbarMarkAsSeenClicked(this.state.selected, () => {
-            this.state.selected.map(id => this.findNotification(id).seen = true);
-            this.setState({loading: false});
-        }, (errorCode, errorMessage) => {
-            this.setState({
-                loading: false,
-            });
-        });
+        this.setState({ loading: true });
+        this.props.presenter.onNotificationToolbarMarkAsSeenClicked(
+            this.state.selected,
+            () => {
+                this.state.selected.map(
+                    (id) => (this.findNotification(id).seen = true)
+                );
+                this.setState({ loading: false });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleDeleteClick() {
-        this.setState({loading: true});
-        this.props.presenter.deleteNotifications(this.state.selected, () => {
-            this.setState({
-                loading: false,
-            });
-            this.fetchNotifications();
-        }, (errorCode, errorMessage) => {
-            this.setState({
-                loading: false,
-            });
-        });
+        this.setState({ loading: true });
+        this.props.presenter.deleteNotifications(
+            this.state.selected,
+            () => {
+                this.setState({
+                    loading: false,
+                });
+                this.fetchNotifications();
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleChangePage(event, page) {
-        const {rowsPerPage} = this.state;
-        this.setState({page: page, offset: rowsPerPage * page}, this.fetchNotifications);
-    };
+        const { rowsPerPage } = this.state;
+        this.setState(
+            { page: page, offset: rowsPerPage * page },
+            this.fetchNotifications
+        );
+    }
 
     handleFilterChange(event) {
-        this.setState({filter: event.target.value}, this.fetchNotifications);
-    };
-
+        this.setState({ filter: event.target.value }, this.fetchNotifications);
+    }
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value}, this.fetchNotifications);
-    };
+        this.setState(
+            { rowsPerPage: event.target.value },
+            this.fetchNotifications
+        );
+    }
 
     handleRowClick(event, id) {
-        const {selected} = this.state;
+        const { selected } = this.state;
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
@@ -172,49 +194,53 @@ class NotificationView extends Component {
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
+                selected.slice(selectedIndex + 1)
             );
         }
-        const filter = newSelected.filter(id => {
+        const filter = newSelected.filter((id) => {
             let n = this.findNotification(id);
-            return (n && !(n.seen)) ? n : null;
+            return n && !n.seen ? n : null;
         });
 
-        this.setState({selected: newSelected, markAsSeenDisabled: filter.length === 0});
-    };
+        this.setState({
+            selected: newSelected,
+            markAsSeenDisabled: filter.length === 0,
+        });
+    }
 
     findNotification(id) {
-        return this.state.data.find(function (n) {
+        return this.state.data.find(function(n) {
             return n.message.id === id;
         });
     }
 
     handleSelectAllClick(event, checked) {
         if (checked) {
-            this.setState(state => ({selected: state.data.map(n => n.message.id)}));
+            this.setState((state) => ({
+                selected: state.data.map((n) => n.message.id),
+            }));
             return;
         }
-        this.setState({selected: []});
-    };
+        this.setState({ selected: [] });
+    }
 
     handleRequestSort(event, property) {
         const orderBy = property;
-        let order = 'desc';
+        let order = "desc";
 
-        if (this.state.orderBy === property && this.state.order === 'desc') {
-            order = 'asc';
+        if (this.state.orderBy === property && this.state.order === "desc") {
+            order = "asc";
         }
 
-        this.setState({order, orderBy,}, () => this.fetchNotifications());
+        this.setState({ order, orderBy }, () => this.fetchNotifications());
     }
 
     isSelected(id) {
-        return this.state.selected.indexOf(id) !== -1
-
+        return this.state.selected.indexOf(id) !== -1;
     }
 
     render() {
-        const {classes, baseDebugId} = this.props;
+        const { classes, baseDebugId } = this.props;
         const {
             data,
             rowsPerPage,
@@ -228,56 +254,85 @@ class NotificationView extends Component {
         const baseId = baseDebugId + ids.NOTIFICATION_VIEW;
         return (
             <div className={classes.container}>
-                {this.state.loading &&
-                <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                }
-                <NotificationToolbar baseDebugId={baseDebugId}
-                                     filter={this.state.filter}
-                                     onFilterChange={this.handleFilterChange}
-                                     onRefreshClicked={this.handleRefreshClicked}
-                                     markSeenDisabled={this.state.selected.length === 0 || markAsSeenDisabled}
-                                     deleteDisabled={this.state.selected.length === 0}
-                                     onMarkSeenClicked={this.handleMarkSeenClick}
-                                     onDeleteClicked={this.handleDeleteClick}/>
+                {this.state.loading && (
+                    <CircularProgress
+                        size={30}
+                        className={classes.loadingStyle}
+                        thickness={7}
+                    />
+                )}
+                <NotificationToolbar
+                    baseDebugId={baseDebugId}
+                    filter={this.state.filter}
+                    onFilterChange={this.handleFilterChange}
+                    onRefreshClicked={this.handleRefreshClicked}
+                    markSeenDisabled={
+                        this.state.selected.length === 0 || markAsSeenDisabled
+                    }
+                    deleteDisabled={this.state.selected.length === 0}
+                    onMarkSeenClicked={this.handleMarkSeenClick}
+                    onDeleteClicked={this.handleDeleteClick}
+                />
                 <div className={classes.table}>
                     <Table>
                         <TableBody>
-                            {data.map(n => {
-                                const isSelected = this.isSelected(n.message.id);
+                            {data.map((n) => {
+                                const isSelected = this.isSelected(
+                                    n.message.id
+                                );
                                 return (
-                                    <TableRow onClick={event => this.handleRowClick(event, n.message.id)}
-                                              role="checkbox"
-                                              aria-checked={isSelected}
-                                              tabIndex={-1}
-                                              selected={isSelected}
-                                              hover
-                                              key={n.message.id}>
+                                    <TableRow
+                                        onClick={(event) =>
+                                            this.handleRowClick(
+                                                event,
+                                                n.message.id
+                                            )
+                                        }
+                                        role="checkbox"
+                                        aria-checked={isSelected}
+                                        tabIndex={-1}
+                                        selected={isSelected}
+                                        hover
+                                        key={n.message.id}
+                                    >
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={isSelected}/>
+                                            <Checkbox checked={isSelected} />
                                         </TableCell>
-                                        <TableCell>{notificationCategory[n.type.replace(
-                                            /\s/g,
-                                            "_").toLowerCase()]}</TableCell>
-                                        <Message message={n.message}
-                                                 seen={n.seen}
-                                                 presenter={this.props.presenter}
-                                                 classes={classes}/>
                                         <TableCell>
-                                            {formatDate(n.message.timestamp, constants.DATE_FORMAT)}
+                                            {
+                                                notificationCategory[
+                                                    n.type
+                                                        .replace(/\s/g, "_")
+                                                        .toLowerCase()
+                                                ]
+                                            }
+                                        </TableCell>
+                                        <Message
+                                            message={n.message}
+                                            seen={n.seen}
+                                            presenter={this.props.presenter}
+                                            classes={classes}
+                                        />
+                                        <TableCell>
+                                            {formatDate(
+                                                n.message.timestamp,
+                                                constants.DATE_FORMAT
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
-                        <EnhancedTableHead selectable={true}
-                                           numSelected={selected.length}
-                                           order={order}
-                                           orderBy={orderBy}
-                                           onSelectAllClick={this.handleSelectAllClick}
-                                           onRequestSort={this.handleRequestSort}
-                                           columnData={columnData}
-                                           baseId={baseId}
-                                           rowsInPage={data.length}
+                        <EnhancedTableHead
+                            selectable={true}
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={this.handleSelectAllClick}
+                            onRequestSort={this.handleRequestSort}
+                            columnData={columnData}
+                            baseId={baseId}
+                            rowsInPage={data.length}
                         />
                     </Table>
                 </div>
@@ -293,8 +348,7 @@ class NotificationView extends Component {
                     rowsPerPageOptions={[5, 100, 500, 1000]}
                 />
             </div>
-        )
+        );
     }
-
 }
 export default withStyles(exStyles)(withI18N(NotificationView, intlData));

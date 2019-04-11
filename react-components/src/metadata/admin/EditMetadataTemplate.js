@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 
-import { FastField, FieldArray, withFormik } from 'formik';
+import { FastField, FieldArray, withFormik } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -43,7 +43,9 @@ class EditMetadataTemplate extends Component {
             "closeMetadataTemplateDialog",
             "confirmCloseMetadataTemplateDialog",
             "closeConfirmationDialog",
-        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
+        ].forEach(
+            (methodName) => (this[methodName] = this[methodName].bind(this))
+        );
     }
 
     static propTypes = {
@@ -56,9 +58,9 @@ class EditMetadataTemplate extends Component {
     closeMetadataTemplateDialog() {
         const { dirty, presenter } = this.props;
 
-        dirty ?
-            this.setState({showConfirmationDialog: true}) :
-            presenter.closeMetadataTemplateDialog()
+        dirty
+            ? this.setState({ showConfirmationDialog: true })
+            : presenter.closeMetadataTemplateDialog();
     }
 
     confirmCloseMetadataTemplateDialog() {
@@ -67,7 +69,7 @@ class EditMetadataTemplate extends Component {
     }
 
     closeConfirmationDialog() {
-        this.setState({showConfirmationDialog: false});
+        this.setState({ showConfirmationDialog: false });
     }
 
     render() {
@@ -76,7 +78,10 @@ class EditMetadataTemplate extends Component {
             intl,
             open,
             // from formik
-            handleSubmit, dirty, isSubmitting, errors,
+            handleSubmit,
+            dirty,
+            isSubmitting,
+            errors,
         } = this.props;
 
         const { showConfirmationDialog } = this.state;
@@ -84,23 +89,33 @@ class EditMetadataTemplate extends Component {
         const dialogTitleID = build(ids.METADATA_TEMPLATE_FORM, ids.TITLE);
 
         return (
-            <Dialog open={open}
-                    fullWidth={true}
-                    maxWidth="md"
-                    disableBackdropClick
-                    disableEscapeKeyDown
-                    aria-labelledby={dialogTitleID}
-                    TransitionComponent={SlideUpTransition}
+            <Dialog
+                open={open}
+                fullWidth={true}
+                maxWidth="md"
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby={dialogTitleID}
+                TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <Typography id={dialogTitleID} variant="h6" color="inherit" className={classes.flex}>
+                        <Typography
+                            id={dialogTitleID}
+                            variant="h6"
+                            color="inherit"
+                            className={classes.flex}
+                        >
                             {getMessage("dialogTitleEditMetadataTemplate")}
                         </Typography>
-                        <IconButton id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.CLOSE_ICON)}
-                                    aria-label={formatMessage(intl, "close")}
-                                    onClick={this.closeMetadataTemplateDialog}
-                                    color="inherit"
+                        <IconButton
+                            id={build(
+                                ids.METADATA_TEMPLATE_FORM,
+                                ids.BUTTONS.CLOSE_ICON
+                            )}
+                            aria-label={formatMessage(intl, "close")}
+                            onClick={this.closeMetadataTemplateDialog}
+                            color="inherit"
                         >
                             <CloseIcon />
                         </IconButton>
@@ -108,63 +123,82 @@ class EditMetadataTemplate extends Component {
                 </AppBar>
 
                 <DialogContent>
-                    <FastField name="name"
-                               label={getMessage("templateNameLabel")}
-                               id={build(ids.METADATA_TEMPLATE_FORM, ids.TEMPLATE_NAME)}
-                               required={true}
-                               autoFocus
-                               component={FormTextField}
+                    <FastField
+                        name="name"
+                        label={getMessage("templateNameLabel")}
+                        id={build(
+                            ids.METADATA_TEMPLATE_FORM,
+                            ids.TEMPLATE_NAME
+                        )}
+                        required={true}
+                        autoFocus
+                        component={FormTextField}
                     />
-                    <FastField name="description"
-                               label={getMessage("description")}
-                               id={build(ids.METADATA_TEMPLATE_FORM, ids.TEMPLATE_DESCRIPTION)}
-                               component={FormTextField}
+                    <FastField
+                        name="description"
+                        label={getMessage("description")}
+                        id={build(
+                            ids.METADATA_TEMPLATE_FORM,
+                            ids.TEMPLATE_DESCRIPTION
+                        )}
+                        component={FormTextField}
                     />
 
-                    <FastField name="deleted"
-                               label={getMessage("markAsDeleted")}
-                               id={build(ids.METADATA_TEMPLATE_FORM, ids.CHECK_DELETED)}
-                               color="primary"
-                               component={FormCheckbox}
+                    <FastField
+                        name="deleted"
+                        label={getMessage("markAsDeleted")}
+                        id={build(
+                            ids.METADATA_TEMPLATE_FORM,
+                            ids.CHECK_DELETED
+                        )}
+                        color="primary"
+                        component={FormCheckbox}
                     />
 
                     <Divider />
 
-                    <FieldArray name="attributes"
-                                component={EditAttributeFormList}
+                    <FieldArray
+                        name="attributes"
+                        component={EditAttributeFormList}
                     />
                 </DialogContent>
 
                 <DialogActions>
-                    <Button id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.CLOSE)}
-                                onClick={this.closeMetadataTemplateDialog}
-                                color="primary"
+                    <Button
+                        id={build(
+                            ids.METADATA_TEMPLATE_FORM,
+                            ids.BUTTONS.CLOSE
+                        )}
+                        onClick={this.closeMetadataTemplateDialog}
+                        color="primary"
                     >
                         {getMessage("close")}
                     </Button>
-                    <Button id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.SAVE)}
-                            disabled={!dirty || isSubmitting || errors.error}
-                            onClick={handleSubmit}
-                            color="primary"
-                            variant="contained"
+                    <Button
+                        id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.SAVE)}
+                        disabled={!dirty || isSubmitting || errors.error}
+                        onClick={handleSubmit}
+                        color="primary"
+                        variant="contained"
                     >
                         {getMessage("save")}
                     </Button>
                 </DialogActions>
 
-                <ConfirmationDialog dialogOpen={showConfirmationDialog}
-                                    debugId={ids.METADATA_TEMPLATE_VIEW}
-                                    heading={getMessage("confirmDiscardChangesDialogHeader")}
-                                    message={getMessage("confirmDiscardChangesDialogMsg")}
-                                    onOkBtnClick={this.confirmCloseMetadataTemplateDialog}
-                                    onCancelBtnClick={this.closeConfirmationDialog}
+                <ConfirmationDialog
+                    dialogOpen={showConfirmationDialog}
+                    debugId={ids.METADATA_TEMPLATE_VIEW}
+                    heading={getMessage("confirmDiscardChangesDialogHeader")}
+                    message={getMessage("confirmDiscardChangesDialogMsg")}
+                    onOkBtnClick={this.confirmCloseMetadataTemplateDialog}
+                    onCancelBtnClick={this.closeConfirmationDialog}
                 />
             </Dialog>
         );
     }
 }
 
-const validateAttributes = attributes => {
+const validateAttributes = (attributes) => {
     const attributesArrayErrors = [];
 
     attributes.forEach((attr, attrIndex) => {
@@ -176,10 +210,15 @@ const validateAttributes = attributes => {
             attrErrors.error = getMessage("errAttrHasErrors");
             attributesArrayErrors[attrIndex] = attrErrors;
         } else {
-            const namesMatch = attr => (attr.name === name);
-            if (attributes.slice(0, attrIndex).some(namesMatch) || attributes.slice(attrIndex + 1).some(namesMatch)) {
+            const namesMatch = (attr) => attr.name === name;
+            if (
+                attributes.slice(0, attrIndex).some(namesMatch) ||
+                attributes.slice(attrIndex + 1).some(namesMatch)
+            ) {
                 attrErrors.name = getMessage("errAttrNameMustBeUnique");
-                attrErrors.error = attrErrors.error ? getMessage("errAttrHasErrors") : getMessage("errAttrNameMustBeUnique");
+                attrErrors.error = attrErrors.error
+                    ? getMessage("errAttrHasErrors")
+                    : getMessage("errAttrNameMustBeUnique");
                 attributesArrayErrors[attrIndex] = attrErrors;
             }
         }
@@ -190,7 +229,9 @@ const validateAttributes = attributes => {
                 // Setting an attrErrors.values message allows the error to be displayed in the table header,
                 // but that component will have to check first if attrErrors.values is an array or not.
                 attrErrors.values = getMessage("errEnumValueRequired");
-                attrErrors.error = attrErrors.error ? getMessage("errAttrHasErrors") : getMessage("errEnumValueRequired");
+                attrErrors.error = attrErrors.error
+                    ? getMessage("errAttrHasErrors")
+                    : getMessage("errEnumValueRequired");
                 attributesArrayErrors[attrIndex] = attrErrors;
             } else {
                 const enumArrayErrors = [];
@@ -201,7 +242,9 @@ const validateAttributes = attributes => {
                             error: true,
                             value: getMessage("required"),
                         };
-                        attrErrors.error = attrErrors.error ? getMessage("errAttrHasErrors") : getMessage("errEnumOptionValueRequired");
+                        attrErrors.error = attrErrors.error
+                            ? getMessage("errAttrHasErrors")
+                            : getMessage("errEnumOptionValueRequired");
                         attrErrors.values = enumArrayErrors;
                         attributesArrayErrors[attrIndex] = attrErrors;
                     }
@@ -222,7 +265,7 @@ const validateAttributes = attributes => {
     return attributesArrayErrors;
 };
 
-const validate = values => {
+const validate = (values) => {
     const errors = {};
 
     if (!values.name) {
@@ -241,8 +284,10 @@ const validate = values => {
     return errors;
 };
 
-const handleSubmit = ({ name, description, deleted, attributes },
-                      { props, setSubmitting, setStatus }) => {
+const handleSubmit = (
+    { name, description, deleted, attributes },
+    { props, setSubmitting, setStatus }
+) => {
     const resolve = (template) => {
         setSubmitting(false);
         setStatus({ success: true, template });
@@ -263,21 +308,19 @@ const handleSubmit = ({ name, description, deleted, attributes },
             attributes,
         },
         resolve,
-        errorCallback,
+        errorCallback
     );
 };
 
-const mapPropsToValues = props => {
+const mapPropsToValues = (props) => {
     const { template } = props;
 
     return { ...template };
 };
 
-export default withFormik(
-    {
-        enableReinitialize: true,
-        mapPropsToValues,
-        validate,
-        handleSubmit,
-    }
-)(withStyles(styles)(withI18N(injectIntl(EditMetadataTemplate), intlData)));
+export default withFormik({
+    enableReinitialize: true,
+    mapPropsToValues,
+    validate,
+    handleSubmit,
+})(withStyles(styles)(withI18N(injectIntl(EditMetadataTemplate), intlData)));

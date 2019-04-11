@@ -8,7 +8,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
-import React, {Component} from "react";
+import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 
 /**
@@ -20,7 +20,7 @@ class EditTagDialog extends Component {
         super(props);
 
         this.state = {
-            description: ''
+            description: "",
         };
 
         this.handleClose = this.handleClose.bind(this);
@@ -30,13 +30,13 @@ class EditTagDialog extends Component {
 
     handleChange(event) {
         let value = event.target.value;
-        this.setState({description: value})
+        this.setState({ description: value });
     }
 
     handleSave() {
-        let {tag} = this.props;
-        let {description} = this.state;
-        this.props.handleSave({...tag, description});
+        let { tag } = this.props;
+        let { description } = this.state;
+        this.props.handleSave({ ...tag, description });
     }
 
     handleClose() {
@@ -46,42 +46,47 @@ class EditTagDialog extends Component {
     componentWillReceiveProps(nextProps) {
         let tag = nextProps.tag;
 
-        this.setState({description: tag ? tag.description : ''})
+        this.setState({ description: tag ? tag.description : "" });
     }
 
     render() {
         let { open } = this.props;
 
         return (
-            <Dialog open={open}
-                    onClose={this.handleClose}>
+            <Dialog open={open} onClose={this.handleClose}>
                 <DialogTitle id={ids.saveSearchDlg}>
-                    {getMessage('editTagDescription')}
+                    {getMessage("editTagDescription")}
                 </DialogTitle>
                 <DialogContent>
-                    <TextField id={ids.editTagInput}
-                               multiline
-                               rowsMax='4'
-                               label={getMessage('description')}
-                               value={this.state.description}
-                               onChange={this.handleChange}/>
+                    <TextField
+                        id={ids.editTagInput}
+                        multiline
+                        rowsMax="4"
+                        label={getMessage("description")}
+                        value={this.state.description}
+                        onChange={this.handleChange}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="flat"
-                            id={ids.editTagSave}
-                            color="primary"
-                            onClick={this.handleSave}>
-                        {getMessage('saveBtn')}
+                    <Button
+                        variant="flat"
+                        id={ids.editTagSave}
+                        color="primary"
+                        onClick={this.handleSave}
+                    >
+                        {getMessage("saveBtn")}
                     </Button>
-                    <Button variant="flat"
-                            id={ids.editTagCancel}
-                            color="primary"
-                            onClick={this.handleClose}>
-                        {getMessage('cancelBtn')}
+                    <Button
+                        variant="flat"
+                        id={ids.editTagCancel}
+                        color="primary"
+                        onClick={this.handleClose}
+                    >
+                        {getMessage("cancelBtn")}
                     </Button>
                 </DialogActions>
             </Dialog>
-        )
+        );
     }
 }
 
@@ -91,7 +96,7 @@ EditTagDialog.propTypes = {
         id: PropTypes.string.isRequired,
     }),
     handleSave: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired
+    handleClose: PropTypes.func.isRequired,
 };
 
 export default withI18N(EditTagDialog, messages);

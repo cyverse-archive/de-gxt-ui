@@ -9,15 +9,17 @@ import { withStyles } from "@material-ui/core/styles";
  * A button used by QueryBuilder.  Clicking it removes the Condition in the same row
  */
 function DeleteBtn(props) {
-    const {classes, ...custom} = props;
+    const { classes, ...custom } = props;
     return (
-        <Fab color="secondary"
-             size="small"
-             classes={{root: classes.conditionButton}}
-             {...custom}>
-            <DeleteIcon/>
+        <Fab
+            color="secondary"
+            size="small"
+            classes={{ root: classes.conditionButton }}
+            {...custom}
+        >
+            <DeleteIcon />
         </Fab>
-    )
+    );
 }
 
 export default withStyles(styles)(DeleteBtn);

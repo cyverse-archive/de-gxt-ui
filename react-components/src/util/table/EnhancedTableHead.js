@@ -18,7 +18,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 
 class EnhancedTableHead extends React.Component {
-    createSortHandler = property => event => {
+    createSortHandler = (property) => (event) => {
         this.props.onRequestSort(event, property);
     };
 
@@ -32,7 +32,7 @@ class EnhancedTableHead extends React.Component {
             selectable,
             classes,
             padding,
-            rowsInPage
+            rowsInPage,
         } = this.props;
 
         let isInDeterminate = numSelected > 0 && numSelected !== rowsInPage;
@@ -40,8 +40,10 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     {selectable && (
-                        <TableCell padding={padding ? padding : "checkbox"}
-                                   className={classes.checkbox_cell}>
+                        <TableCell
+                            padding={padding ? padding : "checkbox"}
+                            className={classes.checkbox_cell}
+                        >
                             <Checkbox
                                 indeterminate={isInDeterminate}
                                 checked={numSelected === rowsInPage}
@@ -49,9 +51,8 @@ class EnhancedTableHead extends React.Component {
                                 className={classes.column_heading}
                             />
                         </TableCell>
-                    )
-                    }
-                    {columnData.map(column => {
+                    )}
+                    {columnData.map((column) => {
                         const key = column.key || column.name;
 
                         return (
@@ -65,25 +66,32 @@ class EnhancedTableHead extends React.Component {
                                 className={classes.column_heading}
                             >
                                 {column.enableSorting ? (
-                                        <Tooltip
-                                            title="Sort"
-                                            placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                                            enterDelay={300}
+                                    <Tooltip
+                                        title="Sort"
+                                        placement={
+                                            column.numeric
+                                                ? "bottom-end"
+                                                : "bottom-start"
+                                        }
+                                        enterDelay={300}
+                                    >
+                                        <TableSortLabel
+                                            active={orderBy === key}
+                                            direction={order.toLowerCase()}
+                                            onClick={
+                                                this.props.onRequestSort &&
+                                                this.createSortHandler(key)
+                                            }
+                                            style={{ color: Color.white }}
                                         >
-                                            <TableSortLabel
-                                                active={orderBy === key}
-                                                direction={order.toLowerCase()}
-                                                onClick={this.props.onRequestSort && this.createSortHandler(key)}
-                                                style={{color: Color.white}}
-                                            >
-                                                {column.name}
-                                            </TableSortLabel>
-                                        </Tooltip>
-                                    ) : (
-                                        column.name
-                                    )}
+                                            {column.name}
+                                        </TableSortLabel>
+                                    </Tooltip>
+                                ) : (
+                                    column.name
+                                )}
                             </TableCell>
-                        )
+                        );
                     }, this)}
                 </TableRow>
             </TableHead>
@@ -107,8 +115,9 @@ EnhancedTableHead.propTypes = {
             padding: PropTypes.string,
             numeric: PropTypes.bool,
             enableSorting: PropTypes.bool,
-            key: PropTypes.string
-        })),
+            key: PropTypes.string,
+        })
+    ),
     padding: PropTypes.string,
 };
 

@@ -29,15 +29,15 @@ class EditCommunityDialog extends Component {
         };
 
         [
-            'onDialogBtnClicked',
-            'handleCloseEditDialog',
-            'cancelSave',
-            'isSelectAppsDlgOpen'
-        ].forEach((fn) => this[fn] = this[fn].bind(this));
+            "onDialogBtnClicked",
+            "handleCloseEditDialog",
+            "cancelSave",
+            "isSelectAppsDlgOpen",
+        ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
     onDialogBtnClicked(dialogName) {
-        this.setState({[dialogName]: true})
+        this.setState({ [dialogName]: true });
     }
 
     handleCloseEditDialog() {
@@ -55,7 +55,7 @@ class EditCommunityDialog extends Component {
     }
 
     isSelectAppsDlgOpen(open) {
-        this.setState({isSelectAppsDlgOpen: open});
+        this.setState({ isSelectAppsDlgOpen: open });
     }
 
     render() {
@@ -72,78 +72,85 @@ class EditCommunityDialog extends Component {
             classes,
         } = this.props;
 
-        const {
-            saveCommunity,
-            isSelectAppsDlgOpen,
-        } = this.state;
+        const { saveCommunity, isSelectAppsDlgOpen } = this.state;
 
-        const communityName = community !== null ? collaboratorsUtil.getSubjectDisplayName(community) : null;
+        const communityName =
+            community !== null
+                ? collaboratorsUtil.getSubjectDisplayName(community)
+                : null;
 
         return (
-            <Dialog open={open}
-                    fullWidth={true}
-                    maxWidth='lg'
+            <Dialog
+                open={open}
+                fullWidth={true}
+                maxWidth="lg"
+                onClose={onClose}
+                classes={{ root: isSelectAppsDlgOpen ? classes.hidden : null }}
+                id={ids.EDIT_DLG}
+            >
+                <DEDialogHeader
+                    heading={
+                        <DialogHeader
+                            community={community}
+                            communityName={communityName}
+                            isCommunityAdmin={isCommunityAdmin}
+                        />
+                    }
+                    messages={messages.messages}
                     onClose={onClose}
-                    classes={{root: isSelectAppsDlgOpen ? classes.hidden : null}}
-                    id={ids.EDIT_DLG}>
-                <DEDialogHeader heading={<DialogHeader community={community}
-                                                       communityName={communityName}
-                                                       isCommunityAdmin={isCommunityAdmin}/>}
-                                messages={messages.messages}
-                                onClose={onClose}>
-                </DEDialogHeader>
+                />
                 <DialogContent>
-                    <EditCommunity parentId={ids.EDIT_DLG}
-                                   community={community}
-                                   isCommunityAdmin={isCommunityAdmin}
-                                   isMember={isMember}
-                                   collaboratorsUtil={collaboratorsUtil}
-                                   currentUser={currentUser}
-                                   presenter={presenter}
-                                   saveCommunity={saveCommunity}
-                                   cancelSave={this.cancelSave}
-                                   isSelectAppsDlgOpen={this.isSelectAppsDlgOpen}
-                                   onCommunitySaved={onCommunitySaved}
-                                   handleCloseEditDlg={this.handleCloseEditDialog}/>
+                    <EditCommunity
+                        parentId={ids.EDIT_DLG}
+                        community={community}
+                        isCommunityAdmin={isCommunityAdmin}
+                        isMember={isMember}
+                        collaboratorsUtil={collaboratorsUtil}
+                        currentUser={currentUser}
+                        presenter={presenter}
+                        saveCommunity={saveCommunity}
+                        cancelSave={this.cancelSave}
+                        isSelectAppsDlgOpen={this.isSelectAppsDlgOpen}
+                        onCommunitySaved={onCommunitySaved}
+                        handleCloseEditDlg={this.handleCloseEditDialog}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained"
-                            id={build(ids.EDIT_DLG, ids.BUTTONS.CANCEL)}
-                            onClick={this.handleCloseEditDialog}>
-                        {getMessage('cancel')}
+                    <Button
+                        variant="contained"
+                        id={build(ids.EDIT_DLG, ids.BUTTONS.CANCEL)}
+                        onClick={this.handleCloseEditDialog}
+                    >
+                        {getMessage("cancel")}
                     </Button>
-                    {isCommunityAdmin &&
-                    <Button variant="contained"
+                    {isCommunityAdmin && (
+                        <Button
+                            variant="contained"
                             id={build(ids.EDIT_DLG, ids.BUTTONS.OK)}
-                            onClick={() => this.onDialogBtnClicked('saveCommunity')}>
-                        {getMessage('ok')}
-                    </Button>
-                    }
+                            onClick={() =>
+                                this.onDialogBtnClicked("saveCommunity")
+                            }
+                        >
+                            {getMessage("ok")}
+                        </Button>
+                    )}
                 </DialogActions>
             </Dialog>
-        )
+        );
     }
 }
 
 function DialogHeader(props) {
-    const {
-        community,
-        communityName,
-        isCommunityAdmin,
-    } = props;
+    const { community, communityName, isCommunityAdmin } = props;
 
     if (community === null) {
-        return (
-            getMessage('createCommunityTitle')
-        );
+        return getMessage("createCommunityTitle");
     } else if (community && isCommunityAdmin) {
-        return (
-            getMessage('editCommunityTitle', {values: {name: communityName}})
-        );
+        return getMessage("editCommunityTitle", {
+            values: { name: communityName },
+        });
     } else {
-        return (
-            communityName
-        );
+        return communityName;
     }
 }
 

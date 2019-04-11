@@ -1,7 +1,7 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,7 +18,7 @@ import injectSheet from "react-jss";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
-import withI18N, {getMessage} from "../../util/I18NWrapper";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 
 function SendTo(props) {
     let displayText = getMessage("emptyValue");
@@ -29,29 +29,39 @@ function SendTo(props) {
 
     if (infoType) {
         if (drUtil.isTreeInfoType(infoType)) {
-            displayText = <DEHyperlink text={getMessage("treeViewer")}/>;
+            displayText = <DEHyperlink text={getMessage("treeViewer")} />;
             className = null;
             onClick = props.handleSendToClick;
         } else if (drUtil.isGenomeVizInfoType(infoType)) {
-            displayText = <DEHyperlink text={getMessage("coge")}/>;
+            displayText = <DEHyperlink text={getMessage("coge")} />;
             className = null;
             onClick = props.handleSendToClick;
         } else if (drUtil.isEnsemblInfoType(infoType)) {
-            displayText = <DEHyperlink text={getMessage("genomeBrowser")}/>;
+            displayText = <DEHyperlink text={getMessage("genomeBrowser")} />;
             className = null;
             onClick = props.handleSendToClick;
         }
     }
-    return (<td id={props.id} className={className} onClick={onClick}>{displayText}</td>);
+    return (
+        <td id={props.id} className={className} onClick={onClick}>
+            {displayText}
+        </td>
+    );
 }
 
 function Md5(props) {
     if (props.md5) {
-        return (<td id={props.id} onClick={props.onClick}>
-            <DEHyperlink text={getMessage("view")}/>
-        </td>);
+        return (
+            <td id={props.id} onClick={props.onClick}>
+                <DEHyperlink text={getMessage("view")} />
+            </td>
+        );
     } else {
-        return <td id={props.id} className={props.classes.detailsValue}>{getMessage("emptyValue")}</td>;
+        return (
+            <td id={props.id} className={props.classes.detailsValue}>
+                {getMessage("emptyValue")}
+            </td>
+        );
     }
 }
 
@@ -59,11 +69,19 @@ function ManageSharing(props) {
     if (props.isOwner) {
         return (
             <td id={props.id} onClick={props.onClick}>
-                {(props.shareCount ? <DEHyperlink text={props.shareCount}/> :
-                    <DEHyperlink text={getMessage("noSharing")}/>)}
-            </td>);
+                {props.shareCount ? (
+                    <DEHyperlink text={props.shareCount} />
+                ) : (
+                    <DEHyperlink text={getMessage("noSharing")} />
+                )}
+            </td>
+        );
     } else {
-        return <td id={props.id} className={props.classes.detailsValue}>{getMessage("emptyValue")}</td>;
+        return (
+            <td id={props.id} className={props.classes.detailsValue}>
+                {getMessage("emptyValue")}
+            </td>
+        );
     }
 }
 
@@ -72,9 +90,9 @@ class BasicDetails extends Component {
         super(props);
         this.state = {
             md5open: false,
-            infoType: (props.data) ? props.data.infoType : "",
+            infoType: props.data ? props.data.infoType : "",
             dataSource: [],
-            tags: {dataId: "", values: []},
+            tags: { dataId: "", values: [] },
             searchText: null,
             loading: false,
         };
@@ -94,18 +112,20 @@ class BasicDetails extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({infoType: (nextProps.data) ? nextProps.data.infoType : ""});
+        this.setState({
+            infoType: nextProps.data ? nextProps.data.infoType : "",
+        });
         if (nextProps.data) {
             this.fetchTags(nextProps.data.id);
         }
     }
 
     handleMd5Open() {
-        this.setState({md5open: true});
+        this.setState({ md5open: true });
     }
 
-    handleMd5Close(){
-        this.setState({md5open: false});
+    handleMd5Close() {
+        this.setState({ md5open: false });
     }
 
     handleShareClick() {
@@ -113,7 +133,7 @@ class BasicDetails extends Component {
     }
 
     handleSendToClick() {
-        this.props.presenter.onSendToClicked(this.state.infoType)
+        this.props.presenter.onSendToClicked(this.state.infoType);
     }
 
     onInfoTypeSelect(infoType) {
@@ -122,68 +142,118 @@ class BasicDetails extends Component {
 
     fetchTags(id) {
         if (id && id !== this.state.tags.dataId && !this.state.loading) {
-            this.setState({loading: true});
-            this.props.presenter.fetchTagsForResource(id, (tagList) => {
-                this.setState({loading: false, tags: {dataId: id, values: tagList.tags}});
-            }, (httpStatusCode, errMsg) => {
-                this.setState({loading: false});
-            });
+            this.setState({ loading: true });
+            this.props.presenter.fetchTagsForResource(
+                id,
+                (tagList) => {
+                    this.setState({
+                        loading: false,
+                        tags: { dataId: id, values: tagList.tags },
+                    });
+                },
+                (httpStatusCode, errMsg) => {
+                    this.setState({ loading: false });
+                }
+            );
         }
     }
 
     handleTagSearch(value) {
         if (value && value.length >= 3) {
-            this.props.presenter.searchTags(value, (tagList) => {
-                if (tagList && tagList.tags) {
-                    this.setState({dataSource: tagList.tags});
+            this.props.presenter.searchTags(
+                value,
+                (tagList) => {
+                    if (tagList && tagList.tags) {
+                        this.setState({ dataSource: tagList.tags });
+                    }
+                },
+                (httpStatusCode, errMsg) => {
+                    this.setState({ loading: false });
                 }
-            }, (httpStatusCode, errMsg) => {
-                this.setState({loading: false});
-            });
-            this.setState({searchText: value});
+            );
+            this.setState({ searchText: value });
         }
     }
 
     handleTagSelect(chosenTag) {
         if (!this.state.loading && chosenTag) {
-            this.setState({loading: true});
+            this.setState({ loading: true });
             if (chosenTag.id !== chosenTag.value) {
-                this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tagList) => {
-                    this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
-                }, (httpStatusCode, errMsg) => {
-                    this.setState({loading: false});
-                });
-            } else {  //component has set a dummy id that equals the value
-                this.props.presenter.createTag(chosenTag.value, this.props.data.id, (tagList) => {
-                    this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
-                }, (httpStatusCode, errMsg) => {
-                    this.setState({loading: false});
-                });
+                this.props.presenter.attachTag(
+                    chosenTag.id,
+                    chosenTag.value,
+                    this.props.data.id,
+                    (tagList) => {
+                        this.setState({
+                            tags: {
+                                dataId: this.props.data.id,
+                                values: tagList.tags,
+                            },
+                            loading: false,
+                        });
+                    },
+                    (httpStatusCode, errMsg) => {
+                        this.setState({ loading: false });
+                    }
+                );
+            } else {
+                //component has set a dummy id that equals the value
+                this.props.presenter.createTag(
+                    chosenTag.value,
+                    this.props.data.id,
+                    (tagList) => {
+                        this.setState({
+                            tags: {
+                                dataId: this.props.data.id,
+                                values: tagList.tags,
+                            },
+                            loading: false,
+                        });
+                    },
+                    (httpStatusCode, errMsg) => {
+                        this.setState({ loading: false });
+                    }
+                );
             }
         }
     }
 
     doRemove(index) {
         if (!this.state.loading) {
-            this.setState({loading: true});
-            this.props.presenter.detachTag(this.state.tags.values[index].id, this.state.tags.values[index].value, this.props.data.id, (tagList) => {
-                this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
-            }, (httpStatusCode, errMsg) => {
-                this.setState({loading: false});
-            });
+            this.setState({ loading: true });
+            this.props.presenter.detachTag(
+                this.state.tags.values[index].id,
+                this.state.tags.values[index].value,
+                this.props.data.id,
+                (tagList) => {
+                    this.setState({
+                        tags: {
+                            dataId: this.props.data.id,
+                            values: tagList.tags,
+                        },
+                        loading: false,
+                    });
+                },
+                (httpStatusCode, errMsg) => {
+                    this.setState({ loading: false });
+                }
+            );
         }
     }
 
     handleTagClick(tag) {
         let index = this.findTag(tag);
         if (index !== -1) {
-            this.props.presenter.onTagSelection(this.state.tags.values[index].id, this.state.tags.values[index].value);
+            this.props.presenter.onTagSelection(
+                this.state.tags.values[index].id,
+                this.state.tags.values[index].value
+            );
         }
     }
 
     findTag(tag) {
         if (this.state.tags && tag) {
-            return this.state.tags.values.indexOf(tag)
+            return this.state.tags.values.indexOf(tag);
         }
         return -1;
     }
@@ -197,12 +267,10 @@ class BasicDetails extends Component {
 
     render() {
         if (!this.props.data) {
-            return (
-                <div>{getMessage("noDetails")}</div>
-            )
+            return <div>{getMessage("noDetails")}</div>;
         }
         const classes = this.props.classes;
-        
+
         let drUtil = this.props.drUtil,
             baseID = this.props.baseID,
             diskResource = this.props.data,
@@ -215,27 +283,45 @@ class BasicDetails extends Component {
         let details = null;
 
         if (isFolder) {
-            details = <tr>
-                <td className={classes.detailsLabel}> {getMessage("filesFolders")}</td>
-                <td> {diskResource["file-count"] ? diskResource["file-count"] : 0}
-                    / {diskResource["dir-count"] ? diskResource["dir-count"] : 0}</td>
-            </tr>;
+            details = (
+                <tr>
+                    <td className={classes.detailsLabel}>
+                        {" "}
+                        {getMessage("filesFolders")}
+                    </td>
+                    <td>
+                        {" "}
+                        {diskResource["file-count"]
+                            ? diskResource["file-count"]
+                            : 0}
+                        /{" "}
+                        {diskResource["dir-count"]
+                            ? diskResource["dir-count"]
+                            : 0}
+                    </td>
+                </tr>
+            );
         } else {
             details = [
                 <tr key="md5">
                     <td className={classes.detailsLabel}>
-                    {getMessage("md5CheckSum")}
-                </td>
-                    <Md5 id={build(baseID, ids.DETAILS_MD5)}
-                         md5={diskResource.md5}
-                         onClick={this.handleMd5Open}
-                         classes={classes}/>
+                        {getMessage("md5CheckSum")}
+                    </td>
+                    <Md5
+                        id={build(baseID, ids.DETAILS_MD5)}
+                        md5={diskResource.md5}
+                        onClick={this.handleMd5Open}
+                        classes={classes}
+                    />
                 </tr>,
                 <tr key="size">
                     <td className={classes.detailsLabel}>
                         {getMessage("size")}
                     </td>
-                    <td id={build(baseID, ids.DETAILS_SIZE)} className={classes.detailsValue}>
+                    <td
+                        id={build(baseID, ids.DETAILS_SIZE)}
+                        className={classes.detailsValue}
+                    >
                         {drUtil.formatFileSize(diskResource["file-size"])}
                     </td>
                 </tr>,
@@ -243,7 +329,10 @@ class BasicDetails extends Component {
                     <td className={classes.detailsLabel}>
                         {getMessage("type")}
                     </td>
-                    <td id={build(baseID, ids.DETAILS_TYPE)} className={classes.detailsValue}>
+                    <td
+                        id={build(baseID, ids.DETAILS_TYPE)}
+                        className={classes.detailsValue}
+                    >
                         {diskResource["content-type"]}
                     </td>
                 </tr>,
@@ -252,55 +341,80 @@ class BasicDetails extends Component {
                         {getMessage("infoType")}
                     </td>
                     <td className={classes.detailsValue}>
-                        <InfoTypeSelectionList id={build(baseID, ids.DETAILS_INFO_TYPE)}
-                                               infoTypes={infoTypes}
-                                               selectedValue={infoType ? infoType : null}
-                                               view={this.props.view}
-                                               onInfoTypeSelect={this.onInfoTypeSelect}/>
+                        <InfoTypeSelectionList
+                            id={build(baseID, ids.DETAILS_INFO_TYPE)}
+                            infoTypes={infoTypes}
+                            selectedValue={infoType ? infoType : null}
+                            view={this.props.view}
+                            onInfoTypeSelect={this.onInfoTypeSelect}
+                        />
                     </td>
                 </tr>,
                 <tr key="sendTo">
                     <td className={classes.detailsLabel}>
                         {getMessage("sendTo")}
                     </td>
-                    <SendTo id={build(baseID, ids.DETAILS_SEND_TO)}
-                            infoType={infoType}
-                            handleSendToClick={this.handleSendToClick}
-                            drUtil={drUtil}
-                            classes={classes}/>
+                    <SendTo
+                        id={build(baseID, ids.DETAILS_SEND_TO)}
+                        infoType={infoType}
+                        handleSendToClick={this.handleSendToClick}
+                        drUtil={drUtil}
+                        classes={classes}
+                    />
                 </tr>,
             ];
         }
         return (
-                <div>
-                    {this.state.loading &&
-                    <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                    }
-                    <table>
-                        <tbody>
+            <div>
+                {this.state.loading && (
+                    <CircularProgress
+                        size={30}
+                        className={classes.loadingStyle}
+                        thickness={7}
+                    />
+                )}
+                <table>
+                    <tbody>
                         <tr>
                             <td className={classes.detailsLabel}>
                                 {getMessage("lastModified")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_LAST_MODIFIED)} className={classes.detailsValue}>
-                                {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") :
-                                    getMessage("emptyValue")}
+                            <td
+                                id={build(baseID, ids.DETAILS_LAST_MODIFIED)}
+                                className={classes.detailsValue}
+                            >
+                                {diskResource["date-modified"]
+                                    ? moment(
+                                          Number(diskResource["date-modified"]),
+                                          "x"
+                                      ).format("YYYY-MM-DD")
+                                    : getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
                             <td className={classes.detailsLabel}>
                                 {getMessage("createdDate")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_DATE_SUBMITTED)} className={classes.detailsValue}>
-                                {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") :
-                                    getMessage("emptyValue")}
+                            <td
+                                id={build(baseID, ids.DETAILS_DATE_SUBMITTED)}
+                                className={classes.detailsValue}
+                            >
+                                {diskResource["date-modified"]
+                                    ? moment(
+                                          Number(diskResource["date-created"]),
+                                          "x"
+                                      ).format("YYYY-MM-DD")
+                                    : getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
                             <td className={classes.detailsLabel}>
                                 {getMessage("permissions")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_PERMISSIONS)} className={classes.detailsValue}>
+                            <td
+                                id={build(baseID, ids.DETAILS_PERMISSIONS)}
+                                className={classes.detailsValue}
+                            >
                                 {diskResource.permission}
                             </td>
                         </tr>
@@ -308,40 +422,40 @@ class BasicDetails extends Component {
                             <td className={classes.detailsLabel}>
                                 {getMessage("share")}
                             </td>
-                            <ManageSharing id={build(baseID, ids.DETAILS_SHARE)}
-                                           isOwner={isOwner}
-                                           shareCount={diskResource["share-count"]}
-                                           onClick={this.handleShareClick}
-                                           classes={classes}/>
+                            <ManageSharing
+                                id={build(baseID, ids.DETAILS_SHARE)}
+                                isOwner={isOwner}
+                                shareCount={diskResource["share-count"]}
+                                onClick={this.handleShareClick}
+                                classes={classes}
+                            />
                         </tr>
                         {details}
-                        </tbody>
-                    </table>
-                    <TagPanel
-                        baseID={baseID}
-                        handleTagSearch={this.handleTagSearch}
-                        handleRemoveClick={this.handleRemoveClick}
-                        tags={this.state.tags.values}
-                        dataSource={this.state.dataSource}
-                        onTagClick={this.handleTagClick}
-                        handleTagSelect={this.handleTagSelect}
-                    />
-                    <Dialog
-                        open={this.state.md5open}
-                        onClose={this.handleMd5Close}>
-                        <DialogTitle>{getMessage("md5CheckSum")}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                {diskResource.md5}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.handleMd5Close} autoFocus>
-                                {getMessage("okLabel")}
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </div>
+                    </tbody>
+                </table>
+                <TagPanel
+                    baseID={baseID}
+                    handleTagSearch={this.handleTagSearch}
+                    handleRemoveClick={this.handleRemoveClick}
+                    tags={this.state.tags.values}
+                    dataSource={this.state.dataSource}
+                    onTagClick={this.handleTagClick}
+                    handleTagSelect={this.handleTagSelect}
+                />
+                <Dialog open={this.state.md5open} onClose={this.handleMd5Close}>
+                    <DialogTitle>{getMessage("md5CheckSum")}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {diskResource.md5}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleMd5Close} autoFocus>
+                            {getMessage("okLabel")}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 }

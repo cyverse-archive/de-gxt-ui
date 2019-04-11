@@ -25,15 +25,14 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import injectSheet from "react-jss";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 
-
 const columnData = [
-    {name: "appName", numeric: false},
-    {name: "rating", numeric: true},
-    {name: "total", numeric: true},
-    {name: "completed", numeric: true},
-    {name: "failed", numeric: true},
-    {name: "lastCompleted", numeric: true},
-    {name: "lastUsed", numeric: true},
+    { name: "appName", numeric: false },
+    { name: "rating", numeric: true },
+    { name: "total", numeric: true },
+    { name: "completed", numeric: true },
+    { name: "failed", numeric: true },
+    { name: "lastCompleted", numeric: true },
+    { name: "lastUsed", numeric: true },
 ];
 
 class AppStats extends Component {
@@ -44,7 +43,7 @@ class AppStats extends Component {
             data: [],
             loading: true,
             searchText: null,
-            startDate: new Date(today.setMonth(today.getMonth() - 3)),  // set default date range for 90 days!
+            startDate: new Date(today.setMonth(today.getMonth() - 3)), // set default date range for 90 days!
             endDate: new Date(),
             filterDisabled: true,
             page: 0,
@@ -60,40 +59,39 @@ class AppStats extends Component {
     }
 
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     };
 
-    handleChangeRowsPerPage = event => {
-        this.setState({rowsPerPage: event.target.value});
+    handleChangeRowsPerPage = (event) => {
+        this.setState({ rowsPerPage: event.target.value });
     };
-
 
     handleSearch(event) {
         if (event.target.value && event.target.value.length >= 3) {
-            this.setState({searchText: event.target.value});
+            this.setState({ searchText: event.target.value });
         } else {
-            this.setState({searchText: ""});
+            this.setState({ searchText: "" });
         }
     }
 
     onStartDateChange(event) {
         if (Date.parse(event.target.value)) {
-            this.setState({startDate: event.target.value});
+            this.setState({ startDate: event.target.value });
         } else {
-            this.setState({startDate: null});
+            this.setState({ startDate: null });
         }
     }
 
     onEndDateChange(event) {
         if (Date.parse(event.target.value)) {
-            this.setState({endDate: event.target.value});
+            this.setState({ endDate: event.target.value });
         } else {
-            this.setState({endDate: null});
+            this.setState({ endDate: null });
         }
     }
 
     componentDidMount() {
-       this.fetchAppStats();
+        this.fetchAppStats();
     }
 
     fetchAppStats() {
@@ -104,20 +102,27 @@ class AppStats extends Component {
         const { searchText, order, orderBy } = this.state;
         let { startDate, endDate } = this.state;
 
-        startDate = startDate ? moment(startDate).format(constants.DATE_FORMAT) : "";
+        startDate = startDate
+            ? moment(startDate).format(constants.DATE_FORMAT)
+            : "";
         endDate = endDate ? moment(endDate).format(constants.DATE_FORMAT) : "";
 
-        this.props.presenter.searchApps(searchText, startDate, endDate, (appList) => {
-            this.setState({
-                loading: false,
-                data: this.sortRows(order, orderBy, appList.apps),
-            })
-            }, (errorCode, errorMessage) => {
+        this.props.presenter.searchApps(
+            searchText,
+            startDate,
+            endDate,
+            (appList) => {
+                this.setState({
+                    loading: false,
+                    data: this.sortRows(order, orderBy, appList.apps),
+                });
+            },
+            (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
-            },
-        )
+            }
+        );
     }
 
     applyFilter() {
@@ -146,16 +151,14 @@ class AppStats extends Component {
             let aVal = this.extractRowValue(orderBy, a);
             let bVal = this.extractRowValue(orderBy, b);
 
-            return (
-                order === "desc"
-                    ? comparator(bVal, aVal)
-                    : comparator(aVal, bVal)
-            );
+            return order === "desc"
+                ? comparator(bVal, aVal)
+                : comparator(aVal, bVal);
         });
     };
 
     extractRowValue = (colName, row) => {
-        const { name, rating, job_stats} = row;
+        const { name, rating, job_stats } = row;
         const {
             job_count,
             job_count_completed,
@@ -164,7 +167,7 @@ class AppStats extends Component {
             last_used,
         } = job_stats;
 
-        const numVal = (n) => n ? n : 0;
+        const numVal = (n) => (n ? n : 0);
 
         switch (colName) {
             case "rating":
@@ -184,7 +187,7 @@ class AppStats extends Component {
         }
     };
 
-    createSortHandler = property => event => {
+    createSortHandler = (property) => (event) => {
         this.handleRequestSort(event, property);
     };
 
@@ -193,101 +196,170 @@ class AppStats extends Component {
         const { data, rowsPerPage, page, order, orderBy } = this.state;
 
         return (
-                <div className={classes.statContainer}>
-                    {this.state.loading &&
-                        <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                    }
+            <div className={classes.statContainer}>
+                {this.state.loading && (
+                    <CircularProgress
+                        size={30}
+                        className={classes.loadingStyle}
+                        thickness={7}
+                    />
+                )}
 
-                    <Toolbar>
-                        <ToolbarGroup>
-                            <TextField className={classes.statSearchTextField}
-                                       label={getMessage("searchApps")}
-                                       onChange={this.handleSearch}/>
-                            <ToolbarSeparator />
-                            <TextField label={getMessage("startDate")} type="date"
-                                       defaultValue={moment(this.state.startDate).format(constants.DATE_FORMAT)}
-                                       InputLabelProps={{
-                                           shrink: true,
-                                       }} onChange={this.onStartDateChange}/>
-                            <TextField label={getMessage("endDate")} type="date"
-                                       defaultValue={moment(this.state.endDate).format(constants.DATE_FORMAT)}
-                                       InputLabelProps={{
-                                           shrink: true,
-                                       }} onChange={this.onEndDateChange}/>
-                            <ToolbarSeparator />
-                            <Button variant="raised" onClick={this.applyFilter}
-                                    className={classes.statFilterButton}>{getMessage("applyFilter")}</Button>
+                <Toolbar>
+                    <ToolbarGroup>
+                        <TextField
+                            className={classes.statSearchTextField}
+                            label={getMessage("searchApps")}
+                            onChange={this.handleSearch}
+                        />
+                        <ToolbarSeparator />
+                        <TextField
+                            label={getMessage("startDate")}
+                            type="date"
+                            defaultValue={moment(this.state.startDate).format(
+                                constants.DATE_FORMAT
+                            )}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.onStartDateChange}
+                        />
+                        <TextField
+                            label={getMessage("endDate")}
+                            type="date"
+                            defaultValue={moment(this.state.endDate).format(
+                                constants.DATE_FORMAT
+                            )}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.onEndDateChange}
+                        />
+                        <ToolbarSeparator />
+                        <Button
+                            variant="raised"
+                            onClick={this.applyFilter}
+                            className={classes.statFilterButton}
+                        >
+                            {getMessage("applyFilter")}
+                        </Button>
+                    </ToolbarGroup>
+                </Toolbar>
 
-                        </ToolbarGroup>
-                    </Toolbar>
-
-                    <div className={classes.statTable}>
-                        <Table>
-                            <TableHead>
-                                <TableRow hover>
-                                    {columnData.map(column => (
-                                        <TableCell className={classes.statTableHead}
-                                                   key={column.name}
-                                                   numeric={column.numeric}
-                                                   sortDirection={orderBy === column.name ? order : false}
+                <div className={classes.statTable}>
+                    <Table>
+                        <TableHead>
+                            <TableRow hover>
+                                {columnData.map((column) => (
+                                    <TableCell
+                                        className={classes.statTableHead}
+                                        key={column.name}
+                                        numeric={column.numeric}
+                                        sortDirection={
+                                            orderBy === column.name
+                                                ? order
+                                                : false
+                                        }
+                                    >
+                                        <Tooltip
+                                            title={getMessage("sort")}
+                                            placement="bottom-start"
+                                            enterDelay={300}
                                         >
-                                            <Tooltip
-                                                title={getMessage("sort")}
-                                                placement="bottom-start"
-                                                enterDelay={300}
+                                            <TableSortLabel
+                                                active={orderBy === column.name}
+                                                direction={order}
+                                                onClick={this.createSortHandler(
+                                                    column.name
+                                                )}
                                             >
-                                                <TableSortLabel
-                                                    active={orderBy === column.name}
-                                                    direction={order}
-                                                    onClick={this.createSortHandler(column.name)}
-                                                >
-                                                    {getMessage(column.name)}
-                                                </TableSortLabel>
-                                            </Tooltip>
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+                                                {getMessage(column.name)}
+                                            </TableSortLabel>
+                                        </Tooltip>
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data
+                                .slice(
+                                    page * rowsPerPage,
+                                    page * rowsPerPage + rowsPerPage
+                                )
+                                .map((n) => {
                                     return (
                                         <TableRow hover key={n.id}>
                                             <TableCell>{n.name}</TableCell>
-                                            <TableCell
-                                                numeric>{(n.rating.average) ? n.rating.average : 0}</TableCell>
-                                            <TableCell
-                                                numeric>{(n.job_stats.job_count) ? n.job_stats.job_count : 0 }</TableCell>
-                                            <TableCell
-                                                numeric>{(n.job_stats.job_count_completed) ? n.job_stats.job_count_completed : 0}</TableCell>
-                                            <TableCell
-                                                numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
-                                            <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(
-                                                constants.DATE_FORMAT) :
-                                                getMessage("emptyValue")} </TableCell>
-                                            <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(
-                                                constants.DATE_FORMAT) :
-                                                getMessage("emptyValue")}</TableCell>
+                                            <TableCell numeric>
+                                                {n.rating.average
+                                                    ? n.rating.average
+                                                    : 0}
+                                            </TableCell>
+                                            <TableCell numeric>
+                                                {n.job_stats.job_count
+                                                    ? n.job_stats.job_count
+                                                    : 0}
+                                            </TableCell>
+                                            <TableCell numeric>
+                                                {n.job_stats.job_count_completed
+                                                    ? n.job_stats
+                                                          .job_count_completed
+                                                    : 0}
+                                            </TableCell>
+                                            <TableCell numeric>
+                                                {n.job_stats.job_count_failed
+                                                    ? n.job_stats
+                                                          .job_count_failed
+                                                    : 0}
+                                            </TableCell>
+                                            <TableCell>
+                                                {n.job_stats.job_last_completed
+                                                    ? moment(
+                                                          Number(
+                                                              n.job_stats
+                                                                  .job_last_completed
+                                                          ),
+                                                          "x"
+                                                      ).format(
+                                                          constants.DATE_FORMAT
+                                                      )
+                                                    : getMessage(
+                                                          "emptyValue"
+                                                      )}{" "}
+                                            </TableCell>
+                                            <TableCell>
+                                                {n.job_stats.last_used
+                                                    ? moment(
+                                                          Number(
+                                                              n.job_stats
+                                                                  .last_used
+                                                          ),
+                                                          "x"
+                                                      ).format(
+                                                          constants.DATE_FORMAT
+                                                      )
+                                                    : getMessage("emptyValue")}
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
-                            </TableBody>
-                        </Table>
-                    </div>
-
-                    <TablePagination
-                        component="div"
-                        colSpan={3}
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={this.handleChangePage}
-                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                        rowsPerPageOptions={[100, 500, 1000]}
-                    />
+                        </TableBody>
+                    </Table>
                 </div>
-        )
 
+                <TablePagination
+                    component="div"
+                    colSpan={3}
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                    rowsPerPageOptions={[100, 500, 1000]}
+                />
+            </div>
+        );
     }
 }
 AppStats.propTypes = {

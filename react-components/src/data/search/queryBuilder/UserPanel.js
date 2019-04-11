@@ -13,29 +13,28 @@ import { withStyles } from "@material-ui/core/styles";
  * with either the collaborator's institution or group description
  */
 function UserPanel(props) {
-    const {
-        users,
-        onDelete,
-        classes,
-        collaboratorsUtil,
-        id
-    } = props;
-    let chips = users && users.map((user, index) =>
-        <Tooltip key={user.id}
-                 title={user.institution ? user.institution : user.description}>
-            <Chip id={user.id}
-                  className={classes.userChip}
-                  onDelete={() => onDelete(index)}
-                  label={collaboratorsUtil.getSubjectDisplayName(user)}/>
-        </Tooltip>
-    );
+    const { users, onDelete, classes, collaboratorsUtil, id } = props;
+    let chips =
+        users &&
+        users.map((user, index) => (
+            <Tooltip
+                key={user.id}
+                title={user.institution ? user.institution : user.description}
+            >
+                <Chip
+                    id={user.id}
+                    className={classes.userChip}
+                    onDelete={() => onDelete(index)}
+                    label={collaboratorsUtil.getSubjectDisplayName(user)}
+                />
+            </Tooltip>
+        ));
 
     return (
-        <Paper className={classes.permissionUsers}
-               id={id}>
+        <Paper className={classes.permissionUsers} id={id}>
             {chips}
         </Paper>
-    )
+    );
 }
 
 UserPanel.propTypes = {
@@ -45,8 +44,8 @@ UserPanel.propTypes = {
     collaboratorsUtil: PropTypes.shape({
         isTeam: PropTypes.func,
         isCollaboratorList: PropTypes.func,
-        getSubjectDisplayName: PropTypes.func
-    })
+        getSubjectDisplayName: PropTypes.func,
+    }),
 };
 
 export default withStyles(styles)(UserPanel);

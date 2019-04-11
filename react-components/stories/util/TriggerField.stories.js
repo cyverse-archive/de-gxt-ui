@@ -1,13 +1,15 @@
-import TriggerField from '../../src/util/TriggerField';
+import TriggerField from "../../src/util/TriggerField";
 
-import Button from '@material-ui/core/Button';
-import React, { Component } from 'react';
+import Button from "@material-ui/core/Button";
+import React, { Component } from "react";
 
 class TriggerFieldTest extends Component {
     render() {
-        const handleSearch = this.props.logger || ((selection) => {
-            console.log(selection);
-        });
+        const handleSearch =
+            this.props.logger ||
+            ((selection) => {
+                console.log(selection);
+            });
 
         return (
             <div>
@@ -16,7 +18,7 @@ class TriggerFieldTest extends Component {
                     <Button>Test Success!</Button>
                 </TriggerField>
             </div>
-        )
+        );
     }
 }
 

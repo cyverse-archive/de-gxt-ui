@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import exStyles from "../../style";
 import ids from "../../ids";
@@ -6,11 +6,10 @@ import intlData from "../../messages";
 import withI18N, { getMessage, formatMessage } from "../../../util/I18NWrapper";
 import ArgumentType from "../../../../src/apps/ArgumentType";
 
-
 import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -22,30 +21,32 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { injectIntl } from "react-intl";
 
-
 function ParameterValue(props) {
     const {
         parameter,
         parameter: {
             info_type,
             param_type,
-            param_value: {value},
+            param_value: { value },
         },
         classes,
         diskResourceUtil,
         onValueClick,
     } = props;
-    let valid_info_type = (!(info_type === "ReferenceGenome")
-        && !(info_type === "ReferenceSequence")
-        && !(info_type === "ReferenceAnnotation"));
+    let valid_info_type =
+        !(info_type === "ReferenceGenome") &&
+        !(info_type === "ReferenceSequence") &&
+        !(info_type === "ReferenceAnnotation");
     let displayValue = value ? (value.display ? value.display : value) : "";
 
-    if ((ArgumentType.Input === (param_type)
-        || ArgumentType.FileInput === (param_type)
-        || ArgumentType.FolderInput === (param_type)
-        || ArgumentType.MultiFileSelector === (param_type) ||
-        ArgumentType.FileFolderInput === (param_type))
-        && valid_info_type) {
+    if (
+        (ArgumentType.Input === param_type ||
+            ArgumentType.FileInput === param_type ||
+            ArgumentType.FolderInput === param_type ||
+            ArgumentType.MultiFileSelector === param_type ||
+            ArgumentType.FileFolderInput === param_type) &&
+        valid_info_type
+    ) {
         return (
             <span
                 className={classes.inputType}
@@ -53,11 +54,11 @@ function ParameterValue(props) {
                 onClick={() => onValueClick(parameter)}
             >
                 {diskResourceUtil.parseNameFromPath(displayValue)}
-            </span>);
+            </span>
+        );
     } else {
-        return (<span className={classes.otherType}>{displayValue}</span>);
+        return <span className={classes.otherType}>{displayValue}</span>;
     }
-
 }
 
 const columnData = [
@@ -85,23 +86,34 @@ class AnalysisParametersDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            order: 'desc',
-            orderBy: 'Name',
-        }
+            order: "desc",
+            orderBy: "Name",
+        };
     }
 
     render() {
-        const {classes, analysisName, parameters, onViewParamDialogClose, onSaveClick, dialogOpen, intl} = this.props;
-        const {order, orderBy} = this.state;
+        const {
+            classes,
+            analysisName,
+            parameters,
+            onViewParamDialogClose,
+            onSaveClick,
+            dialogOpen,
+            intl,
+        } = this.props;
+        const { order, orderBy } = this.state;
         return (
             <Dialog open={dialogOpen}>
                 <DEDialogHeader
-                    heading={formatMessage(intl, "analysisParamTitle", {name: analysisName})}
-                    onClose={onViewParamDialogClose}/>
+                    heading={formatMessage(intl, "analysisParamTitle", {
+                        name: analysisName,
+                    })}
+                    onClose={onViewParamDialogClose}
+                />
                 <DialogContent>
                     <Table>
                         <TableBody>
-                            {parameters.map(n => {
+                            {parameters.map((n) => {
                                 return (
                                     <TableRow key={n.param_id}>
                                         <TableCell>{n.param_name}</TableCell>
@@ -110,17 +122,23 @@ class AnalysisParametersDialog extends Component {
                                             <ParameterValue
                                                 parameter={n}
                                                 classes={classes}
-                                                diskResourceUtil={this.props.diskResourceUtil}
-                                                onValueClick={this.props.onValueClick}/>
+                                                diskResourceUtil={
+                                                    this.props.diskResourceUtil
+                                                }
+                                                onValueClick={
+                                                    this.props.onValueClick
+                                                }
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
-                        <EnhancedTableHead columnData={columnData}
-                                           baseId="analysis"
-                                           order={order}
-                                           orderBy={orderBy}
+                        <EnhancedTableHead
+                            columnData={columnData}
+                            baseId="analysis"
+                            order={order}
+                            orderBy={orderBy}
                         />
                     </Table>
                 </DialogContent>
@@ -129,7 +147,8 @@ class AnalysisParametersDialog extends Component {
                         onClick={() => onSaveClick(parameters)}
                         variant="contained"
                         color="secondary"
-                        style={{textTransform: "none"}}>
+                        style={{ textTransform: "none" }}
+                    >
                         {getMessage("saveToFile")}
                     </Button>
 
@@ -137,7 +156,8 @@ class AnalysisParametersDialog extends Component {
                         onClick={onViewParamDialogClose}
                         variant="contained"
                         color="primary"
-                        style={{textTransform: "none"}}>
+                        style={{ textTransform: "none" }}
+                    >
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>
@@ -146,4 +166,6 @@ class AnalysisParametersDialog extends Component {
     }
 }
 
-export default withStyles(exStyles)(withI18N(injectIntl(AnalysisParametersDialog), intlData));
+export default withStyles(exStyles)(
+    withI18N(injectIntl(AnalysisParametersDialog), intlData)
+);

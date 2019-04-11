@@ -1,15 +1,15 @@
 import build from "../../util/DebugIDUtil";
 import Condition from "./queryBuilder/Condition";
 import ids from "./ids";
-import messages from './messages';
+import messages from "./messages";
 import SaveSearchButton from "./SaveSearchButton";
 import styles from "./styles";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -35,33 +35,35 @@ class QueryBuilder extends Component {
     }
 
     getOriginalName() {
-        let {initialValues} = this.props;
+        let { initialValues } = this.props;
         return initialValues ? initialValues.label : null;
     }
 
     render() {
-        const {
-            handleSubmit,
-            classes,
-            parentId
-        } = this.props;
+        const { handleSubmit, classes, parentId } = this.props;
 
         return (
             <div className={classes.form}>
-                <Condition root={true}
-                           parentId={parentId}
-                           helperProps={this.props}/>
+                <Condition
+                    root={true}
+                    parentId={parentId}
+                    helperProps={this.props}
+                />
                 <div className={classes.buttonBar}>
-                    <Field name='label'
-                           originalName={this.getOriginalName()}
-                           parentId={parentId}
-                           handleSave={handleSubmit(this.handleSaveSearch)}
-                           component={renderSaveSearchBtn}/>
-                    <Button variant="raised"
-                            id={build(parentId, ids.searchBtn)}
-                            className={classes.searchButton}
-                            onClick={handleSubmit(this.handleSubmitForm)}>
-                        {getMessage('searchBtn')}
+                    <Field
+                        name="label"
+                        originalName={this.getOriginalName()}
+                        parentId={parentId}
+                        handleSave={handleSubmit(this.handleSaveSearch)}
+                        component={renderSaveSearchBtn}
+                    />
+                    <Button
+                        variant="raised"
+                        id={build(parentId, ids.searchBtn)}
+                        className={classes.searchButton}
+                        onClick={handleSubmit(this.handleSubmitForm)}
+                    >
+                        {getMessage("searchBtn")}
                     </Button>
                 </div>
             </div>
@@ -82,28 +84,18 @@ QueryBuilder.propTypes = {
     collaboratorsUtil: PropTypes.shape({
         isTeam: PropTypes.func,
         isCollaboratorList: PropTypes.func,
-        getSubjectDisplayName: PropTypes.func
-    })
+        getSubjectDisplayName: PropTypes.func,
+    }),
 };
 
 function renderSaveSearchBtn(props) {
-    const {
-        input,
-        disabled,
-        ...custom
-    } = props;
-    return (
-        <SaveSearchButton disabled={disabled}
-                          {...input}
-                          {...custom}
-        />
-    )
+    const { input, disabled, ...custom } = props;
+    return <SaveSearchButton disabled={disabled} {...input} {...custom} />;
 }
 
 export default withStoreProvider(
-    reduxForm(
-        {
-            form: 'dataQueryBuilder',
-            enableReinitialize: true
-        }
-    )(withStyles(styles)(withI18N(QueryBuilder, messages))));
+    reduxForm({
+        form: "dataQueryBuilder",
+        enableReinitialize: true,
+    })(withStyles(styles)(withI18N(QueryBuilder, messages)))
+);

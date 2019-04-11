@@ -48,53 +48,69 @@ const columnData = [
     },
 ];
 
-
 class RequestHistoryDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            order: 'desc',
-            orderBy: 'Date',
+            order: "desc",
+            orderBy: "Date",
             dialogOpen: props.dialogOpen,
         };
     }
 
     render() {
-        const {
-            history,
-            category,
-            name
-        } = this.props;
-        const helpMap = category === notificationCategory.tool_request ? toolStatusHelpMapping : permIdStatusHelpMapping;
+        const { history, category, name } = this.props;
+        const helpMap =
+            category === notificationCategory.tool_request
+                ? toolStatusHelpMapping
+                : permIdStatusHelpMapping;
         const baseId = ids.REQUEST_HISTORY_DLG;
         return (
-            <Dialog id={baseId}
-                    open={this.state.dialogOpen}>
-                <DialogTitle style={{backgroundColor: Color.blue}}>
-                    <Typography
-                        style={{color: Color.white}}> {name}</Typography>
+            <Dialog id={baseId} open={this.state.dialogOpen}>
+                <DialogTitle style={{ backgroundColor: Color.blue }}>
+                    <Typography style={{ color: Color.white }}>
+                        {" "}
+                        {name}
+                    </Typography>
                 </DialogTitle>
                 <DialogContent>
                     <Table>
                         <TableBody>
-                            {history.map(n => {
+                            {history.map((n) => {
                                 return (
                                     <TableRow key={n.status}>
-                                        <TableCell><span
-                                            title={intlData.messages[helpMap[n.status]]}>{n.status}</span></TableCell>
-                                        <TableCell>{(n.status_date) ? moment(n.status_date, "x").format(
-                                                constants.DATE_FORMAT) :
-                                            getMessage("emptyValue")} </TableCell>
+                                        <TableCell>
+                                            <span
+                                                title={
+                                                    intlData.messages[
+                                                        helpMap[n.status]
+                                                    ]
+                                                }
+                                            >
+                                                {n.status}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            {n.status_date
+                                                ? moment(
+                                                      n.status_date,
+                                                      "x"
+                                                  ).format(
+                                                      constants.DATE_FORMAT
+                                                  )
+                                                : getMessage("emptyValue")}{" "}
+                                        </TableCell>
                                         <TableCell>{n.comments}</TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
-                        <EnhancedTableHead columnData={columnData}
-                                           selectable={false}
-                                           order={this.state.order}
-                                           orderBy={this.state.orderBy}
-                                           baseId={baseId}
+                        <EnhancedTableHead
+                            columnData={columnData}
+                            selectable={false}
+                            order={this.state.order}
+                            orderBy={this.state.orderBy}
+                            baseId={baseId}
                         />
                     </Table>
                 </DialogContent>
@@ -102,9 +118,10 @@ class RequestHistoryDialog extends Component {
                     <Button
                         id={build(baseId, ids.OK_BTN)}
                         onClick={() => {
-                            this.setState({dialogOpen: false})
+                            this.setState({ dialogOpen: false });
                         }}
-                        color="primary">
+                        color="primary"
+                    >
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>
@@ -112,4 +129,4 @@ class RequestHistoryDialog extends Component {
         );
     }
 }
-export default (withI18N(RequestHistoryDialog, intlData));
+export default withI18N(RequestHistoryDialog, intlData);

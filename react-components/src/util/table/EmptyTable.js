@@ -13,26 +13,19 @@ import Typography from "@material-ui/core/Typography";
  * @constructor
  */
 function EmptyTable(props) {
-    const {
-        message,
-        numColumns
-    } = props;
+    const { message, numColumns } = props;
     return (
         <TableRow>
             <TableCell colSpan={numColumns}>
-                <Typography component="p">
-                    {message}
-                </Typography>
+                <Typography component="p">{message}</Typography>
             </TableCell>
         </TableRow>
-    )
+    );
 }
 
 EmptyTable.propTypes = {
-    message: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object
-    ]).isRequired,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+        .isRequired,
     numColumns: PropTypes.number.isRequired,
 };
 

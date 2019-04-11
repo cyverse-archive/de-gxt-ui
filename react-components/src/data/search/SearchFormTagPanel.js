@@ -18,7 +18,7 @@ class SearchFormTagPanel extends Component {
         this.state = {
             openEditTagDlg: false,
             selectedTag: null,
-            dataSource: []
+            dataSource: [],
         };
 
         //Tags
@@ -34,8 +34,8 @@ class SearchFormTagPanel extends Component {
     onTagClicked(tag) {
         this.setState({
             openEditTagDlg: true,
-            selectedTag: tag
-        })
+            selectedTag: tag,
+        });
     }
 
     saveTagDescription(tag) {
@@ -43,30 +43,32 @@ class SearchFormTagPanel extends Component {
         this.setState({
             openEditTagDlg: false,
             selectedTag: null,
-            dataSource: []
+            dataSource: [],
         });
     }
 
     closeEditTagDlg() {
         this.setState({
             openEditTagDlg: false,
-            selectedTag: null
-        })
+            selectedTag: null,
+        });
     }
 
     fetchTagSuggestions(search) {
-        this.props.presenter.fetchTagSuggestions(search, (data) => this.setState({dataSource: data}));
+        this.props.presenter.fetchTagSuggestions(search, (data) =>
+            this.setState({ dataSource: data })
+        );
     }
 
     onTagSelected(tag) {
-        let {
-            presenter
-        } = this.props;
+        let { presenter } = this.props;
 
         if (tag.id !== tag.value) {
             this.appendTag(tag);
         } else {
-            presenter.onAddTagSelected(tag.value, (newTag) => this.appendTag(newTag));
+            presenter.onAddTagSelected(tag.value, (newTag) =>
+                this.appendTag(newTag)
+            );
         }
     }
 
@@ -77,38 +79,34 @@ class SearchFormTagPanel extends Component {
 
     removeTag(tag, index) {
         let { array, tagQuery } = this.props;
-        array.remove(tagQuery.name, index)
+        array.remove(tagQuery.name, index);
     }
 
     render() {
-        let {
-            tagQuery,
-            placeholder,
-            parentId
-        } = this.props;
+        let { tagQuery, placeholder, parentId } = this.props;
 
-        let {
-            selectedTag,
-            openEditTagDlg,
-            dataSource
-        } = this.state;
+        let { selectedTag, openEditTagDlg, dataSource } = this.state;
 
         return (
             <div>
-                <TagPanel baseID={parentId}
-                          placeholder={placeholder}
-                          onTagClick={this.onTagClicked}
-                          handleTagSearch={this.fetchTagSuggestions}
-                          dataSource={dataSource}
-                          handleRemoveClick={this.removeTag}
-                          handleTagSelect={this.onTagSelected}
-                          tags={tagQuery.value ? tagQuery.value : []}/>
-                <EditTagDialog open={openEditTagDlg}
-                               tag={selectedTag}
-                               handleSave={this.saveTagDescription}
-                               handleClose={this.closeEditTagDlg}/>
+                <TagPanel
+                    baseID={parentId}
+                    placeholder={placeholder}
+                    onTagClick={this.onTagClicked}
+                    handleTagSearch={this.fetchTagSuggestions}
+                    dataSource={dataSource}
+                    handleRemoveClick={this.removeTag}
+                    handleTagSelect={this.onTagSelected}
+                    tags={tagQuery.value ? tagQuery.value : []}
+                />
+                <EditTagDialog
+                    open={openEditTagDlg}
+                    tag={selectedTag}
+                    handleSave={this.saveTagDescription}
+                    handleClose={this.closeEditTagDlg}
+                />
             </div>
-        )
+        );
     }
 }
 
@@ -118,10 +116,10 @@ SearchFormTagPanel.propTypes = {
     presenter: PropTypes.shape({
         onAddTagSelected: PropTypes.func.isRequired,
         fetchTagSuggestions: PropTypes.func.isRequired,
-        onEditTagSelected: PropTypes.func.isRequired
+        onEditTagSelected: PropTypes.func.isRequired,
     }),
     array: PropTypes.object.isRequired,
-    tagQuery: PropTypes.object.isRequired
+    tagQuery: PropTypes.object.isRequired,
 };
 
 export default withI18N(SearchFormTagPanel, messages);

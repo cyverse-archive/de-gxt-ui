@@ -9,9 +9,11 @@ import DenyJoinRequestDetailsDialog from "../../../../src/notifications/view/dia
 class DenyJoinRequestDetailsDialogTest extends Component {
     render() {
         return (
-            <DenyJoinRequestDetailsDialog dialogOpen={true}
-                                          teamName="test"
-                                          adminMessage="Nope. You are not cool."/>
+            <DenyJoinRequestDetailsDialog
+                dialogOpen={true}
+                teamName="test"
+                adminMessage="Nope. You are not cool."
+            />
         );
     }
 }
