@@ -55,8 +55,14 @@ const intlData = {
         save: "Save",
         discardChanges: "Discard changes",
         edit: "Edit",
-    }
-
+        quickLaunchNameLabel: "Name",
+        createQuickLaunchLabel: "Create Quick Launch",
+        defaultLabel: "Default",
+        publicLabel: "Public",
+        cancelLabel: "Cancel",
+        defaultQLTooltip: "Make this my default quick launch for this app",
+        publicQLTooltip: "Quick launch visible to all users",
+    },
 };
 
 export default intlData;

@@ -13,6 +13,7 @@ import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
+import CreateQuickLaunchDialogTest from "./apps/quickLaunch/CreateQuickLaunchDialog.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
@@ -91,6 +92,9 @@ storiesOf("apps/details", module).add("AppInfoDialog", () => (
     <AppInfoDialogTest />
 ));
 storiesOf("apps/details", module).add("AppDoc", () => <AppDocTest />);
+storiesOf("apps/qlaunch", module).add("CreateQuickLaunch", () => (
+    <CreateQuickLaunchDialogTest />
+));
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />
