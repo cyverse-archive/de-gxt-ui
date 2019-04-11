@@ -139,4 +139,9 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     public int windowMinHeight() {
         return 350;
     }
+
+    @Override
+    public String createQuickLaunch() {
+        return iplantDisplayStrings.createQuickLaunch();
+    }
 }

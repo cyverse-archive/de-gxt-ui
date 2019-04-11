@@ -24,5 +24,9 @@ public interface AppWizardConfig extends WindowConfig {
 
     void setAnalysisId(String analysisId);
 
+    void setAppIntegratorEmail(String email);
+
+    String getAppIntegratorEmail();
+
 }
 

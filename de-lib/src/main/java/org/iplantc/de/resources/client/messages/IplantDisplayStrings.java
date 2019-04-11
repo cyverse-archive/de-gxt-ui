@@ -2922,4 +2922,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     String imageLabel();
 
     String notificationUrlPrompt(String url);
+
+    String createQuickLaunch();
 }

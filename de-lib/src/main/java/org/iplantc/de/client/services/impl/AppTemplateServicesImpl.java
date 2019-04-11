@@ -31,6 +31,7 @@ import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
+import org.iplantc.de.client.util.AnalysisSubmissionUtil;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -42,7 +43,6 @@ import org.iplantc.de.shared.ServiceFacadeLoggerConstants;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -168,7 +168,8 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     @Override
     public void launchAnalysis(AppTemplate at, JobExecution je, DECallback<AnalysisSubmissionResponse> callback) {
         String address = ANALYSES;
-        Splittable assembledPayload = doAssembleLaunchAnalysisPayload(at, je);
+        Splittable assembledPayload =
+                AnalysisSubmissionUtil.assembleLaunchAnalysisPayload(appTemplateUtils, at, je);
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, APP_EVENT);
         mdcMap.put(APP_ID, at.getId());
@@ -257,82 +258,6 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         return ret;
     }
 
-    Splittable doAssembleLaunchAnalysisPayload(AppTemplate at, JobExecution je) {
-        Splittable assembledPayload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(je));
-        Splittable configSplit = StringQuoter.createSplittable();
-        for (ArgumentGroup ag : at.getArgumentGroups()) {
-            for (Argument arg : ag.getArguments()) {
-                Splittable value = arg.getValue();
-                final boolean diskResourceArgumentType = appTemplateUtils.isDiskResourceArgumentType(arg.getType());
-                final boolean simpleSelectionArgumentType = appTemplateUtils.isSimpleSelectionArgumentType(arg.getType());
-
-                if (value == null) {
-                    continue;
-                }
-
-                if (simpleSelectionArgumentType) {
-                    value.assign(configSplit, arg.getId());
-                } else if (diskResourceArgumentType
-                               && !arg.getType().equals(ArgumentType.MultiFileSelector)) {
-                    value.get("path").assign(configSplit, arg.getId());
-                } else if (arg.getType().equals(ArgumentType.MultiFileSelector)
-                               && value.isIndexed()) {
-                    value.assign(configSplit, arg.getId());
-                } else if (arg.getType().equals(ArgumentType.TreeSelection)
-                               && (arg.getSelectionItems() != null)
-                               && (arg.getSelectionItems().size() == 1)) {
-                    pruneArgumentsFromSelectionItemGroups(value);
-                    pruneSelectedItemsWithNoFlagsNorValues(value).assign(configSplit, arg.getId());
-                } else {
-                    value.assign(configSplit, arg.getId());
-                }
-            }
-        }
-        configSplit.assign(assembledPayload, "config");
-        return assembledPayload;
-    }
-
-    /**
-     * @param value and indexed splittable.
-     * @return an indexed splittable which contains {@link SelectionItem}s whose {@code "name"} or
-     * {@code "value"} JSON keys with non-null values.
-     */
-    Splittable pruneSelectedItemsWithNoFlagsNorValues(final Splittable value){
-        Splittable ret = StringQuoter.createIndexed();
-        for(int i = 0; i < value.size(); i++){
-            final Splittable splittable = value.get(i);
-
-            if(!splittable.isUndefined("value")
-                    && !Strings.isNullOrEmpty(splittable.get("value").asString())){
-                // If the item has a non-null value, add it
-                splittable.assign(ret, ret.size());
-            } else if (!splittable.isUndefined(SelectionItem.ARGUMENT_OPTION_KEY)
-                         && !Strings.isNullOrEmpty(splittable.get(SelectionItem.ARGUMENT_OPTION_KEY).asString())){
-                // If the item has a non-null argument option, add it
-                splittable.assign(ret, ret.size());
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * Nulls out the value associated with {@link SelectionItemGroup#ARGUMENTS_KEY} JSON key in the
-     * children of the given indexed splittable.
-     *
-     * @param value and indexed splittable
-     */
-    void pruneArgumentsFromSelectionItemGroups(final Splittable value){
-        for(int i = 0; i < value.size(); i++){
-            final Splittable splittable = value.get(i);
-            if(splittable.isUndefined(SelectionItemGroup.ARGUMENTS_KEY)){
-                // If the key is undefined, continue
-                continue;
-            }
-            // Remove arguments from selectionItemGroup
-            Splittable.NULL.assign(splittable, SelectionItemGroup.ARGUMENTS_KEY);
-        }
-    }
 
     AppTemplate doCmdLinePreviewCleanup(AppTemplate templateToClean) {
         AppTemplate copy = appTemplateUtils.copyAppTemplate(templateToClean);

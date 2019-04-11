@@ -1,14 +1,17 @@
 package org.iplantc.de.apps.widgets.client.presenter;
 
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.apps.widgets.client.ReactQuickLaunch;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
+import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.apps.widgets.client.view.dialogs.HPCWaitTimeDialog;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -16,6 +19,8 @@ import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.AppTemplateServices;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.CommonModelUtils;
@@ -47,7 +52,12 @@ import java.util.List;
  *
  */
 public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
-                                               RequestAnalysisLaunchEventHandler {
+                                               RequestAnalysisLaunchEventHandler,
+                                               CreateQuickLaunchEvent.CreateQuickLaunchEventHandler {
+
+
+    private ReactQuickLaunch.CreateQLProps props;
+    private String integratorsEmail;
 
     private final class AppTemplateCallback extends AppLaunchCallback<AppTemplate> {
 
@@ -72,6 +82,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     @Inject IplantAnnouncer announcer;
     @Inject CommonModelUtils commonModelUtils;
     AppTemplate appTemplate;
+    JobExecution jobExecution;
     private final AppTemplateServices atServices;
     HandlerManager handlerManager;
     private final UserSettings userSettings;
@@ -83,6 +94,8 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
     @Inject private IplantValidationConstants valConstants;
     @Inject AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProvider;
+    @Inject
+    UserInfo userInfo;
     private final AppLaunchView view;
     private String baseID;
 
@@ -101,6 +114,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         this.appTemplateUtils = appTemplateUtils;
         this.appearance = appearance;
         this.view.addRequestAnalysisLaunchEventHandler(this);
+        this.view.addCreateQuickLaunchEventHandler(this);
         this.atServices = atServices;
     }
     
@@ -112,6 +126,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     @Override
     public void go(final HasOneWidget container, AppWizardConfig config) {
         this.container = container;
+        this.integratorsEmail = config.getAppIntegratorEmail();
         if (config.getAppTemplate() != null) {
             this.appTemplate = appTemplateUtils.convertConfigToTemplate(config);
             createJobExecution();
@@ -188,6 +203,35 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         }
     }
 
+    @Override
+    public void onCreateQuickLaunchRequest(AppTemplate appTemplate,
+                                           JobExecution jobExecution) {
+        this.appTemplate = appTemplate;
+        this.jobExecution = jobExecution;
+        props = new ReactQuickLaunch.CreateQLProps();
+        props.presenter = this;
+        props.appName = appTemplate.getName();
+        props.dialogOpen = true;
+        props.isOwner = userInfo.getEmail().equals(integratorsEmail);
+        view.showOrHideCreateQuickLaunchView(props);
+    }
+
+    @Override
+    public void onHideCreateQuickLaunchRequestDialog() {
+        props.dialogOpen = false;
+        view.showOrHideCreateQuickLaunchView(props);
+    }
+
+    @Override
+    public void createQuickLaunch(String name,
+                                  String description,
+                                  boolean isDefault,
+                                  boolean isPublic,
+                                  ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
+
+    }
+
      void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
         hpcWaitDlgProvider.get(new AsyncCallback<HPCWaitTimeDialog>() {
             @Override
@@ -200,6 +244,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
             }
         });
     }
+
 
     HandlerManager ensureHandlers() {
         return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
