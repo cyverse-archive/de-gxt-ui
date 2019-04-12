@@ -62,11 +62,8 @@ public class AppDetailsViewImpl implements AppDetailsView,
         props.dialogOpen = true;
         props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
-<<<<<<< HEAD
         props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
-=======
-        props.searchRegexPattern = this.searchRegexPattern;
->>>>>>> 47693d0... core-52 Add highlighter for search terms.
+
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }
 
