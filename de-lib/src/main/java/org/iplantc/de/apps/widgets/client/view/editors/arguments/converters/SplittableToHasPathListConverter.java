@@ -25,12 +25,14 @@ public class SplittableToHasPathListConverter implements Converter<Splittable, L
     @Override
     public List<HasPath> convertModelValue(Splittable object) {
         // Assume that the splittable is an array of strings
-        if ((object == null) || !object.isIndexed())
+        if ((object == null) || object.get("path") == null || !object.get("path").isIndexed()) {
             return Collections.emptyList();
+        }
 
         List<HasPath> hasPathList = Lists.newArrayList();
-        for (int i = 0; i < object.size(); i++) {
-            String asString = object.get(i).asString();
+        Splittable paths = object.get("path");
+        for (int i = 0; i < paths.size(); i++) {
+            String asString = paths.get(i).asString();
             hasPathList.add(CommonModelUtils.getInstance().createHasPathFromString((asString)));
         }
 
