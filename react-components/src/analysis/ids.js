@@ -65,6 +65,6 @@ export default {
         TIMESTAMP: "timestamp",
         MESSAGE: "message",
         STATUS: "status",
-        info: "info",
+        INFO: "info",
     },
 };

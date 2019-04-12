@@ -127,7 +127,7 @@ class AnalysisInfoDialog extends Component {
             classes,
             baseDebugId,
         } = this.props;
-        const debugId = build(baseDebugId, ids.INFO.info);
+        const debugId = build(baseDebugId, ids.INFO.INFO);
         return (
             <Dialog open={dialogOpen} maxWidth="md" id={debugId}>
                 <DEDialogHeader

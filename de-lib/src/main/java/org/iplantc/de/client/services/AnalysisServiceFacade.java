@@ -55,7 +55,7 @@ public interface AnalysisServiceFacade {
      * @param callback
      */
     void getAnalysisHistory(String id,
-                                   DECallback<Splittable> callback);
+                            DECallback<Splittable> callback);
 
     void shareAnalyses(AnalysisSharingRequestList request, DECallback<String> callback);
 
