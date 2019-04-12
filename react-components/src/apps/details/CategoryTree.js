@@ -46,12 +46,12 @@ class CategoryTree extends Component {
             >
                 {hierarchyClass.subclasses
                     ? hierarchyClass.subclasses.map((subclass) =>
-                        this.renderHierarchyNode(
-                            subclass,
-                            modelKey,
-                            searchRegexPattern
-                        )
-                    )
+                          this.renderHierarchyNode(
+                              subclass,
+                              modelKey,
+                              searchRegexPattern
+                          )
+                      )
                     : null}
             </TreeNode>
         );

@@ -57,7 +57,9 @@ function CreateQuickLaunchDialog(props) {
                                 component={FormMultilineTextField}
                             />
                             <ErrorMessage name="description" component="div" />
-                            <Tooltip title={formatMessage(intl, "defaultQLTooltip")}>
+                            <Tooltip
+                                title={formatMessage(intl, "defaultQLTooltip")}
+                            >
                                 <Field
                                     name="default"
                                     label={getMessage("defaultLabel")}
@@ -67,7 +69,12 @@ function CreateQuickLaunchDialog(props) {
                                 />
                             </Tooltip>
                             {isAppOwner && (
-                                <Tooltip title={formatMessage(intl, "publicQLTooltip")}>
+                                <Tooltip
+                                    title={formatMessage(
+                                        intl,
+                                        "publicQLTooltip"
+                                    )}
+                                >
                                     <Field
                                         name="default"
                                         label={getMessage("publicLabel")}

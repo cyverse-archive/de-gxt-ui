@@ -194,5 +194,4 @@ AppInfoDialog.propTypes = {
     intl: PropTypes.object.isRequired,
 };
 
-
 export default withI18N(injectIntl(AppInfoDialog), intlData);

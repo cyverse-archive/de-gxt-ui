@@ -66,11 +66,11 @@ class ToolDetailsV1 extends Component {
                                 <td className={labelClass}>
                                     {getMessage("toolNameLabel")}
                                 </td>
-                                <Highlighter search={searchRegexPattern}>
-                                    <td className={valueClass}>
+                                <td className={valueClass}>
+                                    <Highlighter search={searchRegexPattern}>
                                         {toolInfo.name}
-                                    </td>
-                                </Highlighter>
+                                    </Highlighter>
+                                </td>
                             </tr>
                             <tr>
                                 <td className={labelClass}>

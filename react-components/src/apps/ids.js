@@ -7,4 +7,4 @@ export default {
         APP_URL_TEXT: ".appUrlText",
         APP_DOC_EDITOR: "docEditor",
     },
-}
+};
