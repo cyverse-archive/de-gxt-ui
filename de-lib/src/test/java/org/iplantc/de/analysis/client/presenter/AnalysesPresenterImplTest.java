@@ -19,7 +19,6 @@ import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.client.models.analysis.AnalysisStep;
-import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
@@ -31,12 +30,14 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
@@ -97,7 +98,7 @@ public class AnalysesPresenterImplTest {
     @Mock FilterPagingLoadConfig loadConfigMock;
     @Mock List<FilterConfig> filterConfigsMock;
     @Mock FilterConfigBean filterConfigBeanMock;
-    @Mock AnalysisStepsInfo analysisStepsInfoMock;
+
     @Mock List<AnalysisStep> stepListMock;
     @Mock UserInfo userInfoMock;
     @Mock AnalysisSupportAutoBeanFactory supportFactoryMock;
@@ -109,7 +110,8 @@ public class AnalysesPresenterImplTest {
     AnalysesAutoBeanFactory analysesAutoBeanFactory;
     @Mock
     Analysis analysisMock;
-
+    @Mock
+    Splittable analysisStepsInfoMock;
     @Mock
     ReactSuccessCallback reactSuccessCallbackMock;
     @Mock
@@ -117,7 +119,8 @@ public class AnalysesPresenterImplTest {
 
     @Captor ArgumentCaptor<AnalysisCallback<String>> stringCallbackCaptor;
     @Captor ArgumentCaptor<AnalysisCallback<Void>> voidCallbackCaptor;
-    @Captor ArgumentCaptor<AnalysisCallback<AnalysisStepsInfo>> analysisStepsCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<Splittable>> analysisInfoCapture;
     @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
     @Captor ArgumentCaptor<SelectEvent.SelectHandler> okSelectCaptor;
 
@@ -279,10 +282,9 @@ public class AnalysesPresenterImplTest {
                                       reactSuccessCallbackMock,
                                       reactErrorCallbackMock);
 
-        verify(analysisServiceMock).getAnalysisSteps(eq("test_id"),
-                                                     analysisStepsCaptor.capture());
+        verify(analysisServiceMock).getAnalysisHistory(eq("test_id"), analysisInfoCapture.capture());
 
-        analysisStepsCaptor.getValue().onSuccess(analysisStepsInfoMock);
+        analysisInfoCapture.getValue().onSuccess(analysisStepsInfoMock);
     }
 
     @Test
