@@ -10,7 +10,6 @@ import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
 import org.iplantc.de.client.models.analysis.AnalysisParametersList;
-import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.models.analysis.SimpleValue;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestList;
@@ -126,23 +125,17 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
         }
     }
     
-    private class StringAnalaysisStepInfoConverter extends
-                                                  DECallbackConverter<String, AnalysisStepsInfo> {
+    private class StringToSplittableAnalysisHistoryConverter
+            extends DECallbackConverter<String, Splittable> {
 
-        private final AnalysesAutoBeanFactory factory;
-
-        public StringAnalaysisStepInfoConverter(DECallback<AnalysisStepsInfo> callback,
-                                                AnalysesAutoBeanFactory factory) {
+        public StringToSplittableAnalysisHistoryConverter(DECallback<Splittable> callback) {
             super(callback);
-            this.factory = factory;
         }
 
         @Override
-        protected AnalysisStepsInfo convertFrom(String object) {
-            AnalysisStepsInfo as = AutoBeanCodex.decode(factory, AnalysisStepsInfo.class, object).as();
-            return as;
+        protected Splittable convertFrom(String object) {
+            return StringQuoter.split(object);
         }
-        
     }
 
     private final AnalysesAutoBeanFactory factory;
@@ -271,11 +264,12 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getAnalysisSteps(String id, DECallback<AnalysisStepsInfo> callback) {
-        String address = ANALYSES + "/" + id + "/steps";
+    public void getAnalysisHistory(String id,
+                                   DECallback<Splittable> callback) {
+        String address = ANALYSES + "/" + id + "/history";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deServiceFacade.getServiceData(wrapper, new StringAnalaysisStepInfoConverter(callback, factory));
-
+        deServiceFacade.getServiceData(wrapper,
+                                       new StringToSplittableAnalysisHistoryConverter(callback));
     }
 
     @Override

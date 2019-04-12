@@ -60,4 +60,11 @@ export default {
         BATCH: "batch",
         COLLAPSE: "collapse",
     },
+
+    INFO: {
+        TIMESTAMP: "timestamp",
+        MESSAGE: "message",
+        STATUS: "status",
+        INFO: "info",
+    },
 };

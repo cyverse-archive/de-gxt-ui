@@ -1285,6 +1285,7 @@ class AnalysesView extends Component {
                 )}
                 {info && (
                     <AnalysisInfoDialog
+                        baseDebugId={baseDebugId}
                         info={info}
                         dialogOpen={infoDialogOpen}
                         onInfoDialogClose={() =>

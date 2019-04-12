@@ -15,7 +15,6 @@ import org.iplantc.de.client.models.analysis.AnalysesList;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
-import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequest;
@@ -424,7 +423,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void onAnalysisJobInfoSelected(String id,
                                           ReactSuccessCallback callback,
                                           ReactErrorCallback errorCallback) {
-        analysisService.getAnalysisSteps(id, new AnalysisCallback<AnalysisStepsInfo>() {
+        analysisService.getAnalysisHistory(id, new AnalysisCallback<Splittable>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -437,10 +436,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             }
 
             @Override
-            public void onSuccess(AnalysisStepsInfo stepsInfo) {
-                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(stepsInfo));
+            public void onSuccess(Splittable history) {
                 if(callback != null) {
-                    callback.onSuccess(sp);
+                    callback.onSuccess(history);
                 }
             }
         });
