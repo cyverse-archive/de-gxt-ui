@@ -14,7 +14,8 @@ export default {
     SPECIAL_CHARS_RESTRICTIONS: "https://wiki.cyverse.org/wiki/x/O6ui",
     VIEW_APP_TOOL_INFORMATION: "https://wiki.cyverse.org/wiki/x/pAOZ",
     APP_COMMENTS: "https://wiki.cyverse.org/wiki/x/zi2",
-    APP_STATUS: "https://wiki.cyverse.org/wiki/x/6gGO#UsingtheAppsWindowandSubmittinganAnalysis-AppStatus",
+    APP_STATUS:
+        "https://wiki.cyverse.org/wiki/x/6gGO#UsingtheAppsWindowandSubmittinganAnalysis-AppStatus",
     EXTERNAL_APP: "external",
     APP_CATEGORY: "app-category",
     FOLDER: "folder",
@@ -26,4 +27,3 @@ export default {
     DATA: "data",
     AGAVE: "agave",
 };
-

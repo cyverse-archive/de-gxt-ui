@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
@@ -24,12 +24,19 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
 function AppInfoDialog(props) {
-    const {dialogOpen, app, presenter, docEditable, searchRegexPattern, baseDebugId, intl} = props;
+    const {
+        dialogOpen,
+        app,
+        presenter,
+        docEditable,
+        searchRegexPattern,
+        baseDebugId,
+        intl,
+    } = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
@@ -75,16 +82,22 @@ function AppInfoDialog(props) {
 
     const saveDoc = () => {
         setLoading(true);
-        presenter.onSaveMarkdownSelected(app.id, app.system_id, documentation, () => {
-            setLoading(false);
-            setMode(VIEW_MODE);
-            setDirty(false);
-            setConfirmDialogOpen(false);
-        }, (statusCode, errorMessage) => {
-            setLoading(false);
-            setError(true);
-            setConfirmDialogOpen(false);
-        });
+        presenter.onSaveMarkdownSelected(
+            app.id,
+            app.system_id,
+            documentation,
+            () => {
+                setLoading(false);
+                setMode(VIEW_MODE);
+                setDirty(false);
+                setConfirmDialogOpen(false);
+            },
+            (statusCode, errorMessage) => {
+                setLoading(false);
+                setError(true);
+                setConfirmDialogOpen(false);
+            }
+        );
     };
 
     const onModeChange = (mode) => {
@@ -105,25 +118,42 @@ function AppInfoDialog(props) {
     return (
         <React.Fragment>
             <Dialog open={dialogOpen} fullWidth={true} id={baseDebugId}>
-                <DEDialogHeader heading={app.name} onClose={onClose}/>
-                <DialogContent style={{minHeight: 600}}>
-                    <Tabs indicatorColor="primary"
-                          textColor="primary"
-                          value={value}
-                          onChange={handleTabChange}>
-                        <Tab label={appInfoLabel}/>
-                        <Tab label={toolInfoLabel}/>
-                        <Tab label={appDocLabel}/>
+                <DEDialogHeader heading={app.name} onClose={onClose} />
+                <DialogContent style={{ minHeight: 600 }}>
+                    <Tabs
+                        indicatorColor="primary"
+                        textColor="primary"
+                        value={value}
+                        onChange={handleTabChange}
+                    >
+                        <Tab label={appInfoLabel} />
+                        <Tab label={toolInfoLabel} />
+                        <Tab label={appDocLabel} />
                     </Tabs>
-                    {value === 0 && <AppDetails baseDebugId={baseDebugId}
-                                                searchRegexPattern={searchRegexPattern}
-                                                details={app}
-                                                presenter={presenter}/>}
-                    {value === 1 && <ToolDetails baseDebugId={build(baseDebugId, ids.DETAILS.APP_TOOLS)}
-                                                 searchRegexPattern={searchRegexPattern}
-                                                 details={app.tools}/>}
-                    {value === 2 &&
-                    <AppDoc baseDebugId={build(baseDebugId, ids.DETAILS.APP_DOCUMENTATION)}
+                    {value === 0 && (
+                        <AppDetails
+                            baseDebugId={baseDebugId}
+                            searchRegexPattern={searchRegexPattern}
+                            details={app}
+                            presenter={presenter}
+                        />
+                    )}
+                    {value === 1 && (
+                        <ToolDetails
+                            baseDebugId={build(
+                                baseDebugId,
+                                ids.DETAILS.APP_TOOLS
+                            )}
+                            searchRegexPattern={searchRegexPattern}
+                            details={app.tools}
+                        />
+                    )}
+                    {value === 2 && (
+                        <AppDoc
+                            baseDebugId={build(
+                                baseDebugId,
+                                ids.DETAILS.APP_DOCUMENTATION
+                            )}
                             documentation={documentation}
                             references={references}
                             wiki_url={app.wiki_url}
@@ -135,18 +165,20 @@ function AppInfoDialog(props) {
                             error={error}
                             mode={mode}
                             onModeChange={onModeChange}
-                    />}
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
-            <DEConfirmationDialog dialogOpen={confirmDialogOpen}
-                                  messages={intlData}
-                                  debugId={baseDebugId}
-                                  onOkBtnClick={saveDoc}
-                                  onCancelBtnClick={onDiscardChanges}
-                                  heading={formatMessage(intl, "save")}
-                                  message={formatMessage(intl,"docSavePrompt")}
-                                  okLabel={formatMessage(intl, "save")}
-                                  cancelLabel={formatMessage(intl, "discardChanges")}
+            <DEConfirmationDialog
+                dialogOpen={confirmDialogOpen}
+                messages={intlData}
+                debugId={baseDebugId}
+                onOkBtnClick={saveDoc}
+                onCancelBtnClick={onDiscardChanges}
+                heading={formatMessage(intl, "save")}
+                message={formatMessage(intl, "docSavePrompt")}
+                okLabel={formatMessage(intl, "save")}
+                cancelLabel={formatMessage(intl, "discardChanges")}
             />
         </React.Fragment>
     );
@@ -162,5 +194,4 @@ AppInfoDialog.propTypes = {
     intl: PropTypes.object.isRequired,
 };
 
-export default (withI18N(injectIntl(AppInfoDialog), intlData));
-
+export default withI18N(injectIntl(AppInfoDialog), intlData);

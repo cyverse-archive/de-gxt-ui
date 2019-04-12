@@ -42,72 +42,67 @@ class ToolDetailsV1 extends Component {
         let tools = this.props.details,
             labelClass = classes.toolDetailsLabel,
             valueClass = classes.toolDetailsValue;
-        const {baseDebugId, searchRegexPattern} = this.props;
-        return (
-                    tools.map((toolInfo, index) => (
-                        <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography variant="caption">
-                                    <Highlighter
-                                        search={searchRegexPattern}>{toolInfo.name} </Highlighter>:
-                                    <Highlighter
-                                        search={searchRegexPattern}>
-                                        {toolInfo.description}
-                                    </Highlighter>
-                                </Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td>{getMessage("detailsLabel")}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolNameLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.name}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("descriptionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.description}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("imageLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.image}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolVersionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.version}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolAttributionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.attribution}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                ))
-        );
+        const { baseDebugId, searchRegexPattern } = this.props;
+        return tools.map((toolInfo, index) => (
+            <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="caption">
+                        <Highlighter search={searchRegexPattern}>
+                            {toolInfo.name}{" "}
+                        </Highlighter>
+                        :
+                        <Highlighter search={searchRegexPattern}>
+                            {toolInfo.description}
+                        </Highlighter>
+                    </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{getMessage("detailsLabel")}</td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolNameLabel")}
+                                </td>
+                                <td className={valueClass}>{toolInfo.name}</td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("descriptionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    {toolInfo.description}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("imageLabel")}
+                                </td>
+                                <td className={valueClass}>{toolInfo.image}</td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolVersionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    {toolInfo.version}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolAttributionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    {toolInfo.attribution}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        ));
     }
 }
 

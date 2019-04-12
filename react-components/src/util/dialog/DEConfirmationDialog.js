@@ -31,7 +31,7 @@ class DEConfirmationDialog extends Component {
             okLabel,
             cancelLabel,
             optionalLabel,
-            messages
+            messages,
         } = this.props;
         const dialogTitleID = build(debugId, "title");
 
@@ -49,19 +49,23 @@ class DEConfirmationDialog extends Component {
                 />
                 <DialogContent>{message}</DialogContent>
                 <DialogActions>
-                    { variant === THREE_BUTTON_VARIANT &&
-                    <Button id={build(debugId, ids.OPTIONAL)}
+                    {variant === THREE_BUTTON_VARIANT && (
+                        <Button
+                            id={build(debugId, ids.OPTIONAL)}
                             onClick={() => {
                                 if (onOptionalBtnClick) {
                                     onOptionalBtnClick();
                                 }
-                            }} color="primary">
-                        {optionalLabel}
-                    </Button>
-                   }
-                    <Button id={build(debugId, ids.CANCEL)}
-                            onClick={onCancelBtnClick}
+                            }}
                             color="primary"
+                        >
+                            {optionalLabel}
+                        </Button>
+                    )}
+                    <Button
+                        id={build(debugId, ids.CANCEL)}
+                        onClick={onCancelBtnClick}
+                        color="primary"
                     >
                         {cancelLabel}
                     </Button>
@@ -99,6 +103,6 @@ DEConfirmationDialog.propTypes = {
     okLabel: PropTypes.string,
     cancelLabel: PropTypes.string,
     optionalLabel: PropTypes.string,
-    variant:  PropTypes.oneOf([TWO_BUTTON_VARIANT, THREE_BUTTON_VARIANT]),
+    variant: PropTypes.oneOf([TWO_BUTTON_VARIANT, THREE_BUTTON_VARIANT]),
 };
 export default withI18N(DEConfirmationDialog, intlData);

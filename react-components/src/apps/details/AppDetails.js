@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import PropTypes from "prop-types";
 import Rating from "react-rating";
@@ -36,10 +36,9 @@ import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
 
-
 function Favorite(props) {
-    const {is_favorite, id} = props.details;
-    const {classes, isExternal, onFavoriteClick} = props;
+    const { is_favorite, id } = props.details;
+    const { classes, isExternal, onFavoriteClick } = props;
     let className = classes.disableFavorite;
     const debugId = build(props.baseDebugId, id);
     if (!isExternal) {
@@ -47,19 +46,20 @@ function Favorite(props) {
     }
 
     return (
-        <div id={build(debugId, ids.DETAILS.APP_FAVORITE_CELL)} className={className}
-             onClick={() => onFavoriteClick(isExternal)}></div>
+        <div
+            id={build(debugId, ids.DETAILS.APP_FAVORITE_CELL)}
+            className={className}
+            onClick={() => onFavoriteClick(isExternal)}
+        />
     );
 }
 
 class AppDetails extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             dialogOpen: false,
             appURL: "",
-
         };
         this.onAppUrlClick = this.onAppUrlClick.bind(this);
         this.onFavoriteClick = this.onFavoriteClick.bind(this);
@@ -68,78 +68,123 @@ class AppDetails extends Component {
     }
 
     onAppUrlClick() {
-        const {id, system_id} = this.props.details;
+        const { id, system_id } = this.props.details;
         if (this.state.appURL) {
-            this.setState({dialogOpen: true});
+            this.setState({ dialogOpen: true });
         } else {
-            let host = window.location.protocol + '//' + window.location.host + window.location.pathname;
-            const url = host + "?" + constants.TYPE + "=" + constants.APPS
-                + "&" + constants.APP_ID + "="
-                + id + "&" + constants.SYSTEM_ID
-                + "=" + system_id;
-            this.setState({dialogOpen: true, appURL: url});
+            let host =
+                window.location.protocol +
+                "//" +
+                window.location.host +
+                window.location.pathname;
+            const url =
+                host +
+                "?" +
+                constants.TYPE +
+                "=" +
+                constants.APPS +
+                "&" +
+                constants.APP_ID +
+                "=" +
+                id +
+                "&" +
+                constants.SYSTEM_ID +
+                "=" +
+                system_id;
+            this.setState({ dialogOpen: true, appURL: url });
         }
     }
 
     onDeleteRatingClick() {
-        const {presenter, details} = this.props;
-        this.setState({loading: true});
-        presenter.onAppRatingDeSelected(details, () => {
-            this.setState({loading: false});
-        }, (httpCode, message) => {
-            this.setState({loading: false});
-        })
+        const { presenter, details } = this.props;
+        this.setState({ loading: true });
+        presenter.onAppRatingDeSelected(
+            details,
+            () => {
+                this.setState({ loading: false });
+            },
+            (httpCode, message) => {
+                this.setState({ loading: false });
+            }
+        );
     }
 
     onRatingChange(value) {
-        const {presenter, details} = this.props;
-        this.setState({loading: true});
+        const { presenter, details } = this.props;
+        this.setState({ loading: true });
         //service accepts only long
-        presenter.onAppRatingSelected(details, Math.ceil(value), () => {
-            this.setState({loading: false});
-        }, (httpCode, message) => {
-            this.setState({loading: false});
-        })
+        presenter.onAppRatingSelected(
+            details,
+            Math.ceil(value),
+            () => {
+                this.setState({ loading: false });
+            },
+            (httpCode, message) => {
+                this.setState({ loading: false });
+            }
+        );
     }
 
     onFavoriteClick(isExternal) {
-        const {presenter, details} = this.props;
-        this.setState({loading: true});
+        const { presenter, details } = this.props;
+        this.setState({ loading: true });
         if (!isExternal) {
-            presenter.onAppFavoriteSelected(details, () => {
-                this.setState({loading: false});
-            }, (httpCode, message) => {
-                this.setState({loading: false});
-            });
+            presenter.onAppFavoriteSelected(
+                details,
+                () => {
+                    this.setState({ loading: false });
+                },
+                (httpCode, message) => {
+                    this.setState({ loading: false });
+                }
+            );
         }
     }
 
     render() {
-        const {details, searchRegexPattern, baseDebugId, intl, classes} = this.props;
-        const {loading, dialogOpen} = this.state;
-        const isExternal = details.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
+        const {
+            details,
+            searchRegexPattern,
+            baseDebugId,
+            intl,
+            classes,
+        } = this.props;
+        const { loading, dialogOpen } = this.state;
+        const isExternal =
+            details.app_type.toUpperCase() ===
+            constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
-        const {average, user, total} = details.rating;
+        const { average, user, total } = details.rating;
 
         if (details) {
             return (
                 <React.Fragment>
-                    <Paper id={baseDebugId} style={{padding: 5, fontSize: 11}}>
-                        {loading &&
-                        <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
-                        }
-                        <Grid container spacing={24} style={{paddingLeft: 5}}>
+                    <Paper
+                        id={baseDebugId}
+                        style={{ padding: 5, fontSize: 11 }}
+                    >
+                        {loading && (
+                            <CircularProgress
+                                size={30}
+                                className={classes.loadingStyle}
+                                thickness={7}
+                            />
+                        )}
+                        <Grid container spacing={24} style={{ paddingLeft: 5 }}>
                             <Grid item xs={12}>
-                                <Favorite baseDebugId={baseDebugId}
-                                          details={details}
-                                          isExternal={isExternal}
-                                          classes={classes}
-                                          onFavoriteClick={this.onFavoriteClick}/>
+                                <Favorite
+                                    baseDebugId={baseDebugId}
+                                    details={details}
+                                    isExternal={isExternal}
+                                    classes={classes}
+                                    onFavoriteClick={this.onFavoriteClick}
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <b>{getMessage("descriptionLabel")}:</b>
-                                <Highlighter
-                                    search={searchRegexPattern}>{details.description}</Highlighter>
+                                <Highlighter search={searchRegexPattern}>
+                                    {details.description}
+                                </Highlighter>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="h6">
@@ -147,12 +192,13 @@ class AppDetails extends Component {
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("publishedOn")}</b> {formatDate(details.integration_date)}
+                                <b>{getMessage("publishedOn")}</b>{" "}
+                                {formatDate(details.integration_date)}
                             </Grid>
                             <Grid item xs={12}>
                                 <b>{getMessage("integratorName")}</b>
-                                <Highlighter
-                                    search={searchRegexPattern}>{details.integrator_name}
+                                <Highlighter search={searchRegexPattern}>
+                                    {details.integrator_name}
                                 </Highlighter>
                             </Grid>
                             <Grid item xs={12}>
@@ -165,72 +211,119 @@ class AppDetails extends Component {
                                 <b>{getMessage("detailsRatingLbl")} </b>
                                 <Rating
                                     placeholderRating={average}
-                                    emptySymbol={<img src={whitestar} className="icon" alt="white star"/>}
-                                    fullSymbol={<img src={goldstar} className="icon" alt="gold star"/>}
-                                    placeholderSymbol={<img src={redstar} className="icon"
-                                                            alt="red star"/>}
+                                    emptySymbol={
+                                        <img
+                                            src={whitestar}
+                                            className="icon"
+                                            alt="white star"
+                                        />
+                                    }
+                                    fullSymbol={
+                                        <img
+                                            src={goldstar}
+                                            className="icon"
+                                            alt="gold star"
+                                        />
+                                    }
+                                    placeholderSymbol={
+                                        <img
+                                            src={redstar}
+                                            className="icon"
+                                            alt="red star"
+                                        />
+                                    }
                                     fractions={2}
                                     readonly={isExternal}
                                     onChange={this.onRatingChange}
                                 />
                                 <span>
-                                    {
-                                        user &&
-                                        <IconButton onClick={this.onDeleteRatingClick}
-                                                    className={classes.ratingDelete}>
-                                            <Delete fontSize="small"/>
+                                    {user && (
+                                        <IconButton
+                                            onClick={this.onDeleteRatingClick}
+                                            className={classes.ratingDelete}
+                                        >
+                                            <Delete fontSize="small" />
                                         </IconButton>
-                                    }
+                                    )}
                                 </span>
-                                <span>
-                                        ({total ? total : 0})
-                                </span>
-
+                                <span>({total ? total : 0})</span>
                             </Grid>
                             <Grid item xs={12}>
                                 <b>{getMessage("analysesCompleted")}</b>
-                                {details.job_stats.job_count_completed ?
-                                    details.job_stats.job_count_completed :
-                                    0}
+                                {details.job_stats.job_count_completed
+                                    ? details.job_stats.job_count_completed
+                                    : 0}
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("detailsLastCompleted")}</b> {formatDate(details.job_stats.job_last_completed)}
+                                <b>{getMessage("detailsLastCompleted")}</b>{" "}
+                                {formatDate(
+                                    details.job_stats.job_last_completed
+                                )}
                             </Grid>
-                            {showAppURL &&
-                            <Grid item xs={12}>
-                                <b>{getMessage("url")}:</b>
-                                <DEHyperLink onClick={this.onAppUrlClick}
-                                             text={formatMessage(intl, "url")}/>
-                            </Grid>
-                            }
-                            {details.hierarchies &&
-                            <React.Fragment>
-                                <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
-                                    <b>{getMessage("category")}</b>
-                                    <CategoryTree searchRegexPattern={searchRegexPattern}
-                                                  hierarchies={details.hierarchies}/>
+                            {showAppURL && (
+                                <Grid item xs={12}>
+                                    <b>{getMessage("url")}:</b>
+                                    <DEHyperLink
+                                        onClick={this.onAppUrlClick}
+                                        text={formatMessage(intl, "url")}
+                                    />
                                 </Grid>
-                            </React.Fragment>
-                            }
-                            {
-                                details.system_id === constants.AGAVE &&
+                            )}
+                            {details.hierarchies && (
                                 <React.Fragment>
-                                    <Grid id={build(baseDebugId, ids.DETAILS.CATEGORIES_TREE)} item xs={12}>
+                                    <Grid
+                                        id={build(
+                                            baseDebugId,
+                                            ids.DETAILS.CATEGORIES_TREE
+                                        )}
+                                        item
+                                        xs={12}
+                                    >
                                         <b>{getMessage("category")}</b>
-                                        <br/>
-                                        <img src={Book} alt={constants.AGAVE}/> {getMessage("hpc")}
+                                        <CategoryTree
+                                            searchRegexPattern={
+                                                searchRegexPattern
+                                            }
+                                            hierarchies={details.hierarchies}
+                                        />
                                     </Grid>
                                 </React.Fragment>
-                            }
+                            )}
+                            {details.system_id === constants.AGAVE && (
+                                <React.Fragment>
+                                    <Grid
+                                        id={build(
+                                            baseDebugId,
+                                            ids.DETAILS.CATEGORIES_TREE
+                                        )}
+                                        item
+                                        xs={12}
+                                    >
+                                        <b>{getMessage("category")}</b>
+                                        <br />
+                                        <img
+                                            src={Book}
+                                            alt={constants.AGAVE}
+                                        />{" "}
+                                        {getMessage("hpc")}
+                                    </Grid>
+                                </React.Fragment>
+                            )}
                         </Grid>
-                </Paper>
-                    <Dialog open={dialogOpen}
-                            fullWidth>
-                        <DEDialogHeader heading={formatMessage(intl, "copyAppUrl")}
-                                        onClose={() => this.setState({dialogOpen: false})}/>
+                    </Paper>
+                    <Dialog open={dialogOpen} fullWidth>
+                        <DEDialogHeader
+                            heading={formatMessage(intl, "copyAppUrl")}
+                            onClose={() => this.setState({ dialogOpen: false })}
+                        />
                         <DialogContent>
-                            <CopyTextArea id={build(baseDebugId, ids.DETAILS.APP_URL_TEXT)}
-                                          text={this.state.appURL}/>
+                            <CopyTextArea
+                                id={build(
+                                    baseDebugId,
+                                    ids.DETAILS.APP_URL_TEXT
+                                )}
+                                text={this.state.appURL}
+                            />
                         </DialogContent>
                     </Dialog>
                 </React.Fragment>
@@ -249,4 +342,4 @@ AppDetails.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(style)((withI18N(injectIntl(AppDetails), intlData)));
+export default withStyles(style)(withI18N(injectIntl(AppDetails), intlData));
