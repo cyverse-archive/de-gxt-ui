@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AppInfoDialog from "../../../src/apps/details/AppInfoDialog";
 import { text } from "@storybook/addon-knobs";
+import QucikLaunchListing from "../../../src/apps/quickLaunch/QuickLaunchListing";
 
 class AppInfoDialogTest extends Component {
     render() {
@@ -236,6 +237,72 @@ class AppInfoDialogTest extends Component {
                 reason: "",
             },
         };
+        const quickLaunches = [
+            {
+                id: "1",
+                name: "Qlaunch1",
+                description: "This is my first quick launch",
+                creator: "sriram@iplantcollaborative.org",
+                app_id: "123",
+                is_public: false,
+                submission: {
+                    description: "string",
+                    config: {},
+                    "file-metadata": [
+                        {
+                            attr: "string",
+                            value: "string",
+                            unit: "string",
+                        },
+                    ],
+                    starting_step: 0,
+                    name: "string",
+                    app_id: "string",
+                    system_id: "string",
+                    debug: true,
+                    create_output_subdir: true,
+                    archive_logs: true,
+                    output_dir: "string",
+                    uuid: "string",
+                    notify: true,
+                    "skip-parent-meta": true,
+                    callback: "string",
+                    job_id: "string",
+                },
+            },
+            {
+                id: "2",
+                name: "Qlaunch2",
+                description: "This is my second quick launch",
+                creator: "ipctest@iplantcollaborative.org",
+                app_id: "456",
+                is_public: true,
+                submission: {
+                    description: "string",
+                    config: {},
+                    "file-metadata": [
+                        {
+                            attr: "string",
+                            value: "string",
+                            unit: "string",
+                        },
+                    ],
+                    starting_step: 0,
+                    name: "string",
+                    app_id: "string",
+                    system_id: "string",
+                    debug: true,
+                    create_output_subdir: true,
+                    archive_logs: true,
+                    output_dir: "string",
+                    uuid: "string",
+                    notify: true,
+                    "skip-parent-meta": true,
+                    callback: "string",
+                    job_id: "string",
+                },
+            },
+        ];
         const presenter = {
             getAppDoc: (id, successCallback, errCallback) => {
                 successCallback();
@@ -271,6 +338,8 @@ class AppInfoDialogTest extends Component {
                 dialogOpen={true}
                 presenter={presenter}
                 editable={false}
+                quickLaunches={quickLaunches}
+                userName="sriram@iplantcollaborative.org"
             />
         );
     }

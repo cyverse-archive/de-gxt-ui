@@ -62,6 +62,9 @@ const intlData = {
         cancelLabel: "Cancel",
         defaultQLTooltip: "Make this my default quick launch for this app",
         publicQLTooltip: "Quick launch visible to all users",
+        qLaunchToolTip: "Click to use this quick launch",
+        qLaunchEmbedToolTip: "Click to copy embed code",
+        quickLaunchLabel: "Quick launch",
     },
 };
 

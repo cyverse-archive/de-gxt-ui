@@ -14,6 +14,7 @@ import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import CreateQuickLaunchDialogTest from "./apps/quickLaunch/CreateQuickLaunchDialog.stories";
+import QuickLaunchListingTest from "./apps/quickLaunch/QuickLaunchListing.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
@@ -64,6 +65,7 @@ import ErrorExpansionPanelTest from "./util/ErrorExpansionPanel.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
+
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
 ));
@@ -94,6 +96,9 @@ storiesOf("apps/details", module).add("AppInfoDialog", () => (
 storiesOf("apps/details", module).add("AppDoc", () => <AppDocTest />);
 storiesOf("apps/qlaunch", module).add("CreateQuickLaunch", () => (
     <CreateQuickLaunchDialogTest />
+));
+storiesOf("apps/qlaunch", module).add("QuickLaunchListing", () => (
+    <QuickLaunchListingTest />
 ));
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (

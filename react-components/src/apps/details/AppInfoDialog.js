@@ -23,6 +23,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
 
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
@@ -34,10 +35,13 @@ function AppInfoDialog(props) {
         presenter,
         docEditable,
         searchRegexPattern,
+        userName,
         baseDebugId,
         intl,
+        quickLaunches, // for testing
     } = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
+    const quickLaunchLabel = formatMessage(intl, "quickLaunchLabel");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
 
@@ -117,7 +121,7 @@ function AppInfoDialog(props) {
 
     return (
         <React.Fragment>
-            <Dialog open={dialogOpen} fullWidth={true} id={baseDebugId}>
+            <Dialog open={dialogOpen} maxWidth="sm" id={baseDebugId}>
                 <DEDialogHeader heading={app.name} onClose={onClose} />
                 <DialogContent style={{ minHeight: 600 }}>
                     <Tabs
@@ -125,8 +129,11 @@ function AppInfoDialog(props) {
                         textColor="primary"
                         value={tabIndex}
                         onChange={handleTabChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
                     >
                         <Tab label={appInfoLabel} />
+                        <Tab label={quickLaunchLabel} />
                         <Tab label={toolInfoLabel} />
                         <Tab label={appDocLabel} />
                     </Tabs>
@@ -139,6 +146,13 @@ function AppInfoDialog(props) {
                         />
                     )}
                     {tabIndex === 1 && (
+                        <QuickLaunchListing
+                            presenter={presenter}
+                            userName={userName}
+                            quickLaunches={quickLaunches}
+                        />
+                    )}
+                    {tabIndex === 2 && (
                         <ToolDetails
                             baseDebugId={build(
                                 baseDebugId,
@@ -148,7 +162,7 @@ function AppInfoDialog(props) {
                             details={app.tools}
                         />
                     )}
-                    {tabIndex === 2 && (
+                    {tabIndex === 3 && (
                         <AppDoc
                             baseDebugId={build(
                                 baseDebugId,
