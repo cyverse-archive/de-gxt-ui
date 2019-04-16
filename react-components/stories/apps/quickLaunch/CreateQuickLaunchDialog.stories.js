@@ -7,7 +7,7 @@ class CreateQuickLaunchDialogTest extends Component {
             <CreateQuickLaunchDialog
                 appName="All new word count"
                 dialogOpen={true}
-                isAppOwner={true}
+                isOwner={true}
             />
         );
     }

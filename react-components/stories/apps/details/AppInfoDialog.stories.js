@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import AppInfoDialog from "../../../src/apps/details/AppInfoDialog";
 import { text } from "@storybook/addon-knobs";
-import QucikLaunchListing from "../../../src/apps/quickLaunch/QuickLaunchListing";
 
 class AppInfoDialogTest extends Component {
     render() {

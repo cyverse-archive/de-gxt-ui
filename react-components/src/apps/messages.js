@@ -65,6 +65,9 @@ const intlData = {
         qLaunchToolTip: "Click to use this quick launch",
         qLaunchEmbedToolTip: "Click to copy embed code",
         quickLaunchLabel: "Quick launch",
+        embed: "Embed",
+        share: "Share",
+        qLaunchShareToolTip: "Click to share quick launch URL",
     },
 };
 

@@ -21,7 +21,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import { Tooltip } from "@material-ui/core";
 
 function CreateQuickLaunchDialog(props) {
-    const { dialogOpen, appName, isAppOwner, presenter, intl } = props;
+    const { dialogOpen, appName, isOwner, presenter, intl } = props;
 
     const handleSubmit = (values, actions) => {
         console.log("submit clicked->" + values.name);
@@ -58,32 +58,16 @@ function CreateQuickLaunchDialog(props) {
                             />
                             <ErrorMessage name="description" component="div" />
                             <Tooltip
-                                title={formatMessage(intl, "defaultQLTooltip")}
+                                title={formatMessage(intl, "publicQLTooltip")}
                             >
                                 <Field
                                     name="default"
-                                    label={getMessage("defaultLabel")}
+                                    label={getMessage("publicLabel")}
                                     required={false}
                                     margin="dense"
                                     component={FormCheckbox}
                                 />
                             </Tooltip>
-                            {isAppOwner && (
-                                <Tooltip
-                                    title={formatMessage(
-                                        intl,
-                                        "publicQLTooltip"
-                                    )}
-                                >
-                                    <Field
-                                        name="default"
-                                        label={getMessage("publicLabel")}
-                                        required={false}
-                                        margin="dense"
-                                        component={FormCheckbox}
-                                    />
-                                </Tooltip>
-                            )}
                             <br />
                         </DialogContent>
                         <DialogActions>
