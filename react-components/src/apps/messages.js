@@ -62,12 +62,17 @@ const intlData = {
         cancelLabel: "Cancel",
         defaultQLTooltip: "Make this my default quick launch for this app",
         publicQLTooltip: "Quick launch visible to all users",
-        qLaunchToolTip: "Click to use this quick launch",
-        qLaunchEmbedToolTip: "Click to copy embed code",
+        qLaunchToolTip: "Use this quick launch",
+        qLaunchEmbedToolTip: "Copy embed code",
         quickLaunchLabel: "Quick launch",
-        embed: "Embed",
-        share: "Share",
-        qLaunchShareToolTip: "Click to share quick launch URL",
+        embedLbl: "Embed",
+        shareLbl: "Share",
+        deleteLbl: "Delete",
+        qLaunchShareToolTip: "Share quick launch URL",
+        quickLaunchDeleteConfirmation:
+            "Do you wish to delete this quick launch? Note: Deleting" +
+            " public quick launch will break embedded and shared links.",
+        noQuickLaunches: "No quick launches to display.",
     },
 };
 

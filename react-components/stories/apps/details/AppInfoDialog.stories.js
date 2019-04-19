@@ -328,6 +328,9 @@ class AppInfoDialogTest extends Component {
             ) => {
                 console.log("Rating deleted!");
             },
+            getQuickLaunches: (id, handleSuccess, handleFailure) => {
+                handleSuccess(quickLaunches);
+            },
         };
         return (
             <AppInfoDialog
@@ -337,7 +340,6 @@ class AppInfoDialogTest extends Component {
                 dialogOpen={true}
                 presenter={presenter}
                 editable={false}
-                quickLaunches={quickLaunches}
                 userName="sriram@iplantcollaborative.org"
             />
         );

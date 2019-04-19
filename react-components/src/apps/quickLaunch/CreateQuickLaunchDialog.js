@@ -21,11 +21,24 @@ import DialogActions from "@material-ui/core/DialogActions";
 import { Tooltip } from "@material-ui/core";
 
 function CreateQuickLaunchDialog(props) {
-    const { dialogOpen, appName, isOwner, presenter, intl } = props;
+    const { dialogOpen, appName, presenter, intl } = props;
 
     const handleSubmit = (values, actions) => {
         console.log("submit clicked->" + values.name);
-        actions.setSubmitting(false);
+        actions.setSubmitting(true);
+        const { name, description, is_public } = values;
+        presenter.createQuickLaunch(
+            name,
+            description ? description : "",
+            is_public ? is_public : false,
+            () => {
+                actions.setSubmitting(false);
+                handleClose();
+            },
+            (statusCode, errMessage) => {
+                actions.setSubmitting(false);
+            }
+        );
     };
 
     const handleClose = () => {
@@ -61,7 +74,7 @@ function CreateQuickLaunchDialog(props) {
                                 title={formatMessage(intl, "publicQLTooltip")}
                             >
                                 <Field
-                                    name="default"
+                                    name="is_public"
                                     label={getMessage("publicLabel")}
                                     required={false}
                                     margin="dense"

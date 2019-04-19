@@ -38,7 +38,6 @@ function AppInfoDialog(props) {
         userName,
         baseDebugId,
         intl,
-        quickLaunches, // for testing
     } = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const quickLaunchLabel = formatMessage(intl, "quickLaunchLabel");
@@ -149,7 +148,8 @@ function AppInfoDialog(props) {
                         <QuickLaunchListing
                             presenter={presenter}
                             userName={userName}
-                            quickLaunches={quickLaunches}
+                            appId={app.id}
+                            onQuickLaunch={onClose}
                         />
                     )}
                     {tabIndex === 2 && (
