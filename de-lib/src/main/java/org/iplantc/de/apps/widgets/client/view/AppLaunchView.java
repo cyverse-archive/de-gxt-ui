@@ -78,6 +78,8 @@ public interface AppLaunchView extends IsWidget,
         int windowMinHeight();
 
         String createQuickLaunch();
+
+        String createQuickLaunchSuccess(String name);
     }
 
     @JsType
@@ -98,7 +100,6 @@ public interface AppLaunchView extends IsWidget,
 
         void createQuickLaunch(String name,
                                String description,
-                               boolean isDefault,
                                boolean isPublic,
                                ReactSuccessCallback callback,
                                ReactErrorCallback errorCallback);

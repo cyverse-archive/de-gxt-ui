@@ -82,22 +82,29 @@ public class ConfigFactory {
         return awc.as();
     }
 
-    public static AppWizardConfig appWizardConfig(String appIntegratorEmail, String systemId,
-                                                  String appId) {
+    public static AppWizardConfig appWizardConfig(String appIntegratorEmail,
+                                                  String systemId,
+                                                  String appId,
+                                                  String quickLaunchId) {
         AutoBean<AppWizardConfig> awc = applyWindowType(WindowType.APP_WIZARD, factory.appWizardConfig());
         applyTag(systemId + ":" + appId, awc);
         awc.as().setSystemId(systemId);
         awc.as().setAppId(appId);
         awc.as().setAppIntegratorEmail(appIntegratorEmail);
+        awc.as().setQuickLaunchId(quickLaunchId);
         return awc.as();
     }
 
     public static AppWizardConfig appWizardConfig(String appId) {
-        return appWizardConfig(null, null, appId);
+        return appWizardConfig(null, null, appId, "");
     }
 
     public static AppWizardConfig appWizardConfig(App app) {
-        return appWizardConfig(app.getIntegratorEmail(), app.getSystemId(), app.getId());
+        return appWizardConfig(app.getIntegratorEmail(), app.getSystemId(), app.getId(), "");
+    }
+
+    public static AppWizardConfig appWizardConfig(String appId, String quickLaunchId) {
+        return appWizardConfig(null, null, appId, quickLaunchId);
     }
 
     public static DiskResourceWindowConfig diskResourceWindowConfig(boolean newWindowRequested) {

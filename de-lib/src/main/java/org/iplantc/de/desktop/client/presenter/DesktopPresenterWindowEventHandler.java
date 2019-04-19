@@ -7,6 +7,7 @@ import org.iplantc.de.apps.client.events.CreateNewAppEvent;
 import org.iplantc.de.apps.client.events.CreateNewWorkflowEvent;
 import org.iplantc.de.apps.client.events.EditAppEvent;
 import org.iplantc.de.apps.client.events.EditWorkflowEvent;
+import org.iplantc.de.apps.client.events.QuickLaunchEvent;
 import org.iplantc.de.apps.client.events.RunAppEvent;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
@@ -82,7 +83,8 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
                                                            RequestSendToEnsemblEvent.RequestSendToEnsemblEventHandler,
                                                            RequestSendToTreeViewerEvent.RequestSendToTreeViewerEventHandler,
                                                            RequestSimpleDownloadEvent.RequestSimpleDownloadEventHandler,
-                                                           RequestSimpleUploadEvent.RequestSimpleUploadEventHandler {
+                                                           RequestSimpleUploadEvent.RequestSimpleUploadEventHandler,
+                                                           QuickLaunchEvent.QuickLaunchEventHandler {
 
     @Inject DEClientConstants clientConstants;
     @Inject Provider<DiskResourceServiceFacade> diskResourceServiceProvider;
@@ -151,7 +153,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     public void onRequestOpenAppForRelaunch(OpenAppForRelaunchEvent event) {
         final String systemId = event.getSystemId();
         final String appId = event.getAppId();
-        AppWizardConfig config = ConfigFactory.appWizardConfig("", systemId, appId);
+        AppWizardConfig config = ConfigFactory.appWizardConfig("","", systemId, appId);
         config.setAnalysisId(event.getAnalysisId());
         config.setRelaunchAnalysis(true);
 
@@ -346,6 +348,9 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSimpleUploadEvent.TYPE, this);
         registrations.add(handlerRegistration);
+        handlerRegistration = eventBus.addHandler(QuickLaunchEvent.TYPE, this);
+        registrations.add(handlerRegistration);
+
     }
 
     @Override
@@ -358,5 +363,13 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         aiwc.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(newAppTemplate)));
 
         presenter.show(aiwc, true);
+    }
+
+    @Override
+    public void onQuickLaunch(QuickLaunchEvent event) {
+        AppWizardConfig config =
+                ConfigFactory.appWizardConfig("", "",event.getAppId(),
+                                                                            event.getQuickLaunchId());
+        presenter.show(config);
     }
 }

@@ -58,6 +58,18 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
                                     ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback);
 
+        void getQuickLaunches(String appId,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
+
+        
+        void deleteQuickLaunch(String quickLaunchId,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback);
+
+        void getAppInfoForQuickLaunch(String quickLaunchId,
+                                      String appId);
+
     }
 
     void load(Presenter presenter);

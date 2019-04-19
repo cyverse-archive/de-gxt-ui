@@ -28,5 +28,9 @@ public interface AppWizardConfig extends WindowConfig {
 
     String getAppIntegratorEmail();
 
+    String getQuickLaunchId();
+
+    void setQuickLaunchId(String quickLaunchId);
+
 }
 

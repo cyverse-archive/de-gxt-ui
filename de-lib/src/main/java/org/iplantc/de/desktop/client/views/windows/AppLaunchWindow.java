@@ -33,6 +33,7 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
     private AppLaunchView.AppLaunchViewAppearance appearance;
     private String systemId;
     private String appId;
+    private String quickLaunchId;
     private String integratorEmail;
 
     @Inject
@@ -56,7 +57,7 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
 
     @Override
     public WindowConfig getWindowConfig() {
-        AppWizardConfig config = ConfigFactory.appWizardConfig(integratorEmail, systemId, appId);
+        AppWizardConfig config = ConfigFactory.appWizardConfig(integratorEmail, systemId, appId, quickLaunchId);
         config.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(presenter.getAppTemplate())));
         return config;
     }
@@ -82,6 +83,7 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
                 ? deClientConstants.deSystemId()
                 : config1.getSystemId();
         appId = config1.getAppId();
+        quickLaunchId = config1.getQuickLaunchId();
         integratorEmail = config1.getAppIntegratorEmail();
         init(config1);
     }

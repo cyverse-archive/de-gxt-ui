@@ -806,7 +806,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
                 appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
                 show(appsConfig);
             } else if (!Strings.isNullOrEmpty(appId)) {
-                AppWizardConfig config = ConfigFactory.appWizardConfig("", systemId, appId);
+                AppWizardConfig config = ConfigFactory.appWizardConfig("", systemId, appId, "");
                 show(config);
             }
         }

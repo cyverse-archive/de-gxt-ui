@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.QuickLaunchEvent;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
@@ -12,11 +13,13 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
@@ -25,7 +28,6 @@ import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
 import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
@@ -34,12 +36,15 @@ import com.google.web.bindery.autobean.shared.Splittable;
 public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
     @Inject AppUserServiceFacade appUserService;
+    @Inject
+    QuickLaunchServiceFacade qlService;
     @Inject Provider<AppDetailsViewFactory> viewFactoryProvider;
     @Inject IplantAnnouncer announcer;
     @Inject AppDetailsView.AppDetailsAppearance appearance;
     @Inject EventBus eventBus;
     @Inject
     AppAutoBeanFactory appAutoBeanFactory;
+    @Inject private IplantValidationConstants valConstants;
 
     HandlerManager handlerManager;
 
@@ -156,6 +161,60 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
                 }
             }
         });
+    }
+
+    @Override
+    public void getQuickLaunches(String appId,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        qlService.listQuickLaunches(appId, new AppsCallback<Splittable>() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                ErrorHandler.postReact(exception.getMessage(), exception);
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Splittable result) {
+                if (callback != null) {
+                    callback.onSuccess(result);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void deleteQuickLaunch(String quickLaunchId,
+                                  ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
+        qlService.deleteQuickLaunch(quickLaunchId, new AppsCallback<Splittable>() {
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                ErrorHandler.postReact(exception.getMessage(), exception);
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Splittable result) {
+                if (callback != null) {
+                    callback.onSuccess(result);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getAppInfoForQuickLaunch(String quickLaunchId,
+                                         String appId) {
+        eventBus.fireEvent(new QuickLaunchEvent(quickLaunchId, appId));
     }
 
     @Override

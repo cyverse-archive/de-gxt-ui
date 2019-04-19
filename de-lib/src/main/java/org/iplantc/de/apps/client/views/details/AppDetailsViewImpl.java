@@ -63,6 +63,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
         props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
         props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
+        props.userName = userInfo.getFullUsername();
 
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }

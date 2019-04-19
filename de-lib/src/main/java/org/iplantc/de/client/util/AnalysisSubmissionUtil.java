@@ -39,7 +39,9 @@ public class AnalysisSubmissionUtil {
                     value.assign(configSplit, arg.getId());
                 } else if (diskResourceArgumentType && !arg.getType()
                                                            .equals(ArgumentType.MultiFileSelector)) {
-                    value.get("path").assign(configSplit, arg.getId());
+                    if (value.get("path") != null) {
+                        value.get("path").assign(configSplit, arg.getId());
+                    }
                 } else if (arg.getType().equals(ArgumentType.MultiFileSelector) && value.isIndexed()) {
                     value.assign(configSplit, arg.getId());
                 } else if (arg.getType().equals(ArgumentType.TreeSelection) && (arg.getSelectionItems()

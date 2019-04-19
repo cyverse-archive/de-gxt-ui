@@ -144,4 +144,9 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     public String createQuickLaunch() {
         return iplantDisplayStrings.createQuickLaunch();
     }
+
+    @Override
+    public String createQuickLaunchSuccess(String name) {
+        return displayStrings.createQuickLaunchSuccess(name);
+    }
 }

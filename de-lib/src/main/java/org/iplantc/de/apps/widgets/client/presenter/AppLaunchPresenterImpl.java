@@ -19,6 +19,7 @@ import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.AppTemplateServices;
+import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
@@ -32,15 +33,18 @@ import org.iplantc.de.commons.client.util.RegExp;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AppLaunchCallback;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.util.Format;
 
@@ -84,6 +88,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     AppTemplate appTemplate;
     JobExecution jobExecution;
     private final AppTemplateServices atServices;
+    private final QuickLaunchServiceFacade qlServices;
     HandlerManager handlerManager;
     private final UserSettings userSettings;
     private AppTemplateAutoBeanFactory factory;
@@ -103,6 +108,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     public AppLaunchPresenterImpl(final AppLaunchView view,
                                   final UserSettings userSettings,
                                   final AppTemplateServices atServices,
+                                  final QuickLaunchServiceFacade qlServices,
                                   AppTemplateAutoBeanFactory factory,
                                   DEClientConstants deClientConstants,
                                   AppTemplateUtils appTemplateUtils,
@@ -116,6 +122,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         this.view.addRequestAnalysisLaunchEventHandler(this);
         this.view.addCreateQuickLaunchEventHandler(this);
         this.atServices = atServices;
+        this.qlServices = qlServices;
     }
     
     @Override
@@ -131,9 +138,9 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
             this.appTemplate = appTemplateUtils.convertConfigToTemplate(config);
             createJobExecution();
         } else if (config.isRelaunchAnalysis()) {
-            atServices.rerunAnalysis(config.getAnalysisId(),
-                                          config.getAppId(),
-                                          new AppTemplateCallback());
+            atServices.rerunAnalysis(config.getAnalysisId(), config.getAppId(), new AppTemplateCallback());
+        } else if (!Strings.isNullOrEmpty(config.getQuickLaunchId())) {
+            qlServices.reLaunchInfo(config.getQuickLaunchId(), new AppTemplateCallback());
         } else {
             final HasQualifiedId id = getQualifiedIdFromConfig(config);
             atServices.getAppTemplate(id, new AppTemplateCallback());
@@ -225,10 +232,35 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     @Override
     public void createQuickLaunch(String name,
                                   String description,
-                                  boolean isDefault,
                                   boolean isPublic,
                                   ReactSuccessCallback callback,
                                   ReactErrorCallback errorCallback) {
+        qlServices.createQuickLaunch(name,
+                                     description,
+                                     isPublic,
+                                     appTemplate,
+                                     jobExecution,
+                                     new AppsCallback<Splittable>() {
+                                         @Override
+                                         public void onFailure(Integer statusCode,
+                                                               Throwable exception) {
+                                             ErrorHandler.postReact(exception.getMessage(), exception);
+                                             if (errorCallback != null) {
+                                                 errorCallback.onError(statusCode,
+                                                                       exception.getMessage());
+                                             }
+                                         }
+
+                                         @Override
+                                         public void onSuccess(Splittable result) {
+                                             GWT.log("Success ==>" + result);
+                                             announcer.schedule(new SuccessAnnouncementConfig(appearance.createQuickLaunchSuccess(
+                                                     name)));
+                                             if (callback != null) {
+                                                 callback.onSuccess(result);
+                                             }
+                                         }
+                                     });
 
     }
 
