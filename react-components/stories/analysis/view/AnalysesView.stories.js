@@ -295,15 +295,51 @@ class AnalysesViewTest extends Component {
         };
 
         const paramPresenter = {
-            fetchAnalysisParameters: () => {
+            fetchAnalysisParameters: (selected, resolve, reject) => {
                 console.log("fetch parameters");
+                setTimeout(
+                    () =>
+                        resolve({
+                            parameters: [
+                                {
+                                    param_id: "param1",
+                                    param_name: "param1",
+                                    param_value: {
+                                        value: "val1",
+                                    },
+                                    displayValue: "val1",
+                                    param_type: "Text",
+                                },
+                                {
+                                    param_id: "param2",
+                                    param_name: "param2",
+                                    param_value: {
+                                        value: "val2",
+                                    },
+                                    displayValue: "val2",
+                                    param_type: "Text",
+                                },
+                                {
+                                    param_id: "param3",
+                                    param_name: "param3",
+                                    param_value: {
+                                        value: "val3",
+                                    },
+                                    displayValue: "val3",
+                                    param_type: "Text",
+                                },
+                            ],
+                        }),
+                    1500
+                );
             },
-            saveParamsToFile: () => {
+            saveParamsToFile: (parameters, resolve, reject) => {
                 console.log("save parameters to file");
+                console.log(parameters);
+                setTimeout(resolve, 1000);
             },
-            onAnalysisParamValueSelected: () => {
-                console.log("parameter value selected");
-            },
+            onAnalysisParamValueSelected: () =>
+                console.log("parameter value selected"),
         };
 
         return (

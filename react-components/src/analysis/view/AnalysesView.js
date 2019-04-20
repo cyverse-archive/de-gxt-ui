@@ -618,20 +618,19 @@ class AnalysesView extends Component {
     handleSaveParamsToFileClick(parameters) {
         //close viewFilter params temporarily so that save as dialog opens on top of the screen
         this.setState({ loading: true, viewParamsDialogOpen: false });
+
+        const csvRow = (...args) => args.join("\t");
         if (parameters && parameters.length > 0) {
-            let contents = "Name\t" + "Type\t" + "Value\t\n";
-            parameters.forEach(function(param) {
-                contents = contents.concat(
-                    param.param_name +
-                        "\t" +
-                        param.param_type +
-                        "\t" +
-                        param.displayValue +
-                        "\t\n"
-                );
+            let contents = [csvRow("Name", "Type", "Value")];
+            parameters.forEach(({ param_name, param_type, displayValue }) => {
+                contents = [
+                    ...contents,
+                    csvRow(param_name, param_type, displayValue),
+                ];
             });
+
             this.props.paramPresenter.saveParamsToFile(
-                contents,
+                contents.join("\n"),
                 () => {
                     this.setState({
                         loading: false,
