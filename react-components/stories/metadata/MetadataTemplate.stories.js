@@ -227,8 +227,9 @@ class EditNestedAttrMetadataTemplateTest extends Component {
 // curl -X GET --header 'Accept: application/json' 'http://localhost:31331/templates/ae75bc42-45ec-11e5-801c-43dab0dfe096?user=ipctest' | jq 'def attrs: . | {id: .id, name: .name, description: .description, required: .required?, type: .type, values: .values?, attributes: [.attributes[]? | attrs]} | if .values then . else del(.values) end | if (.attributes | length) > 0 then . else del(.attributes) end; {id: .id, name: .name, description: .description, deleted: false, attributes: [.attributes[] | attrs]}'
 const dataciteMetadataTemplate = {
     id: "ae75bc42-45ec-11e5-801c-43dab0dfe096",
-    name: "DOI - DC 4.1",
-    description: "DataCite 4.1 metadata template for DOI submissions",
+    name: "DOI Request - DataCite 4.1",
+    description:
+        "New copy of the DataCite metadata template for testing submissions to the DataCite API",
     deleted: false,
     attributes: [
         {
@@ -272,16 +273,10 @@ const dataciteMetadataTemplate = {
                 {
                     id: "f808ce18-b884-11e8-a32c-f64e9b87c109",
                     name: "xml:lang",
-                    description: "",
+                    description:
+                        "Use default value of US English for primary title. If you add additional titles in other languages, you may change this value for those titles.",
                     required: false,
-                    type: "Enum",
-                    values: [
-                        {
-                            id: "f80b4c6a-b884-11e8-a32c-f64e9b87c109",
-                            is_default: true,
-                            value: "en-us",
-                        },
-                    ],
+                    type: "String",
                 },
             ],
         },
@@ -352,7 +347,7 @@ const dataciteMetadataTemplate = {
             id: "5e183252-7415-11e8-8326-008cfa5ae621",
             name: "publicationYear",
             description:
-                "Year the DOI is issued. Leave blank. Will be filled in after DOI or ARK is issued.",
+                "Year the DOI is issued. Leave blank. Will be filled in when DOI is issued.",
             required: false,
             type: "String",
         },
@@ -360,14 +355,14 @@ const dataciteMetadataTemplate = {
             id: "d7817198-7416-11e8-a7d5-008cfa5ae621",
             name: "resourceType",
             description:
-                "A very brief, preferably one or two word, description of the type of resource for which you are requesting a DOI. This should be more specific than resourceType",
+                "A very brief, preferably one to three word, description of the type of resource for which you are requesting a DOI. This should be more specific than resourceTypeGeneral.",
             required: true,
             type: "String",
             attributes: [
                 {
                     id: "f83f1bc6-b884-11e8-a32c-f64e9b87c109",
                     name: "resourceTypeGeneral",
-                    description: "",
+                    description: "Select from list. ",
                     required: true,
                     type: "Enum",
                     values: [
@@ -388,7 +383,7 @@ const dataciteMetadataTemplate = {
                         },
                         {
                             id: "3ece915a-c8fe-11e8-add7-5a03816fc427",
-                            is_default: false,
+                            is_default: true,
                             value: "Dataset",
                         },
                         {
@@ -454,18 +449,10 @@ const dataciteMetadataTemplate = {
             id: "d782bbe8-7416-11e8-a7d5-008cfa5ae621",
             name: "contributor",
             description:
-                "The institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. If more than one, add rows for contributorName and contributorType under User Metadata.",
+                "An institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. If more than one, add rows for contributorName and contributorType under User Metadata.",
             required: false,
             type: "String",
             attributes: [
-                {
-                    id: "f84604ae-b884-11e8-a32c-f64e9b87c109",
-                    name: "affiliation",
-                    description:
-                        "The organizational or institutional affiliation of the contributor.",
-                    required: false,
-                    type: "String",
-                },
                 {
                     id: "d783f6b6-7416-11e8-a7d5-008cfa5ae621",
                     name: "contributorType",
@@ -612,9 +599,24 @@ const dataciteMetadataTemplate = {
                             name: "schemeURI",
                             description: "",
                             required: false,
-                            type: "URL/URI",
+                            type: "Enum",
+                            values: [
+                                {
+                                    id: "916e880a-edbd-11e8-9bca-008cfa5ae621",
+                                    is_default: true,
+                                    value: "https://orcid.org/",
+                                },
+                            ],
                         },
                     ],
+                },
+                {
+                    id: "f84604ae-b884-11e8-a32c-f64e9b87c109",
+                    name: "affiliation",
+                    description:
+                        "The organizational or institutional affiliation of the contributor.",
+                    required: false,
+                    type: "String",
                 },
             ],
         },
@@ -669,7 +671,8 @@ const dataciteMetadataTemplate = {
                 {
                     id: "f8694464-b884-11e8-a32c-f64e9b87c109",
                     name: "xml:lang",
-                    description: "",
+                    description:
+                        "Set to US English by default. If you add an additional description in another language, you may change this value.",
                     required: false,
                     type: "Enum",
                     values: [
@@ -745,7 +748,7 @@ const dataciteMetadataTemplate = {
         },
         {
             id: "2a253512-741a-11e8-ad87-008cfa5ae621",
-            name: "Analysis_tool",
+            name: "analysis_tool",
             description:
                 "Add a link (URL) to a tool that can be used with this datasets, such as a DE app or Atmosphere image.",
             required: false,
@@ -784,7 +787,7 @@ const dataciteMetadataTemplate = {
             id: "52b91254-74b1-11e8-b2bf-008cfa5ae621",
             name: "version",
             description:
-                "The version number of the resource. Suggested practice: track major_version.minor_version. Register a new identifier for a major version change. Contact us if you need help determining which are major vs. minor versions. ",
+                "The version number of the resource. Suggested practice: track major_version.minor_version. Register a new identifier for a major version change. Contact doi@cyverse.org if you need help determining which are major vs. minor versions. ",
             required: false,
             type: "String",
         },
@@ -810,7 +813,7 @@ const dataciteMetadataTemplate = {
             id: "7309ed60-7418-11e8-ad87-008cfa5ae621",
             name: "relatedIdentifier",
             description:
-                "Identifiers of related resources. These must be globally unique identifiers. For multiple identifiers, add more fields.",
+                "Identifiers of related resources. These must be globally unique identifiers.For each related identifier, include the relationType. For multiple identifiers, add more fields.",
             required: false,
             type: "String",
             attributes: [
@@ -1085,7 +1088,7 @@ const dataciteMetadataTemplate = {
             id: "f8bc36c4-b884-11e8-a32c-f64e9b87c109",
             name: "geoLocation",
             description:
-                "The spatial limits or description of a geographic location.",
+                "The spatial limits or description of a geographic location. Choose from place name, point, or bounding box.",
             required: false,
             type: "Grouping",
             attributes: [
@@ -1166,14 +1169,6 @@ const dataciteMetadataTemplate = {
             ],
         },
         {
-            id: "b2c0eff2-7419-11e8-ad87-008cfa5ae621",
-            name: "compressed_data",
-            description:
-                "Does this dataset contain compressed (e.g., zip) files?",
-            required: false,
-            type: "Boolean",
-        },
-        {
             id: "5ff7c60a-c8f2-11e8-b418-5a03816fc427",
             name: "fundingReference",
             description:
@@ -1233,14 +1228,15 @@ const dataciteMetadataTemplate = {
             id: "b2c24b22-7419-11e8-ad87-008cfa5ae621",
             name: "reuse_or_citation_conditions",
             description:
-                "A standard citation for your dataset will be generated from other metadata, but here you may include specific instructions on how to cite or reuse your dataset. ",
+                "A standard citation for your dataset will be generated from required metadata, but here you may include specific instructions on how to reuse or cite your dataset. ",
             required: false,
             type: "String",
         },
         {
             id: "52cdad72-74b1-11e8-b2bf-008cfa5ae621",
             name: "language",
-            description: "Primary language of the resource.",
+            description:
+                "Primary language of the resource. Contact doi@cyverse.org if you need to change the language.",
             required: false,
             type: "Enum",
             values: [
@@ -1252,9 +1248,18 @@ const dataciteMetadataTemplate = {
             ],
         },
         {
+            id: "b2c0eff2-7419-11e8-ad87-008cfa5ae621",
+            name: "compressed_data",
+            description:
+                "Does this dataset contain compressed (e.g., zip) files?",
+            required: false,
+            type: "Boolean",
+        },
+        {
             id: "52cec45a-74b1-11e8-b2bf-008cfa5ae621",
             name: "size",
-            description: "This should autofill",
+            description:
+                "This will eventually autofill. You may complete the value if you know it.",
             required: false,
             type: "String",
         },
@@ -1262,7 +1267,7 @@ const dataciteMetadataTemplate = {
             id: "52cfd6c4-74b1-11e8-b2bf-008cfa5ae621",
             name: "format",
             description:
-                "Technical format of the resource. Use file extension or MIME type where possible.",
+                "Technical format of the resource. Use file extension or MIME type where possible. If your dataset contains multiple file types, add additional format fields.",
             required: false,
             type: "String",
         },
@@ -1270,7 +1275,7 @@ const dataciteMetadataTemplate = {
             id: "b2c39842-7419-11e8-ad87-008cfa5ae621",
             name: "is_deprecated",
             description:
-                "Has this published dataset been deprecated? If true, there should be a link to the replacement dataset.",
+                "Has this published dataset been deprecated? If true, there should be a link to the replacement dataset. For use by curators only.",
             required: false,
             type: "Boolean",
         },
