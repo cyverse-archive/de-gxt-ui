@@ -1417,6 +1417,12 @@ class MetadataTemplateReadOnlyViewTest extends Component {
                 value: "choice 3",
                 unit: "",
             },
+            {
+                id: "12",
+                attr: "Boolean Attr",
+                value: "true",
+                unit: "",
+            },
         ];
 
         return (

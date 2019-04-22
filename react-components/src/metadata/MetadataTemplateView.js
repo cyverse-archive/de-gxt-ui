@@ -167,6 +167,10 @@ class MetadataTemplateAttributeView extends Component {
                         switch (attribute.type) {
                             case "Boolean":
                                 FieldComponent = FormCheckboxStringValue;
+                                fieldProps = {
+                                    ...fieldProps,
+                                    disabled: !writable,
+                                };
                                 break;
                             case "Number":
                                 FieldComponent = FormNumberField;
