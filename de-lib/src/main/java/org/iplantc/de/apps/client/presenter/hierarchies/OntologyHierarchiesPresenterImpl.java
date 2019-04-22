@@ -81,22 +81,6 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
         @Override
         public void onSuccess(final App appDetails) {
-            TreeStore<OntologyHierarchy> hierarchyTreeStore = getHierarchyTreeStore();
-            TreeStore<AppCategory> categoryTreeStore = getCategoryTreeStore();
-
-            if (app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
-                categoryTreeStore.add(appDetails.getGroups());
-            }
-
-            List<OntologyHierarchy> hierarchies = appDetails.getHierarchies();
-
-            boolean isPublicApp = appDetails.isPublic() != null && appDetails.isPublic();
-            boolean isUnclassified = hierarchies != null && hierarchies.size() == 0;
-            if (isUnclassified && isPublicApp) {
-                hierarchies = unclassifiedHierarchies;
-            }
-            addHierarchies(hierarchyTreeStore, null, hierarchies);
-
             presenterProvider.get(new AsyncCallback<AppDetailsView.Presenter>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -105,7 +89,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
                 @Override
                 public void onSuccess(final AppDetailsView.Presenter result) {
-                    result.go(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
+                    result.go(app, searchRegexPattern);
                 }
             });
 

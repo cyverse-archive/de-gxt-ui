@@ -1,7 +1,7 @@
-import fav from "../../src/resources/images/fav.png";
-import favAdd from "../../src/resources/images/fav_add.png";
-import favRemove from "../../src/resources/images/fav_remove.png";
-import notFav from "../../src/resources/images/not_fav.png";
+import fav from "../resources/images/fav.png";
+import favAdd from "../resources/images/fav_add.png";
+import favRemove from "../resources/images/fav_remove.png";
+import notFav from "../resources/images/not_fav.png";
 import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
@@ -26,13 +26,13 @@ export default (theme) => ({
     statTablePager: {
         flexShrink: 0,
     },
-    toolDetailsLabel: {
+    detailsLabel: {
         fontWeight: "bold",
         fontSize: 10,
         width: 90,
         paddingBottom: "0.5em",
     },
-    toolDetailsValue: {
+    detailsValue: {
         fontSize: 10,
         paddingLeft: 2,
         paddingBottom: "0.5em",

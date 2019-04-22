@@ -2,16 +2,12 @@ package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import com.sencha.gxt.data.shared.TreeStore;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -35,9 +31,7 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
     interface Presenter {
 
         void go(App app,
-                String searchRegexPattern,
-                TreeStore<OntologyHierarchy> hierarchyTreeStore,
-                TreeStore<AppCategory> categoryTreeStore);
+                String searchRegexPattern);
 
         void onAppFavoriteSelected(Splittable app,
                                    ReactSuccessCallback callback,

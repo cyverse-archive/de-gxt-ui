@@ -6,7 +6,6 @@
 import React, { Component } from "react";
 
 import PropTypes from "prop-types";
-import Rating from "react-rating";
 import { injectIntl } from "react-intl";
 
 import ids from "../ids";
@@ -20,21 +19,16 @@ import CategoryTree from "./CategoryTree";
 import CopyTextArea from "../../util/CopyTextArea";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+import { Rate } from "@cyverse-de/de-components";
 
 import Book from "../../resources/images/bookIcon.png";
 import build from "../../util/DebugIDUtil";
 import Highlighter from "../../util/Highlighter";
 
-import goldstar from "../../../src/resources/images/star-gold.gif";
-import whitestar from "../../../src/resources/images/star-white.gif";
-import redstar from "../../../src/resources/images/star-red.gif";
-
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import Delete from "@material-ui/icons/Delete";
 
 function Favorite(props) {
     const { is_favorite, id } = props.details;
@@ -154,7 +148,13 @@ class AppDetails extends Component {
             details.app_type.toUpperCase() ===
             constants.EXTERNAL_APP.toUpperCase();
         const showAppURL = details.is_public || isExternal;
-        const { average, user, total } = details.rating;
+        const {
+            average: averageRating,
+            user: userRating,
+            total: totalRating,
+        } = details.rating;
+        const labelClass = classes.detailsLabel,
+            valueClass = classes.detailsValue;
 
         if (details) {
             return (
@@ -181,10 +181,14 @@ class AppDetails extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("descriptionLabel")}:</b>
-                                <Highlighter search={searchRegexPattern}>
-                                    {details.description}
-                                </Highlighter>
+                                <span className={labelClass}>
+                                    {getMessage("descriptionLabel")}:
+                                </span>
+                                <span className={valueClass}>
+                                    <Highlighter search={searchRegexPattern}>
+                                        {details.description}
+                                    </Highlighter>
+                                </span>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="h6">
@@ -192,77 +196,76 @@ class AppDetails extends Component {
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("publishedOn")}</b>{" "}
-                                {formatDate(details.integration_date)}
+                                <span className={labelClass}>
+                                    {getMessage("publishedOn")}
+                                </span>
+                                <span className={valueClass}>
+                                    {formatDate(details.integration_date)}
+                                </span>
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("integratorName")}</b>
-                                <Highlighter search={searchRegexPattern}>
-                                    {details.integrator_name}
-                                </Highlighter>
+                                <span className={labelClass}>
+                                    {getMessage("integratorName")}
+                                </span>
+                                <span className={valueClass}>
+                                    <Highlighter search={searchRegexPattern}>
+                                        {details.integrator_name}
+                                    </Highlighter>
+                                </span>
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("integratorEmail")}</b>
-                                <Highlighter search={searchRegexPattern}>
-                                    {details.integrator_email}
-                                </Highlighter>
+                                <span className={labelClass}>
+                                    {getMessage("integratorEmail")}
+                                </span>
+                                <span className={valueClass}>
+                                    <Highlighter search={searchRegexPattern}>
+                                        {details.integrator_email}
+                                    </Highlighter>
+                                </span>
                             </Grid>
                             <Grid item xs={12}>
-                                <b>{getMessage("detailsRatingLbl")} </b>
-                                <Rating
-                                    placeholderRating={average}
-                                    emptySymbol={
-                                        <img
-                                            src={whitestar}
-                                            className="icon"
-                                            alt="white star"
-                                        />
+                                <span className={labelClass}>
+                                    {getMessage("detailsRatingLbl")}
+                                </span>
+                                <Rate
+                                    value={
+                                        userRating ? userRating : averageRating
                                     }
-                                    fullSymbol={
-                                        <img
-                                            src={goldstar}
-                                            className="icon"
-                                            alt="gold star"
-                                        />
-                                    }
-                                    placeholderSymbol={
-                                        <img
-                                            src={redstar}
-                                            className="icon"
-                                            alt="red star"
-                                        />
-                                    }
-                                    fractions={2}
-                                    readonly={isExternal}
+                                    readOnly={isExternal}
+                                    total={totalRating}
                                     onChange={this.onRatingChange}
+                                    onDelete={
+                                        userRating
+                                            ? this.onDeleteRatingClick
+                                            : undefined
+                                    }
                                 />
-                                <span>
-                                    {user && (
-                                        <IconButton
-                                            onClick={this.onDeleteRatingClick}
-                                            className={classes.ratingDelete}
-                                        >
-                                            <Delete fontSize="small" />
-                                        </IconButton>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <span className={labelClass}>
+                                    {getMessage("analysesCompleted")}
+                                </span>
+                                <span className={valueClass}>
+                                    {details.job_stats.job_count_completed
+                                        ? details.job_stats.job_count_completed
+                                        : 0}
+                                </span>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <span className={labelClass}>
+                                    {getMessage("detailsLastCompleted")}
+                                </span>
+                                <span className={valueClass}>
+                                    {formatDate(
+                                        details.job_stats.job_last_completed
                                     )}
                                 </span>
-                                <span>({total ? total : 0})</span>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <b>{getMessage("analysesCompleted")}</b>
-                                {details.job_stats.job_count_completed
-                                    ? details.job_stats.job_count_completed
-                                    : 0}
-                            </Grid>
-                            <Grid item xs={12}>
-                                <b>{getMessage("detailsLastCompleted")}</b>{" "}
-                                {formatDate(
-                                    details.job_stats.job_last_completed
-                                )}
                             </Grid>
                             {showAppURL && (
                                 <Grid item xs={12}>
-                                    <b>{getMessage("url")}:</b>
+                                    <span className={labelClass}>
+                                        {getMessage("url")}:
+                                    </span>
                                     <DEHyperLink
                                         onClick={this.onAppUrlClick}
                                         text={formatMessage(intl, "url")}
@@ -279,7 +282,9 @@ class AppDetails extends Component {
                                         item
                                         xs={12}
                                     >
-                                        <b>{getMessage("category")}</b>
+                                        <span className={labelClass}>
+                                            {getMessage("category")}
+                                        </span>
                                         <CategoryTree
                                             searchRegexPattern={
                                                 searchRegexPattern
@@ -299,7 +304,9 @@ class AppDetails extends Component {
                                         item
                                         xs={12}
                                     >
-                                        <b>{getMessage("category")}</b>
+                                        <span className={labelClass}>
+                                            {getMessage("category")}
+                                        </span>
                                         <br />
                                         <img
                                             src={Book}

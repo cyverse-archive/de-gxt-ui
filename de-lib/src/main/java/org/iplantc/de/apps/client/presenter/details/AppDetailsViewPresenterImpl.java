@@ -10,9 +10,7 @@ import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
-import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppFeedback;
-import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
@@ -28,8 +26,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import com.sencha.gxt.data.shared.TreeStore;
 
 /**
  * @author jstroot
@@ -124,12 +120,10 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
     @Override
     public void go(final App app,
-                   final String searchRegexPattern,
-                   TreeStore<OntologyHierarchy> hierarchyTreeStore,
-                   TreeStore<AppCategory> categoryTreeStore) {
+                   final String searchRegexPattern) {
         Preconditions.checkState(view == null, "Cannot call go(..) more than once");
 
-        view = viewFactoryProvider.get().create(app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
+        view = viewFactoryProvider.get().create(app, searchRegexPattern);
         eventBus.addHandler(AppUpdatedEvent.TYPE, view);
         view.load(this);
     }

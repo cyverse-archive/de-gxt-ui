@@ -41,7 +41,7 @@ function AppInfoDialog(props) {
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
 
-    const [value, setValue] = useState(0);
+    const [tabIndex, setTabIndex] = useState(0);
     const [dirty, setDirty] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ function AppInfoDialog(props) {
     }, []);
 
     const handleTabChange = (event, value) => {
-        setValue(value);
+        setTabIndex(value);
     };
 
     const onClose = () => {
@@ -123,14 +123,14 @@ function AppInfoDialog(props) {
                     <Tabs
                         indicatorColor="primary"
                         textColor="primary"
-                        value={value}
+                        value={tabIndex}
                         onChange={handleTabChange}
                     >
                         <Tab label={appInfoLabel} />
                         <Tab label={toolInfoLabel} />
                         <Tab label={appDocLabel} />
                     </Tabs>
-                    {value === 0 && (
+                    {tabIndex === 0 && (
                         <AppDetails
                             baseDebugId={baseDebugId}
                             searchRegexPattern={searchRegexPattern}
@@ -138,7 +138,7 @@ function AppInfoDialog(props) {
                             presenter={presenter}
                         />
                     )}
-                    {value === 1 && (
+                    {tabIndex === 1 && (
                         <ToolDetails
                             baseDebugId={build(
                                 baseDebugId,
@@ -148,7 +148,7 @@ function AppInfoDialog(props) {
                             details={app.tools}
                         />
                     )}
-                    {value === 2 && (
+                    {tabIndex === 2 && (
                         <AppDoc
                             baseDebugId={build(
                                 baseDebugId,

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ToolDetails from "../../../src/apps/details/ToolDetails";
-import "../../../src/index.css";
 
 class ToolDetailsTest extends Component {
     render() {

@@ -16,14 +16,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
-import com.sencha.gxt.widget.core.client.Composite;
-
 /**
  * @author jstroot, sriram
  */
-public class AppDetailsViewImpl extends Composite implements
-                                                 AppDetailsView,
-                                                 AppUpdatedEventHandler {
+public class AppDetailsViewImpl implements AppDetailsView,
+                                           AppUpdatedEventHandler {
 
 
     private final App app;
