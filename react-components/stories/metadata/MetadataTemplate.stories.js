@@ -1686,6 +1686,11 @@ const dataciteMetadata = {
                 },
             ],
         },
+        {
+            attr: "is_deprecated",
+            value: "true",
+            unit: "",
+        },
     ],
 };
 
