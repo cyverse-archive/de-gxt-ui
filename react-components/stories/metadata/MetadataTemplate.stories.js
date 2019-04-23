@@ -1470,17 +1470,17 @@ const dataciteMetadata = {
                 },
                 {
                     attr: "nameIdentifier",
-                    value: "0000000134596520",
+                    value: "0000-0000-1234-5678",
                     unit: "",
                     avus: [
                         {
                             attr: "nameIdentifierScheme",
-                            value: "ISNI",
+                            value: "ORCID",
                             unit: "",
                         },
                         {
                             attr: "schemeURI",
-                            value: "http://isni.org/isni/",
+                            value: "https://orcid.org/",
                             unit: "",
                         },
                     ],
@@ -1514,7 +1514,7 @@ const dataciteMetadata = {
                         },
                         {
                             attr: "schemeURI",
-                            value: "http://orcid.org/",
+                            value: "https://orcid.org/",
                             unit: "",
                         },
                     ],
@@ -1528,7 +1528,7 @@ const dataciteMetadata = {
         },
         {
             attr: "publicationYear",
-            value: "2017",
+            value: "2019",
             unit: "",
         },
         {
@@ -1691,6 +1691,65 @@ const dataciteMetadata = {
                     ],
                 },
             ],
+        },
+        {
+            attr: "fundingReference",
+            value: "",
+            unit: "",
+            avus: [
+                {
+                    attr: "funderName",
+                    value: "NSF",
+                    unit: "",
+                },
+                {
+                    attr: "funderIdentifier",
+                    value: "#DBI-0735191",
+                    unit: "",
+                    avus: [
+                        {
+                            attr: "funderIdentifierType",
+                            value: "Other",
+                            unit: "",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            attr: "version",
+            value: "1.0.0-beta",
+            unit: "",
+        },
+        {
+            attr: "language",
+            value: "en-us",
+            unit: "",
+        },
+        {
+            attr: "size",
+            value: "1.21GB",
+            unit: "",
+        },
+        {
+            attr: "format",
+            value: "application/json",
+            unit: "",
+        },
+        {
+            attr: "analysis_tool",
+            value: "https://qa.cyverse.org/de/",
+            unit: "",
+        },
+        {
+            attr: "reuse_or_citation_conditions",
+            value: "Open Source",
+            unit: "",
+        },
+        {
+            attr: "compressed_data",
+            value: "false",
+            unit: "",
         },
         {
             attr: "is_deprecated",
