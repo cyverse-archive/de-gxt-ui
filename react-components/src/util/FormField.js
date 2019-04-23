@@ -121,6 +121,22 @@ const FormCheckboxTableCell = ({
     </TableCell>
 );
 
+const FormCheckboxStringValue = ({
+    field: { value, onChange, ...field },
+    form: { setFieldValue, ...form },
+    ...custom
+}) => (
+    <FormCheckbox
+        checked={value && value !== "false"}
+        onChange={(event, checked) => {
+            setFieldValue(field.name, checked ? "true" : "false");
+        }}
+        field={field}
+        form={form}
+        {...custom}
+    />
+);
+
 const onNumberChange = (onChange) => (event) => {
     const newValue = event.target.value;
     let intVal = Number(newValue);
@@ -243,6 +259,7 @@ const FormSelectField = ({
 
 export {
     FormCheckbox,
+    FormCheckboxStringValue,
     FormCheckboxTableCell,
     FormIntegerField,
     FormMultilineTextField,

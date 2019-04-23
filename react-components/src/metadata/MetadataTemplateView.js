@@ -16,7 +16,7 @@ import intlData from "./messages";
 import styles from "./style";
 
 import {
-    FormCheckbox,
+    FormCheckboxStringValue,
     FormIntegerField,
     FormMultilineTextField,
     FormNumberField,
@@ -166,7 +166,11 @@ class MetadataTemplateAttributeView extends Component {
 
                         switch (attribute.type) {
                             case "Boolean":
-                                FieldComponent = FormCheckbox;
+                                FieldComponent = FormCheckboxStringValue;
+                                fieldProps = {
+                                    ...fieldProps,
+                                    disabled: !writable,
+                                };
                                 break;
                             case "Number":
                                 FieldComponent = FormNumberField;
