@@ -1,0 +1,3 @@
+.launchButtonPosition {
+    float: right !important;
+}

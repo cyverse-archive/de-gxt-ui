@@ -69,6 +69,7 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         this.customMask = customMask;
         panel = new HTMLPanel("<div></div>");
         initWidget(binder.createAndBindUi(this));
+        launchButton.addStyleName(appearance.launchButtonPositionClassName());
         editorDriver.initialize(this);
     }
 

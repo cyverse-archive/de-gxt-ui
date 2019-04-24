@@ -6,12 +6,6 @@
              xmlns:pan="urn:import:com.google.gwt.user.client.ui"
 >
 
-    <ui:style field="panelStyle">
-        .position {
-            float: right !important;
-        }
-
-    </ui:style>
     <ui:with type="org.iplantc.de.apps.widgets.client.view.AppLaunchView.AppLaunchViewAppearance"
              field="appearance" />
 
@@ -34,7 +28,6 @@
                                    text="{appearance.createQuickLaunch}"/>
                 
                 <button:TextButton ui:field="launchButton"
-                                   addStyleNames="{panelStyle.position}"
                                    text="{appearance.launchAnalysis}"/>
             </pan:HorizontalPanel>
         </container:child>

@@ -80,6 +80,8 @@ public interface AppLaunchView extends IsWidget,
         String createQuickLaunch();
 
         String createQuickLaunchSuccess(String name);
+
+        String launchButtonPositionClassName();
     }
 
     @JsType
