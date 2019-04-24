@@ -71,7 +71,7 @@ class CopyTextArea extends Component {
 CopyTextArea.defaultProps = {
     multiline: false,
     btnText: "Copy",
-    copiedBtnText: "Copied",
+    copiedBtnText: "Copied!",
 };
 
 CopyTextArea.propTypes = {

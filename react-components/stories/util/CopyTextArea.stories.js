@@ -13,7 +13,7 @@ class CopyTextAreaTest extends Component {
             <CopyTextArea
                 debugIdPrefix="test.id.prefix"
                 btnText="Copy"
-                copiedText="Copied!"
+                copiedBtnText="Copied!"
                 text={textToCopy}
             />
         );
