@@ -4,6 +4,7 @@ var intlData = {
         okBtnText: "OK",
         cancelBtnText: "Cancel",
         more: "More",
+        closeBtnText: "Close",
     },
 };
 

@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -29,7 +30,6 @@ import org.iplantc.de.apps.client.events.selection.DetailsCategoryClicked;
 import org.iplantc.de.apps.client.events.selection.DetailsHierarchyClicked;
 import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.ParentFilteredHierarchyCallback;
-import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -43,10 +43,10 @@ import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -76,7 +76,6 @@ public class OntologyHierarchiesPresenterImplTest {
 
     @Mock IplantAnnouncer announcerMock;
     @Mock OntologyUtil ontologyUtilMock;
-    @Mock AsyncProvider<AppDetailsDialog> appDetailsDialogProviderMock;
     @Mock AppUserServiceFacade appUserServiceMock;
     @Mock DETabPanel tabPanelMock;
     @Mock OntologyServiceFacade ontologyServiceMock;
@@ -90,7 +89,6 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock List<OntologyHierarchy> hierarchyListMock;
     @Mock App appMock;
     @Mock Avu avuMock;
-    @Mock AppDetailsDialog appDetailsDialogMock;
     @Mock List<Avu> avuListMock;
     @Mock Iterator<Avu> avuIteratorMock;
     @Mock Iterator<OntologyHierarchy> hierarchyListIterator;
@@ -113,14 +111,20 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock Tree.TreeNode<OntologyHierarchy> treeNodeMock;
     @Mock List<OntologyHierarchiesPresenterImpl.FilteredHierarchyCallback> childCallbacksMock;
     @Mock ParentFilteredHierarchyCallback parentCallbackMock;
+    @Mock
+    AsyncProviderWrapper<AppDetailsView.Presenter> detailsPresenterProviderMock;
+    @Mock
+    AppDetailsView.Presenter detailsPresenterMock;
+
 
     @Captor ArgumentCaptor<DECallback<List<OntologyHierarchy>>> hierarchyListCallback;
     @Captor ArgumentCaptor<OntologyHierarchiesPresenterImpl.FilteredHierarchyCallback> hierarchyCallback;
-    @Captor ArgumentCaptor<AsyncCallback<AppDetailsDialog>> appDetailsDialogCallback;
     @Captor ArgumentCaptor<DECallback<App>> appDetailsCallback;
     @Captor ArgumentCaptor<DECallback<List<Avu>>> appAvuCallbackCaptor;
     @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<ParentFilteredHierarchyCallback> parentCallbackCaptor;
+    @Captor
+    ArgumentCaptor<AsyncCallback<AppDetailsView.Presenter>> detailsPresenterCallback;
 
 
     private OntologyHierarchiesPresenterImpl uut;
@@ -190,7 +194,6 @@ public class OntologyHierarchiesPresenterImplTest {
         };
         uut.ontologyUtil = ontologyUtilMock;
         uut.announcer = announcerMock;
-        uut.appDetailsDlgAsyncProvider = appDetailsDialogProviderMock;
         uut.appUserService = appUserServiceMock;
         uut.handlerManager = handlerManagerMock;
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
@@ -198,6 +201,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.viewTabPanel = tabPanelMock;
         uut.unclassifiedHierarchies = unclassifiedHierarchiesMock;
         uut.views = viewsMock;
+        uut.presenterProvider = detailsPresenterProviderMock;
     }
 
 
@@ -217,7 +221,6 @@ public class OntologyHierarchiesPresenterImplTest {
         };
         uut.ontologyUtil = ontologyUtilMock;
         uut.announcer = announcerMock;
-        uut.appDetailsDlgAsyncProvider = appDetailsDialogProviderMock;
         uut.appUserService = appUserServiceMock;
         uut.handlerManager = handlerManagerMock;
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
@@ -245,7 +248,6 @@ public class OntologyHierarchiesPresenterImplTest {
         };
         uut.ontologyUtil = ontologyUtilMock;
         uut.announcer = announcerMock;
-        uut.appDetailsDlgAsyncProvider = appDetailsDialogProviderMock;
         uut.appUserService = appUserServiceMock;
         uut.handlerManager = handlerManagerMock;
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
@@ -272,27 +274,10 @@ public class OntologyHierarchiesPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
-        verify(appDetailsDialogProviderMock).get(appDetailsDialogCallback.capture());
-        appDetailsDialogCallback.getValue().onSuccess(appDetailsDialogMock);
-
         verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
         appDetailsCallback.getValue().onSuccess(appMock);
 
-        verify(categoryTreeStoreMock).add(appCategoryListMock);
-
-
-        verify(appDetailsDialogMock).show(eq(appMock),
-                                          anyString(),
-                                          eq(hierarchyTreeStoreMock),
-                                          eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
-
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
-
     }
 
     @Test
@@ -308,23 +293,12 @@ public class OntologyHierarchiesPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
-        verify(appDetailsDialogProviderMock).get(appDetailsDialogCallback.capture());
-        appDetailsDialogCallback.getValue().onSuccess(appDetailsDialogMock);
 
         verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
         appDetailsCallback.getValue().onSuccess(appMock);
 
         verifyZeroInteractions(categoryTreeStoreMock);
 
-        verify(appDetailsDialogMock).show(eq(appMock),
-                                          anyString(),
-                                          eq(hierarchyTreeStoreMock),
-                                          eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
     }
@@ -339,23 +313,12 @@ public class OntologyHierarchiesPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
-        verify(appDetailsDialogProviderMock).get(appDetailsDialogCallback.capture());
-        appDetailsDialogCallback.getValue().onSuccess(appDetailsDialogMock);
 
         verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
         appDetailsCallback.getValue().onSuccess(appMock);
 
         verifyZeroInteractions(categoryTreeStoreMock);
 
-        verify(appDetailsDialogMock).show(eq(appMock),
-                                          anyString(),
-                                          eq(hierarchyTreeStoreMock),
-                                          eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
 

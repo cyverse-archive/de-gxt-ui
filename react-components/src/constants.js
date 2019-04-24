@@ -16,4 +16,14 @@ export default {
     APP_COMMENTS: "https://wiki.cyverse.org/wiki/x/zi2",
     APP_STATUS:
         "https://wiki.cyverse.org/wiki/x/6gGO#UsingtheAppsWindowandSubmittinganAnalysis-AppStatus",
+    EXTERNAL_APP: "external",
+    APP_CATEGORY: "app-category",
+    FOLDER: "folder",
+    TYPE: "type",
+    SYSTEM_ID: "system-id",
+    APP_ID: "app-id",
+    STATE: "state",
+    APPS: "apps",
+    DATA: "data",
+    AGAVE: "agave",
 };

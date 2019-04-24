@@ -7,7 +7,10 @@ import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.s
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
 
+import AppDetailsTest from "./apps/details/AppDetails.stories";
+import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
+import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 
@@ -82,7 +85,12 @@ storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
 storiesOf("apps/details", module).add("CategoryTree", () => (
     <CategoryTreeTest logger={action("hierarchy")} />
 ));
+storiesOf("apps/details", module).add("AppDetails", () => <AppDetailsTest />);
 storiesOf("apps/details", module).add("ToolDetails", () => <ToolDetailsTest />);
+storiesOf("apps/details", module).add("AppInfoDialog", () => (
+    <AppInfoDialogTest />
+));
+storiesOf("apps/details", module).add("AppDoc", () => <AppDocTest />);
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />

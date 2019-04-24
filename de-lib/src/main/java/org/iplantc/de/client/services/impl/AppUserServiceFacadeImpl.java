@@ -26,12 +26,10 @@ import org.iplantc.de.client.models.apps.sharing.AppPermissionsRequest;
 import org.iplantc.de.client.models.apps.sharing.AppSharingAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
-import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
-import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
 import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -66,15 +64,14 @@ import java.util.List;
  */
 public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
-    private class AppDocCallbackConverter extends DECallbackConverter<String, AppDoc> {
-        public AppDocCallbackConverter(DECallback<AppDoc> callback) {
+    private class AppDocSplittableCallbackConverter extends DECallbackConverter<String, Splittable> {
+        public AppDocSplittableCallbackConverter(DECallback<Splittable> callback) {
             super(callback);
         }
 
         @Override
-        protected AppDoc convertFrom(String object) {
-            AutoBean<AppDoc> appDocAutoBean = AutoBeanCodex.decode(factory, AppDoc.class, object);
-            return appDocAutoBean.as();
+        protected Splittable convertFrom(String object) {
+            return StringQuoter.split(object);
         }
     }
 
@@ -276,7 +273,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
         // KLUDGE Have to send empty JSON body with POST request
         Splittable body = StringQuoter.createSplittable();
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, body.toString());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, body.getPayload());
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, AppFeedback>(callback) {
             @Override
             protected AppFeedback convertFrom(String object) {
@@ -416,21 +413,23 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback) {
+    public void getAppDoc(HasQualifiedId app,
+                          DECallback<Splittable> callback) {
         String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deServiceFacade.getServiceData(wrapper, new AppDocCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new AppDocSplittableCallbackConverter(callback));
     }
 
     @Override
-    public void saveAppDoc(final HasQualifiedId app,
+    public void saveAppDoc(final String appId,
+                           final String systemId,
                            final String doc,
-                           final DECallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
+                           final DECallback<Splittable> callback) {
+        String address = APPS + "/" +systemId + "/" +appId + "/documentation";
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc).assign(payload, "documentation");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, payload.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppDocCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new AppDocSplittableCallbackConverter(callback));
 
     }
 

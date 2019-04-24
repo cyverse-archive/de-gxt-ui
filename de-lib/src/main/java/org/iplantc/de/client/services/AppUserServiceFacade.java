@@ -3,7 +3,6 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.apps.Publishable;
@@ -11,6 +10,8 @@ import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.shared.DECallback;
+
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -74,9 +75,12 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
      */
     void getAppDetails(App app, DECallback<App> callback);
 
-    void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, DECallback<Splittable> callback);
 
-    void saveAppDoc(HasQualifiedId appId, String doc, DECallback<AppDoc> callback);
+    void saveAppDoc(final String appId,
+                    final String systemId,
+                    final String doc,
+                    final DECallback<Splittable> callback);
 
     void createWorkflows(String body, DECallback<String> callback);
 

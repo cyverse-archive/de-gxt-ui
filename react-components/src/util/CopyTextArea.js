@@ -4,18 +4,17 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { hasClipboardAPI, copySelection } from "../clipboardFunctions";
+import { copySelection, hasClipboardAPI } from "../clipboardFunctions";
+import PropTypes from "prop-types";
 
 class CopyTextArea extends Component {
     constructor(props) {
         super(props);
-
+        // This binding is necessary to make `this` work in the callback
+        this.onCopyText = this.onCopyText.bind(this);
         this.state = {
             btnText: props.btnText,
         };
-
-        // This binding is necessary to make `this` work in the callback
-        this.onCopyText = this.onCopyText.bind(this);
     }
 
     onCopyText(e) {
@@ -27,7 +26,7 @@ class CopyTextArea extends Component {
             ele.select();
         }
         if (copySelection()) {
-            this.setState({ btnText: this.props.copiedText });
+            this.setState({ btnText: this.props.copiedBtnText });
         }
     }
 
@@ -43,12 +42,13 @@ class CopyTextArea extends Component {
     }
 
     render() {
+        const { multiline, text, debugIdPrefix } = this.props;
         return (
             <div>
                 <TextField
-                    id={`${this.props.debugIdPrefix}.CopyTextArea.TextField`}
-                    value={this.props.text}
-                    multiLine={true}
+                    id={`${debugIdPrefix}.CopyTextArea.TextField`}
+                    value={text}
+                    multiLine={multiline}
                     readOnly="readonly"
                     margin="normal"
                     style={{ width: "100%" }}
@@ -56,7 +56,7 @@ class CopyTextArea extends Component {
                 {hasClipboardAPI() && (
                     <Button
                         variant="raised"
-                        id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
+                        id={`${debugIdPrefix}.CopyTextArea.Button`}
                         onClick={this.onCopyText}
                         style={{ padding: 2 }}
                     >
@@ -67,5 +67,19 @@ class CopyTextArea extends Component {
         );
     }
 }
+
+CopyTextArea.defaultProps = {
+    multiline: false,
+    btnText: "Copy",
+    copiedBtnText: "Copied!",
+};
+
+CopyTextArea.propTypes = {
+    debugIdPrefix: PropTypes.string,
+    multiline: PropTypes.bool,
+    text: PropTypes.string.isRequired,
+    btnText: PropTypes.string,
+    copiedBtnText: PropTypes.string,
+};
 
 export default CopyTextArea;

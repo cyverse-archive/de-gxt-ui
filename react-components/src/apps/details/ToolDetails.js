@@ -3,14 +3,21 @@
  *
  */
 import React, { Component } from "react";
+
+import build from "../../util/DebugIDUtil";
+import intlData from "../messages";
+import style from "../style";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import Highlighter from "../../util/Highlighter";
+
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import intlData from "../messages";
-import styles from "../style";
-import injectSheet from "react-jss";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {
@@ -32,71 +39,77 @@ class ToolDetailsV1 extends Component {
 
     render() {
         const classes = this.props.classes;
-        let tools = this.props.app.tools,
-            labelClass = classes.toolDetailsLabel,
-            valueClass = classes.toolDetailsValue;
-        return (
-            <div>
-                {tools.map((toolInfo, index) => (
-                    <ExpansionPanel key={index}>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <p className={labelClass}>{toolInfo.name}:</p>
-                            <p className={valueClass}>{toolInfo.description}</p>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>{getMessage("detailsLabel")}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolNameLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.name}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("descriptionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.description}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("imageLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.image}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolVersionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.version}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className={labelClass}>
-                                            {getMessage("toolAttributionLabel")}
-                                        </td>
-                                        <td className={valueClass}>
-                                            {toolInfo.attribution}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                ))}
-            </div>
-        );
+        let tools = this.props.details,
+            labelClass = classes.detailsLabel,
+            valueClass = classes.detailsValue;
+        const { baseDebugId, searchRegexPattern } = this.props;
+        return tools.map((toolInfo, index) => (
+            <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="caption">
+                        <Highlighter search={searchRegexPattern}>
+                            {toolInfo.name}
+                        </Highlighter>
+                        :
+                        <Highlighter search={searchRegexPattern}>
+                            {toolInfo.description}
+                        </Highlighter>
+                    </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{getMessage("detailsLabel")}</td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolNameLabel")}
+                                </td>
+                                <Highlighter search={searchRegexPattern}>
+                                    <td className={valueClass}>
+                                        {toolInfo.name}
+                                    </td>
+                                </Highlighter>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("descriptionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    <Highlighter search={searchRegexPattern}>
+                                        {toolInfo.description}
+                                    </Highlighter>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("imageLabel")}
+                                </td>
+                                <td className={valueClass}>{toolInfo.image}</td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolVersionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    {toolInfo.version}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={labelClass}>
+                                    {getMessage("toolAttributionLabel")}
+                                </td>
+                                <td className={valueClass}>
+                                    {toolInfo.attribution}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        ));
     }
 }
 
-export default injectSheet(styles)(withI18N(ToolDetailsV1, intlData));
+export default withStyles(style)(withI18N(ToolDetailsV1, intlData));

@@ -1,28 +1,13 @@
 package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.apps.client.events.selection.AppDetailsDocSelected;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.DetailsCategoryClicked;
-import org.iplantc.de.apps.client.events.selection.DetailsHierarchyClicked;
-import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDoc;
-import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
-import com.google.gwt.editor.client.Editor;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-
-import com.sencha.gxt.data.shared.TreeStore;
-import com.sencha.gxt.widget.core.client.tree.TreeStyle;
-
-import java.util.List;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -32,115 +17,52 @@ import jsinterop.annotations.JsType;
  * @author jstroot
  */
 @JsType
-public interface AppDetailsView extends IsWidget,
-                                        Editor<App>,
-                                        AppUpdatedEvent.AppUpdatedEventHandler,
-                                        AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                        AppDetailsDocSelected.HasAppDetailsDocSelectedHandlers,
-                                        SaveMarkdownSelected.HasSaveMarkdownSelectedHandlers,
-                                        AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                        AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                        DetailsHierarchyClicked.HasDetailsHierarchyClickedHandlers,
-                                        DetailsCategoryClicked.HasDetailsCategoryClickedHandlers {
+public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEventHandler {
 
     @JsType
     interface AppDetailsAppearance {
-
-        @JsType
-        interface AppDetailsStyle extends CssResource {
-
-            String label();
-
-            String value();
-
-            String hyperlink();
-
-            String detailsCard();
-
-            String detailsTable();
-
-            String detailsRow();
-
-            String tabPanel();
-        }
-
-        String descriptionLabel();
-
-        AppDetailsStyle css();
-
-        String detailsLabel();
-
         @JsIgnore
         SafeHtml getAppDocError(Throwable caught);
-
-        @JsIgnore
-        SafeHtml getCategoriesHtml(List<List<String>> appGroupHierarchies);
-
-        @JsIgnore
-        SafeHtml highlightText(String value, String searchRegexPattern);
-
-        String publishedOnLabel();
-
-        String integratorNameLabel();
-
-        String integratorEmailLabel();
-
-        String helpLabel();
-
-        String ratingLabel();
-
-        String categoriesLabel();
-
-        String informationTabLabel();
-
         @JsIgnore
         SafeHtml saveAppDocError(Throwable caught);
+    }
 
-        String toolInformationTabLabel();
+    @JsType
+    interface Presenter {
 
-        String toolNameLabel();
+        void go(App app,
+                String searchRegexPattern);
 
-        String toolVersionLabel();
+        void onAppFavoriteSelected(Splittable app,
+                                   ReactSuccessCallback callback,
+                                   ReactErrorCallback errorCallback);
 
-        String toolAttributionLabel();
+        void onAppRatingSelected(Splittable app,
+                                 int score,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback);
 
-        String userManual();
+        void onAppRatingDeSelected(Splittable app,
+                                   ReactSuccessCallback callback,
+                                   ReactErrorCallback errorCallback);
 
-        String url();
+        void onClose();
 
-        String appUrl();
+        void getAppDoc(Splittable appSplittable,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
 
-        String copyAppUrl();
-
-        @JsIgnore
-        void setTreeIcons(TreeStyle style);
-
-        String completedRun();
-
-        String completedDate();
-
-        String imageLabel();
+        void onSaveMarkdownSelected(String appId,
+                                    String systemId,
+                                    String doc,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback);
 
     }
 
-    interface Presenter extends AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                DetailsHierarchyClicked.HasDetailsHierarchyClickedHandlers,
-                                DetailsCategoryClicked.HasDetailsCategoryClickedHandlers{
 
-        void go(HasOneWidget widget,
-                App app,
-                String searchRegexPattern,
-                TreeStore<OntologyHierarchy> hierarchyTreeStore,
-                TreeStore<AppCategory> categoryTreeStore);
-    }
+    void load(Presenter presenter);
 
-    /**
-     * Displays the documentation window
-     */
-    @JsIgnore
-    void showDoc(AppDoc appDoc);
-
-    void onDetailsCategoryClicked(String modelKey);
+    void onClose();
 }
+

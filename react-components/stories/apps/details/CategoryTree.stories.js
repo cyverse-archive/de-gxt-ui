@@ -64,7 +64,9 @@ class CategoryTreeTest extends Component {
             ],
         };
 
-        return <CategoryTree app={app} presenter={presenter} />;
+        return (
+            <CategoryTree hierarchies={app.hierarchies} presenter={presenter} />
+        );
     }
 }
 

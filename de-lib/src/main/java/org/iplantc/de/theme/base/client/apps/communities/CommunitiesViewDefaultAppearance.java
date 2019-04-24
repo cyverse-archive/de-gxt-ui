@@ -17,13 +17,13 @@ public class CommunitiesViewDefaultAppearance implements CommunitiesView.Appeara
 
     public interface CommunityViewResources extends ClientBundle {
 
-        @Source("../book_add.png")
+        @Source("../bookIcon-inbetween.png")
         ImageResource category();
 
-        @Source("../book_open.png")
+        @Source("../bookIcon-open.png")
         ImageResource categoryOpen();
 
-        @Source("../book.png")
+        @Source("../bookIcon.png")
         ImageResource subCategory();
     }
 

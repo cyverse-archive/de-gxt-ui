@@ -13,7 +13,6 @@ import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
 import org.iplantc.de.apps.client.gin.AppCategoryTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
-import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
@@ -32,7 +31,6 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AppsCallback;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Preconditions;
@@ -99,7 +97,6 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     protected static String PATH_KEY = "category_path";
     protected String searchRegexPattern;
     @Inject IplantAnnouncer announcer;
-    @Inject AsyncProviderWrapper<AppDetailsDialog> appDetailsDlgAsyncProvider;
     @Inject AppServiceFacade appService;
     @Inject AppUserServiceFacade appUserService;
     @Inject OauthServiceFacade oauthServiceFacade;
