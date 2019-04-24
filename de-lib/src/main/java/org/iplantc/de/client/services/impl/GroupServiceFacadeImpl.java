@@ -312,7 +312,11 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     void updateGroup(String address, Group group, AsyncCallback<Group> callback) {
-        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
+        Group updatedGroup = factory.getGroup().as();
+        updatedGroup.setName(group.getName());
+        updatedGroup.setDescription(group.getDescription());
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updatedGroup));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
