@@ -277,8 +277,6 @@ public class OntologyHierarchiesPresenterImplTest {
         verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
         appDetailsCallback.getValue().onSuccess(appMock);
 
-        verify(categoryTreeStoreMock).add(appCategoryListMock);
-
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
     }
 
