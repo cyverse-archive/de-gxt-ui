@@ -1,5 +1,6 @@
 package org.iplantc.de.desktop.client.presenter;
 
+import org.iplantc.de.apps.client.events.QuickLaunchEvent;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
@@ -120,11 +121,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         String SYSTEM_ID = "system-id";
         String APP_ID = "app-id";
         String STATE = "state";
+        String QUICK_LAUNCH_ID = "q-id";
     }
 
     public interface TypeQueryValues {
         String APPS = "apps";
         String DATA = "data";
+        String QUICK_LAUNCH = "quick-launch";
     }
 
     private class HeadingUpdatedEventHandler
@@ -796,6 +799,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         boolean hasStateKey = keys.stream().anyMatch(QueryStrings.STATE::equalsIgnoreCase);
         boolean hasAppsType = hasTypeKeys && params.get(QueryStrings.TYPE).stream().anyMatch(TypeQueryValues.APPS::equalsIgnoreCase);
         boolean hasError = keys.stream().anyMatch(AuthErrors.ERROR::equalsIgnoreCase);
+        boolean hasQuickLaunchType =
+                hasTypeKeys && params.get(QueryStrings.TYPE).stream().anyMatch(TypeQueryValues.QUICK_LAUNCH::equalsIgnoreCase);
 
         if (hasAppsType) {
             final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
@@ -815,6 +820,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         }
         if (hasError) {
             showAuthErrors(params);
+        }
+        if(hasQuickLaunchType) {
+            final String quickLaunchId = Window.Location.getParameter(QueryStrings.QUICK_LAUNCH_ID);
+            final String appId = Window.Location.getParameter(QueryStrings.APP_ID);
+            eventBus.fireEvent(new QuickLaunchEvent(quickLaunchId,appId));
         }
     }
 

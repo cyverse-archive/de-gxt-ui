@@ -58,6 +58,7 @@ public interface AppsModule {
         String OK_BTN = ".okBtn";
         String APP_LAUNCH_VIEW = ".view";
         String APP_LAUNCH_BTN = ".launchBtn";
+        String QUICK_LAUNCH_BTN = ".quickLaunchBtn";
         String TEMPLATE_FORM = ".templateForm";
         String APP_LAUNCH_NAME = ".name";
         String APP_LAUNCH_COMMENTS = ".comments";

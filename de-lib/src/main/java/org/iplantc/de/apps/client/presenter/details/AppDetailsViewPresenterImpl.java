@@ -5,6 +5,7 @@ import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.QuickLaunchEvent;
+import org.iplantc.de.apps.client.events.RequestCreateQuickLaunchEvent;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
@@ -172,7 +173,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
             @Override
             public void onFailure(Integer statusCode,
                                   Throwable exception) {
-                ErrorHandler.postReact(exception.getMessage(), exception);
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.getQuickLaunchesError()));
                 if (errorCallback != null) {
                     errorCallback.onError(statusCode, exception.getMessage());
                 }
@@ -215,6 +216,11 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     public void getAppInfoForQuickLaunch(String quickLaunchId,
                                          String appId) {
         eventBus.fireEvent(new QuickLaunchEvent(quickLaunchId, appId));
+    }
+
+    @Override
+    public void onRequestToCreateQuickLaunch(String appId) {
+        eventBus.fireEvent(new RequestCreateQuickLaunchEvent(appId));
     }
 
     @Override

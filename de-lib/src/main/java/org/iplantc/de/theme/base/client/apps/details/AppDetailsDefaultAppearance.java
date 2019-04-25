@@ -42,5 +42,10 @@ public class AppDetailsDefaultAppearance implements AppDetailsView.AppDetailsApp
     public SafeHtml saveAppDocError(Throwable caught) {
         return appsMessages.saveAppDocError(caught.getMessage());
     }
+
+    @Override
+    public String getQuickLaunchesError() {
+        return appsMessages.getQuickLaunchesError();
+    }
 }
 

@@ -175,4 +175,6 @@ public interface AppsMessages extends Messages {
     String failedToRemoveCommunityAdmin(String adminSubjectDisplayName, String communityName);
 
     String failedToLoadCommunities();
+
+    String getQuickLaunchesError();
 }
