@@ -63,6 +63,7 @@ class CategoryTree extends Component {
             <Tree
                 id={this.props.id}
                 defaultExpandAll={false}
+                selectable={false}
             >
                 {hierarchies.map((hierarchyClass) =>
                     this.renderHierarchyNode(

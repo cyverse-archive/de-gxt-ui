@@ -5,7 +5,7 @@
 
 import React from "react";
 
-import LoadingOverlay from "react-loading-overlay";
+import { LoadingMask } from "@cyverse-de/de-components";
 import sanitizeHtml from "sanitize-html";
 import showdown from "showdown";
 import { injectIntl } from "react-intl";
@@ -19,7 +19,6 @@ import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -104,16 +103,7 @@ function AppDoc(props) {
 
     return (
         <Paper id={baseDebugId} style={{ padding: 5, fontSize: 12 }}>
-            <LoadingOverlay
-                active={loading}
-                spinner={
-                    <CircularProgress
-                        size={30}
-                        className={classes.loadingStyle}
-                        thickness={7}
-                    />
-                }
-            >
+            <LoadingMask loading={loading}>
                 {mode === VIEW_MODE && (
                     <React.Fragment>
                         <div
@@ -166,7 +156,7 @@ function AppDoc(props) {
                         </Fab>
                     </Tooltip>
                 )}
-            </LoadingOverlay>
+            </LoadingMask>
         </Paper>
     );
 }

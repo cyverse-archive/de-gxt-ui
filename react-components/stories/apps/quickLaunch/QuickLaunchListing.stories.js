@@ -3,6 +3,16 @@ import QucikLaunchListing from "../../../src/apps/quickLaunch/QuickLaunchListing
 
 class QuickLaunchListingTest extends Component {
     render() {
+        const onDelete = (qLaunch) => {
+            console.log("Delete qlaunch: " + qLaunch.id);
+        };
+
+        const useQuickLaunch = (qLaunch) => {
+            console.log("Use quick launch: " + qLaunch.id);
+        };
+        const onCreate = () => {
+            console.log("Create quick launch");
+        };
         const quickLaunches = [
             {
                 id: "1",
@@ -133,16 +143,15 @@ class QuickLaunchListingTest extends Component {
                 },
             },
         ];
-        const presenter = {
-            getQuickLaunches: (id, handleSuccess, handleFailure) => {
-                handleSuccess(quickLaunches);
-            },
-        };
         return (
             <QucikLaunchListing
-                presenter={presenter}
+                quickLaunches={quickLaunches}
                 userName="sriram@iplantcollaborative.org"
                 appId="456"
+                systemId="de"
+                onDelete={onDelete}
+                useQuickLaunch={useQuickLaunch}
+                onCreate={onCreate}
             />
         );
     }

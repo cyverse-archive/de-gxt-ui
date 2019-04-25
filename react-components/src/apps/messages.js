@@ -73,6 +73,8 @@ const intlData = {
             "Do you wish to delete this quick launch? Note: Deleting" +
             " public quick launch will break embedded and shared links.",
         noQuickLaunches: "No quick launches to display.",
+        quickLaunchNotSupportedMessage:
+            "Quick launch not supported for agave apps!",
     },
 };
 

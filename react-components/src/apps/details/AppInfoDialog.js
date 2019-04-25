@@ -52,6 +52,8 @@ function AppInfoDialog(props) {
     const [mode, setMode] = useState(VIEW_MODE);
     const [documentation, setDocumentation] = useState(null);
     const [references, setReferences] = useState(null);
+    const [quickLaunches, setQuickLaunches] = useState([]);
+    const [selectedQuickLaunch, setSelectedQuickLaunch] = useState(null);
 
     useEffect(() => {
         function handleSuccess(doc) {
@@ -65,10 +67,26 @@ function AppInfoDialog(props) {
             setError(true);
         }
 
+        function handleFetchQLaunchSuccess(qLaunches) {
+            setLoading(false);
+            setQuickLaunches(qLaunches);
+        }
+
+        function handleFetchQLaunchFailure(statusCode, message) {
+            setLoading(false);
+        }
+
+        setLoading(true);
+
         if (!app.wiki_url) {
             setLoading(true);
             presenter.getAppDoc(app, handleSuccess, handleFailure);
         }
+        presenter.getQuickLaunches(
+            app.id,
+            handleFetchQLaunchSuccess,
+            handleFetchQLaunchFailure
+        );
     }, []);
 
     const handleTabChange = (event, value) => {
@@ -118,6 +136,37 @@ function AppInfoDialog(props) {
         presenter.onClose();
     };
 
+    const onCreateQuickLaunch = () => {
+        presenter.onRequestToCreateQuickLaunch(app.id);
+        onClose();
+    };
+
+    const useQuickLaunch = (qLaunch) => {
+        presenter.getAppInfoForQuickLaunch(qLaunch.id, qLaunch.app_id);
+        onClose();
+    };
+
+    const doDeleteQuickLaunch = (qLaunch) => {
+        setLoading(true);
+        presenter.deleteQuickLaunch(
+            qLaunch.id,
+            () => {
+                let pos = quickLaunches.indexOf(qLaunch);
+                if (pos !== -1) {
+                    //must copy into new array for re-render
+                    quickLaunches.splice(pos, 1);
+                    setSelectedQuickLaunch(null);
+                    const newQLaunches = [...quickLaunches];
+                    setQuickLaunches(newQLaunches);
+                }
+                setLoading(false);
+            },
+            (statusCode, errorMessage) => {
+                setLoading(false);
+            }
+        );
+    };
+
     return (
         <React.Fragment>
             <Dialog open={dialogOpen} maxWidth="sm" id={baseDebugId}>
@@ -146,10 +195,18 @@ function AppInfoDialog(props) {
                     )}
                     {tabIndex === 1 && (
                         <QuickLaunchListing
+                            quickLaunches={quickLaunches}
                             presenter={presenter}
                             userName={userName}
                             appId={app.id}
-                            onQuickLaunch={onClose}
+                            systemId={app.system_id}
+                            closeParentDialog={onClose}
+                            onDelete={doDeleteQuickLaunch}
+                            useQuickLaunch={useQuickLaunch}
+                            onCreate={onCreateQuickLaunch}
+                            onSelection={setSelectedQuickLaunch}
+                            loading={loading}
+                            selected={selectedQuickLaunch}
                         />
                     )}
                     {tabIndex === 2 && (
