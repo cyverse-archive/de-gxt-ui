@@ -6,6 +6,7 @@ import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent.CreateQuickLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.util.AppTemplateUtils;
@@ -36,6 +37,8 @@ import java.util.List;
  */
 public class AppLaunchViewImpl extends Composite implements AppLaunchView {
 
+    private final DEClientConstants constants;
+
     @UiTemplate("AppLaunchView.ui.xml")
     interface AppWizardViewUIUiBinder extends UiBinder<Widget, AppLaunchViewImpl> {}
 
@@ -61,12 +64,14 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
                              final AppTemplateForm wizard,
                              final AppTemplateUtils appTemplateUtils,
                              AppLaunchViewAppearance appearance,
-                             CustomMask customMask) {
+                             CustomMask customMask,
+                             DEClientConstants constants) {
         this.law = law;
         this.wizard = wizard;
         this.appTemplateUtils = appTemplateUtils;
         this.appearance = appearance;
         this.customMask = customMask;
+        this.constants = constants;
         panel = new HTMLPanel("<div></div>");
         initWidget(binder.createAndBindUi(this));
         launchButton.addStyleName(appearance.launchButtonPositionClassName());
@@ -94,10 +99,13 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         law.edit(je, appTemplate.getAppType());
         editorDriver.edit(appTemplate);
         wizard.insertFirstInAccordion(law);
-
+        if(appTemplate.getSystemId().equals(constants.hpcSystemId())) {
+            createQuickLaunchButton.setEnabled(false);
+        }
         if (appTemplate.isDeleted()) {
             customMask(appearance.deprecatedAppMask());
             launchButton.setEnabled(false);
+            createQuickLaunchButton.setEnabled(false);
         }
     }
 
@@ -131,6 +139,7 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         fireEvent(new RequestAnalysisLaunchEvent(cleaned, je));
         mask();
         launchButton.setEnabled(false);
+        createQuickLaunchButton.setEnabled(false);
     }
 
     public void customMask(String message) {
@@ -144,6 +153,7 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         super.onEnsureDebugId(baseID);
 
         launchButton.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_BTN);
+        createQuickLaunchButton.ensureDebugId(baseID+ AppsModule.Ids.QUICK_LAUNCH_BTN);
         wizard.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM);
         law.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM + AppsModule.Ids.LAUNCH_ANALYSIS_GROUP);
     }
