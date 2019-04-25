@@ -197,7 +197,7 @@ function ListQuickLaunches(props) {
                                         ? (event) =>
                                               deleteQuickLaunchHandler(
                                                   event,
-                                                  qLaunh
+                                                  qLaunch
                                               )
                                         : undefined;
                                 return (
@@ -217,7 +217,7 @@ function ListQuickLaunches(props) {
                                                     ? (event) =>
                                                           onDelete(
                                                               event,
-                                                              qLaunc
+                                                              qLaunch
                                                           )
                                                     : undefined
                                             }
