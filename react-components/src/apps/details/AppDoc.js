@@ -141,7 +141,7 @@ function AppDoc(props) {
                     >
                         <Fab
                             color="primary"
-                            aria-label="Edit"
+                            aria-label={formatMessage(intl, "edit")}
                             style={{ float: "right" }}
                             size="medium"
                             onClick={() => onModeChange(EDIT_MODE)}
@@ -157,7 +157,7 @@ function AppDoc(props) {
                     >
                         <Fab
                             color="primary"
-                            aria-label="Save"
+                            aria-label={formatMessage(intl, "save")}
                             style={{ float: "right" }}
                             size="medium"
                             onClick={saveDoc}
