@@ -8,9 +8,10 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import constants from "../constants";
+import deConstants from "../constants";
 import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import build from "../util/DebugIDUtil";
+import constants from "./constants";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -61,11 +62,11 @@ const newAVU = (attrTemplate) => {
 
     let value;
     switch (attrTemplate.type) {
-        case "Timestamp":
+        case constants.ATTRIBUTE_TYPE.TIMESTAMP:
             value = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             break;
 
-        case "Enum":
+        case constants.ATTRIBUTE_TYPE.ENUM:
             value =
                 attrTemplate.values &&
                 attrTemplate.values.find((enumVal) => enumVal.is_default);
@@ -165,27 +166,27 @@ class MetadataTemplateAttributeView extends Component {
                             };
 
                         switch (attribute.type) {
-                            case "Boolean":
+                            case constants.ATTRIBUTE_TYPE.BOOLEAN:
                                 FieldComponent = FormCheckboxStringValue;
                                 fieldProps = {
                                     ...fieldProps,
                                     disabled: !writable,
                                 };
                                 break;
-                            case "Number":
+                            case constants.ATTRIBUTE_TYPE.NUMBER:
                                 FieldComponent = FormNumberField;
                                 break;
-                            case "Integer":
+                            case constants.ATTRIBUTE_TYPE.INTEGER:
                                 FieldComponent = FormIntegerField;
                                 break;
-                            case "Multiline Text":
+                            case constants.ATTRIBUTE_TYPE.MULTILINE_TEXT:
                                 FieldComponent = FormMultilineTextField;
                                 break;
-                            case "Timestamp":
+                            case constants.ATTRIBUTE_TYPE.TIMESTAMP:
                                 FieldComponent = FormTimestampField;
                                 break;
 
-                            case "Enum":
+                            case constants.ATTRIBUTE_TYPE.ENUM:
                                 FieldComponent = FormSelectField;
                                 fieldProps = {
                                     ...fieldProps,
@@ -204,7 +205,7 @@ class MetadataTemplateAttributeView extends Component {
                                 };
                                 break;
 
-                            case "UAT Ontology Term":
+                            case constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_UAT:
                                 FieldComponent = AstroThesaurusSearchField;
                                 fieldProps = {
                                     ...fieldProps,
@@ -213,7 +214,7 @@ class MetadataTemplateAttributeView extends Component {
                                 };
                                 break;
 
-                            case "OLS Ontology Term":
+                            case constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_OLS:
                                 FieldComponent = OntologyLookupServiceSearchField;
                                 fieldProps = {
                                     ...fieldProps,
@@ -223,7 +224,7 @@ class MetadataTemplateAttributeView extends Component {
                                 };
                                 break;
 
-                            case "Grouping":
+                            case constants.ATTRIBUTE_TYPE.GROUPING:
                                 FieldComponent = "span";
                                 fieldProps = {};
                                 break;
@@ -240,7 +241,7 @@ class MetadataTemplateAttributeView extends Component {
                                     return null;
                                 }
 
-                                let avuFieldName = `${field}.avus[${index}]`;
+                                const avuFieldName = `${field}.avus[${index}]`;
                                 const avuError = getFormError(
                                     avuFieldName,
                                     touched,
@@ -253,7 +254,40 @@ class MetadataTemplateAttributeView extends Component {
                                     avuFieldName
                                 );
 
-                                let avuField = (
+                                const isGroupingAttr =
+                                    attribute.type ===
+                                    constants.ATTRIBUTE_TYPE.GROUPING;
+
+                                const deleteBtn = canRemove && writable && (
+                                    <IconButton
+                                        id={build(rowID, ids.BUTTONS.DELETE)}
+                                        aria-label={formatMessage(
+                                            intl,
+                                            "delete"
+                                        )}
+                                        classes={{ root: classes.deleteIcon }}
+                                        onClick={() =>
+                                            arrayHelpers.remove(index)
+                                        }
+                                    >
+                                        <ContentRemove />
+                                    </IconButton>
+                                );
+
+                                const childAVUs = attribute.attributes &&
+                                    attribute.attributes.length > 0 && (
+                                        <MetadataTemplateAttributeForm
+                                            field={avuFieldName}
+                                            errors={errors}
+                                            touched={touched}
+                                            presenter={this.props.presenter}
+                                            attributes={attribute.attributes}
+                                            avus={avu.avus}
+                                            writable={writable}
+                                        />
+                                    );
+
+                                const avuField = (
                                     <Fragment key={avuFieldName}>
                                         <Grid
                                             item
@@ -270,50 +304,31 @@ class MetadataTemplateAttributeView extends Component {
                                                     {...fieldProps}
                                                 />
                                             </Grid>
-                                            {canRemove && writable && (
+                                            {!isGroupingAttr && (
                                                 <Grid item xs={1}>
-                                                    <IconButton
-                                                        id={build(
-                                                            rowID,
-                                                            ids.BUTTONS.DELETE
-                                                        )}
-                                                        aria-label={formatMessage(
-                                                            intl,
-                                                            "delete"
-                                                        )}
-                                                        classes={{
-                                                            root:
-                                                                classes.deleteIcon,
-                                                        }}
-                                                        onClick={() =>
-                                                            arrayHelpers.remove(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        <ContentRemove />
-                                                    </IconButton>
+                                                    {deleteBtn}
                                                 </Grid>
                                             )}
                                         </Grid>
-                                        {attribute.attributes &&
-                                            attribute.attributes.length > 0 && (
-                                                <Grid item>
-                                                    <MetadataTemplateAttributeForm
-                                                        field={avuFieldName}
-                                                        errors={errors}
-                                                        touched={touched}
-                                                        presenter={
-                                                            this.props.presenter
-                                                        }
-                                                        attributes={
-                                                            attribute.attributes
-                                                        }
-                                                        avus={avu.avus}
-                                                        writable={writable}
-                                                    />
-                                                </Grid>
-                                            )}
+                                        {childAVUs && (
+                                            <Grid item>
+                                                {isGroupingAttr ? (
+                                                    <fieldset>
+                                                        <legend
+                                                            style={{
+                                                                margin:
+                                                                    "0 0 0 auto",
+                                                            }}
+                                                        >
+                                                            {deleteBtn}
+                                                        </legend>
+                                                        {childAVUs}
+                                                    </fieldset>
+                                                ) : (
+                                                    childAVUs
+                                                )}
+                                            </Grid>
+                                        )}
                                     </Fragment>
                                 );
 
@@ -631,7 +646,7 @@ const validateAVUs = (avus, attributeMap) => {
         const avuErrors = {};
         const value = avu.value;
 
-        let attrTemplate = attributeMap[avu.attr];
+        const attrTemplate = attributeMap[avu.attr];
         if (!attrTemplate) {
             return;
         }
@@ -642,8 +657,8 @@ const validateAVUs = (avus, attributeMap) => {
             avuArrayErrors[avuIndex] = avuErrors;
         } else if (value) {
             switch (attrTemplate.type) {
-                case "Number":
-                case "Integer":
+                case constants.ATTRIBUTE_TYPE.NUMBER:
+                case constants.ATTRIBUTE_TYPE.INTEGER:
                     let numVal = Number(value);
                     if (isNaN(numVal)) {
                         avuErrors.value = getMessage(
@@ -655,10 +670,7 @@ const validateAVUs = (avus, attributeMap) => {
 
                     break;
 
-                case "Boolean":
-                    break;
-
-                case "Timestamp":
+                case constants.ATTRIBUTE_TYPE.TIMESTAMP:
                     if (!Date.parse(value)) {
                         avuErrors.value = getMessage(
                             "templateValidationErrMsgTimestamp"
@@ -669,8 +681,8 @@ const validateAVUs = (avus, attributeMap) => {
 
                     break;
 
-                case "URL/URI":
-                    if (!constants.URL_REGEX.test(value)) {
+                case constants.ATTRIBUTE_TYPE.URL:
+                    if (!deConstants.URL_REGEX.test(value)) {
                         avuErrors.value = getMessage(
                             "templateValidationErrMsgURL"
                         );
@@ -716,7 +728,41 @@ const validate = (values) => {
     return errors;
 };
 
-const handleSubmit = ({ metadata }, { props, setSubmitting, setStatus }) => {
+/**
+ * Users do not fill in the values of Grouping attributes,
+ * but duplicated attributes need unique values in order for the service to save them as separate AVUs.
+ * This function will update AVUs that have attributes matching any Grouping types found in the template,
+ * setting their values to a comma-separated list of their child AVUs' values.
+ */
+const postProcessAVUs = (avus, attributeMap) => {
+    return avus.map((avu) => {
+        const attrTemplate = attributeMap[avu.attr];
+
+        const isGroupingAttr =
+            attrTemplate &&
+            attrTemplate.type === constants.ATTRIBUTE_TYPE.GROUPING;
+
+        const hasChildAVUs = avu.avus && avu.avus.length > 0;
+
+        if (attrTemplate && hasChildAVUs) {
+            avu = {
+                ...avu,
+                avus: postProcessAVUs(avu.avus, attrTemplate.attributes),
+            };
+
+            if (isGroupingAttr) {
+                avu.value = avu.avus.map((avu) => avu.value).join(", ");
+            }
+        }
+
+        return avu;
+    });
+};
+
+const handleSubmit = (
+    { attributeMap, metadata },
+    { props, setSubmitting, setStatus }
+) => {
     const resolve = (metadata) => {
         setSubmitting(false);
         setStatus("submitted");
@@ -727,7 +773,7 @@ const handleSubmit = ({ metadata }, { props, setSubmitting, setStatus }) => {
     };
 
     props.presenter.updateMetadataFromTemplateView(
-        metadata,
+        { ...metadata, avus: postProcessAVUs(metadata.avus, attributeMap) },
         resolve,
         errorCallback
     );

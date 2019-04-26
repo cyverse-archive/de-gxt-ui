@@ -9,6 +9,7 @@ import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import constants from "../constants";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
@@ -224,7 +225,7 @@ const validateAttributes = (attributes) => {
         }
 
         // Validate Enum values
-        if (attr.type === "Enum") {
+        if (attr.type === constants.ATTRIBUTE_TYPE.ENUM) {
             if (!attr.values || attr.values.length < 1) {
                 // Setting an attrErrors.values message allows the error to be displayed in the table header,
                 // but that component will have to check first if attrErrors.values is an array or not.
