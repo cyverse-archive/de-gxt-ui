@@ -9,6 +9,7 @@ import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+import constants from "../constants";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
@@ -39,21 +40,19 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 
-const AttributeTypes = [
-    "String",
-    "Timestamp",
-    "Boolean",
-    "Number",
-    "Integer",
-    "Multiline Text",
-    "URL/URI",
-    "Enum",
-    "OLS Ontology Term",
-    "UAT Ontology Term",
-    "Grouping",
-];
-
-const AttributeTypeMenuItems = AttributeTypes.map((type, index) => (
+const AttributeTypeMenuItems = [
+    constants.ATTRIBUTE_TYPE.STRING,
+    constants.ATTRIBUTE_TYPE.TIMESTAMP,
+    constants.ATTRIBUTE_TYPE.BOOLEAN,
+    constants.ATTRIBUTE_TYPE.NUMBER,
+    constants.ATTRIBUTE_TYPE.INTEGER,
+    constants.ATTRIBUTE_TYPE.MULTILINE_TEXT,
+    constants.ATTRIBUTE_TYPE.URL,
+    constants.ATTRIBUTE_TYPE.ENUM,
+    constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_OLS,
+    constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_UAT,
+    constants.ATTRIBUTE_TYPE.GROUPING,
+].map((type, index) => (
     <MenuItem key={index} value={type}>
         {type}
     </MenuItem>
@@ -96,7 +95,9 @@ class EditAttribute extends Component {
             attribute: { settings },
         } = this.props;
 
-        if (type === "OLS Ontology Term" && (!settings || !settings.type)) {
+        const isOLSType = type === constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_OLS;
+
+        if (isOLSType && (!settings || !settings.type)) {
             setFieldValue(`${field}.settings`, { ...settings, type: "CLASS" });
         }
 
@@ -259,7 +260,7 @@ class EditAttribute extends Component {
                             <Divider />
                         </Grid>
 
-                        {type === "Enum" && (
+                        {type === constants.ATTRIBUTE_TYPE.ENUM && (
                             <Grid item>
                                 <ExpansionPanel defaultExpanded>
                                     <ExpansionPanelSummary
@@ -292,7 +293,8 @@ class EditAttribute extends Component {
                             </Grid>
                         )}
 
-                        {type === "OLS Ontology Term" && (
+                        {type ===
+                            constants.ATTRIBUTE_TYPE.ONTOLOGY_TERM_OLS && (
                             <Grid item>
                                 <ExpansionPanel defaultExpanded>
                                     <ExpansionPanelSummary
@@ -368,7 +370,7 @@ class EditAttributeFormList extends Component {
         unshift({
             name: newName,
             description: "",
-            type: "String",
+            type: constants.ATTRIBUTE_TYPE.STRING,
             required: false,
         });
     }
