@@ -3,7 +3,6 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
-import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -53,7 +52,6 @@ public class QuickLaunchServiceFacadeImpl implements QuickLaunchServiceFacade {
         StringQuoter.create(description).assign(body, "description");
         StringQuoter.create(isPublic).assign(body, "is_public");
         StringQuoter.create(at.getId()).assign(body, "app_id");
-        StringQuoter.create(UserInfo.getInstance().getUsername()).assign(body, "creator");
         Splittable assembledPayload =
                 AnalysisSubmissionUtil.assembleLaunchAnalysisPayload(appTemplateUtils, at, je);
 
