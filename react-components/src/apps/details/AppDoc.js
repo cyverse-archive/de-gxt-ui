@@ -23,7 +23,7 @@ import Fab from "@material-ui/core/Fab";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { Paper, withStyles } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
 
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
@@ -73,7 +73,6 @@ function AppDoc(props) {
         onDocChange,
         loading,
         error,
-        classes,
         mode,
         onModeChange,
         intl,
@@ -161,4 +160,4 @@ function AppDoc(props) {
     );
 }
 
-export default withStyles(style)(withI18N(injectIntl(AppDoc), intlData));
+export default withI18N(injectIntl(AppDoc), intlData);
