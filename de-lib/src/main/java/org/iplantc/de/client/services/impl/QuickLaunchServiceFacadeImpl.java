@@ -15,15 +15,22 @@ import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import javax.inject.Inject;
 
-
+/**
+ *
+ * @author sriram 
+ *
+ */
 public class QuickLaunchServiceFacadeImpl implements QuickLaunchServiceFacade {
 
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+    public static final String IS_PUBLIC = "is_public";
+    public static final String APP_ID = "app_id";
     private final String QUICK_LAUNCH = "org.iplantc.services.quickLaunches";
     private final AppTemplateUtils appTemplateUtils;
     private final DiscEnvApiService deServiceFacade;
@@ -48,15 +55,14 @@ public class QuickLaunchServiceFacadeImpl implements QuickLaunchServiceFacade {
                                   DECallback<Splittable> callback) {
         String address = QUICK_LAUNCH;
         Splittable body = StringQuoter.createSplittable();
-        StringQuoter.create(name).assign(body, "name");
-        StringQuoter.create(description).assign(body, "description");
-        StringQuoter.create(isPublic).assign(body, "is_public");
-        StringQuoter.create(at.getId()).assign(body, "app_id");
+        StringQuoter.create(name).assign(body, NAME);
+        StringQuoter.create(description).assign(body, DESCRIPTION);
+        StringQuoter.create(isPublic).assign(body, IS_PUBLIC);
+        StringQuoter.create(at.getId()).assign(body, APP_ID);
         Splittable assembledPayload =
                 AnalysisSubmissionUtil.assembleLaunchAnalysisPayload(appTemplateUtils, at, je);
 
         assembledPayload.assign(body, "submission");
-        GWT.log("Quick launch payload ==> " + body.getPayload());
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, body.getPayload());
         deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }

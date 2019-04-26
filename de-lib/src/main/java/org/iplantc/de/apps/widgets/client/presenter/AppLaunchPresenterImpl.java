@@ -38,7 +38,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -253,7 +252,6 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
                                          @Override
                                          public void onSuccess(Splittable result) {
-                                             GWT.log("Success ==>" + result);
                                              announcer.schedule(new SuccessAnnouncementConfig(appearance.createQuickLaunchSuccess(
                                                      name)));
                                              if (callback != null) {
