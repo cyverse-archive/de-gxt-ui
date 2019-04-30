@@ -6,5 +6,16 @@ export default {
         CATEGORIES_TREE: "tree",
         APP_URL_TEXT: ".appUrlText",
         APP_DOC_EDITOR: "docEditor",
+        QUICK_LAUNCH: "quickLaunch",
+    },
+    QUICK_LAUNCH: {
+        name: "name",
+        description: "description",
+        public: "public",
+        create: "createQL",
+        cancel: "cancelCreateQL",
+        useQuickLaunch: "useQL",
+        shareQuickLaunch: "shareQL",
+        embedQuickLaunch: "embedQL",
     },
 };

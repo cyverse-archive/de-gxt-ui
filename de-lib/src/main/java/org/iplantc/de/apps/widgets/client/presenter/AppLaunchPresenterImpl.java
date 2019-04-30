@@ -215,6 +215,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         this.appTemplate = appTemplate;
         this.jobExecution = jobExecution;
         props = new ReactQuickLaunch.CreateQLProps();
+        props.baseDebugId = baseID + AppsModule.Ids.APP_LAUNCH_VIEW + AppsModule.Ids.CREATE_QUICK_LAUNCH;
         props.presenter = this;
         props.appName = appTemplate.getName();
         props.dialogOpen = true;

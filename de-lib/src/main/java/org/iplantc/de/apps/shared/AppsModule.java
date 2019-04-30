@@ -57,6 +57,7 @@ public interface AppsModule {
         String HPC_WAIT_DLG = "hpcWaitTimeDlg";
         String OK_BTN = ".okBtn";
         String APP_LAUNCH_VIEW = ".view";
+        String CREATE_QUICK_LAUNCH = ".createQuickLaunch";
         String APP_LAUNCH_BTN = ".launchBtn";
         String QUICK_LAUNCH_BTN = ".quickLaunchBtn";
         String TEMPLATE_FORM = ".templateForm";

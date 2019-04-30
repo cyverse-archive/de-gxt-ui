@@ -195,6 +195,10 @@ function AppInfoDialog(props) {
                     )}
                     {tabIndex === 1 && (
                         <QuickLaunchListing
+                            baseDebugId={build(
+                                baseDebugId,
+                                ids.DETAILS.QUICK_LAUNCH
+                            )}
                             quickLaunches={quickLaunches}
                             presenter={presenter}
                             userName={userName}

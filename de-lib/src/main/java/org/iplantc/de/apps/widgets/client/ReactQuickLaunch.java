@@ -26,6 +26,7 @@ public class ReactQuickLaunch {
        public  String appName;
        public boolean isOwner;
        public boolean dialogOpen;
+       public String baseDebugId;
     }
 
 }

@@ -13,7 +13,6 @@ import { injectIntl } from "react-intl";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import style from "../style";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 

@@ -65,7 +65,6 @@ import ErrorExpansionPanelTest from "./util/ErrorExpansionPanel.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
-
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
 ));

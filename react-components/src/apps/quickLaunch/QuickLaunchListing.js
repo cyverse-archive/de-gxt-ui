@@ -5,27 +5,33 @@
  */
 
 import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import { injectIntl } from "react-intl";
+import PropTypes from "prop-types";
+
+import build from "../../util/DebugIDUtil";
+import constants from "../../constants";
+import ids from "../ids";
+import intlData from "../messages";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+
+import CopyTextArea from "../../util/CopyTextArea";
+import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
+import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import { LoadingMask, QuickLaunch } from "@cyverse-de/de-components";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
+import Popover from "@material-ui/core/Popover";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
 import Code from "@material-ui/icons/Code";
 import Play from "@material-ui/icons/PlayArrow";
 import Share from "@material-ui/icons/Share";
-
-import IconButton from "@material-ui/core/IconButton";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
-import { injectIntl } from "react-intl";
-import intlData from "../messages";
-import constants from "../../constants";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import CopyTextArea from "../../util/CopyTextArea";
-import Grid from "@material-ui/core/Grid";
-import Tooltip from "@material-ui/core/Tooltip";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
-import Popover from "@material-ui/core/Popover";
-import Typography from "@material-ui/core/Typography";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 
 function ActionsPopper(props) {
     const {
@@ -36,7 +42,9 @@ function ActionsPopper(props) {
         embedCodeClickHandler,
         shareClickHandler,
         onActionPopperClose,
+        baseDebugId,
     } = props;
+    const actionsBaseId = build(baseDebugId, qLaunch.id);
     return (
         <Popover
             open={Boolean(anchorEl)}
@@ -57,7 +65,13 @@ function ActionsPopper(props) {
                         fontSize="small"
                         onClick={() => useQuickLaunchClickHandler(qLaunch)}
                     >
-                        <Play color="primary" />
+                        <Play
+                            id={build(
+                                actionsBaseId,
+                                ids.QUICK_LAUNCH.useQuickLaunch
+                            )}
+                            color="primary"
+                        />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={formatMessage(intl, "qLaunchEmbedToolTip")}>
@@ -65,12 +79,24 @@ function ActionsPopper(props) {
                         fontSize="small"
                         onClick={embedCodeClickHandler}
                     >
-                        <Code color="primary" />
+                        <Code
+                            id={build(
+                                actionsBaseId,
+                                ids.QUICK_LAUNCH.embedQuickLaunch
+                            )}
+                            color="primary"
+                        />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={formatMessage(intl, "qLaunchShareToolTip")}>
                     <IconButton fontSize="small" onClick={shareClickHandler}>
-                        <Share color="primary" />
+                        <Share
+                            id={build(
+                                actionsBaseId,
+                                ids.QUICK_LAUNCH.shareQuickLaunch
+                            )}
+                            color="primary"
+                        />
                     </IconButton>
                 </Tooltip>
             </Paper>
@@ -90,6 +116,7 @@ function ListQuickLaunches(props) {
         onSelection,
         loading,
         selected,
+        baseDebugId,
     } = props;
 
     const [embedCode, setEmbedCode] = useState("");
@@ -109,7 +136,6 @@ function ListQuickLaunches(props) {
     };
 
     const embedCodeClickHandler = () => {
-        console.log("Embed code with id: " + selected.id);
         let img_src =
             "http//:" +
             window.location.host +
@@ -190,7 +216,7 @@ function ListQuickLaunches(props) {
                     <LoadingMask loading={loading}>
                         <Grid container spacing={24}>
                             {quickLaunches.map((qLaunch) => {
-                                const id = qLaunch.id;
+                                const id = build(baseDebugId, qLaunch.id);
                                 const is_public = qLaunch.is_public;
                                 const onDelete =
                                     userName === qLaunch.creator
@@ -226,6 +252,7 @@ function ListQuickLaunches(props) {
                                             qLaunch={qLaunch}
                                             anchorEl={anchorEl}
                                             intl={intl}
+                                            baseDebugId={baseDebugId}
                                             useQuickLaunchClickHandler={
                                                 useQuickLaunch
                                             }
@@ -251,7 +278,14 @@ function ListQuickLaunches(props) {
                         onClose={() => setEmbedDialogOpen(false)}
                     />
                     <DialogContent>
-                        <CopyTextArea text={embedCode} multiline={true} />
+                        <CopyTextArea
+                            debugIdPrefix={build(
+                                baseDebugId,
+                                ids.QUICK_LAUNCH.embedQuickLaunch
+                            )}
+                            text={embedCode}
+                            multiline={true}
+                        />
                     </DialogContent>
                 </Dialog>
                 <Dialog open={shareDialogOpen} maxWidth="sm" fullWidth={true}>
@@ -260,7 +294,14 @@ function ListQuickLaunches(props) {
                         onClose={() => setShareDialogOpen(false)}
                     />
                     <DialogContent>
-                        <CopyTextArea text={qLaunchUrl} multiline={true} />
+                        <CopyTextArea
+                            debugIdPrefix={build(
+                                baseDebugId,
+                                ids.QUICK_LAUNCH.shareQuickLaunch
+                            )}
+                            text={qLaunchUrl}
+                            multiline={true}
+                        />
                     </DialogContent>
                 </Dialog>
                 <DEConfirmationDialog
@@ -281,5 +322,18 @@ function ListQuickLaunches(props) {
         );
     }
 }
+
+ListQuickLaunches.propTypes = {
+    quickLaunches: PropTypes.array.isRequired,
+    systemId: PropTypes.string.isRequired,
+    userName: PropTypes.string.isRequired,
+    onDelete: PropTypes.func,
+    useQuickLaunch: PropTypes.func.isRequired,
+    onCreate: PropTypes.func.isRequired,
+    onSelection: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    selected: PropTypes.object,
+    baseDebugId: PropTypes.string.isRequired,
+};
 
 export default withI18N(injectIntl(ListQuickLaunches), intlData);
