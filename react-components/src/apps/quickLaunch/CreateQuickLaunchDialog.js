@@ -12,11 +12,7 @@ import ids from "../ids";
 import intlData from "../messages";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
-import {
-    FormCheckbox,
-    FormMultilineTextField,
-    FormTextField,
-} from "../../util/FormField";
+import { FormCheckbox, FormTextField } from "../../util/FormField";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 
 import Button from "@material-ui/core/Button";
@@ -30,10 +26,10 @@ function CreateQuickLaunchDialog(props) {
 
     const handleSubmit = (values, actions) => {
         actions.setSubmitting(true);
-        const { name, description, is_public } = values;
+        const { name, is_public } = values;
         presenter.createQuickLaunch(
             name,
-            description,
+            "",
             is_public,
             () => {
                 actions.setSubmitting(false);
@@ -68,18 +64,6 @@ function CreateQuickLaunchDialog(props) {
                                 component={FormTextField}
                             />
                             <ErrorMessage name="name" component="div" />
-                            <Field
-                                id={build(
-                                    baseDebugId,
-                                    ids.QUICK_LAUNCH.description
-                                )}
-                                name="description"
-                                label={getMessage("descriptionLabel")}
-                                required={false}
-                                margin="dense"
-                                component={FormMultilineTextField}
-                            />
-                            <ErrorMessage name="description" component="div" />
                             <Tooltip
                                 title={formatMessage(intl, "publicQLTooltip")}
                             >

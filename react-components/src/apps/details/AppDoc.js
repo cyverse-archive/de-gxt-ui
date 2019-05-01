@@ -5,7 +5,6 @@
 
 import React from "react";
 
-import { LoadingMask } from "@cyverse-de/de-components";
 import sanitizeHtml from "sanitize-html";
 import showdown from "showdown";
 import { injectIntl } from "react-intl";
@@ -16,6 +15,7 @@ import intlData from "../messages";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
+import { LoadingMask } from "@cyverse-de/de-components";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 
 import Fab from "@material-ui/core/Fab";

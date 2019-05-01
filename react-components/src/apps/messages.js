@@ -64,7 +64,7 @@ const intlData = {
         publicQLTooltip: "Quick launch visible to all users",
         qLaunchToolTip: "Use this quick launch",
         qLaunchEmbedToolTip: "Copy embed code",
-        quickLaunchLabel: "Quick launch",
+        quickLaunchLabel: "Quick Launch",
         embedLbl: "Embed",
         shareLbl: "Share",
         deleteLbl: "Delete",

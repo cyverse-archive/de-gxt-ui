@@ -17,13 +17,14 @@ import AppDetails from "./AppDetails";
 import AppDoc from "./AppDoc";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
+import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
 import ToolDetails from "./ToolDetails";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
+
 
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
