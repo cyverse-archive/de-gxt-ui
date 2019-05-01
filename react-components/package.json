@@ -19,7 +19,7 @@
     "prop-types": "^15.6.2"
   },
   "dependencies": {
-    "@cyverse-de/de-components": "file:../../de-components",
+    "@cyverse-de/de-components": "^0.2.4",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "add": "^2.0.6",
