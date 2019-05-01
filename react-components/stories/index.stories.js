@@ -62,6 +62,8 @@ import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import ErrorExpansionPanelTest from "./util/ErrorExpansionPanel.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
+import EditCommentsTest from "./data/edit/EditComments.stories";
+
 
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
@@ -142,6 +144,7 @@ storiesOf("data/Tag", module).add("with test diskresource details", () => (
 storiesOf("data/TagPanel", module).add("with test diskresource details", () => (
     <TagPanelTest logger={action("tagpanel")} />
 ));
+storiesOf('data/edit', module).add('Edit Comments Dialogue', () => <EditCommentsTest />);
 
 storiesOf("desktop/view", module).add("with test desktop view", () => (
     <DesktopViewTest logger={action("desktop")} />
