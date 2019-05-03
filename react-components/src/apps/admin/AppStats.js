@@ -2,10 +2,19 @@
  *  @author sriram, psarando
  * */
 import React, { Component } from "react";
-import Toolbar from "@material-ui/core/Toolbar";
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import ToolbarSeparator from "@material-ui/core/Toolbar";
-import TextField from "@material-ui/core/TextField";
+
+import PropTypes from "prop-types";
+import moment from "moment";
+import injectSheet from "react-jss";
+
+import exStyles from "../style";
+import constants from "../../constants";
+import intlData from "../messages";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+import TablePaginationActions from "../../util/table/TablePaginationActions";
+
+import { LoadingMask } from "@cyverse-de/de-components";
+
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,16 +23,11 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import Toolbar from "@material-ui/core/Toolbar";
+import ToolbarGroup from "@material-ui/core/Toolbar";
+import ToolbarSeparator from "@material-ui/core/Toolbar";
+import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import PropTypes from "prop-types";
-import moment from "moment";
-import exStyles from "../style";
-import constants from "../../constants";
-import intlData from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import injectSheet from "react-jss";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
 
 const columnData = [
     { name: "appName", numeric: false },
@@ -193,171 +197,172 @@ class AppStats extends Component {
 
     render() {
         const { classes } = this.props;
-        const { data, rowsPerPage, page, order, orderBy } = this.state;
+        const { data, rowsPerPage, page, order, orderBy, loading } = this.state;
 
         return (
             <div className={classes.statContainer}>
-                {this.state.loading && (
-                    <CircularProgress
-                        size={30}
-                        className={classes.loadingStyle}
-                        thickness={7}
-                    />
-                )}
+                <LoadingMask loading={loading}>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <TextField
+                                className={classes.statSearchTextField}
+                                label={getMessage("searchApps")}
+                                onChange={this.handleSearch}
+                            />
+                            <ToolbarSeparator />
+                            <TextField
+                                label={getMessage("startDate")}
+                                type="date"
+                                defaultValue={moment(
+                                    this.state.startDate
+                                ).format(constants.DATE_FORMAT)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={this.onStartDateChange}
+                            />
+                            <TextField
+                                label={getMessage("endDate")}
+                                type="date"
+                                defaultValue={moment(this.state.endDate).format(
+                                    constants.DATE_FORMAT
+                                )}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={this.onEndDateChange}
+                            />
+                            <ToolbarSeparator />
+                            <Button
+                                variant="raised"
+                                onClick={this.applyFilter}
+                                className={classes.statFilterButton}
+                            >
+                                {getMessage("applyFilter")}
+                            </Button>
+                        </ToolbarGroup>
+                    </Toolbar>
 
-                <Toolbar>
-                    <ToolbarGroup>
-                        <TextField
-                            className={classes.statSearchTextField}
-                            label={getMessage("searchApps")}
-                            onChange={this.handleSearch}
-                        />
-                        <ToolbarSeparator />
-                        <TextField
-                            label={getMessage("startDate")}
-                            type="date"
-                            defaultValue={moment(this.state.startDate).format(
-                                constants.DATE_FORMAT
-                            )}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={this.onStartDateChange}
-                        />
-                        <TextField
-                            label={getMessage("endDate")}
-                            type="date"
-                            defaultValue={moment(this.state.endDate).format(
-                                constants.DATE_FORMAT
-                            )}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={this.onEndDateChange}
-                        />
-                        <ToolbarSeparator />
-                        <Button
-                            variant="raised"
-                            onClick={this.applyFilter}
-                            className={classes.statFilterButton}
-                        >
-                            {getMessage("applyFilter")}
-                        </Button>
-                    </ToolbarGroup>
-                </Toolbar>
-
-                <div className={classes.statTable}>
-                    <Table>
-                        <TableHead>
-                            <TableRow hover>
-                                {columnData.map((column) => (
-                                    <TableCell
-                                        className={classes.statTableHead}
-                                        key={column.name}
-                                        numeric={column.numeric}
-                                        sortDirection={
-                                            orderBy === column.name
-                                                ? order
-                                                : false
-                                        }
-                                    >
-                                        <Tooltip
-                                            title={getMessage("sort")}
-                                            placement="bottom-start"
-                                            enterDelay={300}
+                    <div className={classes.statTable}>
+                        <Table>
+                            <TableHead>
+                                <TableRow hover>
+                                    {columnData.map((column) => (
+                                        <TableCell
+                                            className={classes.statTableHead}
+                                            key={column.name}
+                                            numeric={column.numeric}
+                                            sortDirection={
+                                                orderBy === column.name
+                                                    ? order
+                                                    : false
+                                            }
                                         >
-                                            <TableSortLabel
-                                                active={orderBy === column.name}
-                                                direction={order}
-                                                onClick={this.createSortHandler(
-                                                    column.name
-                                                )}
+                                            <Tooltip
+                                                title={getMessage("sort")}
+                                                placement="bottom-start"
+                                                enterDelay={300}
                                             >
-                                                {getMessage(column.name)}
-                                            </TableSortLabel>
-                                        </Tooltip>
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data
-                                .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
-                                )
-                                .map((n) => {
-                                    return (
-                                        <TableRow hover key={n.id}>
-                                            <TableCell>{n.name}</TableCell>
-                                            <TableCell numeric>
-                                                {n.rating.average
-                                                    ? n.rating.average
-                                                    : 0}
-                                            </TableCell>
-                                            <TableCell numeric>
-                                                {n.job_stats.job_count
-                                                    ? n.job_stats.job_count
-                                                    : 0}
-                                            </TableCell>
-                                            <TableCell numeric>
-                                                {n.job_stats.job_count_completed
-                                                    ? n.job_stats
-                                                          .job_count_completed
-                                                    : 0}
-                                            </TableCell>
-                                            <TableCell numeric>
-                                                {n.job_stats.job_count_failed
-                                                    ? n.job_stats
-                                                          .job_count_failed
-                                                    : 0}
-                                            </TableCell>
-                                            <TableCell>
-                                                {n.job_stats.job_last_completed
-                                                    ? moment(
-                                                          Number(
-                                                              n.job_stats
-                                                                  .job_last_completed
-                                                          ),
-                                                          "x"
-                                                      ).format(
-                                                          constants.DATE_FORMAT
-                                                      )
-                                                    : getMessage(
-                                                          "emptyValue"
-                                                      )}{" "}
-                                            </TableCell>
-                                            <TableCell>
-                                                {n.job_stats.last_used
-                                                    ? moment(
-                                                          Number(
-                                                              n.job_stats
-                                                                  .last_used
-                                                          ),
-                                                          "x"
-                                                      ).format(
-                                                          constants.DATE_FORMAT
-                                                      )
-                                                    : getMessage("emptyValue")}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </div>
+                                                <TableSortLabel
+                                                    active={
+                                                        orderBy === column.name
+                                                    }
+                                                    direction={order}
+                                                    onClick={this.createSortHandler(
+                                                        column.name
+                                                    )}
+                                                >
+                                                    {getMessage(column.name)}
+                                                </TableSortLabel>
+                                            </Tooltip>
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {data
+                                    .slice(
+                                        page * rowsPerPage,
+                                        page * rowsPerPage + rowsPerPage
+                                    )
+                                    .map((n) => {
+                                        return (
+                                            <TableRow hover key={n.id}>
+                                                <TableCell>{n.name}</TableCell>
+                                                <TableCell numeric>
+                                                    {n.rating.average
+                                                        ? n.rating.average
+                                                        : 0}
+                                                </TableCell>
+                                                <TableCell numeric>
+                                                    {n.job_stats.job_count
+                                                        ? n.job_stats.job_count
+                                                        : 0}
+                                                </TableCell>
+                                                <TableCell numeric>
+                                                    {n.job_stats
+                                                        .job_count_completed
+                                                        ? n.job_stats
+                                                              .job_count_completed
+                                                        : 0}
+                                                </TableCell>
+                                                <TableCell numeric>
+                                                    {n.job_stats
+                                                        .job_count_failed
+                                                        ? n.job_stats
+                                                              .job_count_failed
+                                                        : 0}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {n.job_stats
+                                                        .job_last_completed
+                                                        ? moment(
+                                                              Number(
+                                                                  n.job_stats
+                                                                      .job_last_completed
+                                                              ),
+                                                              "x"
+                                                          ).format(
+                                                              constants.DATE_FORMAT
+                                                          )
+                                                        : getMessage(
+                                                              "emptyValue"
+                                                          )}{" "}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {n.job_stats.last_used
+                                                        ? moment(
+                                                              Number(
+                                                                  n.job_stats
+                                                                      .last_used
+                                                              ),
+                                                              "x"
+                                                          ).format(
+                                                              constants.DATE_FORMAT
+                                                          )
+                                                        : getMessage(
+                                                              "emptyValue"
+                                                          )}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </div>
 
-                <TablePagination
-                    component="div"
-                    colSpan={3}
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                    rowsPerPageOptions={[100, 500, 1000]}
-                />
+                    <TablePagination
+                        component="div"
+                        colSpan={3}
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                        rowsPerPageOptions={[100, 500, 1000]}
+                    />
+                </LoadingMask>
             </div>
         );
     }

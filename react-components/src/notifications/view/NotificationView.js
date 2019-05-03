@@ -5,25 +5,28 @@
  *
  **/
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
+
+import classnames from "classnames";
+import constants from "../../constants";
+import exStyles from "../style";
+import formatDate from "../../util/DateFormatter";
+import ids from "../ids";
+import intlData from "../messages";
+import notificationCategory from "../model/notificationCategory";
+import withI18N from "../../util/I18NWrapper";
+
+import EnhancedTableHead from "../../util/table/EnhancedTableHead";
+import NotificationToolbar from "./NotificationToolbar";
+import { LoadingMask } from "@cyverse-de/de-components";
+import TablePaginationActions from "../../util/table/TablePaginationActions";
+
+import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import NotificationToolbar from "./NotificationToolbar";
-import withI18N from "../../util/I18NWrapper";
-import Checkbox from "@material-ui/core/Checkbox";
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
-import exStyles from "../style";
-import intlData from "../messages";
-import notificationCategory from "../model/notificationCategory";
-import ids from "../ids";
-import classnames from "classnames";
-import formatDate from "../../util/DateFormatter";
-import constants from "../../constants";
+import { withStyles } from "@material-ui/core/styles";
 
 const columnData = [
     {
@@ -250,103 +253,102 @@ class NotificationView extends Component {
             selected,
             total,
             markAsSeenDisabled,
+            loading,
         } = this.state;
         const baseId = baseDebugId + ids.NOTIFICATION_VIEW;
         return (
             <div className={classes.container}>
-                {this.state.loading && (
-                    <CircularProgress
-                        size={30}
-                        className={classes.loadingStyle}
-                        thickness={7}
+                <LoadingMask loading={loading}>
+                    <NotificationToolbar
+                        baseDebugId={baseDebugId}
+                        filter={this.state.filter}
+                        onFilterChange={this.handleFilterChange}
+                        onRefreshClicked={this.handleRefreshClicked}
+                        markSeenDisabled={
+                            this.state.selected.length === 0 ||
+                            markAsSeenDisabled
+                        }
+                        deleteDisabled={this.state.selected.length === 0}
+                        onMarkSeenClicked={this.handleMarkSeenClick}
+                        onDeleteClicked={this.handleDeleteClick}
                     />
-                )}
-                <NotificationToolbar
-                    baseDebugId={baseDebugId}
-                    filter={this.state.filter}
-                    onFilterChange={this.handleFilterChange}
-                    onRefreshClicked={this.handleRefreshClicked}
-                    markSeenDisabled={
-                        this.state.selected.length === 0 || markAsSeenDisabled
-                    }
-                    deleteDisabled={this.state.selected.length === 0}
-                    onMarkSeenClicked={this.handleMarkSeenClick}
-                    onDeleteClicked={this.handleDeleteClick}
-                />
-                <div className={classes.table}>
-                    <Table>
-                        <TableBody>
-                            {data.map((n) => {
-                                const isSelected = this.isSelected(
-                                    n.message.id
-                                );
-                                return (
-                                    <TableRow
-                                        onClick={(event) =>
-                                            this.handleRowClick(
-                                                event,
-                                                n.message.id
-                                            )
-                                        }
-                                        role="checkbox"
-                                        aria-checked={isSelected}
-                                        tabIndex={-1}
-                                        selected={isSelected}
-                                        hover
-                                        key={n.message.id}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox checked={isSelected} />
-                                        </TableCell>
-                                        <TableCell>
-                                            {
-                                                notificationCategory[
-                                                    n.type
-                                                        .replace(/\s/g, "_")
-                                                        .toLowerCase()
-                                                ]
+                    <div className={classes.table}>
+                        <Table>
+                            <TableBody>
+                                {data.map((n) => {
+                                    const isSelected = this.isSelected(
+                                        n.message.id
+                                    );
+                                    return (
+                                        <TableRow
+                                            onClick={(event) =>
+                                                this.handleRowClick(
+                                                    event,
+                                                    n.message.id
+                                                )
                                             }
-                                        </TableCell>
-                                        <Message
-                                            message={n.message}
-                                            seen={n.seen}
-                                            presenter={this.props.presenter}
-                                            classes={classes}
-                                        />
-                                        <TableCell>
-                                            {formatDate(
-                                                n.message.timestamp,
-                                                constants.DATE_FORMAT
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        <EnhancedTableHead
-                            selectable={true}
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={this.handleSelectAllClick}
-                            onRequestSort={this.handleRequestSort}
-                            columnData={columnData}
-                            baseId={baseId}
-                            rowsInPage={data.length}
-                        />
-                    </Table>
-                </div>
-                <TablePagination
-                    colSpan={3}
-                    component="div"
-                    count={total}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                    rowsPerPageOptions={[5, 100, 500, 1000]}
-                />
+                                            role="checkbox"
+                                            aria-checked={isSelected}
+                                            tabIndex={-1}
+                                            selected={isSelected}
+                                            hover
+                                            key={n.message.id}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    checked={isSelected}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                {
+                                                    notificationCategory[
+                                                        n.type
+                                                            .replace(/\s/g, "_")
+                                                            .toLowerCase()
+                                                    ]
+                                                }
+                                            </TableCell>
+                                            <Message
+                                                message={n.message}
+                                                seen={n.seen}
+                                                presenter={this.props.presenter}
+                                                classes={classes}
+                                            />
+                                            <TableCell>
+                                                {formatDate(
+                                                    n.message.timestamp,
+                                                    constants.DATE_FORMAT
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            <EnhancedTableHead
+                                selectable={true}
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={this.handleSelectAllClick}
+                                onRequestSort={this.handleRequestSort}
+                                columnData={columnData}
+                                baseId={baseId}
+                                rowsInPage={data.length}
+                            />
+                        </Table>
+                    </div>
+                    <TablePagination
+                        colSpan={3}
+                        component="div"
+                        count={total}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                        rowsPerPageOptions={[5, 100, 500, 1000]}
+                    />
+                </LoadingMask>
             </div>
         );
     }

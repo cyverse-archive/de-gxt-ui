@@ -2,15 +2,8 @@ import fav from "../resources/images/fav.png";
 import favAdd from "../resources/images/fav_add.png";
 import favRemove from "../resources/images/fav_remove.png";
 import notFav from "../resources/images/not_fav.png";
-import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
-    loadingStyle: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        color: Color.orange,
-    },
     statFilterButton: {
         margin: 1,
     },

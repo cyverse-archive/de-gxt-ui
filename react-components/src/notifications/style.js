@@ -10,12 +10,6 @@ export default (theme) => ({
         position: "sticky",
         top: 0,
     },
-    loadingStyle: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        color: Color.orange,
-    },
     container: {
         width: "100%",
         height: "100%",

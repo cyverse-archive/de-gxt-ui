@@ -29,8 +29,9 @@ import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 
+import { LoadingMask } from "@cyverse-de/de-components";
+
 import Checkbox from "@material-ui/core/Checkbox";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -948,6 +949,7 @@ class AnalysesView extends Component {
             parameters,
             info,
             infoDialogOpen,
+            loading,
         } = this.state;
 
         const selectedAnalysis = this.findAnalysis(selected[0]);
@@ -964,272 +966,284 @@ class AnalysesView extends Component {
         return (
             <React.Fragment>
                 <div id={baseId} className={classes.container}>
-                    {this.state.loading && (
-                        <CircularProgress
-                            size={30}
-                            className={classes.loadingStyle}
-                            thickness={7}
+                    <LoadingMask loading={loading}>
+                        <AnalysesToolbar
+                            baseDebugId={build(
+                                toolbarId,
+                                ids.MENUITEM_ANALYSES
+                            )}
+                            baseToolbarId={toolbarId}
+                            handleGoToOutputFolder={this.handleGoToOutputFolder}
+                            handleViewParams={this.handleViewParams}
+                            handleRelaunch={this.handleRelaunchFromMenu}
+                            handleViewInfo={this.handleViewInfo}
+                            handleShare={this.handleShare}
+                            handleCancel={this.handleCancel}
+                            handleDeleteClick={this.handleDeleteClick}
+                            handleRename={this.handleRename}
+                            handleUpdateComments={this.handleUpdateComments}
+                            handleSaveAndComplete={this.handleSaveAndComplete}
+                            handleRefresh={this.fetchAnalyses}
+                            viewFilter={viewFilter}
+                            typeFilter={appTypeFilter}
+                            onViewFilterChange={this.onViewFilterChange}
+                            onTypeFilterChange={this.onTypeFilterChange}
+                            onSearch={this.handleSearch}
+                            searchInputValue={nameFilter}
+                            selectionCount={selectionCount}
+                            owner={owner}
+                            sharable={sharable}
+                            disableCancel={disableCancel}
                         />
-                    )}
-                    <AnalysesToolbar
-                        baseDebugId={build(toolbarId, ids.MENUITEM_ANALYSES)}
-                        baseToolbarId={toolbarId}
-                        handleGoToOutputFolder={this.handleGoToOutputFolder}
-                        handleViewParams={this.handleViewParams}
-                        handleRelaunch={this.handleRelaunchFromMenu}
-                        handleViewInfo={this.handleViewInfo}
-                        handleShare={this.handleShare}
-                        handleCancel={this.handleCancel}
-                        handleDeleteClick={this.handleDeleteClick}
-                        handleRename={this.handleRename}
-                        handleUpdateComments={this.handleUpdateComments}
-                        handleSaveAndComplete={this.handleSaveAndComplete}
-                        handleRefresh={this.fetchAnalyses}
-                        viewFilter={viewFilter}
-                        typeFilter={appTypeFilter}
-                        onViewFilterChange={this.onViewFilterChange}
-                        onTypeFilterChange={this.onTypeFilterChange}
-                        onSearch={this.handleSearch}
-                        searchInputValue={nameFilter}
-                        selectionCount={selectionCount}
-                        owner={owner}
-                        sharable={sharable}
-                        disableCancel={disableCancel}
-                    />
-                    <div className={classes.table}>
-                        <Table>
-                            <TableBody>
-                                {data.map((analysis) => {
-                                    const id = analysis.id;
-                                    const isSelected = this.isSelected(id);
-                                    const user =
-                                        analysis.username &&
-                                        analysis.username.includes(IPLANT)
-                                            ? analysis.username.split("@")[0]
-                                            : analysis.username;
-                                    return (
-                                        <TableRow
-                                            onClick={() =>
-                                                this.handleRowClick(id)
-                                            }
-                                            role="checkbox"
-                                            aria-checked={isSelected}
-                                            tabIndex={-1}
-                                            selected={isSelected}
-                                            hover
-                                            key={id}
-                                            title={analysis.name}
-                                        >
-                                            <TableCell padding="none">
-                                                <Checkbox
-                                                    id={build(
-                                                        gridId,
-                                                        id + ids.CHECKBOX
-                                                    )}
-                                                    onClick={(event, n) =>
-                                                        this.handleCheckBoxClick(
-                                                            event,
-                                                            id
-                                                        )
-                                                    }
-                                                    checked={isSelected}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.ANALYSIS_NAME_CELL
-                                                )}
-                                                padding="none"
+                        <div className={classes.table}>
+                            <Table>
+                                <TableBody>
+                                    {data.map((analysis) => {
+                                        const id = analysis.id;
+                                        const isSelected = this.isSelected(id);
+                                        const user =
+                                            analysis.username &&
+                                            analysis.username.includes(IPLANT)
+                                                ? analysis.username.split(
+                                                      "@"
+                                                  )[0]
+                                                : analysis.username;
+                                        return (
+                                            <TableRow
+                                                onClick={() =>
+                                                    this.handleRowClick(id)
+                                                }
+                                                role="checkbox"
+                                                aria-checked={isSelected}
+                                                tabIndex={-1}
+                                                selected={isSelected}
+                                                hover
+                                                key={id}
+                                                title={analysis.name}
                                             >
-                                                <AnalysisName
-                                                    classes={classes}
-                                                    intl={intl}
-                                                    analysis={analysis}
-                                                    baseId={build(
+                                                <TableCell padding="none">
+                                                    <Checkbox
+                                                        id={build(
+                                                            gridId,
+                                                            id + ids.CHECKBOX
+                                                        )}
+                                                        onClick={(event, n) =>
+                                                            this.handleCheckBoxClick(
+                                                                event,
+                                                                id
+                                                            )
+                                                        }
+                                                        checked={isSelected}
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    id={build(
                                                         gridId,
                                                         id +
                                                             ids.ANALYSIS_NAME_CELL
                                                     )}
-                                                    parentId={parentId}
-                                                    handleGoToOutputFolder={
-                                                        this
-                                                            .handleGoToOutputFolder
-                                                    }
-                                                    handleInteractiveUrlClick={
-                                                        this
-                                                            .handleInteractiveUrlClick
-                                                    }
-                                                    handleBatchIconClick={(
-                                                        event
-                                                    ) =>
-                                                        this.handleBatchIconClick(
-                                                            event,
-                                                            id,
-                                                            analysis.name
-                                                        )
-                                                    }
-                                                    handleViewAllIconClick={(
-                                                        event
-                                                    ) =>
-                                                        this.handleViewAllIconClick(
+                                                    padding="none"
+                                                >
+                                                    <AnalysisName
+                                                        classes={classes}
+                                                        intl={intl}
+                                                        analysis={analysis}
+                                                        baseId={build(
+                                                            gridId,
+                                                            id +
+                                                                ids.ANALYSIS_NAME_CELL
+                                                        )}
+                                                        parentId={parentId}
+                                                        handleGoToOutputFolder={
+                                                            this
+                                                                .handleGoToOutputFolder
+                                                        }
+                                                        handleInteractiveUrlClick={
+                                                            this
+                                                                .handleInteractiveUrlClick
+                                                        }
+                                                        handleBatchIconClick={(
                                                             event
-                                                        )
-                                                    }
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
-                                                {user}
-                                            </TableCell>
-                                            <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.APP_NAME_CELL
-                                                )}
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
-                                                <AppName
-                                                    analysis={analysis}
-                                                    handleRelaunch={
-                                                        this.handleRelaunch
-                                                    }
-                                                    classes={classes}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
-                                                {formatDate(analysis.startdate)}
-                                            </TableCell>
-                                            <TableCell
-                                                className={classes.cellText}
-                                                padding="none"
-                                            >
-                                                {formatDate(analysis.enddate)}
-                                            </TableCell>
-                                            <TableCell
-                                                id={build(
-                                                    gridId,
-                                                    id + ids.SUPPORT_CELL
-                                                )}
-                                                padding="none"
-                                            >
-                                                <Status
-                                                    analysis={analysis}
-                                                    onClick={() =>
-                                                        this.statusClick(
-                                                            analysis
-                                                        )
-                                                    }
-                                                    username={username}
-                                                />
-                                            </TableCell>
-                                            <TableCell padding="none">
-                                                <DotMenu
-                                                    baseDebugId={build(
+                                                        ) =>
+                                                            this.handleBatchIconClick(
+                                                                event,
+                                                                id,
+                                                                analysis.name
+                                                            )
+                                                        }
+                                                        handleViewAllIconClick={(
+                                                            event
+                                                        ) =>
+                                                            this.handleViewAllIconClick(
+                                                                event
+                                                            )
+                                                        }
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    className={classes.cellText}
+                                                    padding="none"
+                                                >
+                                                    {user}
+                                                </TableCell>
+                                                <TableCell
+                                                    id={build(
                                                         gridId,
-                                                        id +
-                                                            ids.ANALYSIS_DOT_MENU
+                                                        id + ids.APP_NAME_CELL
                                                     )}
-                                                    handleGoToOutputFolder={
-                                                        this
-                                                            .handleGoToOutputFolder
-                                                    }
-                                                    handleViewParams={
-                                                        this.handleViewParams
-                                                    }
-                                                    handleRelaunch={
-                                                        this.handleRelaunch
-                                                    }
-                                                    handleViewInfo={
-                                                        this.handleViewInfo
-                                                    }
-                                                    handleShare={
-                                                        this.handleShare
-                                                    }
-                                                    handleCancel={
-                                                        this.handleCancel
-                                                    }
-                                                    handleDeleteClick={
-                                                        this.handleDeleteClick
-                                                    }
-                                                    handleRename={
-                                                        this.handleRename
-                                                    }
-                                                    handleUpdateComments={
-                                                        this
-                                                            .handleUpdateComments
-                                                    }
-                                                    isDisabled={this.isDisabled}
-                                                    isMultiSelect={
-                                                        this.isMultiSelect
-                                                    }
-                                                    shouldDisableCancel={
-                                                        this.shouldDisableCancel
-                                                    }
-                                                    isOwner={this.isOwner}
-                                                    isSharable={this.isSharable}
-                                                    handleSaveAndComplete={
-                                                        this
-                                                            .handleSaveAndComplete
-                                                    }
-                                                    selectionCount={
-                                                        selectionCount
-                                                    }
-                                                    owner={owner}
-                                                    sharable={sharable}
-                                                    disableCancel={
-                                                        disableCancel
-                                                    }
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                            <EnhancedTableHead
-                                selectable={true}
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={this.handleSelectAllClick}
-                                onRequestSort={this.handleRequestSort}
-                                columnData={columnData}
-                                baseId={baseId}
-                                padding="none"
-                                rowsInPage={data.length}
-                            />
-                        </Table>
-                        {!hasData && (
-                            <Typography
-                                style={{
-                                    margin: "0, auto, 0, auto",
-                                    width: 600,
-                                }}
-                                align="center"
-                                variant="subtitle1"
-                            >
-                                {getMessage("noAnalysis")}
-                            </Typography>
-                        )}
-                    </div>
-                    <TablePagination
-                        style={{ height: 40 }}
-                        colSpan={3}
-                        component="div"
-                        count={total}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={this.handleChangePage}
-                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                        rowsPerPageOptions={[100, 500, 1000]}
-                    />
+                                                    className={classes.cellText}
+                                                    padding="none"
+                                                >
+                                                    <AppName
+                                                        analysis={analysis}
+                                                        handleRelaunch={
+                                                            this.handleRelaunch
+                                                        }
+                                                        classes={classes}
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    className={classes.cellText}
+                                                    padding="none"
+                                                >
+                                                    {formatDate(
+                                                        analysis.startdate
+                                                    )}
+                                                </TableCell>
+                                                <TableCell
+                                                    className={classes.cellText}
+                                                    padding="none"
+                                                >
+                                                    {formatDate(
+                                                        analysis.enddate
+                                                    )}
+                                                </TableCell>
+                                                <TableCell
+                                                    id={build(
+                                                        gridId,
+                                                        id + ids.SUPPORT_CELL
+                                                    )}
+                                                    padding="none"
+                                                >
+                                                    <Status
+                                                        analysis={analysis}
+                                                        onClick={() =>
+                                                            this.statusClick(
+                                                                analysis
+                                                            )
+                                                        }
+                                                        username={username}
+                                                    />
+                                                </TableCell>
+                                                <TableCell padding="none">
+                                                    <DotMenu
+                                                        baseDebugId={build(
+                                                            gridId,
+                                                            id +
+                                                                ids.ANALYSIS_DOT_MENU
+                                                        )}
+                                                        handleGoToOutputFolder={
+                                                            this
+                                                                .handleGoToOutputFolder
+                                                        }
+                                                        handleViewParams={
+                                                            this
+                                                                .handleViewParams
+                                                        }
+                                                        handleRelaunch={
+                                                            this.handleRelaunch
+                                                        }
+                                                        handleViewInfo={
+                                                            this.handleViewInfo
+                                                        }
+                                                        handleShare={
+                                                            this.handleShare
+                                                        }
+                                                        handleCancel={
+                                                            this.handleCancel
+                                                        }
+                                                        handleDeleteClick={
+                                                            this
+                                                                .handleDeleteClick
+                                                        }
+                                                        handleRename={
+                                                            this.handleRename
+                                                        }
+                                                        handleUpdateComments={
+                                                            this
+                                                                .handleUpdateComments
+                                                        }
+                                                        isDisabled={
+                                                            this.isDisabled
+                                                        }
+                                                        isMultiSelect={
+                                                            this.isMultiSelect
+                                                        }
+                                                        shouldDisableCancel={
+                                                            this
+                                                                .shouldDisableCancel
+                                                        }
+                                                        isOwner={this.isOwner}
+                                                        isSharable={
+                                                            this.isSharable
+                                                        }
+                                                        handleSaveAndComplete={
+                                                            this
+                                                                .handleSaveAndComplete
+                                                        }
+                                                        selectionCount={
+                                                            selectionCount
+                                                        }
+                                                        owner={owner}
+                                                        sharable={sharable}
+                                                        disableCancel={
+                                                            disableCancel
+                                                        }
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                                <EnhancedTableHead
+                                    selectable={true}
+                                    numSelected={selected.length}
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onSelectAllClick={this.handleSelectAllClick}
+                                    onRequestSort={this.handleRequestSort}
+                                    columnData={columnData}
+                                    baseId={baseId}
+                                    padding="none"
+                                    rowsInPage={data.length}
+                                />
+                            </Table>
+                            {!hasData && (
+                                <Typography
+                                    style={{
+                                        margin: "0, auto, 0, auto",
+                                        width: 600,
+                                    }}
+                                    align="center"
+                                    variant="subtitle1"
+                                >
+                                    {getMessage("noAnalysis")}
+                                </Typography>
+                            )}
+                        </div>
+                        <TablePagination
+                            style={{ height: 40 }}
+                            colSpan={3}
+                            component="div"
+                            count={total}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={this.handleChangePage}
+                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                            rowsPerPageOptions={[100, 500, 1000]}
+                        />
+                    </LoadingMask>
                 </div>
                 {selectedAnalysis && (
                     <DEPromptDialog
@@ -1276,7 +1290,9 @@ class AnalysesView extends Component {
                         parameters={parameters}
                         diskResourceUtil={this.props.diskResourceUtil}
                         onViewParamDialogClose={() =>
-                            this.setState({ viewParamsDialogOpen: false })
+                            this.setState({
+                                viewParamsDialogOpen: false,
+                            })
                         }
                         onValueClick={this.handleParamValueClick}
                         onSaveClick={this.handleSaveParamsToFileClick}
@@ -1299,7 +1315,9 @@ class AnalysesView extends Component {
                     heading={formatMessage(intl, "delete")}
                     onOkBtnClick={this.handleDelete}
                     onCancelBtnClick={() => {
-                        this.setState({ confirmDeleteDialogOpen: false });
+                        this.setState({
+                            confirmDeleteDialogOpen: false,
+                        });
                     }}
                 />
             </React.Fragment>

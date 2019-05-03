@@ -22,9 +22,10 @@ import FormDialogEditAVU from "./EditAVU";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 
+import { LoadingMask } from "@cyverse-de/de-components";
+
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -211,175 +212,176 @@ class EditMetadata extends Component {
                 aria-labelledby={dialogTitleID}
                 TransitionComponent={SlideUpTransition}
             >
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <Typography
-                            id={dialogTitleID}
-                            variant="h6"
-                            color="inherit"
-                            className={classes.flex}
-                        >
-                            {getMessage(
-                                editable
-                                    ? "dialogTitleEditMetadataFor"
-                                    : "dialogTitleViewMetadataFor",
-                                { values: { targetName } }
-                            )}
-                        </Typography>
-
-                        {tabIndex === 0 && (
-                            <Tooltip
-                                title={getMessage("viewInTemplate")}
-                                placement="bottom"
-                                enterDelay={200}
+                <LoadingMask loading={loading}>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <Typography
+                                id={dialogTitleID}
+                                variant="h6"
+                                color="inherit"
+                                className={classes.flex}
                             >
-                                <span>
-                                    <IconButton
-                                        id={build(
-                                            ids.EDIT_METADATA_FORM,
-                                            ids.BUTTONS.VIEW_TEMPLATES
-                                        )}
-                                        aria-label={formatMessage(
-                                            intl,
-                                            "viewInTemplate"
-                                        )}
-                                        disabled={
-                                            loading ||
-                                            isSubmitting ||
-                                            (errors.error && editable)
-                                        }
-                                        onClick={() =>
-                                            this.props.presenter.onSelectTemplateBtnSelected(
-                                                values
-                                            )
-                                        }
-                                        color="inherit"
-                                    >
-                                        <ContentView />
-                                    </IconButton>
-                                </span>
-                            </Tooltip>
-                        )}
-
-                        {tabIndex === 1 && editable && (
-                            <Tooltip
-                                title={getMessage("importIRODSMetadataTooltip")}
-                                placement="bottom"
-                                enterDelay={200}
-                            >
-                                <span>
-                                    <IconButton
-                                        id={build(
-                                            ids.EDIT_METADATA_FORM,
-                                            ids.BUTTONS.IMPORT_IRODS_METADATA
-                                        )}
-                                        aria-label={formatMessage(
-                                            intl,
-                                            "importIRODSMetadata"
-                                        )}
-                                        disabled={
-                                            loading ||
-                                            isSubmitting ||
-                                            irodsAVUsSelected.length < 1
-                                        }
-                                        onClick={() =>
-                                            this.setState({
-                                                showImportConfirmationDialog: true,
-                                            })
-                                        }
-                                        color="inherit"
-                                    >
-                                        <SaveAltIcon />
-                                    </IconButton>
-                                </span>
-                            </Tooltip>
-                        )}
-
-                        <Tooltip
-                            title={getMessage("saveToFile")}
-                            placement="bottom-start"
-                            enterDelay={200}
-                        >
-                            <span>
-                                <IconButton
-                                    id={build(
-                                        ids.EDIT_METADATA_FORM,
-                                        ids.BUTTONS.SAVE_METADATA_TO_FILE
-                                    )}
-                                    aria-label={formatMessage(
-                                        intl,
-                                        "saveToFile"
-                                    )}
-                                    disabled={
-                                        loading ||
-                                        (dirty && editable) ||
-                                        isSubmitting
-                                    }
-                                    onClick={() =>
-                                        this.props.presenter.onSaveMetadataToFileBtnSelected()
-                                    }
-                                    color="inherit"
-                                >
-                                    <SaveIcon />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-
-                        <IconButton
-                            id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.HELP)}
-                            aria-label={formatMessage(intl, "helpBtnLabel")}
-                            onClick={(e) =>
-                                this.setState({
-                                    helpTextAnchor: e.currentTarget,
-                                })
-                            }
-                            color="inherit"
-                        >
-                            <HelpIcon />
-                        </IconButton>
-
-                        <Popover
-                            open={!!helpTextAnchor}
-                            anchorEl={helpTextAnchor}
-                            onClose={() =>
-                                this.setState({ helpTextAnchor: null })
-                            }
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                            }}
-                        >
-                            <Typography className={classes.helpText}>
-                                {formatHTMLMessage("helpText")}
+                                {getMessage(
+                                    editable
+                                        ? "dialogTitleEditMetadataFor"
+                                        : "dialogTitleViewMetadataFor",
+                                    { values: { targetName } }
+                                )}
                             </Typography>
-                        </Popover>
 
-                        <IconButton
-                            id={build(
-                                ids.EDIT_METADATA_FORM,
-                                ids.BUTTONS.CLOSE_ICON
+                            {tabIndex === 0 && (
+                                <Tooltip
+                                    title={getMessage("viewInTemplate")}
+                                    placement="bottom"
+                                    enterDelay={200}
+                                >
+                                    <span>
+                                        <IconButton
+                                            id={build(
+                                                ids.EDIT_METADATA_FORM,
+                                                ids.BUTTONS.VIEW_TEMPLATES
+                                            )}
+                                            aria-label={formatMessage(
+                                                intl,
+                                                "viewInTemplate"
+                                            )}
+                                            disabled={
+                                                loading ||
+                                                isSubmitting ||
+                                                (errors.error && editable)
+                                            }
+                                            onClick={() =>
+                                                this.props.presenter.onSelectTemplateBtnSelected(
+                                                    values
+                                                )
+                                            }
+                                            color="inherit"
+                                        >
+                                            <ContentView />
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
                             )}
-                            onClick={this.closeMetadataDialog}
-                            aria-label={formatMessage(intl, "close")}
-                            color="inherit"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
 
-                <DialogContent>
-                    {loading ? (
-                        <CircularProgress
-                            className={classes.loadingStyle}
-                            size={50}
-                            thickness={4}
-                        />
-                    ) : (
+                            {tabIndex === 1 && editable && (
+                                <Tooltip
+                                    title={getMessage(
+                                        "importIRODSMetadataTooltip"
+                                    )}
+                                    placement="bottom"
+                                    enterDelay={200}
+                                >
+                                    <span>
+                                        <IconButton
+                                            id={build(
+                                                ids.EDIT_METADATA_FORM,
+                                                ids.BUTTONS
+                                                    .IMPORT_IRODS_METADATA
+                                            )}
+                                            aria-label={formatMessage(
+                                                intl,
+                                                "importIRODSMetadata"
+                                            )}
+                                            disabled={
+                                                loading ||
+                                                isSubmitting ||
+                                                irodsAVUsSelected.length < 1
+                                            }
+                                            onClick={() =>
+                                                this.setState({
+                                                    showImportConfirmationDialog: true,
+                                                })
+                                            }
+                                            color="inherit"
+                                        >
+                                            <SaveAltIcon />
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+                            )}
+
+                            <Tooltip
+                                title={getMessage("saveToFile")}
+                                placement="bottom-start"
+                                enterDelay={200}
+                            >
+                                <span>
+                                    <IconButton
+                                        id={build(
+                                            ids.EDIT_METADATA_FORM,
+                                            ids.BUTTONS.SAVE_METADATA_TO_FILE
+                                        )}
+                                        aria-label={formatMessage(
+                                            intl,
+                                            "saveToFile"
+                                        )}
+                                        disabled={
+                                            loading ||
+                                            (dirty && editable) ||
+                                            isSubmitting
+                                        }
+                                        onClick={() =>
+                                            this.props.presenter.onSaveMetadataToFileBtnSelected()
+                                        }
+                                        color="inherit"
+                                    >
+                                        <SaveIcon />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+
+                            <IconButton
+                                id={build(
+                                    ids.EDIT_METADATA_FORM,
+                                    ids.BUTTONS.HELP
+                                )}
+                                aria-label={formatMessage(intl, "helpBtnLabel")}
+                                onClick={(e) =>
+                                    this.setState({
+                                        helpTextAnchor: e.currentTarget,
+                                    })
+                                }
+                                color="inherit"
+                            >
+                                <HelpIcon />
+                            </IconButton>
+
+                            <Popover
+                                open={!!helpTextAnchor}
+                                anchorEl={helpTextAnchor}
+                                onClose={() =>
+                                    this.setState({ helpTextAnchor: null })
+                                }
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left",
+                                }}
+                            >
+                                <Typography className={classes.helpText}>
+                                    {formatHTMLMessage("helpText")}
+                                </Typography>
+                            </Popover>
+
+                            <IconButton
+                                id={build(
+                                    ids.EDIT_METADATA_FORM,
+                                    ids.BUTTONS.CLOSE_ICON
+                                )}
+                                onClick={this.closeMetadataDialog}
+                                aria-label={formatMessage(intl, "close")}
+                                color="inherit"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+
+                    <DialogContent>
+                        (
                         <Fragment>
                             {irodsAVUs && !!irodsAVUs.length && (
                                 <AppBar position="static" color="default">
@@ -494,54 +496,65 @@ class EditMetadata extends Component {
                                 </Fragment>
                             )}
                         </Fragment>
-                    )}
-                </DialogContent>
+                        )}
+                    </DialogContent>
 
-                <DialogActions>
-                    <Button
-                        id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
-                        onClick={this.closeMetadataDialog}
-                        color="primary"
-                    >
-                        {getMessage("close")}
-                    </Button>
-                    {editable && (
+                    <DialogActions>
                         <Button
-                            id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
-                            disabled={
-                                loading ||
-                                !dirty ||
-                                isSubmitting ||
-                                errors.error
-                            }
-                            onClick={handleSubmit}
+                            id={build(
+                                ids.EDIT_METADATA_FORM,
+                                ids.BUTTONS.CLOSE
+                            )}
+                            onClick={this.closeMetadataDialog}
                             color="primary"
-                            variant="contained"
                         >
-                            {getMessage("save")}
+                            {getMessage("close")}
                         </Button>
-                    )}
-                </DialogActions>
+                        {editable && (
+                            <Button
+                                id={build(
+                                    ids.EDIT_METADATA_FORM,
+                                    ids.BUTTONS.SAVE
+                                )}
+                                disabled={
+                                    loading ||
+                                    !dirty ||
+                                    isSubmitting ||
+                                    errors.error
+                                }
+                                onClick={handleSubmit}
+                                color="primary"
+                                variant="contained"
+                            >
+                                {getMessage("save")}
+                            </Button>
+                        )}
+                    </DialogActions>
 
-                <ConfirmationDialog
-                    dialogOpen={showDiscardChangesDialog}
-                    debugId={ids.EDIT_METADATA_FORM}
-                    heading={getMessage("confirmDiscardChangesDialogHeader")}
-                    message={getMessage("confirmDiscardChangesDialogMsg")}
-                    onOkBtnClick={this.confirmCloseMetadataDialog}
-                    onCancelBtnClick={this.closeDiscardChangesDialog}
-                />
+                    <ConfirmationDialog
+                        dialogOpen={showDiscardChangesDialog}
+                        debugId={ids.EDIT_METADATA_FORM}
+                        heading={getMessage(
+                            "confirmDiscardChangesDialogHeader"
+                        )}
+                        message={getMessage("confirmDiscardChangesDialogMsg")}
+                        onOkBtnClick={this.confirmCloseMetadataDialog}
+                        onCancelBtnClick={this.closeDiscardChangesDialog}
+                    />
 
-                <ConfirmationDialog
-                    dialogOpen={showImportConfirmationDialog}
-                    debugId={ids.EDIT_METADATA_FORM}
-                    heading={getMessage("importIRODSMetadata")}
-                    message={formatHTMLMessage("importIRODSMetadataMsg")}
-                    onOkBtnClick={this.onConfirmImportIRODSMetadata}
-                    onCancelBtnClick={() =>
-                        this.setState({ showImportConfirmationDialog: false })
-                    }
-                />
+                    <ConfirmationDialog
+                        dialogOpen={showImportConfirmationDialog}
+                        debugId={ids.EDIT_METADATA_FORM}
+                        heading={getMessage("importIRODSMetadata")}
+                        message={formatHTMLMessage("importIRODSMetadataMsg")}
+                        onOkBtnClick={this.onConfirmImportIRODSMetadata}
+                        onCancelBtnClick={() =>
+                            this.setState({
+                                showImportConfirmationDialog: false,
+                            })
+                        }
+                    />
+                </LoadingMask>
             </Dialog>
         );
     }
