@@ -12,6 +12,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
@@ -259,9 +260,9 @@ public class ErrorHandler {
 
     private static String getErrorMessage(JSONObject jsonError) {
         for (String s : messageStrings) {
-            String error = jsonUtil.getString(jsonError, s);
-            if (!Strings.isNullOrEmpty(error)) {
-                return error;
+            JSONValue error = jsonError.get(s);
+            if (error != null && !Strings.isNullOrEmpty(error.toString())) {
+                return error.toString();
             }
         }
         return "";
