@@ -254,6 +254,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     @Override
     public void onSaveMetadataToFileBtnSelected() {
         eventBus.fireEvent(new SaveMetadataSelected(resource));
+        closeMetadataDialog();
     }
 
     @Override
