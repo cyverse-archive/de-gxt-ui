@@ -8,9 +8,9 @@ import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import exStyle from "../style";
-import injectSheet from "react-jss";
 import PropTypes from "prop-types";
 import Autocomplete from "../../util/Autocomplete";
+import { withStyles } from "@material-ui/core";
 
 class TagPanel extends Component {
     constructor(props) {
@@ -90,4 +90,4 @@ TagPanel.defaultProps = {
     placeholder: getMessage("searchTags"),
 };
 
-export default injectSheet(exStyle)(withI18N(TagPanel, intlData));
+export default withStyles(exStyle)(withI18N(TagPanel, intlData));

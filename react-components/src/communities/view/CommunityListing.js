@@ -3,6 +3,7 @@ import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import EmptyTable from "../../util/table/EmptyTable";
 import { getSorting, stableSort } from "../../util/table/TableSort";
 import ids from "../ids";
+import { LoadingMask } from "@cyverse-de/de-components";
 import messages from "../messages";
 import styles from "../styles";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
@@ -15,7 +16,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 /**
  * @author aramsey
@@ -58,71 +58,66 @@ class CommunityListing extends Component {
 
         return (
             <Fragment>
-                {loading && (
-                    <CircularProgress
-                        size={30}
-                        classes={{ root: classes.loading }}
-                        thickness={7}
-                    />
-                )}
-                <div className={classes.table}>
-                    <Table>
-                        <TableBody>
-                            {(!data || data.length === 0) && (
-                                <EmptyTable
-                                    message={getMessage("noCommunities")}
-                                    numColumns={tableColumns.length}
-                                />
-                            )}
-                            {data &&
-                                data.length > 0 &&
-                                stableSort(
-                                    data,
-                                    getSorting(order, orderBy)
-                                ).map((community) => {
-                                    return (
-                                        <TableRow
-                                            tabIndex={-1}
-                                            hover
-                                            key={community.id}
-                                        >
-                                            <TableCell>
-                                                <Tooltip
-                                                    title={getMessage(
-                                                        "communityNameToolTip"
-                                                    )}
-                                                >
-                                                    <DEHyperLink
-                                                        onClick={() =>
-                                                            onCommunityClicked(
-                                                                community
-                                                            )
-                                                        }
-                                                        text={collaboratorsUtil.getSubjectDisplayName(
-                                                            community
+                <LoadingMask loading={loading}>
+                    <div className={classes.table}>
+                        <Table>
+                            <TableBody>
+                                {(!data || data.length === 0) && (
+                                    <EmptyTable
+                                        message={getMessage("noCommunities")}
+                                        numColumns={tableColumns.length}
+                                    />
+                                )}
+                                {data &&
+                                    data.length > 0 &&
+                                    stableSort(
+                                        data,
+                                        getSorting(order, orderBy)
+                                    ).map((community) => {
+                                        return (
+                                            <TableRow
+                                                tabIndex={-1}
+                                                hover
+                                                key={community.id}
+                                            >
+                                                <TableCell>
+                                                    <Tooltip
+                                                        title={getMessage(
+                                                            "communityNameToolTip"
                                                         )}
-                                                    />
-                                                </Tooltip>
-                                            </TableCell>
-                                            <TableCell>
-                                                {community.description}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                        <EnhancedTableHead
-                            selectable={false}
-                            rowCount={data ? data.length : 0}
-                            order={order}
-                            orderBy={orderBy}
-                            baseId={parentId}
-                            ids={ids.TABLE_HEADER}
-                            columnData={tableColumns}
-                            onRequestSort={this.onRequestSort}
-                        />
-                    </Table>
-                </div>
+                                                    >
+                                                        <DEHyperLink
+                                                            onClick={() =>
+                                                                onCommunityClicked(
+                                                                    community
+                                                                )
+                                                            }
+                                                            text={collaboratorsUtil.getSubjectDisplayName(
+                                                                community
+                                                            )}
+                                                        />
+                                                    </Tooltip>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {community.description}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                            <EnhancedTableHead
+                                selectable={false}
+                                rowCount={data ? data.length : 0}
+                                order={order}
+                                orderBy={orderBy}
+                                baseId={parentId}
+                                ids={ids.TABLE_HEADER}
+                                columnData={tableColumns}
+                                onRequestSort={this.onRequestSort}
+                            />
+                        </Table>
+                    </div>
+                </LoadingMask>
             </Fragment>
         );
     }

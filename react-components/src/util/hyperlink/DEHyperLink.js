@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import styles from "./style";
-import injectSheet from "react-jss";
 import PropTypes from "prop-types";
-
+import { withStyles } from "@material-ui/core";
 class DEHyperLink extends Component {
     render() {
         const { classes, text, onClick, ...custom } = this.props;
@@ -19,4 +18,4 @@ DEHyperLink.propTypes = {
     onClick: PropTypes.func,
 };
 
-export default injectSheet(styles)(DEHyperLink);
+export default withStyles(styles)(DEHyperLink);

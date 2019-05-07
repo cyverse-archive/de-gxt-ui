@@ -7,7 +7,6 @@ import moment from "moment";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import injectSheet from "react-jss";
 import styles from "../style";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 
@@ -23,6 +22,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { withStyles } from "@material-ui/core";
 
 function SendTo(props) {
     let displayText = getMessage("emptyValue");
@@ -472,4 +472,4 @@ class BasicDetails extends Component {
     }
 }
 
-export default injectSheet(styles)(withI18N(BasicDetails, intlData));
+export default withStyles(styles)(withI18N(BasicDetails, intlData));

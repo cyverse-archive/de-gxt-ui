@@ -5,7 +5,6 @@ import React, { Component } from "react";
 
 import PropTypes from "prop-types";
 import moment from "moment";
-import injectSheet from "react-jss";
 
 import exStyles from "../style";
 import constants from "../../constants";
@@ -28,6 +27,7 @@ import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from "@material-ui/core";
 
 const columnData = [
     { name: "appName", numeric: false },
@@ -371,4 +371,4 @@ AppStats.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default injectSheet(exStyles)(withI18N(AppStats, intlData));
+export default withStyles(exStyles)(withI18N(AppStats, intlData));

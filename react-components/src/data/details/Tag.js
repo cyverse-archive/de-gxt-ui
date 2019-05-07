@@ -3,33 +3,27 @@
  */
 import React, { Component } from "react";
 import styles from "../style";
-import jss from "jss";
-import injectSheet from "react-jss";
+import { withStyles } from "@material-ui/core";
 
 class Tag extends Component {
-    handleMouseOver = () => {
-        let ele = document.getElementById(this.props.tag.id);
-        jss.createRule({
-            display: "block",
-        }).applyTo(ele);
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            className: props.classes.hideTagRemoveStyle,
+        };
+        this.handleMouseOver = this.handleMouseOver.bind(this);
+        this.handleMouseOut = this.handleMouseOut.bind(this);
+    }
 
-    handleMouseOut = () => {
-        let ele = document.getElementById(this.props.tag.id);
-        jss.createRule({
-            display: "none",
-        }).applyTo(ele);
-    };
+    handleMouseOver() {
+        this.setState({ className: this.props.classes.displayTagRemoveStyle });
+    }
+
+    handleMouseOut() {
+        this.setState({ className: this.props.classes.hideTagRemoveStyle });
+    }
 
     render() {
-        const removeStyle = {
-            fontWeight: "bold",
-            cursor: "pointer",
-            display: "none",
-            float: "right",
-            fontSize: 12,
-            paddingLeft: "2px",
-        }; // does not work with jss classname approach
         const classes = this.props.classes;
         return (
             <div
@@ -45,10 +39,9 @@ class Tag extends Component {
                 </div>
                 <div
                     id={this.props.tag.id}
-                    style={removeStyle}
+                    className={this.state.className}
                     onClick={() => this.props.removeTag(this.props.tag)}
                 >
-                    {" "}
                     X
                 </div>
             </div>
@@ -56,4 +49,4 @@ class Tag extends Component {
     }
 }
 
-export default injectSheet(styles)(Tag);
+export default withStyles(styles)(Tag);

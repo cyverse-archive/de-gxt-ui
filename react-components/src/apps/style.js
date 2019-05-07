@@ -62,11 +62,4 @@ export default (theme) => ({
     disableFavorite: {
         backgroundImage: `url(${notFav})`,
     },
-
-    ratingDelete: {
-        margin: 5,
-        "&:hover": {
-            backgroundColor: theme.palette.error.dark,
-        },
-    },
 });
