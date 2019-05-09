@@ -1,5 +1,3 @@
-//import CyVersePalette from "../../util/CyVersePalette";
-
 import CyVersePalette from "../../util/CyVersePalette";
 
 export default {
@@ -17,39 +15,42 @@ export default {
         marginLeft: 10,
     },
 
-    dropDownDots:{
+    dropDownDots: {
         float: "right",
     },
 
     deleteButton: {
-      height: 35,
-      float: 'left',
-        marginBottom: 10,
-        width: 100,
-        marginLeft: 10,
+        backgroundColor: "#f24343",
+        "&:hover": {
+            backgroundColor: "#f24343",
+        },
     },
 
     addCommentButton: {
-        float: 'right',
-        marginBottom: 5,
-        marginLeft: 315,
+        float: "right",
+        width: 40,
+        marginBottom: 8,
+        marginLeft: 323,
         color: CyVersePalette.blue,
     },
 
     addCommentTextField: {
-      position: 'relative',
+        position: "relative",
         width: "93%",
         marginLeft: 11,
-
-
     },
 
     dContent: {
         width: 320,
     },
 
-    comment: {
+    comment: {},
 
-    }
+    commentText: {
+        width: 250,
+    },
 
-}
+    deleteIcon: {
+        color: "#ffffff",
+    },
+};
