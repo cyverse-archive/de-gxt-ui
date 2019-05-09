@@ -9,7 +9,7 @@ class EditCommentsTest extends Component {
             },
 
             retractComment: (commentId, resolve, reject) => {
-                console.log("Retracting comment with id: " + commentId);
+                console.log(commentId);
             },
         };
 
