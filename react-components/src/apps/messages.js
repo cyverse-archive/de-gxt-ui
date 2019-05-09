@@ -68,7 +68,7 @@ const intlData = {
         embedLbl: "Embed",
         shareLbl: "Share",
         deleteLbl: "Delete",
-        qLaunchShareToolTip: "Share Quick launch URL",
+        qLaunchShareToolTip: "Share Quick Launch URL",
         quickLaunchDeleteConfirmation:
             "Do you wish to delete this Quick Launch? Note: Deleting" +
             " public Quick Launch will break embedded and shared links.",
