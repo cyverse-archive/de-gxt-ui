@@ -48,17 +48,19 @@ class EditComments extends Component {
             });
     }
 
-
-    retractComment(commentId, callback){
+    retractComment(commentId, callback) {
         new Promise((resolve, reject) => {
             this.props.presenter.retractComment(commentId, resolve, reject);
         })
-            .then((this.getComments))
+            .then((commentList) => {
+                this.setState({ commentList: commentList });
+            })
             .catch((error) => {
                 console.log(error);
-                this.setState({loading: false});
+                this.setState({ loading: false });
             });
     }
+
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({ open: true });
     }
@@ -124,6 +126,7 @@ class EditComments extends Component {
                 }
             }
         }
+
         this.setState({ commentList: temp });
     };
 
@@ -132,12 +135,10 @@ class EditComments extends Component {
             [name]: event.target.value,
         });
     };
-
     createComment = () => {
         const text = document.getElementById("addCommentTextField").value;
         console.log(text);
     };
-
 
     render() {
         const { classes } = this.props;

@@ -7,13 +7,17 @@ import Fab from "@material-ui/core/Fab";
 class Comment extends Component {
     constructor(props) {
         super(props);
-
     }
-
-
-
     render() {
-        const { date, owner, message, id, retracted, classes, retractComment} = this.props;
+        const {
+            date,
+            owner,
+            message,
+            id,
+            retracted,
+            classes,
+            retractComment,
+        } = this.props;
 
         return (
             <>

@@ -61,7 +61,6 @@ import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequ
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
 
-
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
 ));
@@ -150,7 +149,9 @@ storiesOf("data/Tag", module).add("with test diskresource details", () => (
 storiesOf("data/TagPanel", module).add("with test diskresource details", () => (
     <TagPanelTest logger={action("tagpanel")} />
 ));
-storiesOf('data/edit', module).add('Edit Comments Dialogue', () => <EditCommentsTest />);
+storiesOf("data/edit", module).add("Edit Comments Dialogue", () => (
+    <EditCommentsTest />
+));
 
 storiesOf("desktop/view", module).add("with test desktop view", () => (
     <DesktopViewTest logger={action("desktop")} />
