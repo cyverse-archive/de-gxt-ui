@@ -28,6 +28,8 @@ class EditComments extends Component {
         this.handleSortOwner = this.handleSortOwner.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.createComment = this.createComment.bind(this);
+        this.retractComment = this.retractComment.bind(this);
+        this.getComments = this.getComments.bind(this);
     }
 
     componentDidMount() {
