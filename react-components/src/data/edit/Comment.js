@@ -1,43 +1,47 @@
-import React, {Component} from "react";
-import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
+import React, { Component } from "react";
+import Typography from "@material-ui/core/Typography";
+import ListItem from "@material-ui/core/ListItem";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Fab from "@material-ui/core/Fab";
 
-
-class Comment extends Component{
-    state = {
-        anchorEl: null
-    };
-    constructor(props){
+class Comment extends Component {
+    constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
 
     }
 
-    handleClick = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        });
-    };
 
-    render(){
-        const {date, owner, message, id, retracted} = this.props;
+
+    render() {
+        const { date, owner, message, id, retracted, classes, retractComment} = this.props;
 
         return (
-            <div id={id}>
-                <ListItem button onClick={this.handleClick}>
-                    <Typography>
+            <>
+                <ListItem id={id}>
+                    <Typography className={classes.commentText}>
                         On <b>{date}</b> {owner} wrote:
                         <br />
-                        {retracted ? <Typography color="error">Retracted</Typography> :
-                            <Typography>{message}</Typography>}
-
+                        {retracted ? (
+                            <Typography color="error">Retracted</Typography>
+                        ) : (
+                            <Typography>{message}</Typography>
+                        )}
                     </Typography>
+                    <Fab
+                        variant="contained"
+                        size="small"
+                        className={classes.deleteButton}
+                        onClick={() => {
+                            retractComment(this.props.id);
+                        }}
+                    >
+                        <DeleteIcon />
+                    </Fab>
                 </ListItem>
                 <hr />
-            </div>
-        )
+            </>
+        );
     }
-
 }
 
-export default Comment
+export default Comment;
