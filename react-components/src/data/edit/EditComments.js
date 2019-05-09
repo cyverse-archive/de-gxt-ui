@@ -11,17 +11,26 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import CyVersePalette from "../../util/CyVersePalette";
 import List from "@material-ui/core/List";
+import formatDate from "../../util/DateFormatter";
+import constants from "../../constants";
+
+
+let COMMENTS = "Comments";
+const ADD_A_COMMENT = "Add a Comment";
+
 
 class EditComments extends Component {
-    state = {
-        anchorEl: null,
-    };
     constructor(props) {
         super(props);
         this.state = {
             open: true,
             commentList: null,
+            loading: false,
+            multiline: false,
+            commentText: null,
         };
+
+        COMMENTS = "Edit " + this.props.fileName + " Comments";
         this.handleClose = this.handleClose.bind(this);
         this.handleSortMostRecent = this.handleSortMostRecent.bind(this);
         this.handleSortLeastRecent = this.handleSortLeastRecent.bind(this);
@@ -30,6 +39,8 @@ class EditComments extends Component {
         this.createComment = this.createComment.bind(this);
         this.retractComment = this.retractComment.bind(this);
         this.getComments = this.getComments.bind(this);
+
+
     }
 
     componentDidMount() {
@@ -132,10 +143,8 @@ class EditComments extends Component {
         this.setState({ commentList: temp });
     };
 
-    handleChange = (name) => (event) => {
-        this.setState({
-            [name]: event.target.value,
-        });
+    handleChange = (event) => {
+        this.setState({commentText: event.target.value});
     };
     createComment = () => {
         const text = document.getElementById("addCommentTextField").value;
@@ -147,11 +156,11 @@ class EditComments extends Component {
         let commentItems = this.state.commentList
             ? this.state.commentList.map((comment, index) => (
                   <Comment
-                      message={comment.message}
+                      message={comment.comment}
                       id={comment.id}
                       retracted={comment.retracted}
-                      date={comment.date}
-                      owner={comment.owner}
+                      date={formatDate(comment.post_time, constants.DATE_FORMAT)}
+                      owner={comment.commenter}
                       classes={this.props.classes}
                       retractComment={this.retractComment}
                   />
@@ -167,7 +176,7 @@ class EditComments extends Component {
                 >
                     <DEDialogHeader
                         id={"edit-comments-dialog-title"}
-                        heading={"Comments"}
+                        heading={COMMENTS}
                         onClose={this.handleClose}
                     />
                     <hr />
@@ -187,7 +196,7 @@ class EditComments extends Component {
                     </DialogContent>
                     <TextField
                         className={classes.addCommentTextField}
-                        label="Add a Comment"
+                        label={ADD_A_COMMENT}
                         margin="normal"
                         multiline
                         variant="filled"

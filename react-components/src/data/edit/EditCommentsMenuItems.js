@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 
 import MenuItem from "@material-ui/core/MenuItem";
-import RecentIcon from "@material-ui/icons/Update";
+import MostRecentIcon from "@material-ui/icons/Update";
+import LeastRecentIcon from "@material-ui/icons/Restore";
 import OwnerIcon from "@material-ui/icons/SupervisedUserCircleRounded";
 import exStyles from "./style.js";
 import { withStyles } from "@material-ui/core/styles";
+
+const MOST_RECENT = "Most Recent";
+const LEAST_RECENT = "Least Recent";
+const BY_OWNER = "By Owner";
 
 class EditCommentsMenuItems extends Component {
     render() {
@@ -25,8 +30,8 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <RecentIcon />
-                    Most Recent
+                    <MostRecentIcon />
+                    {MOST_RECENT}
                 </MenuItem>
 
                 <MenuItem
@@ -36,8 +41,8 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <RecentIcon />
-                    Least Recent
+                    <LeastRecentIcon />
+                    {LEAST_RECENT}
                 </MenuItem>
 
                 <MenuItem
@@ -48,7 +53,7 @@ class EditCommentsMenuItems extends Component {
                     className={classes.MenuItem}
                 >
                     <OwnerIcon />
-                    By Owner
+                    {BY_OWNER}
                 </MenuItem>
             </React.Fragment>
         );

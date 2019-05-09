@@ -3,6 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Fab from "@material-ui/core/Fab";
+import Divider from '@material-ui/core/Divider';
+
 
 class Comment extends Component {
     constructor(props) {
@@ -42,7 +44,7 @@ class Comment extends Component {
                         <DeleteIcon />
                     </Fab>
                 </ListItem>
-                <hr />
+                <Divider />
             </>
         );
     }
