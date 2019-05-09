@@ -63,10 +63,10 @@ public class AnalysisSubmissionUtil {
      * @return an indexed splittable which contains {@link SelectionItem}s whose {@code "name"} or {@code
      * "value"} JSON keys with non-null values.
      */
-    public static Splittable pruneSelectedItemsWithNoFlagsNorValues(final com.google.web.bindery.autobean.shared.Splittable value) {
+    public static Splittable pruneSelectedItemsWithNoFlagsNorValues(final Splittable value) {
         com.google.web.bindery.autobean.shared.Splittable ret = StringQuoter.createIndexed();
         for (int i = 0; i < value.size(); i++) {
-            final com.google.web.bindery.autobean.shared.Splittable splittable = value.get(i);
+            final Splittable splittable = value.get(i);
 
             if (!splittable.isUndefined("value") && !Strings.isNullOrEmpty(splittable.get("value")
                                                                                      .asString())) {
@@ -89,16 +89,15 @@ public class AnalysisSubmissionUtil {
      *
      * @param value and indexed splittable
      */
-    public static void pruneArgumentsFromSelectionItemGroups(final com.google.web.bindery.autobean.shared.Splittable value) {
+    public static void pruneArgumentsFromSelectionItemGroups(final Splittable value) {
         for (int i = 0; i < value.size(); i++) {
-            final com.google.web.bindery.autobean.shared.Splittable splittable = value.get(i);
+            final Splittable splittable = value.get(i);
             if (splittable.isUndefined(SelectionItemGroup.ARGUMENTS_KEY)) {
                 // If the key is undefined, continue
                 continue;
             }
             // Remove arguments from selectionItemGroup
-            com.google.web.bindery.autobean.shared.Splittable.NULL.assign(splittable,
-                                                                          SelectionItemGroup.ARGUMENTS_KEY);
+            Splittable.NULL.assign(splittable, SelectionItemGroup.ARGUMENTS_KEY);
         }
     }
 

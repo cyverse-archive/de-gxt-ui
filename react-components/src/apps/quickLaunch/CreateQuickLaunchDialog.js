@@ -4,7 +4,7 @@
  *
  */
 import React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -60,10 +60,8 @@ function CreateQuickLaunchDialog(props) {
                                 name="name"
                                 label={getMessage("quickLaunchNameLabel")}
                                 required={true}
-                                margin="dense"
                                 component={FormTextField}
                             />
-                            <ErrorMessage name="name" component="div" />
                             <Tooltip
                                 title={formatMessage(intl, "publicQLTooltip")}
                             >
@@ -75,7 +73,6 @@ function CreateQuickLaunchDialog(props) {
                                     name="is_public"
                                     label={getMessage("publicLabel")}
                                     required={false}
-                                    margin="dense"
                                     component={FormCheckbox}
                                 />
                             </Tooltip>
@@ -86,6 +83,7 @@ function CreateQuickLaunchDialog(props) {
                                 id={build(baseDebugId, ids.QUICK_LAUNCH.cancel)}
                                 color="primary"
                                 disabled={isSubmitting}
+                                onClick={handleClose}
                             >
                                 {getMessage("cancelLabel")}
                             </Button>

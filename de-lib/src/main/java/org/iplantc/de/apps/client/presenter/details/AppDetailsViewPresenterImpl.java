@@ -213,7 +213,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
-    public void getAppInfoForQuickLaunch(String quickLaunchId,
+    public void useQuickLaunch(String quickLaunchId,
                                          String appId) {
         eventBus.fireEvent(new QuickLaunchEvent(quickLaunchId, appId));
     }

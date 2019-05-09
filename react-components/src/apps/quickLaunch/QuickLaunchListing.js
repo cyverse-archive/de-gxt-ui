@@ -136,52 +136,35 @@ function ListQuickLaunches(props) {
     };
 
     const embedCodeClickHandler = () => {
-        let img_src =
-            "http//:" +
-            window.location.host +
-            "/" +
-            constants.QUICK_LAUNCH_EMBED_ICON;
-        const embed =
-            "<a href='" +
-            getShareUrl(selected.id) +
-            "' target='_blank'><img src='" +
-            img_src +
-            "'></a>";
+        const imgSrc = `http//:${window.location.host}/${
+            constants.QUICK_LAUNCH_EMBED_ICON
+        }`;
+        const embed = `<a href="${getShareUrl(
+            selected.id
+        )}" target="_blank"><img src="${imgSrc}"></a>`;
 
         setEmbedCode(embed);
         setEmbedDialogOpen(true);
     };
 
     const shareClickHandler = () => {
-        if (qLaunchUrl) {
-            setShareDialogOpen(true);
-        } else {
-            setQLaunchUrl(getShareUrl(selected.id));
-            setShareDialogOpen(true);
-        }
+        setQLaunchUrl(getShareUrl(selected.id));
+        setShareDialogOpen(true);
     };
 
     const getShareUrl = () => {
-        let host =
+        const host =
             window.location.protocol +
             "//" +
             window.location.host +
             window.location.pathname;
-        const url =
-            host +
-            "?" +
-            constants.TYPE +
-            "=" +
-            constants.QUICK_LAUNCH +
-            "&" +
-            constants.QUICK_LAUNCH_ID +
-            "=" +
-            selected.id +
-            "&" +
-            constants.APP_ID +
-            "=" +
-            selected.app_id;
-        return url;
+        const url = new URL(host);
+
+        url.searchParams.set(constants.TYPE, constants.QUICK_LAUNCH);
+        url.searchParams.set(constants.QUICK_LAUNCH_ID, selected.id);
+        url.searchParams.set(constants.APP_ID, selected.app_id);
+
+        return url.toString();
     };
 
     const deleteQuickLaunchHandler = (event, qLaunch) => {

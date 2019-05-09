@@ -121,7 +121,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         String SYSTEM_ID = "system-id";
         String APP_ID = "app-id";
         String STATE = "state";
-        String QUICK_LAUNCH_ID = "q-id";
+        String QUICK_LAUNCH_ID = "quick-launch-id";
     }
 
     public interface TypeQueryValues {

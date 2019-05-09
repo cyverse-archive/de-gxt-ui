@@ -372,8 +372,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Override
     public void onQuickLaunch(QuickLaunchEvent event) {
         AppWizardConfig config =
-                ConfigFactory.appWizardConfig("", "",event.getAppId(),
-                                                                            event.getQuickLaunchId());
+                ConfigFactory.appWizardConfig("", "", event.getAppId(), event.getQuickLaunchId());
         presenter.show(config);
     }
 

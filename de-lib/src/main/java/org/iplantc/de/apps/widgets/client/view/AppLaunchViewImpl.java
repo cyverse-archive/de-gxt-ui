@@ -1,7 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.shared.AppsModule;
-import org.iplantc.de.apps.widgets.client.ReactQuickLaunch;
 import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent.CreateQuickLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;

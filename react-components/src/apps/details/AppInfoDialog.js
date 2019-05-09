@@ -25,7 +25,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
@@ -57,37 +56,47 @@ function AppInfoDialog(props) {
     const [selectedQuickLaunch, setSelectedQuickLaunch] = useState(null);
 
     useEffect(() => {
-        function handleSuccess(doc) {
-            setLoading(false);
-            setDocumentation(doc.documentation);
-            setReferences(doc.references);
-        }
-
-        function handleFailure(statusCode, message) {
-            setLoading(false);
-            setError(true);
-        }
-
-        function handleFetchQLaunchSuccess(qLaunches) {
-            setLoading(false);
-            setQuickLaunches(qLaunches);
-        }
-
-        function handleFetchQLaunchFailure(statusCode, message) {
-            setLoading(false);
-        }
-
         setLoading(true);
+        let promises = [];
+        let p;
 
         if (!app.wiki_url) {
-            setLoading(true);
-            presenter.getAppDoc(app, handleSuccess, handleFailure);
+            p = new Promise((resolve, reject) => {
+                presenter.getAppDoc(
+                    app,
+                    (doc) => {
+                        setDocumentation(doc.documentation);
+                        setReferences(doc.references);
+                        resolve("");
+                    },
+                    (statusCode, message) => {
+                        reject(message);
+                        setError(true);
+                    }
+                );
+            });
+            promises.push(p);
         }
-        presenter.getQuickLaunches(
-            app.id,
-            handleFetchQLaunchSuccess,
-            handleFetchQLaunchFailure
-        );
+        p = new Promise((resolve, reject) => {
+            presenter.getQuickLaunches(
+                app.id,
+                (qLaunches) => {
+                    setQuickLaunches(qLaunches);
+                    resolve("");
+                },
+                (statusCode, message) => {
+                    reject(message);
+                }
+            );
+        });
+        promises.push(p);
+        Promise.all(promises)
+            .then((value) => {
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(false);
+            });
     }, []);
 
     const handleTabChange = (event, value) => {
@@ -143,7 +152,7 @@ function AppInfoDialog(props) {
     };
 
     const useQuickLaunch = (qLaunch) => {
-        presenter.getAppInfoForQuickLaunch(qLaunch.id, qLaunch.app_id);
+        presenter.useQuickLaunch(qLaunch.id, qLaunch.app_id);
         onClose();
     };
 
@@ -152,14 +161,9 @@ function AppInfoDialog(props) {
         presenter.deleteQuickLaunch(
             qLaunch.id,
             () => {
-                let pos = quickLaunches.indexOf(qLaunch);
-                if (pos !== -1) {
-                    //must copy into new array for re-render
-                    quickLaunches.splice(pos, 1);
-                    setSelectedQuickLaunch(null);
-                    const newQLaunches = [...quickLaunches];
-                    setQuickLaunches(newQLaunches);
-                }
+                const newQLaunches = quickLaunches.filter((q) => q !== qLaunch);
+                setQuickLaunches(newQLaunches);
+                setSelectedQuickLaunch(null);
                 setLoading(false);
             },
             (statusCode, errorMessage) => {
