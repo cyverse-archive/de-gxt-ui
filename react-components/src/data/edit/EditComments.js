@@ -1,29 +1,26 @@
-import React, {Component} from "react";
-import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { withStyles } from '@material-ui/core/styles';
-import DEDialogHeader from  "./../../util/dialog/DEDialogHeader.js"
-import DialogContent from '@material-ui/core/DialogContent';
-import exStyles from "./style.js"
-import DotMenu from "./DotMenu.js"
-import Comment from "./Comment.js"
-import TextField from '@material-ui/core/TextField'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
+import React, { Component } from "react";
+import Dialog from "@material-ui/core/Dialog";
+import { withStyles } from "@material-ui/core/styles";
+import DEDialogHeader from "./../../util/dialog/DEDialogHeader.js";
+import DialogContent from "@material-ui/core/DialogContent";
+import exStyles from "./style.js";
+import DotMenu from "./DotMenu.js";
+import Comment from "./Comment.js";
+import TextField from "@material-ui/core/TextField";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 import CyVersePalette from "../../util/CyVersePalette";
-import List from '@material-ui/core/List';
+import List from "@material-ui/core/List";
 
-
-class EditComments extends Component{
+class EditComments extends Component {
     state = {
         anchorEl: null,
     };
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             open: true,
-            commentList : null,
+            commentList: null,
         };
         this.handleClose = this.handleClose.bind(this);
         this.handleSortMostRecent = this.handleSortMostRecent.bind(this);
@@ -33,29 +30,41 @@ class EditComments extends Component{
         this.createComment = this.createComment.bind(this);
     }
 
-    componentDidMount(){
-        this.getComments(this.props.fileName)
+    componentDidMount() {
+        this.getComments(this.props.fileName);
     }
-    getComments(input, callback){
+    getComments(input, callback) {
         new Promise((resolve, reject) => {
             this.props.presenter.getComments(input, resolve, reject);
-        }).then(commentList => {
-            console.log("here");
-            console.log(commentList);
-            this.setState({commentList : commentList});
-        }).catch(error => {
-            console.log(error);
-            this.setState({loading : false});
         })
-
+            .then((commentList) => {
+                console.log("here");
+                console.log(commentList);
+                this.setState({ commentList: commentList });
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({ loading: false });
+            });
     }
 
+
+    retractComment(commentId, callback){
+        new Promise((resolve, reject) => {
+            this.props.presenter.retractComment(commentId, resolve, reject);
+        })
+            .then((this.getComments))
+            .catch((error) => {
+                console.log(error);
+                this.setState({loading: false});
+            });
+    }
     componentWillReceiveProps(nextProps, nextContext) {
-        this.setState({open: true})
+        this.setState({ open: true });
     }
 
     handleClose = () => {
-        this.setState({open : false});
+        this.setState({ open: false });
     };
 
     handleSortMostRecent = () => {
@@ -64,20 +73,18 @@ class EditComments extends Component{
         let aux = 0;
         let temp = this.state.commentList;
         swapped = true;
-        while(swapped){
+        while (swapped) {
             swapped = false;
-            for(let i = 1; i < temp.length; i++){
-                if(temp[i - 1].date > temp[i].date){
+            for (let i = 1; i < temp.length; i++) {
+                if (temp[i - 1].date > temp[i].date) {
                     swapped = true;
                     aux = temp[i - 1];
                     temp[i - 1] = temp[i];
                     temp[i] = aux;
                 }
             }
-
         }
-        this.setState({commentList : temp});
-
+        this.setState({ commentList: temp });
     };
 
     handleSortLeastRecent = () => {
@@ -86,19 +93,18 @@ class EditComments extends Component{
         let aux = 0;
         let temp = this.state.commentList;
         swapped = true;
-        while(swapped){
+        while (swapped) {
             swapped = false;
-            for(let i = 1; i < temp.length; i++){
-                if(temp[i - 1].date < temp[i].date){
+            for (let i = 1; i < temp.length; i++) {
+                if (temp[i - 1].date < temp[i].date) {
                     swapped = true;
                     aux = temp[i - 1];
                     temp[i - 1] = temp[i];
                     temp[i] = aux;
                 }
             }
-
         }
-        this.setState({commentList : temp});
+        this.setState({ commentList: temp });
     };
 
     handleSortOwner = () => {
@@ -107,40 +113,48 @@ class EditComments extends Component{
         let aux = 0;
         let temp = this.state.commentList;
         swapped = true;
-        while(swapped){
+        while (swapped) {
             swapped = false;
-            for(let i = 1; i < temp.length; i++){
-                if(temp[i - 1].owner.charAt(0) > temp[i].owner.charAt(0)){
+            for (let i = 1; i < temp.length; i++) {
+                if (temp[i - 1].owner.charAt(0) > temp[i].owner.charAt(0)) {
                     swapped = true;
                     aux = temp[i - 1];
                     temp[i - 1] = temp[i];
                     temp[i] = aux;
                 }
             }
-
         }
-        this.setState({commentList : temp});
+        this.setState({ commentList: temp });
     };
 
-    handleChange = name => event => {
+    handleChange = (name) => (event) => {
         this.setState({
             [name]: event.target.value,
         });
     };
 
     createComment = () => {
-      const text = document.getElementById("addCommentTextField").value;
-      console.log(text);
+        const text = document.getElementById("addCommentTextField").value;
+        console.log(text);
     };
 
 
-    render(){
-        const {classes} = this.props;
-        let commentItems = this.state.commentList ? this.state.commentList.map((comment, index) =>
-            <Comment message={comment.message} id={comment.id} retracted={comment.retracted}
-                    date={comment.date} owner={comment.owner}/>
-    ) : [];
-        return(
+    render() {
+        const { classes } = this.props;
+        let commentItems = this.state.commentList
+            ? this.state.commentList.map((comment, index) => (
+                  <Comment
+                      message={comment.message}
+                      id={comment.id}
+                      retracted={comment.retracted}
+                      date={comment.date}
+                      owner={comment.owner}
+                      classes={this.props.classes}
+                      retractComment={this.retractComment}
+                  />
+              ))
+            : [];
+        return (
             <div className={classes.root}>
                 <Dialog
                     open={this.state.open}
@@ -152,34 +166,23 @@ class EditComments extends Component{
                         id={"edit-comments-dialog-title"}
                         heading={"Comments"}
                         onClose={this.handleClose}
+                    />
+                    <hr />
+
+                    <DotMenu
+                        handleSortMostRecent={this.handleSortMostRecent}
+                        handleSortLeastRecent={this.handleSortLeastRecent}
+                        handleSortOwner={this.handleSortOwner}
+                        className={this.props.classes.dropDownDots}
+                    />
+
+                    <DialogContent
+                        id="editCommentsCommentList"
+                        className={classes.dContent}
                     >
-
-                    </DEDialogHeader>
-                    <hr></hr>
-
-                    <Button variant="contained" color="secondary" className={classes.deleteButton}
-
-                    >
-                        Retract
-                        <DeleteIcon />
-                    </Button>
-
-                        <label id={"editCommentsDropDownLabel"} className={classes.dropDownLabel}>  Comments</label>
-                        <DotMenu
-                            handleSortMostRecent={this.handleSortMostRecent}
-                            handleSortLeastRecent={this.handleSortLeastRecent}
-                            handleSortOwner={this.handleSortOwner}
-                            className={this.props.classes.dropDownDots}
-                        />
-
-                    <DialogContent id="editCommentsCommentList" className={classes.dContent}>
-                        <List component="nav">
-                            {commentItems}
-                        </List>
+                        <List component="nav">{commentItems}</List>
                     </DialogContent>
                     <TextField
-                        value={this.state.multiline}
-                        onChange={this.handleChange('multiline')}
                         className={classes.addCommentTextField}
                         label="Add a Comment"
                         margin="normal"
@@ -195,7 +198,7 @@ class EditComments extends Component{
                         onClick={this.createComment}
                         className={classes.addCommentButton}
                     >
-                        <AddIcon/>
+                        <AddIcon />
                     </Fab>
                 </Dialog>
             </div>
@@ -203,5 +206,4 @@ class EditComments extends Component{
     }
 }
 
-export default withStyles(exStyles)(EditComments)
-
+export default withStyles(exStyles)(EditComments);
