@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import RecentIcon from "@material-ui/icons/Update";
-import OwnerIcon from "@material-ui/icons/SupervisedUserCircleRounded"
+import OwnerIcon from "@material-ui/icons/SupervisedUserCircleRounded";
 import exStyles from "./style.js";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -25,7 +25,7 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <RecentIcon/>
+                    <RecentIcon />
                     Most Recent
                 </MenuItem>
 
@@ -36,10 +36,9 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <RecentIcon/>
+                    <RecentIcon />
                     Least Recent
                 </MenuItem>
-
 
                 <MenuItem
                     onClick={() => {
@@ -48,11 +47,9 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <OwnerIcon/>
+                    <OwnerIcon />
                     By Owner
                 </MenuItem>
-
-
             </React.Fragment>
         );
     }

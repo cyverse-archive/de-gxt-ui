@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
 import Menu from "@material-ui/core/Menu";
 
@@ -9,36 +9,35 @@ import EditCommentsMenuItems from "./EditCommentsMenuItems.js";
 const ITEM_HEIGHT = 48;
 
 class DotMenu extends Component {
-
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            anchorEl : null,
+            anchorEl: null,
         };
     }
 
-    handleDotMenuClick = event => {
-        this.setState({anchorEl : event.currentTarget});
+    handleDotMenuClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleDotMenuClose = () => {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     };
 
-    render(){
-        const {anchorEl} = this.state;
+    render() {
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (
-            <div >
+            <div>
                 <IconButton
                     aria-Label="More"
-                    aria-owns={open ? 'long-menu' : null}
+                    aria-owns={open ? "long-menu" : null}
                     aria-haspopup="true"
                     onClick={this.handleDotMenuClick}
-                    classes = {{root : this.props.className}}
+                    classes={{ root: this.props.className }}
                 >
-                    <MoreVertIcon/>
+                    <MoreVertIcon />
                 </IconButton>
                 <Menu
                     anchorEl={anchorEl}
@@ -51,12 +50,11 @@ class DotMenu extends Component {
                         },
                     }}
                 >
-                    <EditCommentsMenuItems handleClose={this.handleDotMenuClose}
-                                           {...this.props}
+                    <EditCommentsMenuItems
+                        handleClose={this.handleDotMenuClose}
+                        {...this.props}
                     />
-
                 </Menu>
-
             </div>
         );
     }
