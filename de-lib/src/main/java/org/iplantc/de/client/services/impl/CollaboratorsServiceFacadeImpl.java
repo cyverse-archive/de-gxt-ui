@@ -55,14 +55,17 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
 
     @Override
     public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Subject>> callback) {
+        if (usernames == null || usernames.isEmpty()) {
+            callback.onSuccess(new FastMap<>());
+            return;
+        }
+
         StringBuilder address = new StringBuilder(deProperties.getMuleServiceBaseUrl());
         address.append("user-info"); //$NON-NLS-1$
 
-        if (usernames != null && !usernames.isEmpty()) {
-            address.append("?username="); //$NON-NLS-1$
-            String userList = Joiner.on("&username=").join(usernames);
-            address.append(URL.encode(userList));
-        }
+        address.append("?username="); //$NON-NLS-1$
+        String userList = Joiner.on("&username=").join(usernames);
+        address.append(URL.encode(userList));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address.toString());
         deServiceFacade.getServiceData(wrapper, new FastMapCollaboratorCallbackConverter(callback, factory));
