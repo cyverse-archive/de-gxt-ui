@@ -25,6 +25,8 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
         SafeHtml getAppDocError(Throwable caught);
         @JsIgnore
         SafeHtml saveAppDocError(Throwable caught);
+
+        String getQuickLaunchesError();
     }
 
     @JsType
@@ -58,11 +60,25 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
                                     ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback);
 
-    }
+        void getQuickLaunches(String appId,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
 
+        
+        void deleteQuickLaunch(String quickLaunchId,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback);
+
+        void useQuickLaunch(String quickLaunchId,
+                                      String appId);
+
+        void onRequestToCreateQuickLaunch(String appId);
+
+    }
 
     void load(Presenter presenter);
 
     void onClose();
 }
+
 

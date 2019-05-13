@@ -15,4 +15,6 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String dontShow();
 
     String launchPreviewHeader(String templateName);
+
+    String createQuickLaunchSuccess(String name);
 }

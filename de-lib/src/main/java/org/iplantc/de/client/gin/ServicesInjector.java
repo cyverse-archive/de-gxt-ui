@@ -14,6 +14,7 @@ import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
+import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.ToolRequestServiceFacade;
@@ -69,4 +70,6 @@ public interface ServicesInjector extends Ginjector {
     OauthServiceFacade getOauthService();
 
     DEUserSupportServiceFacade getUserSupportServiceFacade();
+
+    QuickLaunchServiceFacade getQuickLaunchServiceFacade();
 }

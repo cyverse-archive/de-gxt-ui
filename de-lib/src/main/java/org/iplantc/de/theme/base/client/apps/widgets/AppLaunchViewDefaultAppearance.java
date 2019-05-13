@@ -2,42 +2,66 @@ package org.iplantc.de.theme.base.client.apps.widgets;
 
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
+import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * @author aramsey
  */
 public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchViewAppearance {
 
+
+    interface Style extends CssResource {
+        String launchButtonPosition();
+    }
+
+    interface Resources extends IplantResources {
+        @Source("AppLaunchView.gss")
+        Style css();
+    }
+
     private final IplantDisplayStrings iplantDisplayStrings;
     private AppsWidgetsErrorMessages appsWidgetsErrorMessages;
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     private AppLaunchViewDisplayStrings displayStrings;
     private final IplantErrorStrings errorStrings;
+    private Style style;
+    private final Resources res;
 
     public AppLaunchViewDefaultAppearance() {
-        this(GWT.<AppLaunchViewDisplayStrings> create(AppLaunchViewDisplayStrings.class),
+        this(GWT.<Resources>create(Resources.class),
+             GWT.<AppLaunchViewDisplayStrings> create(AppLaunchViewDisplayStrings.class),
              GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<IplantErrorStrings> create(IplantErrorStrings.class),
              GWT.<AppsWidgetsErrorMessages>create(AppsWidgetsErrorMessages.class),
              GWT.<AppsWidgetsDisplayMessages>create(AppsWidgetsDisplayMessages.class));
     }
 
-    public AppLaunchViewDefaultAppearance(AppLaunchViewDisplayStrings displayStrings,
+    public AppLaunchViewDefaultAppearance(Resources res,
+                                          AppLaunchViewDisplayStrings displayStrings,
                                           IplantDisplayStrings iplantDisplayStrings,
                                           IplantErrorStrings errorStrings,
                                           AppsWidgetsErrorMessages appsWidgetsErrorMessages,
                                           AppsWidgetsDisplayMessages appsWidgetsDisplayMessages) {
+        this.res = res;
         this.displayStrings = displayStrings;
         this.errorStrings = errorStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.appsWidgetsErrorMessages = appsWidgetsErrorMessages;
         this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
+        this.style = res.css();
+        style.ensureInjected();
+    }
+
+    @Override
+    public String launchButtonPositionClassName() {
+        return style.launchButtonPosition();
     }
 
     @Override
@@ -138,5 +162,15 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     @Override
     public int windowMinHeight() {
         return 350;
+    }
+
+    @Override
+    public String createQuickLaunch() {
+        return iplantDisplayStrings.createQuickLaunch();
+    }
+
+    @Override
+    public String createQuickLaunchSuccess(String name) {
+        return displayStrings.createQuickLaunchSuccess(name);
     }
 }

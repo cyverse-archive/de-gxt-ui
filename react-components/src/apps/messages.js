@@ -55,6 +55,26 @@ const intlData = {
         save: "Save",
         discardChanges: "Discard changes",
         edit: "Edit",
+        quickLaunchNameLabel: "Name",
+        createQuickLaunchLabel: "Create Quick Launch",
+        defaultLabel: "Default",
+        publicLabel: "Public",
+        cancelLabel: "Cancel",
+        defaultQLTooltip: "Make this my default quick launch for this app",
+        publicQLTooltip: "Quick Launch visible to all users",
+        qLaunchToolTip: "Use this Quick Launch",
+        qLaunchEmbedToolTip: "Copy embed code",
+        quickLaunchLabel: "Quick Launch",
+        embedLbl: "Embed",
+        shareLbl: "Share",
+        deleteLbl: "Delete",
+        qLaunchShareToolTip: "Share Quick Launch URL",
+        quickLaunchDeleteConfirmation:
+            "Do you wish to delete this Quick Launch? Note: Deleting" +
+            " public Quick Launch will break embedded and shared links.",
+        noQuickLaunches: "No Quick Launch(s) to display.",
+        quickLaunchNotSupportedMessage:
+            "Quick Launch not supported for agave apps!",
     },
 };
 

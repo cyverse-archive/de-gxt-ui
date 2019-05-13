@@ -2,6 +2,7 @@ package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -24,7 +25,8 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  * @author jstroot
  */
 public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreviewView {
-    
+
+
     @UiTemplate("AppLaunchView.ui.xml")
     interface AppWizardPreviewUiBinder extends UiBinder<Widget, AppLaunchPreviewViewImpl> {}
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppLaunchPreviewView> { }
@@ -53,6 +55,12 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     }
 
     @Override
+    public HandlerRegistration addCreateQuickLaunchEventHandler(CreateQuickLaunchEvent.CreateQuickLaunchEventHandler handler) {
+        throw new UnsupportedOperationException(
+                "App Launch preview does not support Quick Launch " + "request events.");
+    }
+
+    @Override
     public void analysisLaunchFailed() {
 
     }
@@ -61,6 +69,12 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     public void edit(AppTemplate appTemplate, JobExecution je) {
         setHeading(appearance.launchPreviewHeader(appTemplate));
         editorDriver.edit(appTemplate);
+    }
+
+    @Override
+    public void showOrHideCreateQuickLaunchView(ReactQuickLaunch.CreateQLProps props) {
+        throw new UnsupportedOperationException(
+                "App Launch preview does not support  Create Quick " + "Launch view");
     }
 
     @Override

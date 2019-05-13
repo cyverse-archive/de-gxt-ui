@@ -4,8 +4,8 @@
  **/
 
 import React, { useEffect, useState } from "react";
-
 import PropTypes from "prop-types";
+
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
@@ -17,6 +17,7 @@ import AppDetails from "./AppDetails";
 import AppDoc from "./AppDoc";
 import DEDialogHeader from "../../util/dialog/DEDialogHeader";
 import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
+import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
 import ToolDetails from "./ToolDetails";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -34,10 +35,12 @@ function AppInfoDialog(props) {
         presenter,
         docEditable,
         searchRegexPattern,
+        userName,
         baseDebugId,
         intl,
     } = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
+    const quickLaunchLabel = formatMessage(intl, "quickLaunchLabel");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
 
@@ -49,23 +52,51 @@ function AppInfoDialog(props) {
     const [mode, setMode] = useState(VIEW_MODE);
     const [documentation, setDocumentation] = useState(null);
     const [references, setReferences] = useState(null);
+    const [quickLaunches, setQuickLaunches] = useState([]);
+    const [selectedQuickLaunch, setSelectedQuickLaunch] = useState(null);
 
     useEffect(() => {
-        function handleSuccess(doc) {
-            setLoading(false);
-            setDocumentation(doc.documentation);
-            setReferences(doc.references);
-        }
-
-        function handleFailure(statusCode, message) {
-            setLoading(false);
-            setError(true);
-        }
+        setLoading(true);
+        let promises = [];
+        let p;
 
         if (!app.wiki_url) {
-            setLoading(true);
-            presenter.getAppDoc(app, handleSuccess, handleFailure);
+            p = new Promise((resolve, reject) => {
+                presenter.getAppDoc(
+                    app,
+                    (doc) => {
+                        setDocumentation(doc.documentation);
+                        setReferences(doc.references);
+                        resolve("");
+                    },
+                    (statusCode, message) => {
+                        reject(message);
+                        setError(true);
+                    }
+                );
+            });
+            promises.push(p);
         }
+        p = new Promise((resolve, reject) => {
+            presenter.getQuickLaunches(
+                app.id,
+                (qLaunches) => {
+                    setQuickLaunches(qLaunches);
+                    resolve("");
+                },
+                (statusCode, message) => {
+                    reject(message);
+                }
+            );
+        });
+        promises.push(p);
+        Promise.all(promises)
+            .then((value) => {
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(false);
+            });
     }, []);
 
     const handleTabChange = (event, value) => {
@@ -115,9 +146,35 @@ function AppInfoDialog(props) {
         presenter.onClose();
     };
 
+    const onCreateQuickLaunch = () => {
+        presenter.onRequestToCreateQuickLaunch(app.id);
+        onClose();
+    };
+
+    const useQuickLaunch = (qLaunch) => {
+        presenter.useQuickLaunch(qLaunch.id, qLaunch.app_id);
+        onClose();
+    };
+
+    const doDeleteQuickLaunch = (qLaunch) => {
+        setLoading(true);
+        presenter.deleteQuickLaunch(
+            qLaunch.id,
+            () => {
+                const newQLaunches = quickLaunches.filter((q) => q !== qLaunch);
+                setQuickLaunches(newQLaunches);
+                setSelectedQuickLaunch(null);
+                setLoading(false);
+            },
+            (statusCode, errorMessage) => {
+                setLoading(false);
+            }
+        );
+    };
+
     return (
         <React.Fragment>
-            <Dialog open={dialogOpen} fullWidth={true} id={baseDebugId}>
+            <Dialog open={dialogOpen} maxWidth="sm" id={baseDebugId}>
                 <DEDialogHeader heading={app.name} onClose={onClose} />
                 <DialogContent style={{ minHeight: 600 }}>
                     <Tabs
@@ -125,8 +182,11 @@ function AppInfoDialog(props) {
                         textColor="primary"
                         value={tabIndex}
                         onChange={handleTabChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
                     >
                         <Tab label={appInfoLabel} />
+                        <Tab label={quickLaunchLabel} />
                         <Tab label={toolInfoLabel} />
                         <Tab label={appDocLabel} />
                     </Tabs>
@@ -139,6 +199,26 @@ function AppInfoDialog(props) {
                         />
                     )}
                     {tabIndex === 1 && (
+                        <QuickLaunchListing
+                            baseDebugId={build(
+                                baseDebugId,
+                                ids.DETAILS.QUICK_LAUNCH
+                            )}
+                            quickLaunches={quickLaunches}
+                            presenter={presenter}
+                            userName={userName}
+                            appId={app.id}
+                            systemId={app.system_id}
+                            closeParentDialog={onClose}
+                            onDelete={doDeleteQuickLaunch}
+                            useQuickLaunch={useQuickLaunch}
+                            onCreate={onCreateQuickLaunch}
+                            onSelection={setSelectedQuickLaunch}
+                            loading={loading}
+                            selected={selectedQuickLaunch}
+                        />
+                    )}
+                    {tabIndex === 2 && (
                         <ToolDetails
                             baseDebugId={build(
                                 baseDebugId,
@@ -148,7 +228,7 @@ function AppInfoDialog(props) {
                             details={app.tools}
                         />
                     )}
-                    {tabIndex === 2 && (
+                    {tabIndex === 3 && (
                         <AppDoc
                             baseDebugId={build(
                                 baseDebugId,

@@ -5,7 +5,6 @@
 
 import React from "react";
 
-import LoadingOverlay from "react-loading-overlay";
 import sanitizeHtml from "sanitize-html";
 import showdown from "showdown";
 import { injectIntl } from "react-intl";
@@ -13,18 +12,17 @@ import { injectIntl } from "react-intl";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import style from "../style";
 import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
+import { LoadingMask } from "@cyverse-de/de-components";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { Paper, withStyles } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
 
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
@@ -74,7 +72,6 @@ function AppDoc(props) {
         onDocChange,
         loading,
         error,
-        classes,
         mode,
         onModeChange,
         intl,
@@ -104,16 +101,7 @@ function AppDoc(props) {
 
     return (
         <Paper id={baseDebugId} style={{ padding: 5, fontSize: 12 }}>
-            <LoadingOverlay
-                active={loading}
-                spinner={
-                    <CircularProgress
-                        size={30}
-                        className={classes.loadingStyle}
-                        thickness={7}
-                    />
-                }
-            >
+            <LoadingMask loading={loading}>
                 {mode === VIEW_MODE && (
                     <React.Fragment>
                         <div
@@ -166,9 +154,9 @@ function AppDoc(props) {
                         </Fab>
                     </Tooltip>
                 )}
-            </LoadingOverlay>
+            </LoadingMask>
         </Paper>
     );
 }
 
-export default withStyles(style)(withI18N(injectIntl(AppDoc), intlData));
+export default withI18N(injectIntl(AppDoc), intlData);

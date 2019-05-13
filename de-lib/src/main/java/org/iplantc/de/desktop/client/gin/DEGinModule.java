@@ -16,6 +16,7 @@ import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.OauthServiceFacade;
+import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
@@ -86,6 +87,10 @@ public class DEGinModule extends AbstractGinModule {
 
     @Provides @Singleton public AppTemplateServices createAppTemplateServices() {
         return ServicesInjector.INSTANCE.getAppTemplateServices();
+    }
+
+    @Provides @Singleton public QuickLaunchServiceFacade createQuickLaunchServiceFacade() {
+        return ServicesInjector.INSTANCE.getQuickLaunchServiceFacade();
     }
 
     @Provides

@@ -1,6 +1,7 @@
 /**
  * @author psarando, sriram
  */
+
 import React, { Component } from "react";
 import Tree, { TreeNode } from "rc-tree";
 import "rc-tree/assets/index.css";
@@ -62,6 +63,7 @@ class CategoryTree extends Component {
             <Tree
                 id={this.props.id}
                 defaultExpandAll={false}
+                selectable={false}
             >
                 {hierarchies.map((hierarchyClass) =>
                     this.renderHierarchyNode(
