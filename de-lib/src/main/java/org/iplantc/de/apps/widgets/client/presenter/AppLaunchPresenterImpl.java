@@ -87,7 +87,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     AppTemplate appTemplate;
     JobExecution jobExecution;
     private final AppTemplateServices atServices;
-    private final QuickLaunchServiceFacade qlServices;
+    QuickLaunchServiceFacade qlServices;
     HandlerManager handlerManager;
     private final UserSettings userSettings;
     private AppTemplateAutoBeanFactory factory;

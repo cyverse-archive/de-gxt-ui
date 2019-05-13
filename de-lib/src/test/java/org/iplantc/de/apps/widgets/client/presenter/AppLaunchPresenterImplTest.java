@@ -22,6 +22,7 @@ import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.AppTemplateServices;
+import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -75,6 +76,8 @@ public class AppLaunchPresenterImplTest {
     @Mock HPCWaitTimeDialog hpcWaitTimeDialogMock;
     @Mock AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProviderMock;
     @Mock Widget viewWidgetMock;
+    @Mock
+    QuickLaunchServiceFacade quickLaunchServiceFacadeMock;
 
     @Captor ArgumentCaptor<AppLaunchCallback<AppTemplate>> appTemplateCaptor;
     @Captor ArgumentCaptor<AppLaunchCallback<AnalysisSubmissionResponse>> analysisSubmissionCaptor;
@@ -100,6 +103,7 @@ public class AppLaunchPresenterImplTest {
         uut = new AppLaunchPresenterImpl(viewMock,
                                          userSettingsMock,
                                          atServicesMock,
+                                         quickLaunchServiceFacadeMock,
                                          factoryMock,
                                          deClientConstantsMock,
                                          appTemplateUtilsMock,
@@ -124,6 +128,7 @@ public class AppLaunchPresenterImplTest {
         uut.container = containerMock;
         uut.announcer = announcerMock;
         uut.hpcWaitDlgProvider = hpcWaitDlgProviderMock;
+        uut.qlServices = quickLaunchServiceFacadeMock;
     }
 
     @Test
