@@ -195,7 +195,7 @@ function ListQuickLaunches(props) {
     } else {
         return (
             <React.Fragment>
-                <Paper style={{ padding: 5 }}>
+                <Paper style={{ padding: 5 }} id={baseDebugId}>
                     <LoadingMask loading={loading}>
                         <Grid container spacing={24}>
                             {quickLaunches.map((qLaunch) => {
