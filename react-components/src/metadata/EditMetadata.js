@@ -202,6 +202,7 @@ class EditMetadata extends Component {
 
         return (
             <Dialog
+                id={ids.EDIT_METADATA_FORM}
                 open={open}
                 fullWidth={true}
                 maxWidth="md"
