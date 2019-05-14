@@ -8,7 +8,9 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import intlData from "./messages";
 import withI18N from "../../util/I18NWrapper";
+import build from "../../util/DebugIDUtil";
 import exStyles from "./style";
+import ids from "./ids";
 
 import PropTypes from "prop-types";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -23,12 +25,16 @@ class DEDialogHeader extends Component {
     render() {
         const { classes, heading, onClose, intl, id } = this.props;
         return (
-            <DialogTitle id={id} className={classes.header}>
+            <DialogTitle
+                id={id && build(id, ids.HEADER)}
+                className={classes.header}
+            >
                 <Typography className={classes.title}>{heading}</Typography>
                 <IconButton
                     aria-label={intl.formatMessage({ id: "more" })}
                     aria-haspopup="true"
                     onClick={onClose}
+                    id={id && build(id, ids.HEADER, ids.CLOSE_BTN)}
                     className={classes.dialogCloseButton}
                 >
                     <CloseIcon />
