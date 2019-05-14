@@ -5,6 +5,7 @@
 import React, { Component } from "react";
 
 import build from "../../util/DebugIDUtil";
+import ids from "../ids";
 import intlData from "../messages";
 import style from "../style";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
@@ -44,7 +45,10 @@ class ToolDetailsV1 extends Component {
             valueClass = classes.detailsValue;
         const { baseDebugId, searchRegexPattern } = this.props;
         return tools.map((toolInfo, index) => (
-            <ExpansionPanel key={index} id={build(baseDebugId, toolInfo.name)}>
+            <ExpansionPanel
+                key={index}
+                id={build(baseDebugId, index, toolInfo.name)}
+            >
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography variant="caption">
                         <Highlighter search={searchRegexPattern}>

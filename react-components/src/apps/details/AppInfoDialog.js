@@ -175,7 +175,11 @@ function AppInfoDialog(props) {
     return (
         <React.Fragment>
             <Dialog open={dialogOpen} maxWidth="sm" id={baseDebugId}>
-                <DEDialogHeader heading={app.name} onClose={onClose} />
+                <DEDialogHeader
+                    heading={app.name}
+                    onClose={onClose}
+                    id={baseDebugId}
+                />
                 <DialogContent style={{ minHeight: 600 }}>
                     <Tabs
                         indicatorColor="primary"
@@ -185,14 +189,35 @@ function AppInfoDialog(props) {
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        <Tab label={appInfoLabel} />
-                        <Tab label={quickLaunchLabel} />
-                        <Tab label={toolInfoLabel} />
-                        <Tab label={appDocLabel} />
+                        <Tab
+                            label={appInfoLabel}
+                            id={build(baseDebugId, ids.DETAILS.APP_INFO_TAB)}
+                        />
+                        <Tab
+                            label={quickLaunchLabel}
+                            id={build(
+                                baseDebugId,
+                                ids.DETAILS.QUICK_LAUNCH_TAB
+                            )}
+                        />
+                        <Tab
+                            label={toolInfoLabel}
+                            id={build(baseDebugId, ids.DETAILS.APP_TOOLS_TAB)}
+                        />
+                        <Tab
+                            label={appDocLabel}
+                            id={build(
+                                baseDebugId,
+                                ids.DETAILS.APP_DOCUMENTATION_TAB
+                            )}
+                        />
                     </Tabs>
                     {tabIndex === 0 && (
                         <AppDetails
-                            baseDebugId={baseDebugId}
+                            baseDebugId={build(
+                                baseDebugId,
+                                ids.DETAILS.APP_INFO
+                            )}
                             searchRegexPattern={searchRegexPattern}
                             details={app}
                             presenter={presenter}
