@@ -212,349 +212,315 @@ class EditMetadata extends Component {
                 aria-labelledby={dialogTitleID}
                 TransitionComponent={SlideUpTransition}
             >
-                <LoadingMask loading={loading}>
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <Typography
-                                id={dialogTitleID}
-                                variant="h6"
-                                color="inherit"
-                                className={classes.flex}
-                            >
-                                {getMessage(
-                                    editable
-                                        ? "dialogTitleEditMetadataFor"
-                                        : "dialogTitleViewMetadataFor",
-                                    { values: { targetName } }
-                                )}
-                            </Typography>
-
-                            {tabIndex === 0 && (
-                                <Tooltip
-                                    title={getMessage("viewInTemplate")}
-                                    placement="bottom"
-                                    enterDelay={200}
-                                >
-                                    <span>
-                                        <IconButton
-                                            id={build(
-                                                ids.EDIT_METADATA_FORM,
-                                                ids.BUTTONS.VIEW_TEMPLATES
-                                            )}
-                                            aria-label={formatMessage(
-                                                intl,
-                                                "viewInTemplate"
-                                            )}
-                                            disabled={
-                                                loading ||
-                                                isSubmitting ||
-                                                (errors.error && editable)
-                                            }
-                                            onClick={() =>
-                                                this.props.presenter.onSelectTemplateBtnSelected(
-                                                    values
-                                                )
-                                            }
-                                            color="inherit"
-                                        >
-                                            <ContentView />
-                                        </IconButton>
-                                    </span>
-                                </Tooltip>
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <Typography
+                            id={dialogTitleID}
+                            variant="h6"
+                            color="inherit"
+                            className={classes.flex}
+                        >
+                            {getMessage(
+                                editable
+                                    ? "dialogTitleEditMetadataFor"
+                                    : "dialogTitleViewMetadataFor",
+                                { values: { targetName } }
                             )}
+                        </Typography>
 
-                            {tabIndex === 1 && editable && (
-                                <Tooltip
-                                    title={getMessage(
-                                        "importIRODSMetadataTooltip"
-                                    )}
-                                    placement="bottom"
-                                    enterDelay={200}
-                                >
-                                    <span>
-                                        <IconButton
-                                            id={build(
-                                                ids.EDIT_METADATA_FORM,
-                                                ids.BUTTONS
-                                                    .IMPORT_IRODS_METADATA
-                                            )}
-                                            aria-label={formatMessage(
-                                                intl,
-                                                "importIRODSMetadata"
-                                            )}
-                                            disabled={
-                                                loading ||
-                                                isSubmitting ||
-                                                irodsAVUsSelected.length < 1
-                                            }
-                                            onClick={() =>
-                                                this.setState({
-                                                    showImportConfirmationDialog: true,
-                                                })
-                                            }
-                                            color="inherit"
-                                        >
-                                            <SaveAltIcon />
-                                        </IconButton>
-                                    </span>
-                                </Tooltip>
-                            )}
-
+                        {tabIndex === 0 && (
                             <Tooltip
-                                title={getMessage("saveToFile")}
-                                placement="bottom-start"
+                                title={getMessage("viewInTemplate")}
+                                placement="bottom"
                                 enterDelay={200}
                             >
                                 <span>
                                     <IconButton
                                         id={build(
                                             ids.EDIT_METADATA_FORM,
-                                            ids.BUTTONS.SAVE_METADATA_TO_FILE
+                                            ids.BUTTONS.VIEW_TEMPLATES
                                         )}
                                         aria-label={formatMessage(
                                             intl,
-                                            "saveToFile"
+                                            "viewInTemplate"
                                         )}
                                         disabled={
                                             loading ||
-                                            (dirty && editable) ||
-                                            isSubmitting
+                                            isSubmitting ||
+                                            (errors.error && editable)
                                         }
                                         onClick={() =>
-                                            this.props.presenter.onSaveMetadataToFileBtnSelected()
+                                            this.props.presenter.onSelectTemplateBtnSelected(
+                                                values
+                                            )
                                         }
                                         color="inherit"
                                     >
-                                        <SaveIcon />
+                                        <ContentView />
                                     </IconButton>
                                 </span>
                             </Tooltip>
-
-                            <IconButton
-                                id={build(
-                                    ids.EDIT_METADATA_FORM,
-                                    ids.BUTTONS.HELP
-                                )}
-                                aria-label={formatMessage(intl, "helpBtnLabel")}
-                                onClick={(e) =>
-                                    this.setState({
-                                        helpTextAnchor: e.currentTarget,
-                                    })
-                                }
-                                color="inherit"
-                            >
-                                <HelpIcon />
-                            </IconButton>
-
-                            <Popover
-                                open={!!helpTextAnchor}
-                                anchorEl={helpTextAnchor}
-                                onClose={() =>
-                                    this.setState({ helpTextAnchor: null })
-                                }
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                            >
-                                <Typography className={classes.helpText}>
-                                    {formatHTMLMessage("helpText")}
-                                </Typography>
-                            </Popover>
-
-                            <IconButton
-                                id={build(
-                                    ids.EDIT_METADATA_FORM,
-                                    ids.BUTTONS.CLOSE_ICON
-                                )}
-                                onClick={this.closeMetadataDialog}
-                                aria-label={formatMessage(intl, "close")}
-                                color="inherit"
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </Toolbar>
-                    </AppBar>
-
-                    <DialogContent>
-                        (
-                        <Fragment>
-                            {irodsAVUs && !!irodsAVUs.length && (
-                                <AppBar position="static" color="default">
-                                    <Tabs
-                                        value={tabIndex}
-                                        onChange={this.handleTabChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                        variant="fullWidth"
-                                    >
-                                        <Tab
-                                            label={getMessage("userMetadata")}
-                                        />
-                                        <Tab
-                                            label={getMessage(
-                                                "additionalMetadata"
-                                            )}
-                                        />
-                                    </Tabs>
-                                </AppBar>
-                            )}
-
-                            {tabIndex === 0 && (
-                                <Fragment>
-                                    <FieldArray
-                                        name="avus"
-                                        render={(arrayHelpers) => (
-                                            <MetadataList
-                                                {...arrayHelpers}
-                                                field="avus"
-                                                editable={editable}
-                                                parentID={
-                                                    ids.EDIT_METADATA_FORM
-                                                }
-                                                onEditAVU={(index) =>
-                                                    this.setState({
-                                                        editingAttrIndex: index,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-
-                                    <FieldArray
-                                        name="avus"
-                                        render={(arrayHelpers) => (
-                                            <FormDialogEditAVU
-                                                {...arrayHelpers}
-                                                editable={editable}
-                                                targetName={targetName}
-                                                editingAttrIndex={
-                                                    editingAttrIndex
-                                                }
-                                                closeAttrDialog={() =>
-                                                    this.setState({
-                                                        editingAttrIndex: -1,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </Fragment>
-                            )}
-
-                            {tabIndex === 1 && (
-                                <Fragment>
-                                    <FieldArray
-                                        name="irods-avus"
-                                        render={(arrayHelpers) => (
-                                            <MetadataList
-                                                {...arrayHelpers}
-                                                field="irods-avus"
-                                                editable={false}
-                                                parentID={
-                                                    ids.EDIT_METADATA_FORM
-                                                }
-                                                onEditAVU={(index) =>
-                                                    this.setState({
-                                                        editingAttrIndex: index,
-                                                    })
-                                                }
-                                                selectable={editable}
-                                                onSelectAVU={
-                                                    this.handleSelectAVU
-                                                }
-                                                onSelectAllClick={
-                                                    this.handleSelectAllAVUs
-                                                }
-                                                avusSelected={irodsAVUsSelected}
-                                                rowsInPage={irodsAVUs.length}
-                                            />
-                                        )}
-                                    />
-                                    <FieldArray
-                                        name="irods-avus"
-                                        render={(arrayHelpers) => (
-                                            <FormDialogEditAVU
-                                                {...arrayHelpers}
-                                                editable={false}
-                                                targetName={targetName}
-                                                editingAttrIndex={
-                                                    editingAttrIndex
-                                                }
-                                                closeAttrDialog={() =>
-                                                    this.setState({
-                                                        editingAttrIndex: -1,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </Fragment>
-                            )}
-                        </Fragment>
                         )}
-                    </DialogContent>
 
-                    <DialogActions>
-                        <Button
+                        {tabIndex === 1 && editable && (
+                            <Tooltip
+                                title={getMessage("importIRODSMetadataTooltip")}
+                                placement="bottom"
+                                enterDelay={200}
+                            >
+                                <span>
+                                    <IconButton
+                                        id={build(
+                                            ids.EDIT_METADATA_FORM,
+                                            ids.BUTTONS.IMPORT_IRODS_METADATA
+                                        )}
+                                        aria-label={formatMessage(
+                                            intl,
+                                            "importIRODSMetadata"
+                                        )}
+                                        disabled={
+                                            loading ||
+                                            isSubmitting ||
+                                            irodsAVUsSelected.length < 1
+                                        }
+                                        onClick={() =>
+                                            this.setState({
+                                                showImportConfirmationDialog: true,
+                                            })
+                                        }
+                                        color="inherit"
+                                    >
+                                        <SaveAltIcon />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+                        )}
+
+                        <Tooltip
+                            title={getMessage("saveToFile")}
+                            placement="bottom-start"
+                            enterDelay={200}
+                        >
+                            <span>
+                                <IconButton
+                                    id={build(
+                                        ids.EDIT_METADATA_FORM,
+                                        ids.BUTTONS.SAVE_METADATA_TO_FILE
+                                    )}
+                                    aria-label={formatMessage(
+                                        intl,
+                                        "saveToFile"
+                                    )}
+                                    disabled={
+                                        loading ||
+                                        (dirty && editable) ||
+                                        isSubmitting
+                                    }
+                                    onClick={() =>
+                                        this.props.presenter.onSaveMetadataToFileBtnSelected()
+                                    }
+                                    color="inherit"
+                                >
+                                    <SaveIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+
+                        <IconButton
+                            id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.HELP)}
+                            aria-label={formatMessage(intl, "helpBtnLabel")}
+                            onClick={(e) =>
+                                this.setState({
+                                    helpTextAnchor: e.currentTarget,
+                                })
+                            }
+                            color="inherit"
+                        >
+                            <HelpIcon />
+                        </IconButton>
+
+                        <Popover
+                            open={!!helpTextAnchor}
+                            anchorEl={helpTextAnchor}
+                            onClose={() =>
+                                this.setState({ helpTextAnchor: null })
+                            }
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                            }}
+                        >
+                            <Typography className={classes.helpText}>
+                                {formatHTMLMessage("helpText")}
+                            </Typography>
+                        </Popover>
+
+                        <IconButton
                             id={build(
                                 ids.EDIT_METADATA_FORM,
-                                ids.BUTTONS.CLOSE
+                                ids.BUTTONS.CLOSE_ICON
                             )}
                             onClick={this.closeMetadataDialog}
-                            color="primary"
+                            aria-label={formatMessage(intl, "close")}
+                            color="inherit"
                         >
-                            {getMessage("close")}
+                            <CloseIcon />
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+
+                <DialogContent>
+                    <LoadingMask loading={loading}>
+                        {irodsAVUs && !!irodsAVUs.length && (
+                            <AppBar position="static" color="default">
+                                <Tabs
+                                    value={tabIndex}
+                                    onChange={this.handleTabChange}
+                                    indicatorColor="primary"
+                                    textColor="primary"
+                                    variant="fullWidth"
+                                >
+                                    <Tab label={getMessage("userMetadata")} />
+                                    <Tab
+                                        label={getMessage("additionalMetadata")}
+                                    />
+                                </Tabs>
+                            </AppBar>
+                        )}
+
+                        {tabIndex === 0 && (
+                            <Fragment>
+                                <FieldArray
+                                    name="avus"
+                                    render={(arrayHelpers) => (
+                                        <MetadataList
+                                            {...arrayHelpers}
+                                            field="avus"
+                                            editable={editable}
+                                            parentID={ids.EDIT_METADATA_FORM}
+                                            onEditAVU={(index) =>
+                                                this.setState({
+                                                    editingAttrIndex: index,
+                                                })
+                                            }
+                                        />
+                                    )}
+                                />
+
+                                <FieldArray
+                                    name="avus"
+                                    render={(arrayHelpers) => (
+                                        <FormDialogEditAVU
+                                            {...arrayHelpers}
+                                            editable={editable}
+                                            targetName={targetName}
+                                            editingAttrIndex={editingAttrIndex}
+                                            closeAttrDialog={() =>
+                                                this.setState({
+                                                    editingAttrIndex: -1,
+                                                })
+                                            }
+                                        />
+                                    )}
+                                />
+                            </Fragment>
+                        )}
+
+                        {tabIndex === 1 && (
+                            <Fragment>
+                                <FieldArray
+                                    name="irods-avus"
+                                    render={(arrayHelpers) => (
+                                        <MetadataList
+                                            {...arrayHelpers}
+                                            field="irods-avus"
+                                            editable={false}
+                                            parentID={ids.EDIT_METADATA_FORM}
+                                            onEditAVU={(index) =>
+                                                this.setState({
+                                                    editingAttrIndex: index,
+                                                })
+                                            }
+                                            selectable={editable}
+                                            onSelectAVU={this.handleSelectAVU}
+                                            onSelectAllClick={
+                                                this.handleSelectAllAVUs
+                                            }
+                                            avusSelected={irodsAVUsSelected}
+                                            rowsInPage={irodsAVUs.length}
+                                        />
+                                    )}
+                                />
+                                <FieldArray
+                                    name="irods-avus"
+                                    render={(arrayHelpers) => (
+                                        <FormDialogEditAVU
+                                            {...arrayHelpers}
+                                            editable={false}
+                                            targetName={targetName}
+                                            editingAttrIndex={editingAttrIndex}
+                                            closeAttrDialog={() =>
+                                                this.setState({
+                                                    editingAttrIndex: -1,
+                                                })
+                                            }
+                                        />
+                                    )}
+                                />
+                            </Fragment>
+                        )}
+                    </LoadingMask>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button
+                        id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
+                        onClick={this.closeMetadataDialog}
+                        color="primary"
+                    >
+                        {getMessage("close")}
+                    </Button>
+                    {editable && (
+                        <Button
+                            id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
+                            disabled={
+                                loading ||
+                                !dirty ||
+                                isSubmitting ||
+                                errors.error
+                            }
+                            onClick={handleSubmit}
+                            color="primary"
+                            variant="contained"
+                        >
+                            {getMessage("save")}
                         </Button>
-                        {editable && (
-                            <Button
-                                id={build(
-                                    ids.EDIT_METADATA_FORM,
-                                    ids.BUTTONS.SAVE
-                                )}
-                                disabled={
-                                    loading ||
-                                    !dirty ||
-                                    isSubmitting ||
-                                    errors.error
-                                }
-                                onClick={handleSubmit}
-                                color="primary"
-                                variant="contained"
-                            >
-                                {getMessage("save")}
-                            </Button>
-                        )}
-                    </DialogActions>
+                    )}
+                </DialogActions>
 
-                    <ConfirmationDialog
-                        dialogOpen={showDiscardChangesDialog}
-                        debugId={ids.EDIT_METADATA_FORM}
-                        heading={getMessage(
-                            "confirmDiscardChangesDialogHeader"
-                        )}
-                        message={getMessage("confirmDiscardChangesDialogMsg")}
-                        onOkBtnClick={this.confirmCloseMetadataDialog}
-                        onCancelBtnClick={this.closeDiscardChangesDialog}
-                    />
+                <ConfirmationDialog
+                    dialogOpen={showDiscardChangesDialog}
+                    debugId={ids.EDIT_METADATA_FORM}
+                    heading={getMessage("confirmDiscardChangesDialogHeader")}
+                    message={getMessage("confirmDiscardChangesDialogMsg")}
+                    onOkBtnClick={this.confirmCloseMetadataDialog}
+                    onCancelBtnClick={this.closeDiscardChangesDialog}
+                />
 
-                    <ConfirmationDialog
-                        dialogOpen={showImportConfirmationDialog}
-                        debugId={ids.EDIT_METADATA_FORM}
-                        heading={getMessage("importIRODSMetadata")}
-                        message={formatHTMLMessage("importIRODSMetadataMsg")}
-                        onOkBtnClick={this.onConfirmImportIRODSMetadata}
-                        onCancelBtnClick={() =>
-                            this.setState({
-                                showImportConfirmationDialog: false,
-                            })
-                        }
-                    />
-                </LoadingMask>
+                <ConfirmationDialog
+                    dialogOpen={showImportConfirmationDialog}
+                    debugId={ids.EDIT_METADATA_FORM}
+                    heading={getMessage("importIRODSMetadata")}
+                    message={formatHTMLMessage("importIRODSMetadataMsg")}
+                    onOkBtnClick={this.onConfirmImportIRODSMetadata}
+                    onCancelBtnClick={() =>
+                        this.setState({ showImportConfirmationDialog: false })
+                    }
+                />
             </Dialog>
         );
     }
