@@ -7,11 +7,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import styles from "../style";
-import injectSheet from "react-jss";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
 import FormControl from "@material-ui/core/FormControl";
+import { withStyles } from "@material-ui/core";
 
 class InfoTypeSelectionList extends Component {
     handleChange = (event) => {
@@ -57,4 +57,4 @@ class InfoTypeSelectionList extends Component {
     }
 }
 
-export default injectSheet(styles)(withI18N(InfoTypeSelectionList, intlData));
+export default withStyles(styles)(withI18N(InfoTypeSelectionList, intlData));

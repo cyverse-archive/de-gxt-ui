@@ -19,7 +19,7 @@
     "prop-types": "^15.6.2"
   },
   "dependencies": {
-    "@cyverse-de/de-components": "^0.2.4",
+    "@cyverse-de/de-components": "^0.2.5",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "add": "^2.0.6",
@@ -35,7 +35,6 @@
     "react-dom": "^16.8.6",
     "react-highlighter": "^0.4.2",
     "react-intl": "^2.8.0",
-    "react-jss": "^8.6.1",
     "react-player": "^1.6.4",
     "react-redux": "^5.0.7",
     "react-scripts": "2.1.8",

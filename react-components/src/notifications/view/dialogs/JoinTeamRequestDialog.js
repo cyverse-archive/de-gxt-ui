@@ -5,34 +5,41 @@
  *
  **/
 import React, { Component } from "react";
+
+import build from "../../../util/DebugIDUtil";
+import Color from "../../../util/CyVersePalette";
+import ids from "../../ids";
+import intlData from "../../messages";
+import privilegeType from "../../model/privilegeType";
+import withI18N, { getMessage } from "../../../util/I18NWrapper";
+
+import { LoadingMask } from "@cyverse-de/de-components";
+
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import Button from "@material-ui/core/Button";
-import intlData from "../../messages";
-import Color from "../../../util/CyVersePalette";
-import Typography from "@material-ui/core/Typography";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
+
 import Select from "@material-ui/core/Select";
+
 import MenuItem from "@material-ui/core/MenuItem";
-import CardHeader from "@material-ui/core/CardHeader";
+import Paper from "@material-ui/core/Paper";
+
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import privilegeType from "../../model/privilegeType";
-import build from "../../../util/DebugIDUtil";
-import ids from "../../ids";
+import Typography from "@material-ui/core/Typography";
+
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
     paper: {
@@ -254,7 +261,7 @@ class JoinTeamRequestDialog extends Component {
     render() {
         const classes = this.props.classes;
         const { requester_name, team_name } = this.props.request;
-        const { dialogOpen } = this.state;
+        const { dialogOpen, loading } = this.state;
         return (
             <React.Fragment>
                 <Dialog
@@ -262,69 +269,66 @@ class JoinTeamRequestDialog extends Component {
                     open={dialogOpen}
                     onClose={this.props.handleJoinTeamRequestDialogClose}
                 >
-                    <DialogTitle style={{ backgroundColor: Color.blue }}>
-                        <Typography style={{ color: Color.white }}>
-                            {getMessage("joinTeamRequestHeader")}
-                        </Typography>
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            <Typography paragraph>
-                                {getMessage("joinRequestIntro")}
+                    <LoadingMask loading={loading}>
+                        <DialogTitle style={{ backgroundColor: Color.blue }}>
+                            <Typography style={{ color: Color.white }}>
+                                {getMessage("joinTeamRequestHeader")}
                             </Typography>
-                            {this.state.loading && (
-                                <CircularProgress
-                                    size={30}
-                                    className={classes.loadingStyle}
-                                    thickness={7}
-                                />
-                            )}
-                            <TeamDetails {...this.props} />
-                        </DialogContentText>
-                        <RequestOptions
-                            classes={classes}
-                            action={this.state.action}
-                            onChange={(e) => {
-                                this.setState({ action: e.target.value });
-                            }}
-                        />
-                        <ApproveRequest
-                            classes={classes}
-                            action={this.state.action}
-                            requester_name={requester_name}
-                            team_name={team_name}
-                            privilege={this.state.privilege}
-                            onChange={(e) => {
-                                this.setState({ privilege: e.target.value });
-                            }}
-                        />
-                        <DenyRequest
-                            classes={classes}
-                            action={this.state.action}
-                            requester_name={requester_name}
-                            team_name={team_name}
-                            onChange={(e) => {
-                                this.setState({ message: e.target.value });
-                            }}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)}
-                            onClick={this.handleOkClick}
-                            color="primary"
-                        >
-                            {getMessage("okBtnText")}
-                        </Button>
-                        <Button
-                            id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
-                            onClick={this.handleCancelClick}
-                            color="primary"
-                            autoFocus
-                        >
-                            {getMessage("cancelBtnText")}
-                        </Button>
-                    </DialogActions>
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                <Typography paragraph>
+                                    {getMessage("joinRequestIntro")}
+                                </Typography>
+                                <TeamDetails {...this.props} />
+                            </DialogContentText>
+                            <RequestOptions
+                                classes={classes}
+                                action={this.state.action}
+                                onChange={(e) => {
+                                    this.setState({ action: e.target.value });
+                                }}
+                            />
+                            <ApproveRequest
+                                classes={classes}
+                                action={this.state.action}
+                                requester_name={requester_name}
+                                team_name={team_name}
+                                privilege={this.state.privilege}
+                                onChange={(e) => {
+                                    this.setState({
+                                        privilege: e.target.value,
+                                    });
+                                }}
+                            />
+                            <DenyRequest
+                                classes={classes}
+                                action={this.state.action}
+                                requester_name={requester_name}
+                                team_name={team_name}
+                                onChange={(e) => {
+                                    this.setState({ message: e.target.value });
+                                }}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)}
+                                onClick={this.handleOkClick}
+                                color="primary"
+                            >
+                                {getMessage("okBtnText")}
+                            </Button>
+                            <Button
+                                id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
+                                onClick={this.handleCancelClick}
+                                color="primary"
+                                autoFocus
+                            >
+                                {getMessage("cancelBtnText")}
+                            </Button>
+                        </DialogActions>
+                    </LoadingMask>
                 </Dialog>
             </React.Fragment>
         );

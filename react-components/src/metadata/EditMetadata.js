@@ -22,9 +22,10 @@ import FormDialogEditAVU from "./EditAVU";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 
+import { LoadingMask } from "@cyverse-de/de-components";
+
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -373,128 +374,106 @@ class EditMetadata extends Component {
                 </AppBar>
 
                 <DialogContent>
-                    {loading ? (
-                        <CircularProgress
-                            className={classes.loadingStyle}
-                            size={50}
-                            thickness={4}
-                        />
-                    ) : (
-                        <Fragment>
-                            {irodsAVUs && !!irodsAVUs.length && (
-                                <AppBar position="static" color="default">
-                                    <Tabs
-                                        value={tabIndex}
-                                        onChange={this.handleTabChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                        variant="fullWidth"
-                                    >
-                                        <Tab
-                                            label={getMessage("userMetadata")}
+                    <LoadingMask loading={loading}>
+                        {irodsAVUs && !!irodsAVUs.length && (
+                            <AppBar position="static" color="default">
+                                <Tabs
+                                    value={tabIndex}
+                                    onChange={this.handleTabChange}
+                                    indicatorColor="primary"
+                                    textColor="primary"
+                                    variant="fullWidth"
+                                >
+                                    <Tab label={getMessage("userMetadata")} />
+                                    <Tab
+                                        label={getMessage("additionalMetadata")}
+                                    />
+                                </Tabs>
+                            </AppBar>
+                        )}
+
+                        {tabIndex === 0 && (
+                            <Fragment>
+                                <FieldArray
+                                    name="avus"
+                                    render={(arrayHelpers) => (
+                                        <MetadataList
+                                            {...arrayHelpers}
+                                            field="avus"
+                                            editable={editable}
+                                            parentID={ids.EDIT_METADATA_FORM}
+                                            onEditAVU={(index) =>
+                                                this.setState({
+                                                    editingAttrIndex: index,
+                                                })
+                                            }
                                         />
-                                        <Tab
-                                            label={getMessage(
-                                                "additionalMetadata"
-                                            )}
+                                    )}
+                                />
+
+                                <FieldArray
+                                    name="avus"
+                                    render={(arrayHelpers) => (
+                                        <FormDialogEditAVU
+                                            {...arrayHelpers}
+                                            editable={editable}
+                                            targetName={targetName}
+                                            editingAttrIndex={editingAttrIndex}
+                                            closeAttrDialog={() =>
+                                                this.setState({
+                                                    editingAttrIndex: -1,
+                                                })
+                                            }
                                         />
-                                    </Tabs>
-                                </AppBar>
-                            )}
+                                    )}
+                                />
+                            </Fragment>
+                        )}
 
-                            {tabIndex === 0 && (
-                                <Fragment>
-                                    <FieldArray
-                                        name="avus"
-                                        render={(arrayHelpers) => (
-                                            <MetadataList
-                                                {...arrayHelpers}
-                                                field="avus"
-                                                editable={editable}
-                                                parentID={
-                                                    ids.EDIT_METADATA_FORM
-                                                }
-                                                onEditAVU={(index) =>
-                                                    this.setState({
-                                                        editingAttrIndex: index,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-
-                                    <FieldArray
-                                        name="avus"
-                                        render={(arrayHelpers) => (
-                                            <FormDialogEditAVU
-                                                {...arrayHelpers}
-                                                editable={editable}
-                                                targetName={targetName}
-                                                editingAttrIndex={
-                                                    editingAttrIndex
-                                                }
-                                                closeAttrDialog={() =>
-                                                    this.setState({
-                                                        editingAttrIndex: -1,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </Fragment>
-                            )}
-
-                            {tabIndex === 1 && (
-                                <Fragment>
-                                    <FieldArray
-                                        name="irods-avus"
-                                        render={(arrayHelpers) => (
-                                            <MetadataList
-                                                {...arrayHelpers}
-                                                field="irods-avus"
-                                                editable={false}
-                                                parentID={
-                                                    ids.EDIT_METADATA_FORM
-                                                }
-                                                onEditAVU={(index) =>
-                                                    this.setState({
-                                                        editingAttrIndex: index,
-                                                    })
-                                                }
-                                                selectable={editable}
-                                                onSelectAVU={
-                                                    this.handleSelectAVU
-                                                }
-                                                onSelectAllClick={
-                                                    this.handleSelectAllAVUs
-                                                }
-                                                avusSelected={irodsAVUsSelected}
-                                                rowsInPage={irodsAVUs.length}
-                                            />
-                                        )}
-                                    />
-                                    <FieldArray
-                                        name="irods-avus"
-                                        render={(arrayHelpers) => (
-                                            <FormDialogEditAVU
-                                                {...arrayHelpers}
-                                                editable={false}
-                                                targetName={targetName}
-                                                editingAttrIndex={
-                                                    editingAttrIndex
-                                                }
-                                                closeAttrDialog={() =>
-                                                    this.setState({
-                                                        editingAttrIndex: -1,
-                                                    })
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </Fragment>
-                            )}
-                        </Fragment>
-                    )}
+                        {tabIndex === 1 && (
+                            <Fragment>
+                                <FieldArray
+                                    name="irods-avus"
+                                    render={(arrayHelpers) => (
+                                        <MetadataList
+                                            {...arrayHelpers}
+                                            field="irods-avus"
+                                            editable={false}
+                                            parentID={ids.EDIT_METADATA_FORM}
+                                            onEditAVU={(index) =>
+                                                this.setState({
+                                                    editingAttrIndex: index,
+                                                })
+                                            }
+                                            selectable={editable}
+                                            onSelectAVU={this.handleSelectAVU}
+                                            onSelectAllClick={
+                                                this.handleSelectAllAVUs
+                                            }
+                                            avusSelected={irodsAVUsSelected}
+                                            rowsInPage={irodsAVUs.length}
+                                        />
+                                    )}
+                                />
+                                <FieldArray
+                                    name="irods-avus"
+                                    render={(arrayHelpers) => (
+                                        <FormDialogEditAVU
+                                            {...arrayHelpers}
+                                            editable={false}
+                                            targetName={targetName}
+                                            editingAttrIndex={editingAttrIndex}
+                                            closeAttrDialog={() =>
+                                                this.setState({
+                                                    editingAttrIndex: -1,
+                                                })
+                                            }
+                                        />
+                                    )}
+                                />
+                            </Fragment>
+                        )}
+                    </LoadingMask>
                 </DialogContent>
 
                 <DialogActions>

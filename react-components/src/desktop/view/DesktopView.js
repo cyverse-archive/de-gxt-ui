@@ -2,24 +2,27 @@
  * @author sriram
  */
 import React, { Component } from "react";
-import UserMenu from "./UserMenu";
-import Notifications from "./Notifications";
-import Help from "./Help";
-import Taskbar from "./Taskbar";
-import styles from "../style";
-import { withStyles } from "@material-ui/core/styles";
-import ids from "../ids";
-import constants from "../../constants";
-import Sockette from "sockette";
-import build from "../../util/DebugIDUtil";
-import tour from "../NewUserTourSteps";
+
 import introJs from "intro.js";
-import dataImg from "../../resources/images/data.png";
+import Sockette from "sockette";
+import { injectIntl } from "react-intl";
+
 import appsImg from "../../resources/images/apps.png";
 import analysesImg from "../../resources/images/analyses.png";
-import { injectIntl } from "react-intl";
-import withI18N from "../../util/I18NWrapper";
+import dataImg from "../../resources/images/data.png";
+import build from "../../util/DebugIDUtil";
+import constants from "../../constants";
+import Help from "./Help";
+import ids from "../ids";
+import Notifications from "./Notifications";
 import messages from "../messages";
+import UserMenu from "./UserMenu";
+import styles from "../style";
+import Taskbar from "./Taskbar";
+import tour from "../NewUserTourSteps";
+import withI18N from "../../util/I18NWrapper";
+
+import { withStyles } from "@material-ui/core/styles";
 
 class DesktopView extends Component {
     constructor(props) {

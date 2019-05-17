@@ -55,13 +55,6 @@ const styles = (theme) => ({
     grow: {
         flexGrow: 1,
     },
-
-    loading: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        color: palette.orange,
-    },
 });
 
 export default styles;

@@ -10,9 +10,9 @@ import withI18N from "../../util/I18NWrapper";
 
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button/Button";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import Fab from "@material-ui/core/Fab/Fab";
+import { LoadingMask } from "@cyverse-de/de-components";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
@@ -469,16 +469,11 @@ class EditCommunity extends Component {
                         })}
                         messages={messages.messages}
                         message={
-                            <div>
-                                {loading && (
-                                    <CircularProgress
-                                        size={30}
-                                        classes={{ root: classes.loading }}
-                                        thickness={7}
-                                    />
-                                )}
-                                {getMessage("confirmDeleteCommunity")}
-                            </div>
+                            <LoadingMask loading={loading}>
+                                <div>
+                                    {getMessage("confirmDeleteCommunity")}
+                                </div>
+                            </LoadingMask>
                         }
                     />
 
@@ -497,16 +492,9 @@ class EditCommunity extends Component {
                         })}
                         messages={messages.messages}
                         message={
-                            <div>
-                                {loading && (
-                                    <CircularProgress
-                                        size={30}
-                                        classes={{ root: classes.loading }}
-                                        thickness={7}
-                                    />
-                                )}
-                                {getMessage("confirmJoinCommunity")}
-                            </div>
+                            <LoadingMask loading={loading}>
+                                <div>{getMessage("confirmJoinCommunity")}</div>
+                            </LoadingMask>
                         }
                     />
 
@@ -525,107 +513,100 @@ class EditCommunity extends Component {
                         })}
                         messages={messages.messages}
                         message={
-                            <div>
-                                {loading && (
-                                    <CircularProgress
-                                        size={30}
-                                        classes={{ root: classes.loading }}
-                                        thickness={7}
-                                    />
-                                )}
-                                {getMessage("confirmLeaveCommunity")}
-                            </div>
+                            <LoadingMask loading={loading}>
+                                <div>{getMessage("confirmLeaveCommunity")}</div>
+                            </LoadingMask>
                         }
                     />
                 </Toolbar>
-                <form className={classes.column}>
-                    <TextField
-                        id={build(parentId, ids.EDIT.NAME)}
-                        error={this.isInvalid()}
-                        required
-                        label={getMessage("nameField")}
-                        value={name}
-                        className={classes.formItem}
-                        InputProps={{
-                            readOnly: !isCommunityAdmin,
-                        }}
-                        helperText={errors.text}
-                        onChange={this.handleNameChange}
-                    />
-                    <TextField
-                        id={build(parentId, ids.EDIT.DESCRIPTION)}
-                        multiline
-                        label={getMessage("descriptionField")}
-                        value={this.state.description}
-                        className={classes.formItem}
-                        InputProps={{
-                            readOnly: !isCommunityAdmin,
-                        }}
-                        onChange={this.handleDescChange}
-                    />
-                    <fieldset className={classes.formItem}>
-                        <legend>{getMessage("communityAdmins")}</legend>
-                        <Typography component="p" className={classes.textBlurb}>
-                            {getMessage("explainCommunityAdmin")}
-                        </Typography>
-                        {isCommunityAdmin && (
-                            <Toolbar>
-                                <div className={classes.subjectSearch}>
-                                    <SubjectSearchField
-                                        collaboratorsUtil={collaboratorsUtil}
-                                        presenter={presenter}
-                                        parentId={parentId}
-                                        onSelect={this.onAddAdmin}
-                                    />
-                                </div>
-                            </Toolbar>
-                        )}
-                        <CollaboratorListing
-                            parentId={parentId}
-                            collaboratorsUtil={collaboratorsUtil}
-                            data={admins}
-                            deletable={isCommunityAdmin}
-                            onDeleteCollaborator={this.handleRemoveAdmin}
-                            messages={messages.messages}
-                            emptyTableMsg={getMessage("noAdmins")}
+                <LoadingMask loading={loading}>
+                    <form className={classes.column}>
+                        <TextField
+                            id={build(parentId, ids.EDIT.NAME)}
+                            error={this.isInvalid()}
+                            required
+                            label={getMessage("nameField")}
+                            value={name}
+                            className={classes.formItem}
+                            InputProps={{
+                                readOnly: !isCommunityAdmin,
+                            }}
+                            helperText={errors.text}
+                            onChange={this.handleNameChange}
                         />
-                    </fieldset>
-                    <fieldset className={classes.formItem}>
-                        <legend>{getMessage("apps")}</legend>
-                        {isCommunityAdmin && (
-                            <Toolbar id={toolbarId}>
-                                <Fab
-                                    size="small"
-                                    variant="extended"
-                                    onClick={this.onAddCommunityAppsClicked}
-                                >
-                                    <AddIcon />
-                                    {getMessage("apps")}
-                                </Fab>
-                                <Typography
-                                    variant="caption"
-                                    className={classes.textBlurb}
-                                >
-                                    {getMessage("explainCommunityApps")}
-                                </Typography>
-                            </Toolbar>
-                        )}
-                        <AppGridListing
-                            parentId={parentId}
-                            data={apps}
-                            selectable={false}
-                            deletable={isCommunityAdmin}
-                            onRemoveApp={this.handleRemoveApp}
+                        <TextField
+                            id={build(parentId, ids.EDIT.DESCRIPTION)}
+                            multiline
+                            label={getMessage("descriptionField")}
+                            value={this.state.description}
+                            className={classes.formItem}
+                            InputProps={{
+                                readOnly: !isCommunityAdmin,
+                            }}
+                            onChange={this.handleDescChange}
                         />
-                    </fieldset>
-                    {loading && (
-                        <CircularProgress
-                            size={30}
-                            classes={{ root: classes.loading }}
-                            thickness={7}
-                        />
-                    )}
-                </form>
+                        <fieldset className={classes.formItem}>
+                            <legend>{getMessage("communityAdmins")}</legend>
+                            <Typography
+                                component="p"
+                                className={classes.textBlurb}
+                            >
+                                {getMessage("explainCommunityAdmin")}
+                            </Typography>
+                            {isCommunityAdmin && (
+                                <Toolbar>
+                                    <div className={classes.subjectSearch}>
+                                        <SubjectSearchField
+                                            collaboratorsUtil={
+                                                collaboratorsUtil
+                                            }
+                                            presenter={presenter}
+                                            parentId={parentId}
+                                            onSelect={this.onAddAdmin}
+                                        />
+                                    </div>
+                                </Toolbar>
+                            )}
+                            <CollaboratorListing
+                                parentId={parentId}
+                                collaboratorsUtil={collaboratorsUtil}
+                                data={admins}
+                                deletable={isCommunityAdmin}
+                                onDeleteCollaborator={this.handleRemoveAdmin}
+                                messages={messages.messages}
+                                emptyTableMsg={getMessage("noAdmins")}
+                            />
+                        </fieldset>
+                        <fieldset className={classes.formItem}>
+                            <legend>{getMessage("apps")}</legend>
+                            {isCommunityAdmin && (
+                                <Toolbar id={toolbarId}>
+                                    <Fab
+                                        size="small"
+                                        variant="extended"
+                                        onClick={this.onAddCommunityAppsClicked}
+                                    >
+                                        <AddIcon />
+                                        {getMessage("apps")}
+                                    </Fab>
+                                    <Typography
+                                        variant="caption"
+                                        className={classes.textBlurb}
+                                    >
+                                        {getMessage("explainCommunityApps")}
+                                    </Typography>
+                                </Toolbar>
+                            )}
+                            <AppGridListing
+                                parentId={parentId}
+                                data={apps}
+                                selectable={false}
+                                deletable={isCommunityAdmin}
+                                onRemoveApp={this.handleRemoveApp}
+                            />
+                        </fieldset>
+                    </form>
+                </LoadingMask>
             </div>
         );
     }

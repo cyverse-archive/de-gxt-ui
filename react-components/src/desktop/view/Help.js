@@ -2,18 +2,21 @@
  * @author sriram
  */
 import React, { Component } from "react";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import styles from "../style";
-import { withStyles } from "@material-ui/core/styles";
+import ReactDOM from "react-dom";
+
+import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import build from "../../util/DebugIDUtil";
+import styles from "../style";
 import tour from "../NewUserTourSteps";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+import { withStyles } from "@material-ui/core/styles";
+
+import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+
 import HelpIcon from "@material-ui/icons/Help";
-import ReactDOM from "react-dom";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 class Help extends Component {
     constructor(props) {

@@ -36,11 +36,6 @@ export default {
         fontSize: 10,
         padding: 2,
         cursor: "pointer",
-        ":hover": {
-            tagRemoveStyle: {
-                display: "block",
-            },
-        },
     },
 
     tagStyle: {
@@ -65,5 +60,18 @@ export default {
         top: 200,
         left: 100,
         color: "#DB6619",
+    },
+
+    displayTagRemoveStyle: {
+        fontWeight: "bold",
+        cursor: "pointer",
+        display: "block",
+        float: "right",
+        fontSize: 12,
+        paddingLeft: "1px",
+    },
+
+    hideTagRemoveStyle: {
+        display: "none",
     },
 };

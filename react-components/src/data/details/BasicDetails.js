@@ -3,22 +3,26 @@
  */
 import React, { Component } from "react";
 import moment from "moment";
+
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
+import intlData from "../messages";
+import styles from "../style";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+import InfoTypeSelectionList from "./InfoTypeSelectionList";
+import TagPanel from "./TagPanel";
+
+import { LoadingMask } from "@cyverse-de/de-components";
+
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import InfoTypeSelectionList from "./InfoTypeSelectionList";
-import TagPanel from "./TagPanel";
-import intlData from "../messages";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import styles from "../style";
-import injectSheet from "react-jss";
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import { withStyles } from "@material-ui/core";
 
 function SendTo(props) {
     let displayText = getMessage("emptyValue");
@@ -366,98 +370,106 @@ class BasicDetails extends Component {
         }
         return (
             <div>
-                {this.state.loading && (
-                    <CircularProgress
-                        size={30}
-                        className={classes.loadingStyle}
-                        thickness={7}
+                <LoadingMask loading={this.state.loading}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td className={classes.detailsLabel}>
+                                    {getMessage("lastModified")}
+                                </td>
+                                <td
+                                    id={build(
+                                        baseID,
+                                        ids.DETAILS_LAST_MODIFIED
+                                    )}
+                                    className={classes.detailsValue}
+                                >
+                                    {diskResource["date-modified"]
+                                        ? moment(
+                                              Number(
+                                                  diskResource["date-modified"]
+                                              ),
+                                              "x"
+                                          ).format("YYYY-MM-DD")
+                                        : getMessage("emptyValue")}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={classes.detailsLabel}>
+                                    {getMessage("createdDate")}
+                                </td>
+                                <td
+                                    id={build(
+                                        baseID,
+                                        ids.DETAILS_DATE_SUBMITTED
+                                    )}
+                                    className={classes.detailsValue}
+                                >
+                                    {diskResource["date-modified"]
+                                        ? moment(
+                                              Number(
+                                                  diskResource["date-created"]
+                                              ),
+                                              "x"
+                                          ).format("YYYY-MM-DD")
+                                        : getMessage("emptyValue")}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={classes.detailsLabel}>
+                                    {getMessage("permissions")}
+                                </td>
+                                <td
+                                    id={build(baseID, ids.DETAILS_PERMISSIONS)}
+                                    className={classes.detailsValue}
+                                >
+                                    {diskResource.permission}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className={classes.detailsLabel}>
+                                    {getMessage("share")}
+                                </td>
+                                <ManageSharing
+                                    id={build(baseID, ids.DETAILS_SHARE)}
+                                    isOwner={isOwner}
+                                    shareCount={diskResource["share-count"]}
+                                    onClick={this.handleShareClick}
+                                    classes={classes}
+                                />
+                            </tr>
+                            {details}
+                        </tbody>
+                    </table>
+                    <TagPanel
+                        baseID={baseID}
+                        handleTagSearch={this.handleTagSearch}
+                        handleRemoveClick={this.handleRemoveClick}
+                        tags={this.state.tags.values}
+                        dataSource={this.state.dataSource}
+                        onTagClick={this.handleTagClick}
+                        handleTagSelect={this.handleTagSelect}
                     />
-                )}
-                <table>
-                    <tbody>
-                        <tr>
-                            <td className={classes.detailsLabel}>
-                                {getMessage("lastModified")}
-                            </td>
-                            <td
-                                id={build(baseID, ids.DETAILS_LAST_MODIFIED)}
-                                className={classes.detailsValue}
-                            >
-                                {diskResource["date-modified"]
-                                    ? moment(
-                                          Number(diskResource["date-modified"]),
-                                          "x"
-                                      ).format("YYYY-MM-DD")
-                                    : getMessage("emptyValue")}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className={classes.detailsLabel}>
-                                {getMessage("createdDate")}
-                            </td>
-                            <td
-                                id={build(baseID, ids.DETAILS_DATE_SUBMITTED)}
-                                className={classes.detailsValue}
-                            >
-                                {diskResource["date-modified"]
-                                    ? moment(
-                                          Number(diskResource["date-created"]),
-                                          "x"
-                                      ).format("YYYY-MM-DD")
-                                    : getMessage("emptyValue")}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className={classes.detailsLabel}>
-                                {getMessage("permissions")}
-                            </td>
-                            <td
-                                id={build(baseID, ids.DETAILS_PERMISSIONS)}
-                                className={classes.detailsValue}
-                            >
-                                {diskResource.permission}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className={classes.detailsLabel}>
-                                {getMessage("share")}
-                            </td>
-                            <ManageSharing
-                                id={build(baseID, ids.DETAILS_SHARE)}
-                                isOwner={isOwner}
-                                shareCount={diskResource["share-count"]}
-                                onClick={this.handleShareClick}
-                                classes={classes}
-                            />
-                        </tr>
-                        {details}
-                    </tbody>
-                </table>
-                <TagPanel
-                    baseID={baseID}
-                    handleTagSearch={this.handleTagSearch}
-                    handleRemoveClick={this.handleRemoveClick}
-                    tags={this.state.tags.values}
-                    dataSource={this.state.dataSource}
-                    onTagClick={this.handleTagClick}
-                    handleTagSelect={this.handleTagSelect}
-                />
-                <Dialog open={this.state.md5open} onClose={this.handleMd5Close}>
-                    <DialogTitle>{getMessage("md5CheckSum")}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {diskResource.md5}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleMd5Close} autoFocus>
-                            {getMessage("okLabel")}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    <Dialog
+                        open={this.state.md5open}
+                        onClose={this.handleMd5Close}
+                    >
+                        <DialogTitle>{getMessage("md5CheckSum")}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                {diskResource.md5}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleMd5Close} autoFocus>
+                                {getMessage("okLabel")}
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </LoadingMask>
             </div>
         );
     }
 }
 
-export default injectSheet(styles)(withI18N(BasicDetails, intlData));
+export default withStyles(styles)(withI18N(BasicDetails, intlData));

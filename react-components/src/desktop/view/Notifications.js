@@ -3,23 +3,28 @@
  */
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import MenuItem from "@material-ui/core/MenuItem";
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import ids from "../ids";
-import build from "../../util/DebugIDUtil";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "../style";
-import Menu from "@material-ui/core/Menu";
-import Divider from "@material-ui/core/Divider";
-import intlData from "../messages";
 import classnames from "classnames";
-import NotificationIcon from "@material-ui/icons/Notifications";
+
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
+import intlData from "../messages";
+import styles from "../style";
 import tour from "../NewUserTourSteps";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import { LoadingMask } from "@cyverse-de/de-components";
+import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+
 import Badge from "@material-ui/core/Badge";
 import Fab from "@material-ui/core/Fab";
+import Divider from "@material-ui/core/Divider";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+
+import NotificationIcon from "@material-ui/icons/Notifications";
+import RefreshIcon from "@material-ui/icons/Refresh";
+
+import { withStyles } from "@material-ui/core/styles";
 
 function ErrorComponent(props) {
     return (
@@ -199,48 +204,44 @@ class Notifications extends Component {
                     onClose={this.handleClose}
                     className={classes.notificationMenu}
                 >
-                    {notificationLoading ? (
-                        <CircularProgress
-                            size={30}
-                            className={classes.loadingStyle}
-                            thickness={7}
-                        />
-                    ) : error ? (
-                        <ErrorComponent
+                    <LoadingMask loading={notificationLoading}>
+                        {error ? (
+                            <ErrorComponent
+                                classes={classes}
+                                onClick={this.props.fetchNotifications}
+                            />
+                        ) : messages.length > 0 ? (
+                            messages
+                                .map((n) => {
+                                    return (
+                                        <Notification
+                                            key={n.message.id}
+                                            notification={n}
+                                            onClick={this.onMenuItemSelect}
+                                            classes={classes}
+                                        />
+                                    );
+                                })
+                                .reverse()
+                        ) : (
+                            <MenuItem
+                                id={build(ids.DESKTOP, ids.EMPTY_NOTIFICATION)}
+                                onClick={this.onMenuItemSelect}
+                            >
+                                <div className={classes.notificationError}>
+                                    {getMessage("noNotifications")}
+                                </div>
+                            </MenuItem>
+                        )}
+                        <NotificationFooter
+                            unSeenCount={unSeenCount}
+                            viewAllNotification={this.props.viewAllNotification}
+                            markAllAsSeen={this.props.markAllAsSeen}
+                            viewNewNotification={this.props.viewNewNotification}
+                            onClick={this.handleClose}
                             classes={classes}
-                            onClick={this.props.fetchNotifications}
                         />
-                    ) : messages.length > 0 ? (
-                        messages
-                            .map((n) => {
-                                return (
-                                    <Notification
-                                        key={n.message.id}
-                                        notification={n}
-                                        onClick={this.onMenuItemSelect}
-                                        classes={classes}
-                                    />
-                                );
-                            })
-                            .reverse()
-                    ) : (
-                        <MenuItem
-                            id={build(ids.DESKTOP, ids.EMPTY_NOTIFICATION)}
-                            onClick={this.onMenuItemSelect}
-                        >
-                            <div className={classes.notificationError}>
-                                {getMessage("noNotifications")}
-                            </div>
-                        </MenuItem>
-                    )}
-                    <NotificationFooter
-                        unSeenCount={unSeenCount}
-                        viewAllNotification={this.props.viewAllNotification}
-                        markAllAsSeen={this.props.markAllAsSeen}
-                        viewNewNotification={this.props.viewNewNotification}
-                        onClick={this.handleClose}
-                        classes={classes}
-                    />
+                    </LoadingMask>
                 </Menu>
             </React.Fragment>
         );

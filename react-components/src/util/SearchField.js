@@ -1,12 +1,11 @@
 import styles from "./style";
-
-import injectSheet from "react-jss";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Search from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import CyVersePalette from "./CyVersePalette";
+import { withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey
@@ -135,4 +134,4 @@ SearchField.defaultProps = {
     endAdornment: null,
 };
 
-export default injectSheet(styles)(SearchField);
+export default withStyles(styles)(SearchField);

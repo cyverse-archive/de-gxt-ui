@@ -2,19 +2,23 @@
  * @author sriram
  */
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
+
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
+import intlData from "../messages";
+import styles from "../style";
+import tour from "../NewUserTourSteps";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+
+import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+
+import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import Divider from "@material-ui/core/Divider";
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import styles from "../style";
-import ids from "../ids";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import intlData from "../messages";
-import build from "../../util/DebugIDUtil";
-import tour from "../NewUserTourSteps";
-import { withStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
-import ReactDOM from "react-dom";
+
+import { withStyles } from "@material-ui/core/styles";
 
 class UserMenu extends Component {
     constructor(props) {
