@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import AppStatusIcon from "./AppStatusIcon";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 
 import {
+    AppStatusIcon,
     EnhancedTableHead,
     EmptyTable,
     getMessage,
@@ -135,7 +135,11 @@ class AppGridListing extends Component {
                                             </TableCell>
                                         )}
                                         <TableCell>
-                                            <AppStatusIcon app={app} />
+                                            <AppStatusIcon
+                                                isPublic={app.is_public}
+                                                isBeta={app.disabled}
+                                                isDisabled={app.beta}
+                                            />
                                         </TableCell>
                                         <TableCell>{app.name}</TableCell>
                                         <TableCell>
