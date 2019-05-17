@@ -1,12 +1,11 @@
-import build from "../../../util/DebugIDUtil";
-import { getMessage } from "../../../util/I18NWrapper";
+import React, { Fragment } from "react";
+import { Field } from "redux-form";
+
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
-
-import { Field } from "redux-form";
-import React, { Fragment } from "react";
+import { build, getMessage } from "@cyverse-de/ui-lib";
 
 /**
  * A component which allows users to specify metadata attribute and values in QueryBuilder

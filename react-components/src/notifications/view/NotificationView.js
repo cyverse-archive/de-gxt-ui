@@ -9,16 +9,18 @@ import React, { Component } from "react";
 import classnames from "classnames";
 import constants from "../../constants";
 import exStyles from "../style";
-import formatDate from "../../util/DateFormatter";
 import ids from "../ids";
 import intlData from "../messages";
 import notificationCategory from "../model/notificationCategory";
-import withI18N from "../../util/I18NWrapper";
-
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import NotificationToolbar from "./NotificationToolbar";
-import { LoadingMask } from "@cyverse-de/de-components";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
+
+import {
+    EnhancedTableHead,
+    formatDate,
+    LoadingMask,
+    TablePaginationActions,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";

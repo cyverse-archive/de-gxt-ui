@@ -6,9 +6,8 @@ import * as data from "./data";
 import * as desktop from "./desktop";
 import * as fileViewers from "./fileViewers";
 import * as metadata from "./metadata";
-import * as util from "./util/util";
 import * as notifications from "./notifications";
-import palette from "./util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 import React from "react";
 import ReactDOM from "react-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"; // v1.x
@@ -57,7 +56,6 @@ export {
     fileViewers,
     metadata,
     notifications,
-    util,
     getDefaultTheme,
     MuiThemeProvider,
 };

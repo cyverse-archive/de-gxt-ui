@@ -12,24 +12,28 @@ import ids from "../ids";
 import exStyles from "../style";
 import appType from "../model/appType";
 import viewFilter from "../model/viewFilterOptions";
-import Color from "../../util/CyVersePalette";
-import formatDate from "../../util/DateFormatter";
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
 import DotMenu from "./DotMenu";
 import AnalysisParametersDialog from "./dialogs/AnalysisParametersDialog";
 import AnalysisInfoDialog from "./dialogs/AnalysisInfoDialog";
 import analysisStatus from "../model/analysisStatus";
 import AnalysesToolbar from "./AnalysesToolbar";
-import DEPromptDialog from "../../util/dialog/DEPromptDialog";
 import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
 
-import { LoadingMask } from "@cyverse-de/de-components";
+import {
+    build,
+    DEHyperlink,
+    DEConfirmationDialog,
+    DEPromptDialog,
+    EnhancedTableHead,
+    formatDate,
+    formatMessage,
+    LoadingMask,
+    getMessage,
+    palette,
+    TablePaginationActions,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
@@ -98,7 +102,7 @@ function AnalysisName(props) {
                         handleInteractiveUrlClick(interactiveUrls[0])
                     }
                     id={build(baseId, ids.ICONS.INTERACTIVE)}
-                    style={{ color: Color.darkBlue }}
+                    style={{ color: palette.darkBlue }}
                 />
                 <sup>{name}</sup>
             </span>
@@ -163,7 +167,7 @@ function Status(props) {
         analysis.status !== analysisStatus.CANCELED
     ) {
         return (
-            <DEHyperLink
+            <DEHyperlink
                 onClick={(analysis) => onClick(analysis)}
                 text={analysis.status}
             />

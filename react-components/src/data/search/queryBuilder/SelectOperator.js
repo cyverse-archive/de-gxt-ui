@@ -1,4 +1,5 @@
-import build from "../../../util/DebugIDUtil";
+import React from "react";
+import { build } from "@cyverse-de/ui-lib";
 import ids from "../ids";
 import { operatorMap } from "./Operators";
 
@@ -6,7 +7,6 @@ import { Fields } from "redux-form";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React from "react";
 import Select from "@material-ui/core/Select";
 
 /**

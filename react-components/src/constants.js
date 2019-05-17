@@ -1,7 +1,4 @@
 export default {
-    DATE_FORMAT: "YYYY-MM-DD",
-    LONG_DATE_FORMAT: "YYYY-MM-DD HH:mm:ss",
-    EMPTY_DATE: "-",
     NOTIFICATION_WS: "/de/websocket/notifications",
     WS_PROTOCOL: "ws://",
     WSS_PROTOCOL: "wss://",

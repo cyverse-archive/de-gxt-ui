@@ -7,14 +7,19 @@ import { getIn } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
-import { getSorting, stableSort } from "../util/table/TableSort";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import EnhancedTableHead from "../util/table/EnhancedTableHead";
+import {
+    build,
+    EnhancedTableHead,
+    formatMessage,
+    getMessage,
+    getSorting,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import Fab from "@material-ui/core/Fab";

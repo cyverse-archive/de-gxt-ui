@@ -1,4 +1,4 @@
-import Color from "../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 export default (theme) => ({
     table: {
@@ -7,7 +7,7 @@ export default (theme) => ({
         width: "100%",
     },
     tableHead: {
-        backgroundColor: Color.blue,
+        backgroundColor: palette.blue,
         position: "sticky",
         top: 0,
     },
@@ -24,16 +24,16 @@ export default (theme) => ({
         fontSize: 10,
     },
     toolbar: {
-        backgroundColor: Color.lightGray,
+        backgroundColor: palette.lightGray,
         borderBottom: "solid 2px",
-        borderColor: Color.gray,
+        borderColor: palette.gray,
         height: 55,
     },
     dialogCloseButton: {
         position: "absolute",
         right: 0,
         top: 10,
-        color: Color.white,
+        color: palette.white,
     },
     analysisName: {
         fontSize: 12,
@@ -50,7 +50,7 @@ export default (theme) => ({
         fontSize: 12,
     },
     toolbarItemColor: {
-        color: Color.darkBlue,
+        color: palette.darkBlue,
     },
     inputType: {
         cursor: "pointer",

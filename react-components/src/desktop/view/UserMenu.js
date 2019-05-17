@@ -4,14 +4,12 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
-import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
 import styles from "../style";
 import tour from "../NewUserTourSteps";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+import { build, DEHyperlink, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";

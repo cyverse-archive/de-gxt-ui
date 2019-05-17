@@ -1,14 +1,15 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
 import Conditions from "./Conditions";
 import DeleteBtn from "./DeleteBtn";
 import Group from "./Group";
 import ids from "../ids";
 
+import { build } from "@cyverse-de/ui-lib";
+
 import { FieldArray, Fields, FormSection } from "redux-form";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { Fragment } from "react";
 import Select from "@material-ui/core/Select";
 
 /**

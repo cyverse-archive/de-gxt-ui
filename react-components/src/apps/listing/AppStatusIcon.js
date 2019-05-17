@@ -1,12 +1,13 @@
+import React from "react";
+import PropTypes from "prop-types";
+
 import betaPng from "../../resources/images/betaSymbol.png";
 import betaSvg from "../../resources/images/betaSymbol.svg";
 import messages from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import Disabled from "@material-ui/icons/Block";
 import Lock from "@material-ui/icons/Lock";
-import PropTypes from "prop-types";
-import React from "react";
 import ToolTip from "@material-ui/core/Tooltip";
 
 /**

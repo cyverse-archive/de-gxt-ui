@@ -1,4 +1,6 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
+
+import { build } from "@cyverse-de/ui-lib";
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
@@ -6,7 +8,6 @@ import SelectOperator from "./SelectOperator";
 import Validations from "./Validations";
 
 import { Field } from "redux-form";
-import React, { Fragment } from "react";
 
 /**
  * A component which allows users to specify file names in QueryBuilder

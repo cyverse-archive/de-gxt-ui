@@ -1,15 +1,21 @@
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import EmptyTable from "../../util/table/EmptyTable";
-import { getSorting, stableSort } from "../../util/table/TableSort";
-import ids from "../ids";
-import { LoadingMask } from "@cyverse-de/de-components";
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+
 import messages from "../messages";
 import styles from "../styles";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import ids from "../ids";
 
-import PropTypes from "prop-types";
-import React, { Component, Fragment } from "react";
+import {
+    DEHyperlink,
+    EmptyTable,
+    EnhancedTableHead,
+    getMessage,
+    getSorting,
+    LoadingMask,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -86,7 +92,7 @@ class CommunityListing extends Component {
                                                             "communityNameToolTip"
                                                         )}
                                                     >
-                                                        <DEHyperLink
+                                                        <DEHyperlink
                                                             onClick={() =>
                                                                 onCommunityClicked(
                                                                     community

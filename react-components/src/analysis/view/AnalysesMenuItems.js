@@ -7,9 +7,7 @@ import React, { Component } from "react";
 
 import exStyles from "../style";
 import ids from "../ids";
-import build from "../../util/DebugIDUtil";
-import Color from "../../util/CyVersePalette";
-import { getMessage } from "../../util/I18NWrapper";
+import { build, getMessage, palette } from "@cyverse-de/ui-lib";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
@@ -62,7 +60,7 @@ class AnalysesMenuItems extends Component {
                     className={classes.menuItem}
                     data-disabled={disableSingleSelectionMenuItem}
                 >
-                    <FolderIcon style={{ color: Color.darkBlue }} />
+                    <FolderIcon style={{ color: palette.darkBlue }} />
                     {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem

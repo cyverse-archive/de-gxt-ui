@@ -1,18 +1,23 @@
-import build from "../../util/DebugIDUtil";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import {
+    build,
+    DEDialogHeader,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import EditCommunity from "./EditCommunity";
-import { getMessage } from "../../util/I18NWrapper";
+
 import ids from "../ids";
 import messages from "../messages";
 import styles from "../styles";
-import withI18N from "../../util/I18NWrapper";
 
 import Button from "@material-ui/core/Button/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
 
 /**

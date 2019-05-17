@@ -1,9 +1,9 @@
+import React from "react";
+import PropTypes from "prop-types";
 import styles from "../styles";
 
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-import PropTypes from "prop-types";
-import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 

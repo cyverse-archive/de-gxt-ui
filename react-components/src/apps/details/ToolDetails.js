@@ -3,14 +3,9 @@
  *
  */
 import React, { Component } from "react";
-
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
 import intlData from "../messages";
 import style from "../style";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-
-import Highlighter from "../../util/Highlighter";
+import { build, getMessage, Highlighter, withI18N } from "@cyverse-de/ui-lib";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";

@@ -1,12 +1,12 @@
+import React, { Component, Fragment } from "react";
+
 import CollaboratorListIcon from "./CollaboratorListIcon";
-import getRegExp from "../util/getRegExp";
-import Highlighter from "../util/Highlighter";
 import styles from "./styles";
 import TeamIcon from "./TeamIcon";
+import { getRegExp, Highlighter } from "@cyverse-de/ui-lib";
 
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
-import React, { Component, Fragment } from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 

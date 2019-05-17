@@ -6,18 +6,20 @@ import { FastField, Field, getIn } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
 import {
+    build,
     FormCheckbox,
     FormCheckboxTableCell,
+    formatMessage,
+    getMessage,
     FormTextField,
     getFormError,
-} from "../../util/FormField";
+    withI18N,
+} from "@cyverse-de/ui-lib";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";

@@ -6,11 +6,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
+
+import { build, formatMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import Fab from "@material-ui/core/Fab";
 import Toolbar from "@material-ui/core/Toolbar";

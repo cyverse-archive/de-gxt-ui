@@ -1,4 +1,4 @@
-import Color from "../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 export default (theme) => ({
     table: {
@@ -6,7 +6,7 @@ export default (theme) => ({
         height: "75%",
     },
     tableHead: {
-        backgroundColor: Color.blue,
+        backgroundColor: palette.blue,
         position: "sticky",
         top: 0,
     },
@@ -21,9 +21,9 @@ export default (theme) => ({
         textTransform: "none",
     },
     toolbar: {
-        backgroundColor: Color.lightGray,
+        backgroundColor: palette.lightGray,
         borderBottom: "solid 2px",
-        borderColor: Color.gray,
+        borderColor: palette.gray,
         height: 55,
     },
     notification: {
@@ -31,7 +31,7 @@ export default (theme) => ({
         cursor: "pointer",
     },
     unSeenNotificationBackground: {
-        backgroundColor: Color.lightBlue,
+        backgroundColor: palette.lightBlue,
     },
     dropDown: {
         margin: 3,

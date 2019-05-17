@@ -1,4 +1,4 @@
-import { getMessage } from "../../../util/I18NWrapper";
+import { getMessage } from "@cyverse-de/ui-lib";
 
 /**
  * An Operator is part of a Condition and allows the user to specify whether the condition

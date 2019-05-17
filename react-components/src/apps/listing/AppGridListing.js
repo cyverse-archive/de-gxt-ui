@@ -1,15 +1,22 @@
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
 import AppStatusIcon from "./AppStatusIcon";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
-import EmptyTable from "../../util/table/EmptyTable";
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import { getSorting, stableSort } from "../../util/table/TableSort";
+
+import {
+    EnhancedTableHead,
+    EmptyTable,
+    getMessage,
+    getSorting,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import ids from "./ids";
 import messages from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 
-import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
-import React, { Component } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";

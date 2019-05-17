@@ -1,6 +1,5 @@
 import Date from "./Date";
 import FileSize from "./FileSize";
-import { getMessage } from "../../../util/I18NWrapper";
 import Group from "./Group";
 import ids from "../ids";
 import Label from "./Label";
@@ -9,6 +8,8 @@ import Owner from "./Owner";
 import Path from "./Path";
 import Permissions from "./Permissions";
 import Tags from "./Tags";
+
+import { getMessage } from "@cyverse-de/ui-lib";
 
 /**
  * All of the conditions available to the user for the QueryBuilder

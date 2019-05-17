@@ -7,14 +7,18 @@ import { FastField, getIn } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
-
-import { FormTextField } from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
+
+import {
+    build,
+    formatMessage,
+    FormTextField,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";

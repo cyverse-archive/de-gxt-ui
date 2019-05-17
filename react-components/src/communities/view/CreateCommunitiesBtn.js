@@ -1,12 +1,11 @@
-import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import React from "react";
+import PropTypes from "prop-types";
 import ids from "../ids";
 import messages from "../messages";
+import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button/Button";
-import PropTypes from "prop-types";
-import React from "react";
 
 /**
  * @author aramsey

@@ -1,12 +1,11 @@
-import build from "../../../util/DebugIDUtil";
-import { getMessage } from "../../../util/I18NWrapper";
+import React, { Fragment } from "react";
+import { Field } from "redux-form";
+
+import { build, getMessage } from "@cyverse-de/ui-lib";
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
-
-import { Field } from "redux-form";
-import React, { Fragment } from "react";
 
 /**
  * A component that will allow users to fill out a starting and ending date, currently used

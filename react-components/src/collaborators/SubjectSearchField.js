@@ -1,14 +1,17 @@
-import Autocomplete from "../util/Autocomplete";
-import build from "../util/DebugIDUtil";
-import hasProps from "../util/hasProps";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import ids from "./ids";
 import messages from "./messages";
 import SubjectSearchMenuItem from "./SubjectSearchMenuItem";
 import styles from "./styles";
-import withI18N, { getMessage } from "../util/I18NWrapper";
+import {
+    Autocomplete,
+    build,
+    getMessage,
+    hasProps,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
-import PropTypes from "prop-types";
-import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
 /**

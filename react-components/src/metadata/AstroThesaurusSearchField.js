@@ -2,11 +2,9 @@
  * @author psarando
  */
 import React, { Component } from "react";
-
 import PropTypes from "prop-types";
 
-import { getMessage } from "../util/I18NWrapper";
-import { FormSearchField } from "../util/FormField";
+import { FormSearchField, getMessage } from "@cyverse-de/ui-lib";
 
 import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";

@@ -1,4 +1,4 @@
-import palette from "../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 const styles = (theme) => ({
     column: {

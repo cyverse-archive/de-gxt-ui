@@ -5,27 +5,33 @@
  *
  **/
 import React, { Component } from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import moment from "moment";
-import constants from "../../../constants";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
-import Color from "../../../util/CyVersePalette";
+
+import ids from "../../ids";
+import {
+    build,
+    dateConstants,
+    EnhancedTableHead,
+    formatDate,
+    getMessage,
+    palette,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import intlData from "../../messages";
+import toolStatusHelpMapping from "../../model/toolStatusHelpMapping";
+import permIdStatusHelpMapping from "../../model/permIdStatusHelpMapping";
+import notificationCategory from "../../model/notificationCategory";
+
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import toolStatusHelpMapping from "../../model/toolStatusHelpMapping";
-import permIdStatusHelpMapping from "../../model/permIdStatusHelpMapping";
-import notificationCategory from "../../model/notificationCategory";
-import build from "../../../util/DebugIDUtil";
-import ids from "../../ids";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
 
 const columnData = [
     {
@@ -67,8 +73,8 @@ class RequestHistoryDialog extends Component {
         const baseId = ids.REQUEST_HISTORY_DLG;
         return (
             <Dialog id={baseId} open={this.state.dialogOpen}>
-                <DialogTitle style={{ backgroundColor: Color.blue }}>
-                    <Typography style={{ color: Color.white }}>
+                <DialogTitle style={{ backgroundColor: palette.blue }}>
+                    <Typography style={{ color: palette.white }}>
                         {" "}
                         {name}
                     </Typography>
@@ -91,14 +97,10 @@ class RequestHistoryDialog extends Component {
                                             </span>
                                         </TableCell>
                                         <TableCell>
-                                            {n.status_date
-                                                ? moment(
-                                                      n.status_date,
-                                                      "x"
-                                                  ).format(
-                                                      constants.DATE_FORMAT
-                                                  )
-                                                : getMessage("emptyValue")}{" "}
+                                            {formatDate(
+                                                n.status_date,
+                                                dateConstants.DATE_FORMAT
+                                            )}
                                         </TableCell>
                                         <TableCell>{n.comments}</TableCell>
                                     </TableRow>

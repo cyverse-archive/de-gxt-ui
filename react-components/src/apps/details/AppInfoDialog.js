@@ -8,15 +8,20 @@ import PropTypes from "prop-types";
 
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
 import intlData from "../messages";
 import ids from "../ids";
-import withI18N, { formatMessage } from "../../util/I18NWrapper";
 
 import AppDetails from "./AppDetails";
 import AppDoc from "./AppDoc";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
+
+import {
+    build,
+    DEDialogHeader,
+    DEConfirmationDialog,
+    formatMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
 import ToolDetails from "./ToolDetails";
 

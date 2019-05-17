@@ -1,20 +1,25 @@
-import EmptyTable from "../util/table/EmptyTable";
-import EnhancedTableHead from "../util/table/EnhancedTableHead";
-import { getSorting, stableSort } from "../util/table/TableSort";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
 import ids from "./ids";
 import messages from "./messages";
-import withI18N from "../util/I18NWrapper";
+import TeamIcon from "./TeamIcon";
+import CollaboratorListIcon from "./CollaboratorListIcon";
+import DeleteBtn from "../data/search/queryBuilder/DeleteBtn";
 
-import PropTypes from "prop-types";
+import {
+    EnhancedTableHead,
+    EmptyTable,
+    getSorting,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import Checkbox from "@material-ui/core/Checkbox";
-import React, { Component } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import TeamIcon from "./TeamIcon";
-import CollaboratorListIcon from "./CollaboratorListIcon";
-import DeleteBtn from "../data/search/queryBuilder/DeleteBtn";
 
 /**
  * @author aramsey
