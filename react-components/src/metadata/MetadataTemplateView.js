@@ -24,7 +24,7 @@ import {
     FormSelectField,
     FormTextField,
     FormTimestampField,
-    getCurrentDateFormatted,
+    formatCurrentDate,
     getFormError,
     getMessage,
     withI18N,
@@ -65,7 +65,7 @@ const newAVU = (attrTemplate) => {
     let value;
     switch (attrTemplate.type) {
         case constants.ATTRIBUTE_TYPE.TIMESTAMP:
-            value = getCurrentDateFormatted();
+            value = formatCurrentDate();
             break;
 
         case constants.ATTRIBUTE_TYPE.ENUM:
