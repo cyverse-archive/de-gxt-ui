@@ -50,7 +50,7 @@ class SaveSearchButton extends Component {
         return (
             <Fragment>
                 <Button
-                    variant="raised"
+                    variant="contained"
                     className={classes.searchButton}
                     id={build(parentId, ids.saveSearchBtn)}
                     disabled={!!disabled}

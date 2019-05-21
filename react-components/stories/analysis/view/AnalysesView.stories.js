@@ -342,6 +342,12 @@ class AnalysesViewTest extends Component {
                 console.log("parameter value selected"),
         };
 
+        const drUtil = {
+            parseNameFromPath: () => {
+                console.log("parse name from path");
+            },
+        };
+
         return (
             <AnalysesView
                 analysesList={analysesList}
@@ -351,6 +357,8 @@ class AnalysesViewTest extends Component {
                 email="abc@cyverse.org"
                 name="sriram srinivasan"
                 baseDebugId="AnalysesWindow"
+                viewFilter="all"
+                diskResourceUtil={drUtil}
             />
         );
     }

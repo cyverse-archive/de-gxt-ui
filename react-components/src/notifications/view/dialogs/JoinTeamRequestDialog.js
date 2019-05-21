@@ -5,6 +5,7 @@
  *
  **/
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import ids from "../../ids";
 import intlData from "../../messages";
@@ -12,6 +13,7 @@ import privilegeType from "../../model/privilegeType";
 
 import {
     build,
+    formatMessage,
     getMessage,
     LoadingMask,
     palette,
@@ -182,7 +184,14 @@ function ApproveRequest(props) {
 }
 
 function DenyRequest(props) {
-    const { classes, action, onChange, requester_name, team_name } = props;
+    const {
+        classes,
+        action,
+        onChange,
+        requester_name,
+        team_name,
+        intl,
+    } = props;
     return (
         <div style={{ display: action === DENY ? "block" : "none" }}>
             <Card className={classes.card} raised={true}>
@@ -202,7 +211,7 @@ function DenyRequest(props) {
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        placeholder={getMessage("message")}
+                        placeholder={formatMessage(intl, "message")}
                         fullWidth
                         margin="normal"
                         onChange={onChange}
@@ -265,6 +274,7 @@ class JoinTeamRequestDialog extends Component {
         const classes = this.props.classes;
         const { requester_name, team_name } = this.props.request;
         const { dialogOpen, loading } = this.state;
+        const { intl } = this.props;
         return (
             <React.Fragment>
                 <Dialog
@@ -306,6 +316,7 @@ class JoinTeamRequestDialog extends Component {
                             />
                             <DenyRequest
                                 classes={classes}
+                                intl={intl}
                                 action={this.state.action}
                                 requester_name={requester_name}
                                 team_name={team_name}
@@ -338,4 +349,6 @@ class JoinTeamRequestDialog extends Component {
     }
 }
 
-export default withStyles(styles)(withI18N(JoinTeamRequestDialog, intlData));
+export default withStyles(styles)(
+    withI18N(injectIntl(JoinTeamRequestDialog, intlData))
+);

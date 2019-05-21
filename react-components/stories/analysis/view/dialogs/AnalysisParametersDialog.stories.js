@@ -98,7 +98,6 @@ class AnalysisParametersDialogTest extends Component {
                 },
             ],
         };
-
         return (
             <AnalysisParametersDialog
                 parameters={parameterList.parameters}

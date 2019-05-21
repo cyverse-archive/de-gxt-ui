@@ -238,7 +238,7 @@ class AppStats extends Component {
                             />
                             <ToolbarSeparator />
                             <Button
-                                variant="raised"
+                                variant="contained"
                                 onClick={this.applyFilter}
                                 className={classes.statFilterButton}
                             >

@@ -58,7 +58,7 @@ class QueryBuilder extends Component {
                         component={renderSaveSearchBtn}
                     />
                     <Button
-                        variant="raised"
+                        variant="contained"
                         id={build(parentId, ids.searchBtn)}
                         className={classes.searchButton}
                         onClick={handleSubmit(this.handleSubmitForm)}

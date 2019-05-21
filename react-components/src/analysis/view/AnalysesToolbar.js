@@ -88,7 +88,7 @@ class AnalysesToolbar extends Component {
                     </Menu>
                     <Button
                         id={build(baseToolbarId, ids.BUTTON_REFRESH)}
-                        variant="raised"
+                        variant="contained"
                         className={classes.toolbarButton}
                         onClick={this.props.handleRefresh}
                     >
