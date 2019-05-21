@@ -20,7 +20,7 @@
         "prop-types": "^15.6.2"
     },
     "dependencies": {
-        "@cyverse-de/ui-lib": "file:../../ui-lib",
+        "@cyverse-de/ui-lib": "0.3.2",
         "@material-ui/core": "^3.9.3",
         "@material-ui/icons": "^3.0.2",
         "add": "^2.0.6",
