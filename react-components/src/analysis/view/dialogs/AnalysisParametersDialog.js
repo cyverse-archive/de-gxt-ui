@@ -1,13 +1,19 @@
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import exStyles from "../../style";
 import ids from "../../ids";
 import intlData from "../../messages";
-import withI18N, { getMessage, formatMessage } from "../../../util/I18NWrapper";
+
 import ArgumentType from "../../../../src/apps/ArgumentType";
 
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
-import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
+import {
+    DEDialogHeader,
+    EnhancedTableHead,
+    getMessage,
+    formatMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,8 +24,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core/styles";
-
-import { injectIntl } from "react-intl";
 
 function ParameterValue(props) {
     const {

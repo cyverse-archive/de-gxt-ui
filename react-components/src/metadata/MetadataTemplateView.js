@@ -4,29 +4,31 @@
 import React, { Component, Fragment } from "react";
 
 import { FastField, FieldArray, withFormik } from "formik";
-import moment from "moment";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import deConstants from "../constants";
-import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
-import build from "../util/DebugIDUtil";
 import constants from "./constants";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
 import {
+    build,
+    DEConfirmationDialog,
     FormCheckboxStringValue,
     FormIntegerField,
+    formatMessage,
     FormMultilineTextField,
     FormNumberField,
     FormSelectField,
     FormTextField,
     FormTimestampField,
+    formatCurrentDate,
     getFormError,
-} from "../util/FormField";
-import DEConfirmationDialog from "../util/dialog/DEConfirmationDialog";
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
@@ -63,7 +65,7 @@ const newAVU = (attrTemplate) => {
     let value;
     switch (attrTemplate.type) {
         case constants.ATTRIBUTE_TYPE.TIMESTAMP:
-            value = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+            value = formatCurrentDate();
             break;
 
         case constants.ATTRIBUTE_TYPE.ENUM:

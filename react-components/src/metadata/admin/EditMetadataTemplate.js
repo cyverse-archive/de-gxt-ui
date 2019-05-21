@@ -7,17 +7,23 @@ import { FastField, FieldArray, withFormik } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import constants from "../constants";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import { FormCheckbox, FormTextField } from "../../util/FormField";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
 import EditAttributeFormList from "./EditAttributeFormList";
 import SlideUpTransition from "../SlideUpTransition";
+
+import {
+    build,
+    DEConfirmationDialog,
+    FormCheckbox,
+    formatMessage,
+    FormTextField,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";

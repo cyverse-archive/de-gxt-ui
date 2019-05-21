@@ -1,4 +1,5 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
+
 import ids from "../ids";
 import messages from "../messages";
 import { options } from "./Operators";
@@ -6,13 +7,13 @@ import SelectOperator from "./SelectOperator";
 import styles from "../styles";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import UserPanel from "./UserPanel";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
+import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import { Field, FieldArray } from "redux-form";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { Fragment } from "react";
+
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
 

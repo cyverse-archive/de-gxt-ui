@@ -1,15 +1,22 @@
-import AppStatusIcon from "./AppStatusIcon";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
-import EmptyTable from "../../util/table/EmptyTable";
-import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import { getSorting, stableSort } from "../../util/table/TableSort";
+
+import {
+    AppStatusIcon,
+    EnhancedTableHead,
+    EmptyTable,
+    getMessage,
+    getSorting,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import ids from "./ids";
 import messages from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 
-import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
-import React, { Component } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -128,7 +135,11 @@ class AppGridListing extends Component {
                                             </TableCell>
                                         )}
                                         <TableCell>
-                                            <AppStatusIcon app={app} />
+                                            <AppStatusIcon
+                                                isPublic={app.is_public}
+                                                isBeta={app.disabled}
+                                                isDisabled={app.beta}
+                                            />
                                         </TableCell>
                                         <TableCell>{app.name}</TableCell>
                                         <TableCell>

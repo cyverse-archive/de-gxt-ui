@@ -2,17 +2,19 @@
  *  @author sriram, psarando
  * */
 import React, { Component } from "react";
-
 import PropTypes from "prop-types";
-import moment from "moment";
 
 import exStyles from "../style";
-import constants from "../../constants";
 import intlData from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
 
-import { LoadingMask } from "@cyverse-de/de-components";
+import {
+    dateConstants,
+    formatDate,
+    getMessage,
+    TablePaginationActions,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
@@ -107,9 +109,9 @@ class AppStats extends Component {
         let { startDate, endDate } = this.state;
 
         startDate = startDate
-            ? moment(startDate).format(constants.DATE_FORMAT)
+            ? formatDate(startDate, dateConstants.DATE_FORMAT)
             : "";
-        endDate = endDate ? moment(endDate).format(constants.DATE_FORMAT) : "";
+        endDate = endDate ? formatDate(endDate, dateConstants.DATE_FORMAT) : "";
 
         this.props.presenter.searchApps(
             searchText,
@@ -213,9 +215,10 @@ class AppStats extends Component {
                             <TextField
                                 label={getMessage("startDate")}
                                 type="date"
-                                defaultValue={moment(
-                                    this.state.startDate
-                                ).format(constants.DATE_FORMAT)}
+                                defaultValue={formatDate(
+                                    this.state.startDate,
+                                    dateConstants.DATE_FORMAT
+                                )}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -224,8 +227,9 @@ class AppStats extends Component {
                             <TextField
                                 label={getMessage("endDate")}
                                 type="date"
-                                defaultValue={moment(this.state.endDate).format(
-                                    constants.DATE_FORMAT
+                                defaultValue={formatDate(
+                                    this.state.endDate,
+                                    dateConstants.DATE_FORMAT
                                 )}
                                 InputLabelProps={{
                                     shrink: true,
@@ -314,35 +318,17 @@ class AppStats extends Component {
                                                         : 0}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {n.job_stats
-                                                        .job_last_completed
-                                                        ? moment(
-                                                              Number(
-                                                                  n.job_stats
-                                                                      .job_last_completed
-                                                              ),
-                                                              "x"
-                                                          ).format(
-                                                              constants.DATE_FORMAT
-                                                          )
-                                                        : getMessage(
-                                                              "emptyValue"
-                                                          )}{" "}
+                                                    {formatDate(
+                                                        n.job_stats
+                                                            .job_last_completed,
+                                                        dateConstants.DATE_FORMAT
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {n.job_stats.last_used
-                                                        ? moment(
-                                                              Number(
-                                                                  n.job_stats
-                                                                      .last_used
-                                                              ),
-                                                              "x"
-                                                          ).format(
-                                                              constants.DATE_FORMAT
-                                                          )
-                                                        : getMessage(
-                                                              "emptyValue"
-                                                          )}
+                                                    {formatDate(
+                                                        n.job_stats.last_used,
+                                                        dateConstants.DATE_FORMAT
+                                                    )}
                                                 </TableCell>
                                             </TableRow>
                                         );

@@ -6,14 +6,17 @@
  **/
 import React, { Component } from "react";
 
-import build from "../../../util/DebugIDUtil";
-import Color from "../../../util/CyVersePalette";
 import ids from "../../ids";
 import intlData from "../../messages";
 import privilegeType from "../../model/privilegeType";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
-import { LoadingMask } from "@cyverse-de/de-components";
+import {
+    build,
+    getMessage,
+    LoadingMask,
+    palette,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -270,8 +273,8 @@ class JoinTeamRequestDialog extends Component {
                     onClose={this.props.handleJoinTeamRequestDialogClose}
                 >
                     <LoadingMask loading={loading}>
-                        <DialogTitle style={{ backgroundColor: Color.blue }}>
-                            <Typography style={{ color: Color.white }}>
+                        <DialogTitle style={{ backgroundColor: palette.blue }}>
+                            <Typography style={{ color: palette.white }}>
                                 {getMessage("joinTeamRequestHeader")}
                             </Typography>
                         </DialogTitle>

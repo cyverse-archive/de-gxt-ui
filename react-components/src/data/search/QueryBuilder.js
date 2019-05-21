@@ -1,15 +1,15 @@
-import build from "../../util/DebugIDUtil";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
 import Condition from "./queryBuilder/Condition";
 import ids from "./ids";
 import messages from "./messages";
 import SaveSearchButton from "./SaveSearchButton";
 import styles from "./styles";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
+import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
 import { withStyles } from "@material-ui/core/styles";
 

@@ -1,4 +1,4 @@
-import cyverse from "../../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 export default {
     searchButton: {
@@ -17,7 +17,7 @@ export default {
         padding: "10px 5px 10px 15px",
         borderStyle: "solid",
         borderWidth: "1px",
-        borderColor: cyverse.gray,
+        borderColor: palette.gray,
         minWidth: "500px",
         minHeight: "300px",
         maxHeight: "300px",

@@ -9,14 +9,18 @@ import sanitizeHtml from "sanitize-html";
 import showdown from "showdown";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import { EDIT_MODE, VIEW_MODE } from "./AppInfoDialog";
 
-import { LoadingMask } from "@cyverse-de/de-components";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
+import {
+    build,
+    DEHyperlink,
+    formatMessage,
+    getMessage,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Fab from "@material-ui/core/Fab";
 import TextField from "@material-ui/core/TextField";
@@ -52,7 +56,7 @@ function WikiUrl(props) {
             <Typography variant="subtitle1">
                 {getMessage("documentation")}
             </Typography>
-            <DEHyperLink
+            <DEHyperlink
                 text={name}
                 onClick={() => window.open(wiki_url, "_blank")}
             />

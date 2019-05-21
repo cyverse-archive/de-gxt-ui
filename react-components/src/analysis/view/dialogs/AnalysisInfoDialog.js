@@ -6,20 +6,23 @@
 
 import React, { Component } from "react";
 
-import build from "../../../util/DebugIDUtil";
 import exStyles from "../../style";
-import formatDate from "../../../util/DateFormatter";
 import ids from "../../ids";
 import intlData from "../../messages";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
+import { injectIntl } from "react-intl";
 
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+import {
+    build,
+    formatDate,
+    DEDialogHeader,
+    EnhancedTableHead,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
-import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
 import { withStyles } from "@material-ui/core/styles";
-
-import { injectIntl } from "react-intl";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";

@@ -1,12 +1,14 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
+
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
 import Validations from "./Validations";
 
+import { build } from "@cyverse-de/ui-lib";
+
 import { Field } from "redux-form";
-import React, { Fragment } from "react";
 
 /**
  * A component which allows users to specify a path prefix in QueryBuilder

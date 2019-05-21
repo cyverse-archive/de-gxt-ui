@@ -12,11 +12,16 @@ import intlData from "../messages";
 import appType from "../model/appType";
 import viewFilter from "../model/viewFilterOptions";
 import exStyles from "../style";
-import build from "../../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
+
+import {
+    build,
+    formatMessage,
+    getMessage,
+    SearchField,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import AnalysesMenuItems from "./AnalysesMenuItems";
-import SearchField from "../../util/SearchField";
 
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";

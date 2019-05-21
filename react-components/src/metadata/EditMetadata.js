@@ -7,22 +7,23 @@ import { FieldArray, withFormik } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
-import build from "../util/DebugIDUtil";
-import withI18N, {
-    formatHTMLMessage,
-    formatMessage,
-    getMessage,
-} from "../util/I18NWrapper";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import DEConfirmationDialog from "../util/dialog/DEConfirmationDialog";
 import FormDialogEditAVU from "./EditAVU";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 
-import { LoadingMask } from "@cyverse-de/de-components";
+import {
+    build,
+    DEConfirmationDialog,
+    formatHTMLMessage,
+    formatMessage,
+    getMessage,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";

@@ -2,14 +2,14 @@
  * @author sriram
  */
 import React, { Component } from "react";
-import Tag from "./Tag";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
-import intlData from "../messages";
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
-import exStyle from "../style";
 import PropTypes from "prop-types";
-import Autocomplete from "../../util/Autocomplete";
+import exStyle from "../style";
+import intlData from "../messages";
+import ids from "../ids";
+import Tag from "./Tag";
+
+import { Autocomplete, build, getMessage, withI18N } from "@cyverse-de/ui-lib";
+
 import { withStyles } from "@material-ui/core";
 
 class TagPanel extends Component {

@@ -4,14 +4,17 @@
 import React, { Component } from "react";
 import { FastField, FieldArray } from "formik";
 
-import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
-
-import { FormSelectField } from "../../util/FormField";
 import StringListEditor from "./StringListEditor";
+
+import {
+    build,
+    FormSelectField,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";

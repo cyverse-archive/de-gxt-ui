@@ -8,17 +8,22 @@ import React, { useState } from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 
-import build from "../../util/DebugIDUtil";
 import constants from "../../constants";
 import ids from "../ids";
 import intlData from "../messages";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
-import CopyTextArea from "../../util/CopyTextArea";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import { LoadingMask, QuickLaunch } from "@cyverse-de/de-components";
+import {
+    build,
+    CopyTextArea,
+    DEConfirmationDialog,
+    DEDialogHeader,
+    DEHyperlink,
+    formatMessage,
+    getMessage,
+    LoadingMask,
+    QuickLaunch,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -179,7 +184,7 @@ function ListQuickLaunches(props) {
                     <Typography variant="subtitle2">
                         {getMessage("noQuickLaunches")}
                     </Typography>
-                    <DEHyperLink
+                    <DEHyperlink
                         text={getMessage("createQuickLaunchLabel")}
                         onClick={onCreate}
                     />

@@ -7,13 +7,18 @@ import React from "react";
 import { Field, Form, Formik } from "formik";
 import { injectIntl } from "react-intl";
 
-import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
-import { FormCheckbox, FormTextField } from "../../util/FormField";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
+import {
+    build,
+    DEDialogHeader,
+    FormCheckbox,
+    FormTextField,
+    formatMessage,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";

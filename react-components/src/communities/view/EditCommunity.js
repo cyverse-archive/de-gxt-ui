@@ -1,20 +1,24 @@
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import AppGridListing from "../../apps/listing/AppGridListing";
-import build from "../../util/DebugIDUtil";
 import CollaboratorListing from "../../collaborators/CollaboratorListing";
-import { getMessage } from "../../util/I18NWrapper";
 import ids from "../ids";
 import messages from "../messages";
 import styles from "../styles";
 import SubjectSearchField from "../../collaborators/SubjectSearchField";
-import withI18N from "../../util/I18NWrapper";
 
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button/Button";
-import DEConfirmationDialog from "../../util/dialog/DEConfirmationDialog";
-import Fab from "@material-ui/core/Fab/Fab";
-import { LoadingMask } from "@cyverse-de/de-components";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+
+import Fab from "@material-ui/core/Fab";
+import {
+    build,
+    DEConfirmationDialog,
+    getMessage,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";

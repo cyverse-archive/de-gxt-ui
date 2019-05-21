@@ -1,10 +1,11 @@
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
 import CommunitiesToolbar from "./CommunitiesToolbar";
 import CommunityFilter from "./CommunityFilter";
 import CommunityListing from "./CommunityListing";
 import styles from "../styles";
 
-import PropTypes from "prop-types";
-import React, { Component } from "react";
 import EditCommunityDialog from "./EditCommunityDialog";
 import { withStyles } from "@material-ui/core/styles";
 

@@ -10,21 +10,26 @@ import { injectIntl } from "react-intl";
 
 import ids from "../ids";
 import constants from "../../constants";
-import formatDate from "../../util/DateFormatter";
 import intlData from "../../apps/messages";
 import style from "../../apps/style";
-import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 
 import CategoryTree from "./CategoryTree";
-import CopyTextArea from "../../util/CopyTextArea";
-import DEHyperLink from "../../util/hyperlink/DEHyperLink";
-import DEDialogHeader from "../../util/dialog/DEDialogHeader";
-import { LoadingMask } from "@cyverse-de/de-components";
-import { Rate } from "@cyverse-de/de-components";
+
+import {
+    build,
+    CopyTextArea,
+    DEDialogHeader,
+    DEHyperlink,
+    formatDate,
+    formatMessage,
+    getMessage,
+    Highlighter,
+    LoadingMask,
+    Rate,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Book from "../../resources/images/bookIcon.png";
-import build from "../../util/DebugIDUtil";
-import Highlighter from "../../util/Highlighter";
 
 import Grid from "@material-ui/core/Grid";
 import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
@@ -273,7 +278,7 @@ class AppDetails extends Component {
                                         <span className={labelClass}>
                                             {getMessage("url")}:
                                         </span>
-                                        <DEHyperLink
+                                        <DEHyperlink
                                             onClick={this.onAppUrlClick}
                                             text={formatMessage(intl, "url")}
                                         />

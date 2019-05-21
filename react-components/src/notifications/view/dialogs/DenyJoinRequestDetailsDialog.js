@@ -5,19 +5,20 @@
  *
  **/
 import React, { Component } from "react";
+import intlData from "../../messages";
+import ids from "../../ids";
+
+import { build, getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
+
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import Button from "@material-ui/core/Button";
-import intlData from "../../messages";
-import Color from "../../../util/CyVersePalette";
+
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import build from "../../../util/DebugIDUtil";
-import ids from "../../ids";
 
 class DenyJoinRequestDetailsDialog extends Component {
     constructor(props) {
@@ -32,8 +33,8 @@ class DenyJoinRequestDetailsDialog extends Component {
         const baseId = ids.DENY_REQUEST_DLG;
         return (
             <Dialog id={baseId} open={this.state.dialogOpen}>
-                <DialogTitle style={{ backgroundColor: Color.blue }}>
-                    <Typography style={{ color: Color.white }}>
+                <DialogTitle style={{ backgroundColor: palette.blue }}>
+                    <Typography style={{ color: palette.white }}>
                         {" "}
                         {getMessage("denyDetailsHeader")}
                     </Typography>

@@ -1,15 +1,15 @@
-import build from "../../../util/DebugIDUtil";
-import { getMessage } from "../../../util/I18NWrapper";
+import React, { Fragment } from "react";
+
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
 import Validations from "./Validations";
+import { build, getMessage } from "@cyverse-de/ui-lib";
 
 import { Field } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { Fragment } from "react";
 import Select from "@material-ui/core/Select";
 
 /**

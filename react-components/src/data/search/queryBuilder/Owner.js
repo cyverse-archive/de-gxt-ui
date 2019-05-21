@@ -1,12 +1,13 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
 import ids from "../ids";
 import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import UserPanel from "./UserPanel";
 
+import { build } from "@cyverse-de/ui-lib";
+
 import { Field } from "redux-form";
-import React, { Fragment } from "react";
 import Grid from "@material-ui/core/Grid";
 
 /**

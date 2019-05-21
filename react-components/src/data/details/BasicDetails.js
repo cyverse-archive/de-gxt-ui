@@ -2,19 +2,23 @@
  * @author sriram
  */
 import React, { Component } from "react";
-import moment from "moment";
 
-import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
 import styles from "../style";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
 
-import { LoadingMask } from "@cyverse-de/de-components";
+import {
+    build,
+    DEHyperlink,
+    dateConstants,
+    formatDate,
+    getMessage,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -384,14 +388,10 @@ class BasicDetails extends Component {
                                     )}
                                     className={classes.detailsValue}
                                 >
-                                    {diskResource["date-modified"]
-                                        ? moment(
-                                              Number(
-                                                  diskResource["date-modified"]
-                                              ),
-                                              "x"
-                                          ).format("YYYY-MM-DD")
-                                        : getMessage("emptyValue")}
+                                    {formatDate(
+                                        diskResource["date-modified"],
+                                        dateConstants.DATE_FORMAT
+                                    )}
                                 </td>
                             </tr>
                             <tr>
@@ -405,14 +405,10 @@ class BasicDetails extends Component {
                                     )}
                                     className={classes.detailsValue}
                                 >
-                                    {diskResource["date-modified"]
-                                        ? moment(
-                                              Number(
-                                                  diskResource["date-created"]
-                                              ),
-                                              "x"
-                                          ).format("YYYY-MM-DD")
-                                        : getMessage("emptyValue")}
+                                    {formatDate(
+                                        diskResource["date-created"],
+                                        dateConstants.DATE_FORMAT
+                                    )}
                                 </td>
                             </tr>
                             <tr>

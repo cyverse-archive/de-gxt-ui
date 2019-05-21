@@ -6,7 +6,7 @@ import React, { Component } from "react";
 import Tree, { TreeNode } from "rc-tree";
 import "rc-tree/assets/index.css";
 
-import Highlighter from "../../util/Highlighter";
+import { Highlighter } from "@cyverse-de/ui-lib";
 
 import Book from "../../resources/images/bookIcon.png";
 import Book_Open from "../../resources/images/bookIcon-open.png";

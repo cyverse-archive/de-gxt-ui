@@ -6,14 +6,19 @@ import React, { Component, Fragment } from "react";
 import { FastField, FieldArray, getIn } from "formik";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
-
-import build from "../util/DebugIDUtil";
-import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
-import { FormTextField, getFormError } from "../util/FormField";
+import {
+    build,
+    formatMessage,
+    FormTextField,
+    getFormError,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 

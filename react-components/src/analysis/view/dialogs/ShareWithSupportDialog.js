@@ -4,19 +4,23 @@
  *
  */
 import React from "react";
+import PropTypes from "prop-types";
+import { injectIntl } from "react-intl";
+
 import ids from "../../ids";
 import analysisStatus from "../../model/analysisStatus";
-import withI18N, {
+
+import intlData from "../../messages";
+
+import {
+    build,
+    DEDialogHeader,
     formatHTMLMessage,
     formatMessage,
     getMessage,
-} from "../../../util/I18NWrapper";
-import { injectIntl } from "react-intl";
-import intlData from "../../messages";
-import build from "../../../util/DebugIDUtil";
-import formatDate from "../../../util/DateFormatter";
-
-import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
+    formatDate,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button/Button";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
@@ -29,7 +33,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
-import PropTypes from "prop-types";
 
 function AnalysisInfo(props) {
     const { analysis, name, email } = props;

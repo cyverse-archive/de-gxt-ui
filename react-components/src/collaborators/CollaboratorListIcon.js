@@ -1,9 +1,9 @@
+import React from "react";
 import messages from "./messages";
 import styles from "./styles";
-import withI18N, { getMessage } from "../util/I18NWrapper";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import ListAlt from "@material-ui/icons/ListAlt";
-import React from "react";
 import ToolTip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 

@@ -1,14 +1,14 @@
-import build from "../../util/DebugIDUtil";
+import React from "react";
+import PropTypes from "prop-types";
+
 import CreateCommunitiesBtn from "./CreateCommunitiesBtn";
 import CommunityFilter from "./CommunityFilter";
 import ids from "../ids";
 import messages from "../messages";
 import styles from "../styles";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
+import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import MenuItem from "@material-ui/core/MenuItem";
-import PropTypes from "prop-types";
-import React from "react";
 import Select from "@material-ui/core/Select";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";

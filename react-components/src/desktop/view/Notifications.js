@@ -5,15 +5,18 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import classnames from "classnames";
 
-import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import intlData from "../messages";
 import styles from "../style";
 import tour from "../NewUserTourSteps";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 
-import { LoadingMask } from "@cyverse-de/de-components";
-import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+import {
+    build,
+    DEHyperlink,
+    getMessage,
+    LoadingMask,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Badge from "@material-ui/core/Badge";
 import Fab from "@material-ui/core/Fab";

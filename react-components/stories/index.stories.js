@@ -56,15 +56,6 @@ import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequ
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
 
-import SearchFieldTest from "./util/SearchField.stories";
-import AutocompleteTest from "./util/Autocomplete.stories";
-import CopyTextAreaTest from "./util/CopyTextArea.stories";
-import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
-import ErrorHandlerTest from "./util/ErrorHandler.stories";
-import ErrorExpansionPanelTest from "./util/ErrorExpansionPanel.stories";
-import TriggerFieldTest from "./util/TriggerField.stories";
-import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
-
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
 ));
@@ -200,9 +191,6 @@ storiesOf("metadata/MetadataTemplateView", module)
         />
     ));
 
-storiesOf("util", module).add("Autocomplete", () => (
-    <AutocompleteTest selectOptionLogger={action("Selected Option")} />
-));
 storiesOf("notifications/view", module).add("with test notifications", () => (
     <NotificationViewTest logger={action("notification Window")} />
 ));
@@ -222,17 +210,3 @@ storiesOf("notifications/view/dialogs", module).add(
     "with test RequestHistoryDialogTest",
     () => <RequestHistoryDialogTest logger={action("notification window")} />
 );
-
-storiesOf("util", module).add("CopyTextArea", () => <CopyTextAreaTest />);
-storiesOf("util", module).add("DEHyperLink", () => <DEHyperLinkTest />);
-storiesOf("util", module).add("ErrorExpansionPanel", () => (
-    <ErrorExpansionPanelTest />
-));
-storiesOf("util", module).add("ErrorHandler", () => <ErrorHandlerTest />);
-storiesOf("util", module).add("SearchField", () => (
-    <SearchFieldTest logger={action("Search")} />
-));
-storiesOf("util", module).add("TriggerSearchField", () => (
-    <TriggerFieldTest logger={action("Search")} />
-));
-storiesOf("util", module).add("DEPromptDialog", () => <DEPromptDialogTest />);

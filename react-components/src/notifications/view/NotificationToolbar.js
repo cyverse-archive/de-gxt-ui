@@ -4,6 +4,12 @@
  *  @author sriram
  * */
 import React, { Component } from "react";
+import exStyles from "../style";
+import notificationCategory from "../model/notificationCategory";
+import ids from "../ids";
+
+import { build, getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
+
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
 import Select from "@material-ui/core/Select";
@@ -14,14 +20,8 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckIcon from "@material-ui/icons/Check";
 import intlData from "../messages";
-import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
-import exStyles from "../style";
-import notificationCategory from "../model/notificationCategory";
-import build from "../../util/DebugIDUtil";
-import ids from "../ids";
-import Color from "../../util/CyVersePalette";
 
 class NotificationToolbar extends Component {
     render() {
@@ -82,7 +82,7 @@ class NotificationToolbar extends Component {
                         className={classes.toolbarButton}
                         onClick={this.props.onRefreshClicked}
                     >
-                        <RefreshIcon style={{ color: Color.darkBlue }} />
+                        <RefreshIcon style={{ color: palette.darkBlue }} />
                         {getMessage("refresh")}
                     </Button>
                     <Button
@@ -93,7 +93,7 @@ class NotificationToolbar extends Component {
                         className={classes.toolbarButton}
                         onClick={this.props.onMarkSeenClicked}
                     >
-                        <CheckIcon style={{ color: Color.darkBlue }} />
+                        <CheckIcon style={{ color: palette.darkBlue }} />
                         {getMessage("markSeen")}
                     </Button>
                     <Button
@@ -104,7 +104,7 @@ class NotificationToolbar extends Component {
                         onClick={this.props.onDeleteClicked}
                         className={classes.toolbarButton}
                     >
-                        <DeleteIcon style={{ color: Color.darkBlue }} />
+                        <DeleteIcon style={{ color: palette.darkBlue }} />
                         {getMessage("delete")}
                     </Button>
                 </ToolbarGroup>

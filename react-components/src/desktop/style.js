@@ -1,7 +1,7 @@
 import cyverseMini from "../resources/images/whitelogo.png";
 import desktopBcg from "../resources/images/background.png";
 import cyverseHeader from "../resources/images/cyverse_icon_white.png";
-import color from "../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 export default {
     "@global body": {
@@ -26,7 +26,7 @@ export default {
         backgroundRepeat: "no-repeat",
     },
     header: {
-        backgroundColor: color.blue,
+        backgroundColor: palette.blue,
         borderBottom: "5px solid #57cbea",
         position: "absolute",
         height: "51px",
@@ -69,8 +69,8 @@ export default {
         borderRadius: "10px",
     },
     notificationBadge: {
-        backgroundColor: color.orange,
-        color: color.white,
+        backgroundColor: palette.orange,
+        color: palette.white,
         fontSize: 10,
     },
     badge: {
@@ -180,14 +180,14 @@ export default {
         display: "inline-block",
         borderRadius: 4,
         "&:hover": {
-            backgroundColor: color.blue,
+            backgroundColor: palette.blue,
             boxShadow: "none",
         },
     },
     taskbarButtonMinimized: {
         backgroundImage: `url(${cyverseMini})`,
         backgroundSize: 20,
-        backgroundColor: color.darkGray,
+        backgroundColor: palette.darkGray,
         backgroundPosition: "5px 5px",
         backgroundRepeat: "no-repeat",
         position: "relative",
@@ -204,7 +204,7 @@ export default {
         display: "inline-block",
         whiteSpace: "nowrap",
         "&:hover": {
-            backgroundColor: color.blue,
+            backgroundColor: palette.blue,
         },
     },
     taskbar: {
@@ -215,14 +215,14 @@ export default {
         overflow: "hidden",
         whiteSpace: "nowrap",
         display: "inline-block",
-        backgroundColor: color.lightGray,
+        backgroundColor: palette.lightGray,
     },
     errorRetryButton: {
-        backgroundColor: color.orange,
+        backgroundColor: palette.orange,
         position: "relative",
         left: 50,
         "&:hover": {
-            backgroundColor: color.blue,
+            backgroundColor: palette.blue,
         },
     },
     notificationError: {
@@ -233,7 +233,7 @@ export default {
         outline: "none",
         position: "absolute",
         left: 50,
-        color: color.orange,
+        color: palette.orange,
     },
     notificationMenu: {
         maxHeight: 650,
@@ -248,7 +248,7 @@ export default {
         width: 300,
     },
     unSeenNotificationBackground: {
-        backgroundColor: color.lightBlue,
+        backgroundColor: palette.lightBlue,
         borderBottom: 1,
         width: "100%",
     },

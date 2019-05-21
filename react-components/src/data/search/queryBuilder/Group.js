@@ -1,10 +1,10 @@
-import build from "../../../util/DebugIDUtil";
+import React, { Fragment } from "react";
+
+import { build } from "@cyverse-de/ui-lib";
 import AddBtn from "./AddBtn";
 import Condition from "./Condition";
 import DeleteBtn from "./DeleteBtn";
 import ids from "../ids";
-
-import React, { Fragment } from "react";
 
 /**
  * A component which allows users to create different groupings in QueryBuilder
