@@ -71,7 +71,7 @@ class EditTagDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        variant="flat"
+                        variant="text"
                         id={ids.editTagSave}
                         color="primary"
                         onClick={this.handleSave}
@@ -79,7 +79,7 @@ class EditTagDialog extends Component {
                         {getMessage("saveBtn")}
                     </Button>
                     <Button
-                        variant="flat"
+                        variant="text"
                         id={ids.editTagCancel}
                         color="primary"
                         onClick={this.handleClose}

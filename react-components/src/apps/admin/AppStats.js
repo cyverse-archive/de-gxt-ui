@@ -255,7 +255,11 @@ class AppStats extends Component {
                                         <TableCell
                                             className={classes.statTableHead}
                                             key={column.name}
-                                            numeric={column.numeric}
+                                            align={
+                                                column.numeric
+                                                    ? "right"
+                                                    : "inherit"
+                                            }
                                             sortDirection={
                                                 orderBy === column.name
                                                     ? order

@@ -262,7 +262,15 @@ class AppDetailsTest extends Component {
             },
         };
 
-        return <AppDetails details={appDetals} presenter={presenter} />;
+        return (
+            <AppDetails
+                details={appDetals}
+                presenter={presenter}
+                searchRegexPattern=""
+                loading={false}
+                baseDebugId="appDetails"
+            />
+        );
     }
 }
 export default AppDetailsTest;

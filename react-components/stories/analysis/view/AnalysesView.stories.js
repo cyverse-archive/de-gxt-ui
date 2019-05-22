@@ -359,6 +359,7 @@ class AnalysesViewTest extends Component {
                 baseDebugId="AnalysesWindow"
                 viewFilter="all"
                 diskResourceUtil={drUtil}
+                appTypeFilter="de"
             />
         );
     }

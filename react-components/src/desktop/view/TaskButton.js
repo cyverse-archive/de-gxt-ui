@@ -21,7 +21,7 @@ class TaskButton extends Component {
             classes,
             windowConfig: { minimized, windowTitle },
         } = this.props;
-        const variant = minimized ? "raised" : "contained";
+        const variant = minimized ? "outlined" : "contained";
         const className = minimized
             ? classes.taskbarButtonMinimized
             : classes.taskbarButton;

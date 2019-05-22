@@ -65,7 +65,11 @@ class CategoryTreeTest extends Component {
         };
 
         return (
-            <CategoryTree hierarchies={app.hierarchies} presenter={presenter} />
+            <CategoryTree
+                hierarchies={app.hierarchies}
+                presenter={presenter}
+                searchRegexPattern=""
+            />
         );
     }
 }
