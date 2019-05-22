@@ -913,11 +913,13 @@ class AnalysesView extends Component {
 
     onViewFilterChange(viewFilter) {
         const { appTypeFilter, presenter } = this.props;
+        this.setState({ selected: [] });
         presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
     onTypeFilterChange(appTypeFilter) {
         const { viewFilter, presenter } = this.props;
+        this.setState({ selected: [] });
         presenter.handleViewAndTypeFilterChange(viewFilter, appTypeFilter);
     }
 
