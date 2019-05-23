@@ -341,6 +341,7 @@ class AppInfoDialogTest extends Component {
                 presenter={presenter}
                 editable={false}
                 userName="sriram@iplantcollaborative.org"
+                docEditable={false}
             />
         );
     }

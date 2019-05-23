@@ -152,6 +152,9 @@ class QuickLaunchListingTest extends Component {
                 onDelete={onDelete}
                 useQuickLaunch={useQuickLaunch}
                 onCreate={onCreate}
+                baseDebugId="quicklaunchListing"
+                loading={false}
+                onSelection={() => console.log("Quick launch selected!")}
             />
         );
     }

@@ -24,7 +24,7 @@ class ToolDetailsTest extends Component {
                 },
             ],
         };
-        return <ToolDetails details={details.tools} />;
+        return <ToolDetails details={details.tools} searchRegexPattern="" />;
     }
 }
 
