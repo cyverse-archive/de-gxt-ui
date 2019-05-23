@@ -297,24 +297,24 @@ class AppStats extends Component {
                                         return (
                                             <TableRow hover key={n.id}>
                                                 <TableCell>{n.name}</TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.rating.average
                                                         ? n.rating.average
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats.job_count
                                                         ? n.job_stats.job_count
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats
                                                         .job_count_completed
                                                         ? n.job_stats
                                                               .job_count_completed
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats
                                                         .job_count_failed
                                                         ? n.job_stats

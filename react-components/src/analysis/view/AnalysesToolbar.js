@@ -25,8 +25,8 @@ import AnalysesMenuItems from "./AnalysesMenuItems";
 
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -110,7 +110,12 @@ class AnalysesToolbar extends Component {
                                         e.target.value
                                     )
                                 }
-                                input={<OutlinedInput name="permission" />}
+                                input={
+                                    <OutlinedInput
+                                        labelWidth={0}
+                                        name="permission"
+                                    />
+                                }
                                 style={{ minWidth: 200 }}
                             >
                                 <MenuItem
@@ -156,7 +161,9 @@ class AnalysesToolbar extends Component {
                                         e.target.value
                                     )
                                 }
-                                input={<OutlinedInput name="type" />}
+                                input={
+                                    <OutlinedInput labelWidth={0} name="type" />
+                                }
                                 style={{ minWidth: 120 }}
                             >
                                 <MenuItem
@@ -233,7 +240,6 @@ AnalysesToolbar.propTypes = {
     handleRefresh: PropTypes.func.isRequired,
     viewFilter: PropTypes.string,
     typeFilter: PropTypes.string,
-    onPermissionsFilterChange: PropTypes.func.isRequired,
     onTypeFilterChange: PropTypes.func.isRequired,
     onSearch: PropTypes.func.isRequired,
     searchInputValue: PropTypes.string,

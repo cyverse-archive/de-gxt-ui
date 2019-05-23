@@ -32,7 +32,7 @@ const intlData = {
         name: "Name",
         email: "Email",
         message: "Message",
-        okBtnText: "Ok",
+        okBtnText: "OK",
         admin: "Can manage the team",
         read: "Can view the team and its members",
         view: "Can view the team",
