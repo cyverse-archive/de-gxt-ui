@@ -32,7 +32,6 @@ import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEve
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
@@ -46,7 +45,6 @@ import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSel
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
@@ -94,7 +92,6 @@ public class DiskResourcePresenterImpl implements
                                       MoveDiskResourcesSelected.MoveDiskResourcesSelectedHandler,
                                       RenameDiskResourceSelected.RenameDiskResourceSelectedHandler,
                                       RestoreDiskResourcesSelected.RestoreDiskResourcesSelectedHandler,
-                                      SendToTreeViewerSelected.SendToTreeViewerSelectedHandler,
                                       SendToEnsemblSelected.SendToEnsemblSelectedHandler,
                                       SendToCogeSelected.SendToCogeSelectedHandler,
                                       DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler,
@@ -269,7 +266,6 @@ public class DiskResourcePresenterImpl implements
         this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
         this.detailsViewPresenter.addSendToCogeSelectedHandler(this);
         this.detailsViewPresenter.addSendToEnsemblSelectedHandler(this);
-        this.detailsViewPresenter.addSendToTreeViewerSelectedHandler(this);
 
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();
@@ -326,7 +322,6 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addShareByDataLinkSelectedEventHandler(this.gridViewPresenter);
         toolbarPresenter.getView().addSendToCogeSelectedHandler(this);
         toolbarPresenter.getView().addSendToEnsemblSelectedHandler(this);
-        toolbarPresenter.getView().addSendToTreeViewerSelectedHandler(this);
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addOpenTrashFolderSelectedHandler(this);
@@ -536,20 +531,6 @@ public class DiskResourcePresenterImpl implements
             eventBus.fireEvent(new RequestSendToEnsemblEvent(resourcesToSend));
         } else {
             announcer.schedule(new ErrorAnnouncementConfig(appearance.unsupportedEnsemblInfoType()));
-        }
-    }
-
-    @Override
-    public void onSendToTreeViewerSelected(SendToTreeViewerSelected event) {
-        // There is typically only one resource used.
-        for (DiskResource resource : event.getResourcesToSend()) {
-            InfoType infoType = InfoType.fromTypeString(resource.getInfoType());
-            if (infoType == null || !diskResourceUtil.isTreeInfoType(infoType)) {
-
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.unsupportedTreeInfoType()));
-                return;
-            }
-            eventBus.fireEvent(new RequestSendToTreeViewerEvent((File)resource));
         }
     }
 

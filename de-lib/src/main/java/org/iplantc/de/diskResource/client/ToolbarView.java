@@ -204,10 +204,6 @@ public interface ToolbarView extends IsWidget,
 
         ImageResource sendToEnsemblIcon();
 
-        String sendToTreeViewerMenuItem();
-
-        ImageResource sendToTreeViewerIcon();
-
         ImageResource sendNcbiSraIcon();
 
         String refresh();
@@ -310,11 +306,8 @@ public interface ToolbarView extends IsWidget,
 
     void maskSendToEnsembl();
 
-    void maskSendToTreeViewer();
-
     void unmaskSendToCoGe();
 
     void unmaskSendToEnsembl();
 
-    void unmaskSendToTreeViewer();
 }

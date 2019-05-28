@@ -36,11 +36,7 @@ function SendTo(props) {
     let drUtil = props.drUtil;
 
     if (infoType) {
-        if (drUtil.isTreeInfoType(infoType)) {
-            displayText = <DEHyperlink text={getMessage("treeViewer")} />;
-            className = null;
-            onClick = props.handleSendToClick;
-        } else if (drUtil.isGenomeVizInfoType(infoType)) {
+        if (drUtil.isGenomeVizInfoType(infoType)) {
             displayText = <DEHyperlink text={getMessage("coge")} />;
             className = null;
             onClick = props.handleSendToClick;

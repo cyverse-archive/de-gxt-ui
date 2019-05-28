@@ -14,6 +14,5 @@ public interface FileViewerErrorStrings extends Messages {
     @Key("indexFileMissingError")
     String indexFileMissingError();
 
-    @Key("unableToRetrieveTreeUrls")
-    String unableToRetrieveTreeUrls(String fileName);
 }
+

@@ -31,7 +31,6 @@ import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.callbacks.FileSaveCallback;
 import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
-import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.fileViewers.client.views.AbstractStructuredTextViewer;
 import org.iplantc.de.fileViewers.client.views.ExternalVisualizationURLViewerImpl;
@@ -484,19 +483,6 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         viewers.forEach(viewer -> viewer.asWidget().ensureDebugId(baseID));
     }
 
-    /**
-     * Calls the tree URL service to fetch the URLs to display in the grid.
-     */
-    void callTreeCreateService(final FileViewer viewer, File file) {
-        simpleContainer.mask(appearance.retrieveTreeUrlsMask());
-        IsMaskable maskable = asMaskable(simpleContainer);
-        fileEditorService.getTreeUrl(file.getPath(),
-                                     false,
-                                     new TreeUrlCallback(file,
-                                                         maskable,
-                                                         viewer));
-    }
-
     void composeView(final File file,
                      final Folder parentFolder,
                      final Manifest manifest,
@@ -525,8 +511,6 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
             if (urls != null && !urls.isEmpty()) {
                 vizViewer.setData(urls);
-            } else if (treeViewer) {
-                callTreeCreateService(vizViewer, file);
             }
             if (isVizTabFirst) {
                 viewers.add(0, vizViewer);

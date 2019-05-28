@@ -115,8 +115,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     TextButton shareMenu;
     @UiField
-    MenuItem shareWithCollaboratorsMi, createPublicLinkMi, sendToCogeMi, sendToEnsemblMi,
-            sendToTreeViewerMi, createNcbiSraMi;
+    MenuItem shareWithCollaboratorsMi, createPublicLinkMi, sendToCogeMi, sendToEnsemblMi, createNcbiSraMi;
     @UiField
     MenuItem simpleDownloadMi, bulkDownloadMi;
     @UiField
@@ -342,7 +341,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
                 ,editInfoTypeMiEnabled, metadataMiEnabled;
 
         boolean simpleDownloadMiEnabled, bulkDownloadMiEnabled;
-        boolean sendToCogeMiEnabled, sendToEnsemblMiEnabled, sendToTreeViewerMiEnabled;
+        boolean sendToCogeMiEnabled, sendToEnsemblMiEnabled;
 
         boolean shareWithCollaboratorsMiEnabled, createPublicLinkMiEnabled, shareFolderLocationMiEnabled;
 
@@ -388,12 +387,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
                 && !isSelectionInTrash
                 && !containsFilteredItems
                 && containsOnlyEnsemblFiles(selectedDiskResources);
-        sendToTreeViewerMiEnabled = !isSelectionEmpty
-                && isSingleSelection
-                && containsFile
-                && !isSelectionInTrash
-                && diskResourceUtil.isTreeInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
-                && !containsFilteredItems;
 
         shareWithCollaboratorsMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
         createPublicLinkMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash
@@ -428,7 +421,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         shareFolderLocationMi.setEnabled(shareFolderLocationMiEnabled);
         sendToCogeMi.setEnabled(sendToCogeMiEnabled);
         sendToEnsemblMi.setEnabled(sendToEnsemblMiEnabled);
-        sendToTreeViewerMi.setEnabled(sendToTreeViewerMiEnabled);
 
         restoreMi.setEnabled(restoreMiEnabled);
     }
@@ -673,11 +665,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         fireEvent(new SendToEnsemblSelected(selectedDiskResources));
     }
 
-    @UiHandler("sendToTreeViewerMi")
-    void onSendToTreeViewerClicked(SelectionEvent<Item> event) {
-        fireEvent(new SendToTreeViewerSelected(selectedDiskResources));
-    }
-
     @UiHandler("shareFolderLocationMi")
     void onShareFolderLocationClicked(SelectionEvent<Item> event) {
         Preconditions.checkState(selectedFolder != null);
@@ -745,12 +732,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     }
 
     @Override
-    public void maskSendToTreeViewer() {
-        sendToTreeViewerMi.mask();
-
-    }
-
-    @Override
     public void unmaskSendToCoGe() {
         sendToCogeMi.unmask();
     }
@@ -758,11 +739,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public void unmaskSendToEnsembl() {
         sendToEnsemblMi.unmask();
-    }
-
-    @Override
-    public void unmaskSendToTreeViewer() {
-        sendToTreeViewerMi.unmask();
     }
 
     @Override
@@ -832,7 +808,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
                 + Ids.MENU_ITEM_SHARE_FOLDER_LOCATION);
         sendToCogeMi.ensureDebugId(baseID + Ids.SHARE_MENU + Ids.MENU_ITEM_SEND_TO_COGE);
         sendToEnsemblMi.ensureDebugId(baseID + Ids.SHARE_MENU + Ids.MENU_ITEM_SEND_TO_ENSEMBL);
-        sendToTreeViewerMi.ensureDebugId(baseID + Ids.SHARE_MENU + Ids.MENU_ITEM_SEND_TO_TREE_VIEWER);
 
         // Trash menu
         openTrashMi.ensureDebugId(baseID + Ids.TRASH_MENU + Ids.MENU_ITEM_OPEN_TRASH);

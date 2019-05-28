@@ -125,8 +125,6 @@ public interface DiskResourceView extends IsWidget,
 
             String unsupportedEnsemblInfoType();
 
-            String unsupportedTreeInfoType();
-
             String warning();
 
             String details();

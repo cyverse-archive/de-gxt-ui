@@ -61,10 +61,6 @@
         <when-type-is class="org.iplantc.de.fileViewers.client.callbacks.ShareAnonymousCallback.ShareAnonymousCallbackAppearance" />
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.fileViewers.callbacks.TreeUrlCallbackDefaultAppearance">
-        <when-type-is class="org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback.TreeUrlCallbackAppearance"/>
-    </replace-with>
-
     <replace-with class="org.iplantc.de.theme.base.client.fileViewers.FileViewerDefaultAppearance">
         <when-type-is class="org.iplantc.de.fileViewers.client.FileViewer.FileViewerAppearance" />
     </replace-with>

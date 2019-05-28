@@ -315,9 +315,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         }
 
         final ArrayList<DiskResource> resources = Lists.newArrayList(boundValue);
-        if (diskResourceUtil.isTreeInfoType(resInfoType)) {
-            ensureHandlers().fireEvent(new SendToTreeViewerSelected(resources));
-        } else if (diskResourceUtil.isGenomeVizInfoType(resInfoType)) {
+        if (diskResourceUtil.isGenomeVizInfoType(resInfoType)) {
             ensureHandlers().fireEvent(new SendToCogeSelected(resources));
         } else if (diskResourceUtil.isEnsemblInfoType(resInfoType)) {
             ensureHandlers().fireEvent(new SendToEnsemblSelected(resources));
