@@ -497,11 +497,10 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         viewers.addAll(viewersList);
 
         Splittable infoTypeSplittable = diskResourceUtil.createInfoTypeSplittable(infoType);
-        boolean treeViewer = diskResourceUtil.isTreeTab(infoTypeSplittable);
         boolean cogeViewer = diskResourceUtil.isGenomeVizTab(infoTypeSplittable);
         boolean ensembleViewer = diskResourceUtil.isEnsemblVizTab(infoTypeSplittable);
 
-        if (treeViewer || cogeViewer || ensembleViewer) {
+        if (cogeViewer || ensembleViewer) {
             FileViewer vizViewer = new ExternalVisualizationURLViewerImpl(file,
                                                                           infoType,
                                                                           fileEditorService,

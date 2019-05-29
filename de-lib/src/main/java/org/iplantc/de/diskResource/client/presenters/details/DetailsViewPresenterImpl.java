@@ -22,7 +22,6 @@ import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
 import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
@@ -127,11 +126,6 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     @Override
     public HandlerRegistration addSendToEnsemblSelectedHandler(SendToEnsemblSelected.SendToEnsemblSelectedHandler handler) {
         return ensureHandlers().addHandler(SendToEnsemblSelected.TYPE, handler);
-    }
-
-    @Override
-    public HandlerRegistration addSendToTreeViewerSelectedHandler(SendToTreeViewerSelected.SendToTreeViewerSelectedHandler handler) {
-        return ensureHandlers().addHandler(SendToTreeViewerSelected.TYPE, handler);
     }
 
     @Override

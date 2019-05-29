@@ -42,7 +42,6 @@ import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesS
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
@@ -226,12 +225,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     public HandlerRegistration
             addSendToEnsemblSelectedHandler(SendToEnsemblSelected.SendToEnsemblSelectedHandler handler) {
         return addHandler(handler, SendToEnsemblSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration
-            addSendToTreeViewerSelectedHandler(SendToTreeViewerSelected.SendToTreeViewerSelectedHandler handler) {
-        return addHandler(handler, SendToTreeViewerSelected.TYPE);
     }
 
     @Override
