@@ -49,8 +49,9 @@ class AppStats extends Component {
             data: [],
             loading: true,
             searchText: null,
-            startDate: new Date(today.setMonth(today.getMonth() - 3)), // set default date range for 90 days!
-            endDate: new Date(),
+            startDate: new Date(today.setMonth(today.getMonth() - 3)).valueOf(), // set default date range for
+            // 90 days!
+            endDate: new Date().valueOf(),
             filterDisabled: true,
             page: 0,
             rowsPerPage: 100,
