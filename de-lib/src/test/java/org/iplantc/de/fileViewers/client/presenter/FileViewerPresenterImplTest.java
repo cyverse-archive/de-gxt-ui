@@ -343,17 +343,6 @@ public class FileViewerPresenterImplTest {
     }
 
     @Test
-    public void testCallTreeCreateService() {
-        when(fileMock.getPath()).thenReturn("path");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.callTreeCreateService(fileViewerMock, fileMock);
-
-        verify(simpleContainerMock).mask(eq(appearanceMock.retrieveTreeUrlsMask()));
-        verify(fileEditorServiceMock).getTreeUrl(eq("path"), eq(false), stringAsyncCaptor.capture());
-    }
-
-    @Test
     @Ignore
     public void testComposeView() {
 
