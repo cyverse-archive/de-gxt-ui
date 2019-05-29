@@ -194,6 +194,7 @@ class ViewMetadataTest extends Component {
                 targetResource={{ label: "Read-Only Resource" }}
                 presenter={presenter(logger)}
                 metadata={metadata}
+                loading={false}
             />
         );
     }
@@ -471,6 +472,7 @@ class EditDataCiteMetadataTest extends Component {
                 targetResource={{ label: "DataCite Resource" }}
                 presenter={presenter(logger)}
                 metadata={metadata}
+                loading={false}
             />
         );
     }
@@ -490,6 +492,7 @@ const EmptyMetadataTest = (props) => {
             targetResource={{ label: "Empty Metadata" }}
             presenter={presenter(logger)}
             metadata={{}}
+            loading={false}
         />
     );
 };

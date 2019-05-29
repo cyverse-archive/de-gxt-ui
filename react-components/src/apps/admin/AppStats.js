@@ -238,7 +238,7 @@ class AppStats extends Component {
                             />
                             <ToolbarSeparator />
                             <Button
-                                variant="raised"
+                                variant="contained"
                                 onClick={this.applyFilter}
                                 className={classes.statFilterButton}
                             >
@@ -255,7 +255,11 @@ class AppStats extends Component {
                                         <TableCell
                                             className={classes.statTableHead}
                                             key={column.name}
-                                            numeric={column.numeric}
+                                            align={
+                                                column.numeric
+                                                    ? "right"
+                                                    : "inherit"
+                                            }
                                             sortDirection={
                                                 orderBy === column.name
                                                     ? order
@@ -293,24 +297,24 @@ class AppStats extends Component {
                                         return (
                                             <TableRow hover key={n.id}>
                                                 <TableCell>{n.name}</TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.rating.average
                                                         ? n.rating.average
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats.job_count
                                                         ? n.job_stats.job_count
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats
                                                         .job_count_completed
                                                         ? n.job_stats
                                                               .job_count_completed
                                                         : 0}
                                                 </TableCell>
-                                                <TableCell numeric>
+                                                <TableCell align="right">
                                                     {n.job_stats
                                                         .job_count_failed
                                                         ? n.job_stats

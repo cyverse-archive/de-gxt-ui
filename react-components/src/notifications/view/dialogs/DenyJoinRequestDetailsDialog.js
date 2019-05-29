@@ -5,17 +5,22 @@
  *
  **/
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import intlData from "../../messages";
 import ids from "../../ids";
 
-import { build, getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
+import {
+    build,
+    DEDialogHeader,
+    formatMessage,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -29,40 +34,39 @@ class DenyJoinRequestDetailsDialog extends Component {
     }
 
     render() {
-        const { teamName, adminMessage } = this.props;
+        const { teamName, adminMessage, intl } = this.props;
         const baseId = ids.DENY_REQUEST_DLG;
         return (
             <Dialog id={baseId} open={this.state.dialogOpen}>
-                <DialogTitle style={{ backgroundColor: palette.blue }}>
-                    <Typography style={{ color: palette.white }}>
-                        {" "}
-                        {getMessage("denyDetailsHeader")}
-                    </Typography>
-                </DialogTitle>
+                <DEDialogHeader
+                    heading={formatMessage(intl, "denyDetailsHeader")}
+                    onClose={() => {
+                        this.setState({ dialogOpen: false });
+                    }}
+                />
                 <DialogContent>
-                    <DialogContentText>
-                        <Typography>
-                            {getMessage("denyDetailsMessage", {
-                                values: {
-                                    team: teamName,
-                                },
-                            })}
-                        </Typography>
-                        <p style={{ marginTop: 10 }}>
-                            {getMessage("denyAdminLabel")}
-                            <TextField
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                margin="normal"
-                                value={adminMessage}
-                            />
-                        </p>
-                    </DialogContentText>
+                    <Typography component={"span"}>
+                        {getMessage("denyDetailsMessage", {
+                            values: {
+                                team: teamName,
+                            },
+                        })}
+                    </Typography>
+
+                    <Typography component={"span"}>
+                        {getMessage("denyAdminLabel")}
+                    </Typography>
+                    <TextField
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                        fullWidth
+                        margin="normal"
+                        value={adminMessage}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -71,6 +75,7 @@ class DenyJoinRequestDetailsDialog extends Component {
                             this.setState({ dialogOpen: false });
                         }}
                         color="primary"
+                        variant="contained"
                     >
                         {getMessage("okBtnText")}
                     </Button>
@@ -79,4 +84,5 @@ class DenyJoinRequestDetailsDialog extends Component {
         );
     }
 }
-export default withI18N(DenyJoinRequestDetailsDialog, intlData);
+
+export default withI18N(injectIntl(DenyJoinRequestDetailsDialog), intlData);

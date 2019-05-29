@@ -1325,6 +1325,8 @@ class AnalysesView extends Component {
                             confirmDeleteDialogOpen: false,
                         });
                     }}
+                    okLabel={formatMessage(intl, "okBtnText")}
+                    cancelLabel={formatMessage(intl, "cancelBtnText")}
                 />
             </React.Fragment>
         );

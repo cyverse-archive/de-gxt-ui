@@ -293,6 +293,7 @@ function ListQuickLaunches(props) {
                     </DialogContent>
                 </Dialog>
                 <DEConfirmationDialog
+                    debugId={baseDebugId}
                     heading={formatMessage(intl, "deleteLbl")}
                     okLabel={formatMessage(intl, "deleteLbl")}
                     message={formatMessage(

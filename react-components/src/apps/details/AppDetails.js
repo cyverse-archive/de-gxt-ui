@@ -59,6 +59,7 @@ class AppDetails extends Component {
         this.state = {
             dialogOpen: false,
             appURL: "",
+            loading: false,
         };
         this.onAppUrlClick = this.onAppUrlClick.bind(this);
         this.onFavoriteClick = this.onFavoriteClick.bind(this);

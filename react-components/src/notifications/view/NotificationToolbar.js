@@ -39,7 +39,12 @@ class NotificationToolbar extends Component {
                                 native
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
-                                input={<OutlinedInput name="filter" />}
+                                input={
+                                    <OutlinedInput
+                                        labelWidth={0}
+                                        name="filter"
+                                    />
+                                }
                             >
                                 <option value={notificationCategory.new}>
                                     {notificationCategory.new}
@@ -77,7 +82,7 @@ class NotificationToolbar extends Component {
                     <ToolbarSeparator />
                     <Button
                         id={build(baseId, ids.REFRESH_BTN)}
-                        variant="raised"
+                        variant="contained"
                         size="small"
                         className={classes.toolbarButton}
                         onClick={this.props.onRefreshClicked}
@@ -87,7 +92,7 @@ class NotificationToolbar extends Component {
                     </Button>
                     <Button
                         id={build(baseId, ids.MARK_ALL_SEEN_BTN)}
-                        variant="raised"
+                        variant="contained"
                         size="small"
                         disabled={this.props.markSeenDisabled}
                         className={classes.toolbarButton}
@@ -98,7 +103,7 @@ class NotificationToolbar extends Component {
                     </Button>
                     <Button
                         id={build(baseId, ids.DELETE_BTN)}
-                        variant="raised"
+                        variant="contained"
                         size="small"
                         disabled={this.props.deleteDisabled}
                         onClick={this.props.onDeleteClicked}

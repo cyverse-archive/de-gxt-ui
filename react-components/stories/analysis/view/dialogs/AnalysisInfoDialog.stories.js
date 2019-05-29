@@ -192,7 +192,13 @@ class AnalysisInfoDialogTest extends Component {
             total: 1,
         };
 
-        return <AnalysisInfoDialog info={info} dialogOpen={true} />;
+        return (
+            <AnalysisInfoDialog
+                info={info}
+                dialogOpen={true}
+                onInfoDialogClose={() => console.log("Dialog closed!")}
+            />
+        );
     }
 }
 

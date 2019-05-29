@@ -52,6 +52,7 @@ class TagPanelTest extends Component {
                 handleRemoveClick={() => logger}
                 onTagClick={logger}
                 handleTagSelect={logger}
+                baseID="tagPanelId"
             />
         );
     }
