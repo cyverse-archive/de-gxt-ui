@@ -49,8 +49,9 @@ class AppStats extends Component {
             data: [],
             loading: true,
             searchText: null,
-            startDate: new Date(today.setMonth(today.getMonth() - 3)), // set default date range for 90 days!
-            endDate: new Date(),
+            startDate: new Date(today.setMonth(today.getMonth() - 3)).valueOf(), // set default date range for
+            // 90 days!
+            endDate: new Date().valueOf(),
             filterDisabled: true,
             page: 0,
             rowsPerPage: 100,
@@ -81,16 +82,18 @@ class AppStats extends Component {
     }
 
     onStartDateChange(event) {
-        if (Date.parse(event.target.value)) {
-            this.setState({ startDate: event.target.value });
+        const parsedDate = Date.parse(event.target.value).valueOf();
+        if (parsedDate) {
+            this.setState({ startDate: parsedDate });
         } else {
             this.setState({ startDate: null });
         }
     }
 
     onEndDateChange(event) {
-        if (Date.parse(event.target.value)) {
-            this.setState({ endDate: event.target.value });
+        const parsedDate = Date.parse(event.target.value).valueOf();
+        if (parsedDate) {
+            this.setState({ endDate: parsedDate });
         } else {
             this.setState({ endDate: null });
         }
