@@ -172,7 +172,7 @@ class AppDetails extends Component {
                         <LoadingMask loading={loading}>
                             <Grid
                                 container
-                                spacing={24}
+                                spacing={2}
                                 style={{ paddingLeft: 5 }}
                             >
                                 <Grid item xs={12}>
