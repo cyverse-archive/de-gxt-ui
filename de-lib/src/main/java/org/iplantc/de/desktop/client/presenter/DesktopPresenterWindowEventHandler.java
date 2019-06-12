@@ -155,7 +155,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     public void onRequestOpenAppForRelaunch(OpenAppForRelaunchEvent event) {
         final String systemId = event.getSystemId();
         final String appId = event.getAppId();
-        AppWizardConfig config = ConfigFactory.appWizardConfig("","", systemId, appId);
+        AppWizardConfig config = ConfigFactory.appWizardConfig("", systemId, appId, "");
         config.setAnalysisId(event.getAnalysisId());
         config.setRelaunchAnalysis(true);
 
