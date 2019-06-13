@@ -10,7 +10,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import TextField from "@material-ui/core/TextField";
 
 /**
@@ -72,19 +71,19 @@ class EditTagDialog extends Component {
                 <DialogActions>
                     <Button
                         variant="text"
-                        id={ids.editTagSave}
-                        color="primary"
-                        onClick={this.handleSave}
-                    >
-                        {getMessage("saveBtn")}
-                    </Button>
-                    <Button
-                        variant="text"
                         id={ids.editTagCancel}
                         color="primary"
                         onClick={this.handleClose}
                     >
                         {getMessage("cancelBtn")}
+                    </Button>
+                    <Button
+                        variant="text"
+                        id={ids.editTagSave}
+                        color="primary"
+                        onClick={this.handleSave}
+                    >
+                        {getMessage("saveBtn")}
                     </Button>
                 </DialogActions>
             </Dialog>

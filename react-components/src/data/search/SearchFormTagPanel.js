@@ -62,7 +62,7 @@ class SearchFormTagPanel extends Component {
     }
 
     onTagSelected(tag) {
-        let { presenter } = this.props;
+        const { presenter } = this.props;
 
         if (tag.id !== tag.value) {
             this.appendTag(tag);
@@ -74,19 +74,19 @@ class SearchFormTagPanel extends Component {
     }
 
     appendTag(tag) {
-        let { array } = this.props;
+        const { array } = this.props;
         array.push(tag);
     }
 
     removeTag(tag, index) {
-        let { array } = this.props;
+        const { array } = this.props;
         array.remove(index);
     }
 
     render() {
-        let { tagQuery, placeholder, parentId, onBlur } = this.props;
+        const { tagQuery, placeholder, parentId, onBlur } = this.props;
 
-        let { selectedTag, openEditTagDlg, dataSource } = this.state;
+        const { selectedTag, openEditTagDlg, dataSource } = this.state;
 
         return (
             <div>
@@ -114,7 +114,7 @@ class SearchFormTagPanel extends Component {
 
 SearchFormTagPanel.propTypes = {
     parentId: PropTypes.string.isRequired,
-    placeholder: PropTypes.any.isRequired,
+    placeholder: PropTypes.any,
     presenter: PropTypes.shape({
         onAddTagSelected: PropTypes.func.isRequired,
         fetchTagSuggestions: PropTypes.func.isRequired,
