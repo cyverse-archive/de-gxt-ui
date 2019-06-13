@@ -1,17 +1,17 @@
 import React, { Fragment } from "react";
 
-import { build } from "@cyverse-de/ui-lib";
 import ids from "../ids";
 import { options } from "./Operators";
-import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
-import Validations from "./Validations";
 
-import { Field } from "redux-form";
+import { build, FormTextField } from "@cyverse-de/ui-lib";
+import { Field, getIn } from "formik";
 
 /**
  * A component which allows users to specify file names in QueryBuilder
  */
+const LABEL_DEFAULT = { label: "" };
+
 function Label(props) {
     const operators = [
         options.Contains,
@@ -20,20 +20,26 @@ function Label(props) {
         options.IsNot,
     ];
 
-    const { parentId } = props;
+    const {
+        parentId,
+        field: { name },
+    } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
-            <Field
-                name="label"
-                id={build(parentId, ids.fileName)}
-                validate={Validations.nonEmptyField}
+            <SelectOperator
                 operators={operators}
-                component={ReduxTextField}
+                parentId={parentId}
+                name={name}
+            />
+            <Field
+                name={`${name}.label`}
+                fullWidth={false}
+                id={build(parentId, ids.fileName)}
+                component={FormTextField}
             />
         </Fragment>
     );
 }
 
-export default Label;
+export { Label, LABEL_DEFAULT };
