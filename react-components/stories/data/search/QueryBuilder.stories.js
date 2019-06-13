@@ -127,6 +127,20 @@ class QueryBuilderTest extends React.Component {
 
         const initialValues = {
             label: "OLDNAME",
+            type: "all",
+            args: [
+                {
+                    type: "label",
+                    args: { opLabel: "Contains", label: "test" },
+                },
+                {
+                    type: "created",
+                    args: {
+                        opLabel: "Between",
+                        from: "2019-06-13 16:30",
+                    },
+                },
+            ],
         };
 
         const parentId = "searchForm";

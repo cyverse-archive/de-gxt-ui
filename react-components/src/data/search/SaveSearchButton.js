@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import ids from "./ids";
 import messages from "./messages";
 import styles from "./styles";
-import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
+import { build, withI18N, getMessage } from "@cyverse-de/ui-lib";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -31,8 +31,8 @@ class SaveSearchButton extends Component {
         this.handleSave = this.handleSave.bind(this);
     }
 
-    handleSave() {
-        this.props.handleSave();
+    handleSave(values) {
+        this.props.handleSave(values);
         this.setState({ open: false });
     }
 
@@ -45,7 +45,12 @@ class SaveSearchButton extends Component {
     }
 
     render() {
-        let { value, onChange, parentId, disabled, classes } = this.props;
+        const {
+            field: { value, onChange, ...field },
+            form: { values },
+            parentId,
+            classes,
+        } = this.props;
 
         return (
             <Fragment>
@@ -53,7 +58,6 @@ class SaveSearchButton extends Component {
                     variant="contained"
                     className={classes.searchButton}
                     id={build(parentId, ids.saveSearchBtn)}
-                    disabled={!!disabled}
                     onClick={this.handleOpen}
                 >
                     {getMessage("saveBtn")}
@@ -72,26 +76,25 @@ class SaveSearchButton extends Component {
                             }
                             value={value}
                             onChange={onChange}
+                            {...field}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button
-                            variant="flat"
-                            disabled={!value}
-                            id={ids.saveBtn}
-                            color="primary"
-                            onClick={this.handleSave}
-                        >
-                            {getMessage("saveBtn")}
-                        </Button>
-                        ,
-                        <Button
-                            variant="flat"
                             id={ids.cancelBtn}
                             color="primary"
                             onClick={this.handleClose}
                         >
                             {getMessage("cancelBtn")}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={!value}
+                            id={ids.saveBtn}
+                            color="primary"
+                            onClick={() => this.handleSave(values)}
+                        >
+                            {getMessage("saveBtn")}
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -102,10 +105,8 @@ class SaveSearchButton extends Component {
 
 SaveSearchButton.propTypes = {
     parentId: PropTypes.string,
-    disabled: PropTypes.bool,
     handleSave: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    field: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(withI18N(SaveSearchButton, messages));
