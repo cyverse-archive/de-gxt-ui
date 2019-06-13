@@ -7,21 +7,32 @@ import SelectOperator from "./SelectOperator";
 import styles from "../styles";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import UserPanel from "./UserPanel";
-import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import { Field, FieldArray } from "redux-form";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
+import {
+    build,
+    FormSelectField,
+    getFormError,
+    getMessage,
+    withI18N,
+} from "@cyverse-de/ui-lib";
+import { Field, FieldArray, getIn } from "formik";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import MenuItem from "@material-ui/core/MenuItem";
-
-import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A component which allows users to specify a list of users which must have certain
  * permissions in QueryBuilder
  */
-function Permissions(props) {
+
+const PERMISSION_DEFAULT = {
+    permission: "read",
+    users: [],
+};
+
+const Permissions = withI18N(PermissionsClause, messages);
+
+function PermissionsClause(props) {
     const operators = [
         options.AreAtLeast,
         options.Are,
@@ -46,84 +57,101 @@ function Permissions(props) {
 
     const {
         parentId,
-        classes,
-        helperProps: { presenter, collaboratorsUtil },
+        field: { name },
+        presenter,
+        collaboratorsUtil,
     } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
+            <SelectOperator
+                operators={operators}
+                parentId={parentId}
+                name={name}
+            />
             <Field
-                name="permission"
-                permissions={permissions}
+                name={`${name}.permission`}
                 id={build(parentId, ids.permissionList)}
-                component={renderSelect}
+                render={({
+                    field,
+                    form: { setFieldValue, ...form },
+                    ...props
+                }) => {
+                    return (
+                        <FormSelectField
+                            {...props}
+                            form={form}
+                            field={field}
+                            fullWidth={false}
+                        >
+                            {permissions &&
+                                permissions.map((permission, index) => {
+                                    return (
+                                        <MenuItem
+                                            key={index}
+                                            value={permission.value}
+                                        >
+                                            {permission.label}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </FormSelectField>
+                    );
+                }}
             />
             <FieldArray
-                name="users"
-                presenter={presenter}
-                classes={classes}
-                collaboratorsUtil={collaboratorsUtil}
-                parentId={parentId}
-                validate={[]}
-                component={renderSubjectSearch}
+                name={`${name}.users`}
+                render={(arrayHelpers) => (
+                    <SubjectSearch
+                        presenter={presenter}
+                        collaboratorsUtil={collaboratorsUtil}
+                        parentId={parentId}
+                        {...arrayHelpers}
+                    />
+                )}
             />
         </Fragment>
     );
 }
 
-function renderSelect(props) {
-    const { input, permissions, id } = props;
-
-    if (input.value === "") {
-        input.onChange(permissions[0].value);
-    }
-
-    return (
-        <Grid item>
-            <FormControl id={id}>
-                <Select
-                    value={input.value}
-                    id={build(id, ids.inputField)}
-                    onChange={(event) => input.onChange(event.target.value)}
-                >
-                    {permissions &&
-                        permissions.map((permission, index) => {
-                            return (
-                                <MenuItem key={index} value={permission.value}>
-                                    {permission.label}
-                                </MenuItem>
-                            );
-                        })}
-                </Select>
-            </FormControl>
-        </Grid>
-    );
-}
+const SubjectSearch = withStyles(styles)(renderSubjectSearch);
 
 function renderSubjectSearch(props) {
-    const { presenter, collaboratorsUtil, fields, parentId, classes } = props;
+    const {
+        name,
+        presenter,
+        collaboratorsUtil,
+        push,
+        remove,
+        parentId,
+        form: { values, touched, errors },
+        classes,
+    } = props;
 
-    const users = fields.getAll();
+    let users = getIn(values, name);
+    const errorMsg = getFormError(name, touched, errors);
 
     return (
-        <Grid item className={classes.autocompleteField}>
+        <div className={classes.autocompleteField}>
             <SubjectSearchField
                 presenter={presenter}
                 collaboratorsUtil={collaboratorsUtil}
                 parentId={parentId}
-                onSelect={(collaborator) => fields.push(collaborator)}
+                onSelect={push}
             />
+            <FormHelperText error>{errorMsg}</FormHelperText>
             {users && users.length > 0 && (
                 <UserPanel
                     users={users}
                     id={build(parentId, ids.userList)}
                     collaboratorsUtil={collaboratorsUtil}
-                    onDelete={fields.remove}
+                    onDelete={(index) => {
+                        remove(index);
+                    }}
                 />
             )}
-        </Grid>
+        </div>
     );
 }
 
-export default withStyles(styles)(withI18N(Permissions, messages));
+export { Permissions, PERMISSION_DEFAULT };
