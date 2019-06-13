@@ -10,7 +10,7 @@ import { withI18N } from "@cyverse-de/ui-lib";
 /**
  * @author aramsey
  * A wrapper around the TagPanel component that handles editing tags, specifically designed
- * for the SearchForm with redux
+ * for the SearchForm with formik
  */
 class SearchFormTagPanel extends Component {
     constructor(props) {
@@ -74,17 +74,17 @@ class SearchFormTagPanel extends Component {
     }
 
     appendTag(tag) {
-        let { array, tagQuery } = this.props;
-        array.insert(tagQuery.name, 0, tag);
+        let { array } = this.props;
+        array.push(tag);
     }
 
     removeTag(tag, index) {
-        let { array, tagQuery } = this.props;
-        array.remove(tagQuery.name, index);
+        let { array } = this.props;
+        array.remove(index);
     }
 
     render() {
-        let { tagQuery, placeholder, parentId } = this.props;
+        let { tagQuery, placeholder, parentId, onBlur } = this.props;
 
         let { selectedTag, openEditTagDlg, dataSource } = this.state;
 
@@ -98,7 +98,8 @@ class SearchFormTagPanel extends Component {
                     dataSource={dataSource}
                     handleRemoveClick={this.removeTag}
                     handleTagSelect={this.onTagSelected}
-                    tags={tagQuery.value ? tagQuery.value : []}
+                    tags={tagQuery}
+                    onBlur={onBlur}
                 />
                 <EditTagDialog
                     open={openEditTagDlg}
@@ -120,7 +121,7 @@ SearchFormTagPanel.propTypes = {
         onEditTagSelected: PropTypes.func.isRequired,
     }),
     array: PropTypes.object.isRequired,
-    tagQuery: PropTypes.object.isRequired,
+    tagQuery: PropTypes.array,
 };
 
 export default withI18N(SearchFormTagPanel, messages);

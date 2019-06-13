@@ -46,7 +46,7 @@ class SubjectSearchField extends Component {
     }
 
     render() {
-        const { onSelect, parentId, collaboratorsUtil } = this.props;
+        const { onSelect, parentId, collaboratorsUtil, onBlur } = this.props;
 
         return (
             <div id={build(parentId, ids.subjectSearchField)}>
@@ -65,6 +65,7 @@ class SubjectSearchField extends Component {
                     loadOptions={this.getSubjects}
                     collaboratorsUtil={collaboratorsUtil}
                     onChange={onSelect}
+                    onBlur={onBlur}
                 />
             </div>
         );

@@ -52,7 +52,7 @@ class SearchFormTagPanelTest extends Component {
         ];
 
         const array = {
-            insert: appendTagLogger,
+            push: appendTagLogger,
             remove: removeTagLogger,
         };
 

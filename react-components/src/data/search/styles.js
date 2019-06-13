@@ -46,12 +46,9 @@ export default {
     },
 
     autocompleteField: {
-        flexGrow: 1,
-        flexBasis: "200px",
-    },
-
-    errorField: {
-        color: "red",
+        display: "inline-block",
+        width: "250px",
+        marginTop: "12px",
     },
 
     conditionButton: {
