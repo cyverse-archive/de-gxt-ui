@@ -7,7 +7,6 @@ import BasicDetailsTest from "../../stories/data/details/BasicDetails.stories";
 import EditTagDialogTest from "../../stories/data/search/EditTagDialog.stories";
 import InfoTypeSelectionListTest from "../../stories/data/details/InfoTypeSelectionList.stories";
 import QueryBuilderTest from "../../stories/data/search/QueryBuilder.stories";
-import SaveSearchButtonTest from "../../stories/data/search/SaveSearchButton.stories";
 import SearchFormTagPanelTest from "../../stories/data/search/SearchFormTagPanel.stories";
 import TagPanelTest from "../../stories/data/details/TagPanel.stories";
 import TagTest from "../../stories/data/details/Tag.stories";
@@ -50,17 +49,6 @@ it("renders QueryBuilder without crashing", () => {
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
             <QueryBuilderTest />
-        </MuiThemeProvider>,
-        div
-    );
-    ReactDOM.unmountComponentAtNode(div);
-});
-
-it("renders SaveSearchButton without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-        <MuiThemeProvider theme={getDefaultTheme()}>
-            <SaveSearchButtonTest />
         </MuiThemeProvider>,
         div
     );
