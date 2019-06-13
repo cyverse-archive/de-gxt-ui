@@ -26,7 +26,9 @@ export default {
 
     condition: {
         paddingLeft: "20px",
-        marginTop: "5px",
+        "& div": {
+            marginRight: "5px",
+        },
     },
 
     fileSize: {
@@ -52,6 +54,8 @@ export default {
     },
 
     conditionButton: {
-        margin: "0px 5px 0px 5px",
+        margin: "10px 10px 0px 5px",
+        display: "inline-flex",
+        verticalAlign: "top",
     },
 };

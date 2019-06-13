@@ -1,50 +1,62 @@
 import React, { Fragment } from "react";
 
-import { build } from "@cyverse-de/ui-lib";
 import AddBtn from "./AddBtn";
-import Condition from "./Condition";
+import Clause from "./Clause";
 import DeleteBtn from "./DeleteBtn";
-import ids from "../ids";
+import ids from "../../search/ids";
+import styles from "../styles";
+
+import { build } from "@cyverse-de/ui-lib";
+import { Field, getIn } from "formik";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A component which allows users to create different groupings in QueryBuilder
  * such as Any and All
  */
+const DEFAULT_CLAUSE = { type: "label", args: { label: "" } };
+
 function Group(props) {
     const {
-        root,
-        fields,
-        onRemove,
-        helperProps,
-        helperProps: { parentId, classes },
+        push,
+        remove,
+        form: { values },
+        name,
+        classes,
+        collaboratorsUtil,
+        presenter,
+        parentId,
     } = props;
 
-    let baseId = build(parentId, fields.name);
+    let args = getIn(values, name);
+    let baseId = build(parentId, name);
 
     return (
         <Fragment>
             <AddBtn
-                onClick={() => fields.push({})}
+                onClick={() => push(DEFAULT_CLAUSE)}
                 id={build(baseId, ids.addConditionBtn)}
             />
-            {!root && (
-                <DeleteBtn
-                    onClick={onRemove}
-                    id={build(baseId, ids.deleteConditionBtn)}
-                />
-            )}
-            {fields.map((field, index) => (
-                <div key={index} className={classes.condition}>
-                    <Condition
-                        field={field}
-                        parentId={baseId}
-                        onRemove={() => fields.remove(index)}
-                        helperProps={helperProps}
-                    />
-                </div>
-            ))}
+            {args &&
+                args.map((field, index) => {
+                    return (
+                        <div className={classes.condition} key={index}>
+                            <DeleteBtn
+                                onClick={() => remove(index)}
+                                id={build(parentId, ids.deleteConditionBtn)}
+                            />
+                            <Field
+                                name={`${name}.${index}`}
+                                collaboratorsUtil={collaboratorsUtil}
+                                presenter={presenter}
+                                parentId={build(baseId, index)}
+                                component={Clause}
+                            />
+                        </div>
+                    );
+                })}
         </Fragment>
     );
 }
 
-export default Group;
+export default withStyles(styles)(Group);
