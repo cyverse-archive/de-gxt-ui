@@ -1,20 +1,20 @@
-import Date from "./Date";
-import FileSize from "./FileSize";
+import { Date, DATE_DEFAULT } from "./Date";
+import { FileSize, SIZE_DEFAULT } from "./FileSize";
 import Group from "./Group";
 import ids from "../ids";
-import Label from "./Label";
-import Metadata from "./Metadata";
-import Owner from "./Owner";
-import Path from "./Path";
-import Permissions from "./Permissions";
-import Tags from "./Tags";
+import { Label, LABEL_DEFAULT } from "./Label";
+import { Metadata, METADATA_DEFAULT } from "./Metadata";
+import { Owner, OWNER_DEFAULT } from "./Owner";
+import { Path, PATH_DEFAULT } from "./Path";
+import { Permissions, PERMISSION_DEFAULT } from "./Permissions";
+import { Tags, TAGS_DEFAULT } from "./Tags";
 
 import { getMessage } from "@cyverse-de/ui-lib";
 
 /**
- * All of the conditions available to the user for the QueryBuilder
+ * All of the clauses available to the user for the QueryBuilder
  *
- * The labels array is used to populate the dropdown menu in Condition
+ * The labels array is used to populate the dropdown menu in Clause
  *
  * The componentMap object is used to map a dropdown menu selection to which
  * component should be rendered
@@ -82,38 +82,47 @@ let componentMap = {
     label: {
         isGroup: false,
         component: Label,
+        defaultArgs: LABEL_DEFAULT,
     },
     owner: {
         isGroup: false,
         component: Owner,
+        defaultArgs: OWNER_DEFAULT,
     },
     path: {
         isGroup: false,
         component: Path,
+        defaultArgs: PATH_DEFAULT,
     },
     created: {
         isGroup: false,
         component: Date,
+        defaultArgs: DATE_DEFAULT,
     },
     modified: {
         isGroup: false,
         component: Date,
+        defaultArgs: DATE_DEFAULT,
     },
     tag: {
         isGroup: false,
         component: Tags,
+        defaultArgs: TAGS_DEFAULT,
     },
     size: {
         isGroup: false,
         component: FileSize,
+        defaultArgs: SIZE_DEFAULT,
     },
     metadata: {
         isGroup: false,
         component: Metadata,
+        defaultArgs: METADATA_DEFAULT,
     },
     permissions: {
         isGroup: false,
         component: Permissions,
+        defaultArgs: PERMISSION_DEFAULT,
     },
     all: {
         isGroup: true,
