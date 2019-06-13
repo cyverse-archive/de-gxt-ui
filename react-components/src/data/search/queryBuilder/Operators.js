@@ -63,43 +63,61 @@ const operatorMap = {
     Is: {
         negated: false,
         exact: true,
+        permission_recurse: undefined,
     },
     IsNot: {
         negated: true,
         exact: true,
+        permission_recurse: undefined,
     },
     Contains: {
         negated: false,
         exact: false,
+        permission_recurse: undefined,
     },
     ContainsNot: {
         negated: true,
         exact: false,
+        permission_recurse: undefined,
     },
     Between: {
         negated: false,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     BetweenNot: {
         negated: true,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     Begins: {
         negated: false,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     BeginsNot: {
         negated: true,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     Are: {
         negated: false,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     AreNot: {
         negated: true,
+        exact: undefined,
+        permission_recurse: undefined,
     },
     AreAtLeast: {
         negated: false,
+        exact: undefined,
         permission_recurse: true,
     },
     AreNotAtLeast: {
         negated: true,
+        exact: undefined,
         permission_recurse: true,
     },
 };
