@@ -185,12 +185,20 @@ public class DataSearchQueryBuilder {
         if (fileSizes != null && (!fileSizes.isNull(FROM) || !fileSizes.isNull(TO))) {
             Splittable from = fileSizes.get(FROM);
             Splittable to = fileSizes.get(TO);
-            if (from != null && !from.isNull("value") && !from.isNull("unit")) {
-                assignKeyValue(fileSizes, FROM, from.get("value").asNumber() + from.get("unit").asString());
+            if (from != null
+                && !from.isNull("value")
+                && !from.get("value").isString()
+                && !from.isNull("unit")) {
+                assignKeyValue(fileSizes,
+                               FROM,
+                               from.get("value").asNumber() + from.get("unit").asString());
             } else {
                 assignKeyValue(fileSizes, FROM, "");
             }
-            if (to != null && !to.isNull("value") && !to.isNull("unit")) {
+            if (to != null
+                && !to.isNull("value")
+                && !to.get("value").isString()
+                && !to.isNull("unit")) {
                 assignKeyValue(fileSizes, TO, to.get("value").asNumber() + to.get("unit").asString());
             } else {
                 assignKeyValue(fileSizes, TO, "");

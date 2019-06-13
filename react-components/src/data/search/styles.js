@@ -29,6 +29,13 @@ export default {
         marginTop: "5px",
     },
 
+    fileSize: {
+        width: "100px",
+        display: "inline-flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+
     permissionUsers: {
         marginTop: "5px",
         padding: "5px",

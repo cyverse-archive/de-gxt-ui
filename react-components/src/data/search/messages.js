@@ -6,7 +6,6 @@ export default {
         editTagDescription: "Edit Tag Description",
         fileSizeGreater: "Min",
         fileSizeLessThan: "Max",
-        fileSizes: ["KB", "MB", "GB", "TB"],
         filterName: "Query Name",
         owner: "Owner",
         requiredField: "This field is required",

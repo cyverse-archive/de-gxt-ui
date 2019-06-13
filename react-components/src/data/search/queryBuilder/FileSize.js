@@ -1,97 +1,102 @@
 import React, { Fragment } from "react";
 
 import ids from "../ids";
+import styles from "../styles";
 import { options } from "./Operators";
-import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
-import Validations from "./Validations";
-import { build, getMessage } from "@cyverse-de/ui-lib";
+import { minValue } from "./Validations";
 
-import { Field } from "redux-form";
-import Grid from "@material-ui/core/Grid";
+import {
+    build,
+    getMessage,
+    FormSelectField,
+    FormNumberField,
+} from "@cyverse-de/ui-lib";
+import { Field } from "formik";
 import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A component which allows users to specify a file size range in QueryBuilder
  */
-function FileSize(props) {
+const SIZE_DEFAULT = {
+    from: { value: "", unit: "KB" },
+    to: { value: "", unit: "KB" },
+};
+
+const FileSize = withStyles(styles)(FileSizeClause);
+
+function FileSizeClause(props) {
     const operators = [options.Between, options.BetweenNot];
 
     const {
         parentId,
-        helperProps: { messages },
+        field: { name },
+        classes,
     } = props;
-
-    const sizesList = messages.fileSizes;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
-            <Field
-                name="from.value"
-                type="number"
-                parse={(value) => (value ? Number(value) : null)}
-                min="0"
-                helperText={getMessage("fileSizeGreater")}
-                id={build(parentId, ids.fileSizeGreaterVal)}
-                validate={Validations.minValue}
-                component={ReduxTextField}
+            <SelectOperator
+                operators={operators}
+                parentId={parentId}
+                name={name}
             />
-            <Field
-                name="from.unit"
-                id={build(parentId, ids.fileSizeGreaterUnit)}
-                label=" "
-                component={renderDropDown}
-            >
-                {sizesList}
-            </Field>
-            <Field
-                name="to.value"
-                type="number"
-                parse={(value) => (value ? Number(value) : null)}
-                min="0"
-                helperText={getMessage("fileSizeLessThan")}
-                id={build(parentId, ids.fileSizeLessThanVal)}
-                validate={Validations.minValue}
-                component={ReduxTextField}
-            />
-            <Field
-                name="to.unit"
-                id={build(parentId, ids.fileSizeLessThanUnit)}
-                label=" "
-                component={renderDropDown}
-            >
-                {sizesList}
-            </Field>
+            <div className={classes.fileSize}>
+                <Field
+                    name={`${name}.from.value`}
+                    label={getMessage("fileSizeGreater")}
+                    id={build(parentId, ids.fileSizeGreaterVal)}
+                    validate={minValue}
+                    fullWidth={false}
+                    component={FormNumberField}
+                />
+                <Field
+                    name={`${name}.from.unit`}
+                    id={build(parentId, ids.fileSizeGreaterUnit)}
+                    label=" "
+                    render={SizeUnit}
+                />
+            </div>
+            <div className={classes.fileSize}>
+                <Field
+                    name={`${name}.to.value`}
+                    label={getMessage("fileSizeLessThan")}
+                    id={build(parentId, ids.fileSizeLessThanVal)}
+                    validate={minValue}
+                    fullWidth={false}
+                    component={FormNumberField}
+                />
+                <Field
+                    name={`${name}.to.unit`}
+                    id={build(parentId, ids.fileSizeLessThanUnit)}
+                    label=" "
+                    render={SizeUnit}
+                />
+            </div>
         </Fragment>
     );
 }
 
-function renderDropDown(props) {
-    const { input, children, id } = props;
+const sizesList = ["KB", "MB", "GB", "TB"];
 
-    if (input.value === "") {
-        input.onChange(children[0]);
-    }
-
+function SizeUnit(props) {
+    const {
+        field,
+        form: { setFieldValue, ...form },
+        ...rest
+    } = props;
     return (
-        <Grid item>
-            <Select
-                value={input.value}
-                onChange={(event) => input.onChange(event.target.value)}
-                id={id}
-            >
-                {children.map(function(item, index) {
-                    return (
-                        <MenuItem key={index} value={item}>
-                            {item}
-                        </MenuItem>
-                    );
-                })}
-            </Select>
-        </Grid>
+        <FormSelectField form={form} field={field} fullWidth={false} {...rest}>
+            {sizesList.map((item, index) => {
+                return (
+                    <MenuItem key={index} value={item} id={item}>
+                        {item}
+                    </MenuItem>
+                );
+            })}
+        </FormSelectField>
     );
 }
 
-export default FileSize;
+export { FileSize, SIZE_DEFAULT };
