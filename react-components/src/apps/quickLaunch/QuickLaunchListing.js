@@ -141,12 +141,11 @@ function ListQuickLaunches(props) {
     };
 
     const embedCodeClickHandler = () => {
-        const imgSrc = `http//:${window.location.host}/${
-            constants.QUICK_LAUNCH_EMBED_ICON
-        }`;
-        const embed = `<a href="${getShareUrl(
-            selected.id
-        )}" target="_blank"><img src="${imgSrc}"></a>`;
+        const shareUrl = getShareUrl(selected.id);
+        const host = window.location.host;
+        const imgSrc = `https://${host}/${constants.QUICK_LAUNCH_EMBED_ICON}`;
+
+        const embed = `<a href="${shareUrl}" target="_blank"><img src="${imgSrc}"></a>`;
 
         setEmbedCode(embed);
         setEmbedDialogOpen(true);
