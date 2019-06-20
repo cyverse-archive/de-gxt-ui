@@ -30,4 +30,5 @@ export default {
     USER_MENU_ANCHOR: "userMenuAnchor",
     HELP_MENU_ANCHOR: "helpMenuAnchor",
     UNSEEN_NOTIFICATION_COUNT: "unSeenCount",
+    EMAIL_SUPPORT_LINK: "emailSupport",
 };

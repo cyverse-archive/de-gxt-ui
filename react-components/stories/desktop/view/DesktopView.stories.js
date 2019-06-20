@@ -491,6 +491,7 @@ class DesktopViewTest extends Component {
             onDataWinBtnSelect: () => logger("Data Clicked"),
             onAppsWinBtnSelect: () => logger("Apps Clicked"),
             onAnalysesWinBtnSelect: () => logger("Analyses Clicked"),
+            onEmailSupportClicked: () => logger("Email Support Clicked"),
         };
         return (
             <DesktopView

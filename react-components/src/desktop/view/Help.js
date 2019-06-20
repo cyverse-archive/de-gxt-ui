@@ -101,6 +101,21 @@ class Help extends Component {
                         <DEHyperlink text={getMessage("faqLink")} />
                     </MenuItem>
                     <Divider />
+                    <Tooltip title={getMessage("emailSupportTooltip")}
+                             placement="left">
+                        <MenuItem
+                            id={build(ids.DESKTOP, ids.EMAIL_SUPPORT_LINK)}
+                            onClick={() => {
+                                presenter.onEmailSupportClicked();
+                                this.handleClose();
+                            }}
+                        >
+                            <DEHyperlink
+                                text={getMessage("emailSupportLink")}
+                            />
+                        </MenuItem>
+                    </Tooltip>
+                    <Divider />
                     <MenuItem
                         id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
                         onClick={() => {

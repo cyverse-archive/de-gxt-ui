@@ -491,6 +491,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         view.onFeedbackBtnSelect();
     }
 
+    @Override
+    public void onEmailSupportClicked() {
+        Window.Location.assign(commonUiConstants.emailSupport());
+    }
+
     /**
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */

@@ -147,6 +147,8 @@ public interface DesktopView extends IsWidget {
 
         void onFeedbackSelect();
 
+        void onEmailSupportClicked();
+
         @SuppressWarnings("unusable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,
                                     final NotificationMarkAsSeenCallback callback,

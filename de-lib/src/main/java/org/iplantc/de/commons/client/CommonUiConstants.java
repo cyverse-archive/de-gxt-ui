@@ -62,4 +62,6 @@ public interface CommonUiConstants extends Constants {
     String iDropDesktopClientInstructionsUrl();
 
     String faqUrl();
+
+    String emailSupport();
 }

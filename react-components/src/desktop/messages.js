@@ -26,6 +26,8 @@ var intlData = {
         helpTooltip: "Help",
         notificationTooltip: "Notifications",
         preferencesTooltip: "Preferences and Groups",
+        emailSupportLink: "Email Support",
+        emailSupportTooltip: "support@cyverse.org",
     },
 };
 
