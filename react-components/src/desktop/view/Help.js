@@ -101,8 +101,23 @@ class Help extends Component {
                         <DEHyperlink text={getMessage("faqLink")} />
                     </MenuItem>
                     <Divider />
-                    <Tooltip title={getMessage("emailSupportTooltip")}
-                             placement="left">
+                    <Tooltip
+                        title={getMessage("supportChatTooltip")}
+                        placement="left"
+                    >
+                        <MenuItem
+                            id="help_menu_intercom_link"
+                            onClick={() => {
+                                this.handleClose();
+                            }}
+                        >
+                            <DEHyperlink text={getMessage("supportChatLink")} />
+                        </MenuItem>
+                    </Tooltip>
+                    <Tooltip
+                        title={getMessage("emailSupportTooltip")}
+                        placement="left"
+                    >
                         <MenuItem
                             id={build(ids.DESKTOP, ids.EMAIL_SUPPORT_LINK)}
                             onClick={() => {

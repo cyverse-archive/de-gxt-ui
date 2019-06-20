@@ -28,6 +28,8 @@ var intlData = {
         preferencesTooltip: "Preferences and Groups",
         emailSupportLink: "Email Support",
         emailSupportTooltip: "support@cyverse.org",
+        supportChatLink: "Chat With Support",
+        supportChatTooltip: "Chat may be disabled by your browser's settings",
     },
 };
 

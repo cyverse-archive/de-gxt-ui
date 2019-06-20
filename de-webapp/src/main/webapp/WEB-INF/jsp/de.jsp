@@ -128,7 +128,8 @@ response.setDateHeader("Expires", 0);
                     app_id: APP_ID,
                     alignment: 'right',
                     horizontal_padding: 20,
-                    vertical_padding: 45
+                    vertical_padding: 45,
+                    custom_launcher_selector: '#help_menu_intercom_link',
             	};
             }
         })
