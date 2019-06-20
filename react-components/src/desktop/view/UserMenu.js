@@ -46,7 +46,7 @@ class UserMenu extends Component {
 
     render() {
         const { anchorEl } = this.state;
-        const { classes, presenter, doIntro } = this.props;
+        const { classes, presenter } = this.props;
         return (
             <span>
                 <PersonIcon
@@ -96,34 +96,6 @@ class UserMenu extends Component {
                         }}
                     >
                         <DEHyperlink text={getMessage("communities")} />
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
-                        onClick={() => {
-                            presenter.onDocumentationClick();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("documentation")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                        onClick={() => {
-                            doIntro();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("introduction")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.ABOUT_LINK)}
-                        onClick={() => {
-                            presenter.onAboutClick();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("about")} />
                     </MenuItem>
                     <Divider />
                     <MenuItem

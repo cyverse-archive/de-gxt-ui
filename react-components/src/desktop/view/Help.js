@@ -13,6 +13,7 @@ import { build, DEHyperlink, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import { withStyles } from "@material-ui/core/styles";
 
+import Divider from "@material-ui/core/Divider";
 import HelpIcon from "@material-ui/icons/Help";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -45,7 +46,7 @@ class Help extends Component {
 
     render() {
         const { anchorEl } = this.state;
-        const { classes, presenter } = this.props;
+        const { classes, presenter, doIntro } = this.props;
         return (
             <span>
                 <HelpIcon
@@ -61,13 +62,13 @@ class Help extends Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem
-                        id={build(ids.DESKTOP, ids.FAQS_LINK)}
+                        id={build(ids.DESKTOP, ids.INTRO_LINK)}
                         onClick={() => {
-                            presenter.onFaqSelect();
+                            doIntro();
                             this.handleClose();
                         }}
                     >
-                        <DEHyperlink text={getMessage("faqLink")} />
+                        <DEHyperlink text={getMessage("introduction")} />
                     </MenuItem>
                     <MenuItem
                         id={build(ids.DESKTOP, ids.FORUMS_LINK)}
@@ -79,6 +80,25 @@ class Help extends Component {
                         <DEHyperlink text={getMessage("forumsLink")} />
                     </MenuItem>
                     <MenuItem
+                        id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
+                        onClick={() => {
+                            presenter.onDocumentationClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("documentation")} />
+                    </MenuItem>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.FAQS_LINK)}
+                        onClick={() => {
+                            presenter.onFaqSelect();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("faqLink")} />
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem
                         id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
                         onClick={() => {
                             presenter.onFeedbackSelect();
@@ -86,6 +106,15 @@ class Help extends Component {
                         }}
                     >
                         <DEHyperlink text={getMessage("feedbackLink")} />
+                    </MenuItem>
+                    <MenuItem
+                        id={build(ids.DESKTOP, ids.ABOUT_LINK)}
+                        onClick={() => {
+                            presenter.onAboutClick();
+                            this.handleClose();
+                        }}
+                    >
+                        <DEHyperlink text={getMessage("about")} />
                     </MenuItem>
                 </Menu>
             </span>
