@@ -143,7 +143,7 @@ public interface DesktopView extends IsWidget {
 
         void onDataWinBtnSelect();
 
-        void onForumsBtnSelect();
+        void onLearningCenterBtnClick();
 
         void onFeedbackSelect();
 

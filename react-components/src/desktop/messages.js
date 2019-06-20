@@ -2,7 +2,7 @@ var intlData = {
     locales: "en-US",
     messages: {
         faqLink: "FAQs",
-        forumsLink: "Forum",
+        learningCenterLink: "Learning Center",
         feedbackLink: "Feedback",
         preferences: "Preferences",
         collaborators: "Collaborators",

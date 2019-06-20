@@ -17,7 +17,7 @@ export default {
     LOGOUT_LINK: "logout",
     SUPPORT_BTN: "support",
     FAQS_LINK: "faqs",
-    FORUMS_LINK: "forum",
+    LEARNING_CENTER_LINK: "learningCenter",
     FEEDBACK_LINK: "feedback",
     NOTIFICATIONS_MENU: "notificationsMenu",
     EMPTY_NOTIFICATION: "emptyNotification",

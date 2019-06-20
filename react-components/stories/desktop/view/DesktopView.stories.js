@@ -485,6 +485,12 @@ class DesktopViewTest extends Component {
             onCollaboratorsClick: () => logger("Collaborators Clicked"),
             onTeamsClick: () => logger("Teams Clicked"),
             onCommunitiesClick: () => logger("Communities Clicked"),
+            onLearningCenterBtnClick: () => logger("Learning Center Clicked"),
+            onFaqSelect: () => logger("FAQ Clicked"),
+            onFeedbackSelect: () => logger("Feedback Clicked"),
+            onDataWinBtnSelect: () => logger("Data Clicked"),
+            onAppsWinBtnSelect: () => logger("Apps Clicked"),
+            onAnalysesWinBtnSelect: () => logger("Analyses Clicked"),
         };
         return (
             <DesktopView

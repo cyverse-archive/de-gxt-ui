@@ -71,13 +71,13 @@ class Help extends Component {
                         <DEHyperlink text={getMessage("introduction")} />
                     </MenuItem>
                     <MenuItem
-                        id={build(ids.DESKTOP, ids.FORUMS_LINK)}
+                        id={build(ids.DESKTOP, ids.LEARNING_CENTER_LINK)}
                         onClick={() => {
-                            presenter.onForumsBtnSelect();
+                            presenter.onLearningCenterBtnClick();
                             this.handleClose();
                         }}
                     >
-                        <DEHyperlink text={getMessage("forumsLink")} />
+                        <DEHyperlink text={getMessage("learningCenterLink")} />
                     </MenuItem>
                     <MenuItem
                         id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
