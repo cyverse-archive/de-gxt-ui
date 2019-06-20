@@ -17,6 +17,7 @@ import Divider from "@material-ui/core/Divider";
 import HelpIcon from "@material-ui/icons/Help";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class Help extends Component {
     constructor(props) {
@@ -49,12 +50,14 @@ class Help extends Component {
         const { classes, presenter, doIntro } = this.props;
         return (
             <span>
-                <HelpIcon
-                    id={build(ids.DESKTOP, ids.HELP_MENU)}
-                    className={classes.menuIcon}
-                    onClick={this.handleClick}
-                    ref={this.helpBtn}
-                />
+                <Tooltip title={getMessage("helpTooltip")}>
+                    <HelpIcon
+                        id={build(ids.DESKTOP, ids.HELP_MENU)}
+                        className={classes.menuIcon}
+                        onClick={this.handleClick}
+                        ref={this.helpBtn}
+                    />
+                </Tooltip>
                 <Menu
                     id={build(ids.DESKTOP, ids.HELP_MENU)}
                     anchorEl={anchorEl}

@@ -15,6 +15,7 @@ import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import PersonIcon from "@material-ui/icons/Person";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -49,12 +50,14 @@ class UserMenu extends Component {
         const { classes, presenter } = this.props;
         return (
             <span>
-                <PersonIcon
-                    id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
-                    className={classes.menuIcon}
-                    onClick={this.onUserMenuClick}
-                    ref={this.userBtn}
-                />
+                <Tooltip title={getMessage("preferencesTooltip")}>
+                    <PersonIcon
+                        id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                        className={classes.menuIcon}
+                        onClick={this.onUserMenuClick}
+                        ref={this.userBtn}
+                    />
+                </Tooltip>
                 <Menu
                     id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                     anchorEl={anchorEl}

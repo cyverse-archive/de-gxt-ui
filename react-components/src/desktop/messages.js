@@ -23,6 +23,9 @@ var intlData = {
         analysesTip:
             "Find the status, parameters, and results of your executed apps.",
         dot: ". ",
+        helpTooltip: "Help",
+        notificationTooltip: "Notifications",
+        preferencesTooltip: "Preferences and Groups",
     },
 };
 
