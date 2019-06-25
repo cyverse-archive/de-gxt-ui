@@ -227,7 +227,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         if (hasFoldersLoaded(folder)) {
             callback.onSuccess(getSubFolders(folder));
         } else {
-            String address = getDirectoryListingEndpoint(parent.getPath(), false);
+            String address = getDirectoryListingEndpoint(parent.getPath());
             ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
             callService(wrapper, new DECallbackConverter<String, List<Folder>>(callback) {
 
@@ -306,12 +306,11 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         return filteredFolders;
     }
 
-    private String getDirectoryListingEndpoint(final String path, boolean includeFiles) {
-        String address = deProperties.getDataMgmtBaseUrl()
-                + "directory?includefiles=" + (includeFiles ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    private String getDirectoryListingEndpoint(final String path) {
+        String address = deProperties.getDataMgmtBaseUrl() + "directory";
 
         if (!Strings.isNullOrEmpty(path)) {
-            address += "&path=" + URL.encodeQueryString(path); //$NON-NLS-1$
+            address += "?path=" + URL.encodeQueryString(path);
         }
 
         return address;
