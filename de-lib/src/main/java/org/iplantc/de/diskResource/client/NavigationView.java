@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent.DiskResourceNameSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent.DiskResourcePathSelectedEventHandler;
+import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.HasFolderSelectionEventHandlers;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent.HasRootFoldersRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.HasSavedSearchesRetrievedEventHandlers;
@@ -73,6 +74,7 @@ public interface NavigationView extends IsWidget,
                                 UpdateSavedSearchesHandler,
                                 ImportFromUrlSelectedHandler,
                                 SimpleUploadSelectedHandler,
+                                FileUploadedEvent.FileUploadedEventHandler,
                                 DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
                                 RefreshFolderSelected.HasRefreshFolderSelectedHandlers {
 
