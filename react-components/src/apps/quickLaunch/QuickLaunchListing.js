@@ -40,7 +40,6 @@ import Share from "@material-ui/icons/Share";
 
 function ActionsPopper(props) {
     const {
-        qLaunch,
         anchorEl,
         intl,
         useQuickLaunchClickHandler,
@@ -49,7 +48,7 @@ function ActionsPopper(props) {
         onActionPopperClose,
         baseDebugId,
     } = props;
-    const actionsBaseId = build(baseDebugId, qLaunch.id);
+
     return (
         <Popover
             open={Boolean(anchorEl)}
@@ -67,41 +66,35 @@ function ActionsPopper(props) {
             <Paper>
                 <Tooltip title={formatMessage(intl, "qLaunchToolTip")}>
                     <IconButton
+                        id={build(baseDebugId, ids.QUICK_LAUNCH.useQuickLaunch)}
                         fontSize="small"
-                        onClick={() => useQuickLaunchClickHandler(qLaunch)}
+                        onClick={useQuickLaunchClickHandler}
                     >
-                        <Play
-                            id={build(
-                                actionsBaseId,
-                                ids.QUICK_LAUNCH.useQuickLaunch
-                            )}
-                            color="primary"
-                        />
+                        <Play color="primary" />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={formatMessage(intl, "qLaunchEmbedToolTip")}>
                     <IconButton
+                        id={build(
+                            baseDebugId,
+                            ids.QUICK_LAUNCH.embedQuickLaunch
+                        )}
                         fontSize="small"
                         onClick={embedCodeClickHandler}
                     >
-                        <Code
-                            id={build(
-                                actionsBaseId,
-                                ids.QUICK_LAUNCH.embedQuickLaunch
-                            )}
-                            color="primary"
-                        />
+                        <Code color="primary" />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={formatMessage(intl, "qLaunchShareToolTip")}>
-                    <IconButton fontSize="small" onClick={shareClickHandler}>
-                        <Share
-                            id={build(
-                                actionsBaseId,
-                                ids.QUICK_LAUNCH.shareQuickLaunch
-                            )}
-                            color="primary"
-                        />
+                    <IconButton
+                        id={build(
+                            baseDebugId,
+                            ids.QUICK_LAUNCH.shareQuickLaunch
+                        )}
+                        fontSize="small"
+                        onClick={shareClickHandler}
+                    >
+                        <Share color="primary" />
                     </IconButton>
                 </Tooltip>
             </Paper>
@@ -128,7 +121,7 @@ function ListQuickLaunches(props) {
     const [qLaunchUrl, setQLaunchUrl] = useState("");
     const [embedDialogOpen, setEmbedDialogOpen] = useState(false);
     const [shareDialogOpen, setShareDialogOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState("");
+    const [anchorEl, setAnchorEl] = useState(null);
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
     const quickLaunchClickHandler = (event, qLaunch) => {
@@ -138,6 +131,10 @@ function ListQuickLaunches(props) {
         } else {
             useQuickLaunch(qLaunch);
         }
+    };
+
+    const useQuickLaunchClickHandler = () => {
+        useQuickLaunch(selected);
     };
 
     const embedCodeClickHandler = () => {
@@ -202,7 +199,7 @@ function ListQuickLaunches(props) {
                 <Paper style={{ padding: 5 }} id={baseDebugId}>
                     <LoadingMask loading={loading}>
                         <Grid container spacing={24}>
-                            {quickLaunches.map((qLaunch) => {
+                            {quickLaunches.map((qLaunch, index) => {
                                 const id = build(baseDebugId, qLaunch.id);
                                 const is_public = qLaunch.is_public;
                                 const onDelete =
@@ -214,7 +211,7 @@ function ListQuickLaunches(props) {
                                               )
                                         : undefined;
                                 return (
-                                    <Grid item key={id}>
+                                    <Grid item key={index}>
                                         <QuickLaunch
                                             id={id}
                                             label={qLaunch.name}
@@ -235,30 +232,21 @@ function ListQuickLaunches(props) {
                                                     : undefined
                                             }
                                         />
-                                        <ActionsPopper
-                                            qLaunch={qLaunch}
-                                            anchorEl={anchorEl}
-                                            intl={intl}
-                                            baseDebugId={baseDebugId}
-                                            useQuickLaunchClickHandler={
-                                                useQuickLaunch
-                                            }
-                                            embedCodeClickHandler={
-                                                embedCodeClickHandler
-                                            }
-                                            shareClickHandler={
-                                                shareClickHandler
-                                            }
-                                            onActionPopperClose={() =>
-                                                setAnchorEl(null)
-                                            }
-                                        />
                                     </Grid>
                                 );
                             })}
                         </Grid>
                     </LoadingMask>
                 </Paper>
+                <ActionsPopper
+                    anchorEl={anchorEl}
+                    intl={intl}
+                    baseDebugId={baseDebugId}
+                    useQuickLaunchClickHandler={useQuickLaunchClickHandler}
+                    embedCodeClickHandler={embedCodeClickHandler}
+                    shareClickHandler={shareClickHandler}
+                    onActionPopperClose={() => setAnchorEl(null)}
+                />
                 <Dialog open={embedDialogOpen} maxWidth="sm" fullWidth={true}>
                     <DEDialogHeader
                         heading={formatMessage(intl, "embedLbl")}
