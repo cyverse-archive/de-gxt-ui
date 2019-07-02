@@ -335,7 +335,6 @@ class DesktopView extends Component {
                                         ids.USER_MENU_ANCHOR
                                     )}
                                     presenter={this.props.presenter}
-                                    doIntro={this.doIntro}
                                 />
                                 <Help
                                     anchor={build(
@@ -343,6 +342,7 @@ class DesktopView extends Component {
                                         ids.HELP_MENU_ANCHOR
                                     )}
                                     presenter={this.props.presenter}
+                                    doIntro={this.doIntro}
                                 />
                                 <span
                                     id={build(

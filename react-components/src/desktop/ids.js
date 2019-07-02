@@ -17,7 +17,7 @@ export default {
     LOGOUT_LINK: "logout",
     SUPPORT_BTN: "support",
     FAQS_LINK: "faqs",
-    FORUMS_LINK: "forum",
+    LEARNING_CENTER_LINK: "learningCenter",
     FEEDBACK_LINK: "feedback",
     NOTIFICATIONS_MENU: "notificationsMenu",
     EMPTY_NOTIFICATION: "emptyNotification",
@@ -30,4 +30,5 @@ export default {
     USER_MENU_ANCHOR: "userMenuAnchor",
     HELP_MENU_ANCHOR: "helpMenuAnchor",
     UNSEEN_NOTIFICATION_COUNT: "unSeenCount",
+    EMAIL_SUPPORT_LINK: "emailSupport",
 };

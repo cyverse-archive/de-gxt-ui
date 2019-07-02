@@ -46,9 +46,7 @@ export default {
         backgroundSize: "contain",
         color: "#ffffff",
         position: "relative",
-        marginLeft: "8px",
-        marginBottom: "0px",
-        marginRight: "6px",
+        marginLeft: "15px",
         cursor: "pointer",
         "&:hover": {
             boxShadow: "0px 2px 3px #ccc",
@@ -61,7 +59,8 @@ export default {
         backgroundSize: "contain",
         color: "#ffffff",
         position: "relative",
-        marginBottom: "12px",
+        marginLeft: "15px",
+        marginBottom: "13px",
         cursor: "pointer",
         "&:hover": {
             boxShadow: "0px 2px 3px #ccc",

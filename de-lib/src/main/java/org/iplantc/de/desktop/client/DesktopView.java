@@ -143,9 +143,11 @@ public interface DesktopView extends IsWidget {
 
         void onDataWinBtnSelect();
 
-        void onForumsBtnSelect();
+        void onLearningCenterBtnClick();
 
         void onFeedbackSelect();
+
+        void onEmailSupportClicked();
 
         @SuppressWarnings("unusable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,

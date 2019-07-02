@@ -23,9 +23,9 @@ import Fab from "@material-ui/core/Fab";
 import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-
 import NotificationIcon from "@material-ui/icons/Notifications";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -193,12 +193,14 @@ class Notifications extends Component {
                         root: classes.badge,
                     }}
                 >
-                    <NotificationIcon
-                        id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
-                        className={classes.notificationMenuIcon}
-                        onClick={this.handleNotificationsClick}
-                        ref={this.notificationBtn}
-                    />
+                    <Tooltip title={getMessage("notificationTooltip")}>
+                        <NotificationIcon
+                            id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
+                            className={classes.notificationMenuIcon}
+                            onClick={this.handleNotificationsClick}
+                            ref={this.notificationBtn}
+                        />
+                    </Tooltip>
                 </Badge>
                 <Menu
                     id={build(ids.DESKTOP, ids.NOTIFICATIONS_MENU)}

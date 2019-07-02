@@ -482,13 +482,18 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
-    public void onForumsBtnSelect() {
-        WindowUtil.open(commonUiConstants.forumsUrl());
+    public void onLearningCenterBtnClick() {
+        WindowUtil.open(commonUiConstants.learningCenterUrl());
     }
 
     @Override
     public void onFeedbackSelect() {
         view.onFeedbackBtnSelect();
+    }
+
+    @Override
+    public void onEmailSupportClicked() {
+        Window.Location.assign(commonUiConstants.emailSupport());
     }
 
     /**

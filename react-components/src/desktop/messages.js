@@ -2,7 +2,7 @@ var intlData = {
     locales: "en-US",
     messages: {
         faqLink: "FAQs",
-        forumsLink: "Forum",
+        learningCenterLink: "Learning Center",
         feedbackLink: "Feedback",
         preferences: "Preferences",
         collaborators: "Collaborators",
@@ -23,6 +23,13 @@ var intlData = {
         analysesTip:
             "Find the status, parameters, and results of your executed apps.",
         dot: ". ",
+        helpTooltip: "Help",
+        notificationTooltip: "Notifications",
+        preferencesTooltip: "Preferences and Groups",
+        emailSupportLink: "Email Support",
+        emailSupportTooltip: "support@cyverse.org",
+        supportChatLink: "Chat With Support",
+        supportChatTooltip: "Chat may be disabled by your browser's settings",
     },
 };
 

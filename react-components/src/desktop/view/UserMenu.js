@@ -15,6 +15,7 @@ import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import PersonIcon from "@material-ui/icons/Person";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -46,15 +47,17 @@ class UserMenu extends Component {
 
     render() {
         const { anchorEl } = this.state;
-        const { classes, presenter, doIntro } = this.props;
+        const { classes, presenter } = this.props;
         return (
             <span>
-                <PersonIcon
-                    id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
-                    className={classes.menuIcon}
-                    onClick={this.onUserMenuClick}
-                    ref={this.userBtn}
-                />
+                <Tooltip title={getMessage("preferencesTooltip")}>
+                    <PersonIcon
+                        id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                        className={classes.menuIcon}
+                        onClick={this.onUserMenuClick}
+                        ref={this.userBtn}
+                    />
+                </Tooltip>
                 <Menu
                     id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                     anchorEl={anchorEl}
@@ -96,34 +99,6 @@ class UserMenu extends Component {
                         }}
                     >
                         <DEHyperlink text={getMessage("communities")} />
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
-                        onClick={() => {
-                            presenter.onDocumentationClick();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("documentation")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                        onClick={() => {
-                            doIntro();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("introduction")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.ABOUT_LINK)}
-                        onClick={() => {
-                            presenter.onAboutClick();
-                            this.handleClose();
-                        }}
-                    >
-                        <DEHyperlink text={getMessage("about")} />
                     </MenuItem>
                     <Divider />
                     <MenuItem

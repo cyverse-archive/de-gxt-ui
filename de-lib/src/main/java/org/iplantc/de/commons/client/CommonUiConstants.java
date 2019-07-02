@@ -13,7 +13,7 @@ public interface CommonUiConstants extends Constants {
      * 
      * @return a string representing the URL.
      */
-    String forumsUrl();
+    String learningCenterUrl();
 
     /**
      * URL for landing page.
@@ -62,4 +62,6 @@ public interface CommonUiConstants extends Constants {
     String iDropDesktopClientInstructionsUrl();
 
     String faqUrl();
+
+    String emailSupport();
 }
