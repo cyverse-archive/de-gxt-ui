@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.errorHandling.ServiceError;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
-import org.iplantc.de.commons.client.views.ReactUtilComponents;
 import org.iplantc.de.commons.client.views.dialogs.ErrorDialog;
 
 import com.google.common.base.Strings;
@@ -159,11 +158,11 @@ public class ErrorHandler {
         HTMLPanel panel = new HTMLPanel("<div></div>");
         String errorDetails = getErrorDetails(errorSummary, caughtList);
 
-        ReactUtilComponents.ErrorHandlerProps props = new ReactUtilComponents.ErrorHandlerProps();
+        CyVerseReactComponents.ErrorHandlerProps props = new CyVerseReactComponents.ErrorHandlerProps();
         props.errorSummary = errorSummary.asString();
         props.errorDetails = errorDetails;
 
-        CyVerseReactComponents.render(ReactUtilComponents.ErrorHandler,
+        CyVerseReactComponents.render(CyVerseReactComponents.ErrorHandler,
                                       props,
                                       panel.getElement());
     }

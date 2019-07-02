@@ -10,6 +10,7 @@ import gwt.react.client.elements.ReactElement;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
@@ -22,6 +23,15 @@ public class CyVerseReactComponents {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class MuiThemeProviderProps extends BaseProps {
         public Splittable theme;
+    }
+
+    @JsProperty
+    public static ComponentConstructorFn<ErrorHandlerProps> ErrorHandler;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class ErrorHandlerProps extends BaseProps {
+        public String errorSummary;
+        public String errorDetails;
     }
 
     @JsOverlay
