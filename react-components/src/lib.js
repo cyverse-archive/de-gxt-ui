@@ -7,7 +7,7 @@ import * as desktop from "./desktop";
 import * as fileViewers from "./fileViewers";
 import * as metadata from "./metadata";
 import * as notifications from "./notifications";
-import { palette } from "@cyverse-de/ui-lib";
+import { ErrorHandler, palette } from "@cyverse-de/ui-lib";
 import React from "react";
 import ReactDOM from "react-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"; // v1.x
@@ -56,6 +56,7 @@ export {
     fileViewers,
     metadata,
     notifications,
+    ErrorHandler,
     getDefaultTheme,
     MuiThemeProvider,
 };
