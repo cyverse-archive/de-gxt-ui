@@ -21,6 +21,7 @@ import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourceRenamedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcesDeletedEvent;
+import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.diskResource.client.events.FolderCreatedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
@@ -228,6 +229,7 @@ public class NavigationPresenterImpl implements
         handlerRegistrations.add(eventBus.addHandler(DiskResourceRenamedEvent.TYPE, this));
         handlerRegistrations.add(eventBus.addHandler(FolderCreatedEvent.TYPE, this));
         handlerRegistrations.add(eventBus.addHandler(DiskResourcesMovedEvent.TYPE, this));
+        handlerRegistrations.add(eventBus.addHandler(FileUploadedEvent.TYPE, this));
     }
 
     TreeLoader<Folder> initTreeLoader(final DiskResourceView.FolderRpcProxy rpcProxy){
@@ -415,6 +417,13 @@ public class NavigationPresenterImpl implements
     @Override
     public void onFolderRefreshed(FolderRefreshedEvent event) {
         reloadTreeStoreFolderChildren(event.getFolder());
+    }
+
+    @Override
+    public void onFileUploaded(FileUploadedEvent event) {
+        String path = event.getUploadDestFolder().getPath();
+        Folder folder = getFolderByPath(path);
+        reloadTreeStoreFolderChildren(folder);
     }
 
     @Override
