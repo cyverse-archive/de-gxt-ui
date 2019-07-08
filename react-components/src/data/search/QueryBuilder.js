@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import Condition from "./queryBuilder/Condition";
+import Clause from "./queryBuilder/Clause";
 import ids from "./ids";
 import messages from "./messages";
 import SaveSearchButton from "./SaveSearchButton";
 import styles from "./styles";
-import withStoreProvider from "../../util/StoreProvider";
-import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { validate } from "./queryBuilder/Validations";
 
+import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { Field, Form, withFormik } from "formik";
 import Button from "@material-ui/core/Button";
-import { reduxForm, Field } from "redux-form";
 import { withStyles } from "@material-ui/core/styles";
 
 /**
@@ -20,56 +20,62 @@ class QueryBuilder extends Component {
     constructor(props) {
         super(props);
 
-        this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
-        this.getOriginalName = this.getOriginalName.bind(this);
-    }
-
-    handleSubmitForm(values) {
-        this.props.presenter.onSearchBtnClicked(values);
     }
 
     handleSaveSearch(values) {
-        let originalName = this.getOriginalName();
+        const { initialValues } = this.props;
+        let originalName = initialValues ? initialValues.label : null;
         this.props.presenter.onSaveSearch(values, originalName);
     }
 
-    getOriginalName() {
-        let { initialValues } = this.props;
-        return initialValues ? initialValues.label : null;
-    }
-
     render() {
-        const { handleSubmit, classes, parentId } = this.props;
+        const {
+            handleSubmit,
+            classes,
+            parentId,
+            collaboratorsUtil,
+            presenter,
+        } = this.props;
 
         return (
-            <div className={classes.form}>
-                <Condition
+            <Form className={classes.form}>
+                <Field
                     root={true}
                     parentId={parentId}
-                    helperProps={this.props}
+                    presenter={presenter}
+                    collaboratorsUtil={collaboratorsUtil}
+                    component={Clause}
                 />
                 <div className={classes.buttonBar}>
                     <Field
                         name="label"
-                        originalName={this.getOriginalName()}
-                        parentId={parentId}
-                        handleSave={handleSubmit(this.handleSaveSearch)}
-                        component={renderSaveSearchBtn}
+                        render={(props) => (
+                            <SaveSearchButton
+                                handleSave={this.handleSaveSearch}
+                                parentId={parentId}
+                                {...props}
+                            />
+                        )}
                     />
                     <Button
                         variant="contained"
+                        type="submit"
+                        onClick={handleSubmit}
                         id={build(parentId, ids.searchBtn)}
                         className={classes.searchButton}
-                        onClick={handleSubmit(this.handleSubmitForm)}
                     >
                         {getMessage("searchBtn")}
                     </Button>
                 </div>
-            </div>
+            </Form>
         );
     }
 }
+
+const handleSubmit = (values, { props }) => {
+    props.presenter.onSearchBtnClicked(values);
+};
 
 QueryBuilder.propTypes = {
     presenter: PropTypes.shape({
@@ -88,14 +94,8 @@ QueryBuilder.propTypes = {
     }),
 };
 
-function renderSaveSearchBtn(props) {
-    const { input, disabled, ...custom } = props;
-    return <SaveSearchButton disabled={disabled} {...input} {...custom} />;
-}
-
-export default withStoreProvider(
-    reduxForm({
-        form: "dataQueryBuilder",
-        enableReinitialize: true,
-    })(withStyles(styles)(withI18N(QueryBuilder, messages)))
-);
+export default withFormik({
+    mapPropsToValues: ({ initialValues }) => ({ ...initialValues }),
+    validate,
+    handleSubmit,
+})(withStyles(styles)(withI18N(QueryBuilder, messages)));

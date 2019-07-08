@@ -1,11 +1,12 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.client.models.sharing.PermissionValue;
-
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("nls")
 public class DataSearchQueryBuilder {
+    private final String REACT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     // QUERY BUILDING BLOCKS
     public static final String ALL = "all";
@@ -114,6 +116,10 @@ public class DataSearchQueryBuilder {
                 return;
             }
             switch (type) {
+                case CREATED:
+                case MODIFIED:
+                    dateRange(child);
+                    break;
                 case SIZE:
                     fileSizeRange(child);
                     break;
@@ -146,6 +152,38 @@ public class DataSearchQueryBuilder {
         return negated != null && negated.asBoolean();
     }
 
+    public void dateRange(Splittable child) {
+        Splittable range = getArgs(child);
+        if (range != null) {
+            Splittable fromSpl = range.get(FROM);
+            Splittable toSpl = range.get(TO);
+            String from = fromSpl != null ? fromSpl.asString() : null;
+            String to = toSpl != null ? toSpl.asString() : null;
+
+            if (!Strings.isNullOrEmpty(from)) {
+                String time = getDateTime(from);
+                assignKeyValue(range, FROM, time);
+            }
+            if (!Strings.isNullOrEmpty(to)) {
+                String time = getDateTime(to);
+                assignKeyValue(range, TO, time);
+            }
+        }
+    }
+
+    private String getDateTime(String dateTime) {
+        //Add time, if missing (old searches only have a date)
+        if (dateTime.length() == 10) {
+            dateTime = dateTime + " 00:00:00";
+        }
+        //Add seconds, if missing
+        if (dateTime.length() == 16) {
+            dateTime = dateTime + ":00";
+        }
+        Date formattedDate = DateTimeFormat.getFormat(REACT_DATE_TIME_FORMAT).parse(dateTime);
+        return Long.toString(formattedDate.getTime());
+    }
+
     /**
      * {"type": "size", "args": {"from": "1KB", "to": "2KB"}}
      */
@@ -154,12 +192,20 @@ public class DataSearchQueryBuilder {
         if (fileSizes != null && (!fileSizes.isNull(FROM) || !fileSizes.isNull(TO))) {
             Splittable from = fileSizes.get(FROM);
             Splittable to = fileSizes.get(TO);
-            if (from != null && !from.isNull("value") && !from.isNull("unit")) {
-                assignKeyValue(fileSizes, FROM, from.get("value").asNumber() + from.get("unit").asString());
+            if (from != null
+                && !from.isNull("value")
+                && !from.get("value").isString()
+                && !from.isNull("unit")) {
+                assignKeyValue(fileSizes,
+                               FROM,
+                               from.get("value").asNumber() + from.get("unit").asString());
             } else {
                 assignKeyValue(fileSizes, FROM, "");
             }
-            if (to != null && !to.isNull("value") && !to.isNull("unit")) {
+            if (to != null
+                && !to.isNull("value")
+                && !to.get("value").isString()
+                && !to.isNull("unit")) {
                 assignKeyValue(fileSizes, TO, to.get("value").asNumber() + to.get("unit").asString());
             } else {
                 assignKeyValue(fileSizes, TO, "");

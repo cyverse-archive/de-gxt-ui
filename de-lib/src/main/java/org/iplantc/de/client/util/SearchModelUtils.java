@@ -36,7 +36,8 @@ public class SearchModelUtils {
     }
 
     public Splittable createDefaultFilter() {
-        return StringQuoter.createSplittable();
+        String query = "{\"type\":\"all\"}";
+        return StringQuoter.split(query);
     }
 
     public Splittable createDefaultSimpleSearch(String searchTerm) {

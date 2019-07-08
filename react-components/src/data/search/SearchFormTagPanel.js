@@ -10,7 +10,7 @@ import { withI18N } from "@cyverse-de/ui-lib";
 /**
  * @author aramsey
  * A wrapper around the TagPanel component that handles editing tags, specifically designed
- * for the SearchForm with redux
+ * for the SearchForm with formik
  */
 class SearchFormTagPanel extends Component {
     constructor(props) {
@@ -62,7 +62,7 @@ class SearchFormTagPanel extends Component {
     }
 
     onTagSelected(tag) {
-        let { presenter } = this.props;
+        const { presenter } = this.props;
 
         if (tag.id !== tag.value) {
             this.appendTag(tag);
@@ -74,19 +74,19 @@ class SearchFormTagPanel extends Component {
     }
 
     appendTag(tag) {
-        let { array, tagQuery } = this.props;
-        array.insert(tagQuery.name, 0, tag);
+        const { array } = this.props;
+        array.push(tag);
     }
 
     removeTag(tag, index) {
-        let { array, tagQuery } = this.props;
-        array.remove(tagQuery.name, index);
+        const { array } = this.props;
+        array.remove(index);
     }
 
     render() {
-        let { tagQuery, placeholder, parentId } = this.props;
+        const { tagQuery, placeholder, parentId, onBlur } = this.props;
 
-        let { selectedTag, openEditTagDlg, dataSource } = this.state;
+        const { selectedTag, openEditTagDlg, dataSource } = this.state;
 
         return (
             <div>
@@ -98,7 +98,8 @@ class SearchFormTagPanel extends Component {
                     dataSource={dataSource}
                     handleRemoveClick={this.removeTag}
                     handleTagSelect={this.onTagSelected}
-                    tags={tagQuery.value ? tagQuery.value : []}
+                    tags={tagQuery}
+                    onBlur={onBlur}
                 />
                 <EditTagDialog
                     open={openEditTagDlg}
@@ -113,14 +114,14 @@ class SearchFormTagPanel extends Component {
 
 SearchFormTagPanel.propTypes = {
     parentId: PropTypes.string.isRequired,
-    placeholder: PropTypes.any.isRequired,
+    placeholder: PropTypes.any,
     presenter: PropTypes.shape({
         onAddTagSelected: PropTypes.func.isRequired,
         fetchTagSuggestions: PropTypes.func.isRequired,
         onEditTagSelected: PropTypes.func.isRequired,
     }),
     array: PropTypes.object.isRequired,
-    tagQuery: PropTypes.object.isRequired,
+    tagQuery: PropTypes.array,
 };
 
 export default withI18N(SearchFormTagPanel, messages);

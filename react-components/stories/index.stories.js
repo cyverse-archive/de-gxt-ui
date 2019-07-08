@@ -27,7 +27,6 @@ import TagPanelTest from "./data/details/TagPanel.stories";
 
 import QueryBuilderTest from "./data/search/QueryBuilder.stories";
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
-import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
 import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
 
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
@@ -123,9 +122,6 @@ storiesOf("data/search", module).add("QueryBuilder", () => (
         saveSearchLogger={action("Save Search")}
         addTagLogger={action("Add Tag")}
     />
-));
-storiesOf("data/search", module).add("SaveSearchButton", () => (
-    <SaveSearchButtonTest logger={action("Save Search")} />
 ));
 storiesOf("data/search", module).add("SearchFormTagPanel", () => (
     <SearchFormTagPanel

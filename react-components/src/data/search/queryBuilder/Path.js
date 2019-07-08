@@ -2,34 +2,38 @@ import React, { Fragment } from "react";
 
 import ids from "../ids";
 import { options } from "./Operators";
-import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
-import Validations from "./Validations";
 
-import { build } from "@cyverse-de/ui-lib";
-
-import { Field } from "redux-form";
+import { build, FormTextField } from "@cyverse-de/ui-lib";
+import { Field } from "formik";
 
 /**
  * A component which allows users to specify a path prefix in QueryBuilder
  */
+const PATH_DEFAULT = { prefix: "" };
 function Path(props) {
     const operators = [options.Begins, options.BeginsNot];
 
-    const { parentId } = props;
+    const {
+        parentId,
+        field: { name },
+    } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
-            <Field
-                name="prefix"
+            <SelectOperator
                 operators={operators}
+                parentId={parentId}
+                name={name}
+            />
+            <Field
+                name={`${name}.prefix`}
+                fullWidth={false}
                 id={build(parentId, ids.path)}
-                validate={Validations.nonEmptyField}
-                component={ReduxTextField}
+                component={FormTextField}
             />
         </Fragment>
     );
 }
 
-export default Path;
+export { Path, PATH_DEFAULT };

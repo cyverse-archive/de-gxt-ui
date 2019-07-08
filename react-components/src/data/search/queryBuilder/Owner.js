@@ -1,67 +1,88 @@
 import React, { Fragment } from "react";
+
 import ids from "../ids";
 import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
+import styles from "../styles";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import UserPanel from "./UserPanel";
 
-import { build } from "@cyverse-de/ui-lib";
-
-import { Field } from "redux-form";
-import Grid from "@material-ui/core/Grid";
+import { build, getFormError } from "@cyverse-de/ui-lib";
+import { Field } from "formik";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A component which allows users to specify an owner in QueryBuilder
  */
+const OWNER_DEFAULT = { owner: "" };
 
 function Owner(props) {
     const operators = [options.Is, options.IsNot];
 
     const {
         parentId,
-        helperProps: { presenter, collaboratorsUtil, classes },
+        field: { name },
+        presenter,
+        collaboratorsUtil,
     } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
-            <Field
-                name="owner"
+            <SelectOperator
                 operators={operators}
+                parentId={parentId}
+                name={name}
+            />
+            <Field
+                name={`${name}.owner`}
                 presenter={presenter}
                 collaboratorsUtil={collaboratorsUtil}
-                classes={classes}
                 parentId={parentId}
-                validate={[]}
-                component={renderSubjectSearch}
+                component={SubjectSearch}
             />
         </Fragment>
     );
 }
 
-function renderSubjectSearch(props) {
-    const { presenter, collaboratorsUtil, input, parentId, classes } = props;
+const SubjectSearch = withStyles(styles)(renderSubjectSearch);
 
-    let collaborator = input.value;
+function renderSubjectSearch(props) {
+    const {
+        presenter,
+        collaboratorsUtil,
+        parentId,
+        classes,
+        field,
+        form: { setFieldValue, setFieldTouched, touched, errors },
+    } = props;
+
+    let fieldName = field.name;
+    let collaborator = field.value;
+    const errorMsg = getFormError(fieldName, touched, errors);
 
     return (
-        <Grid item className={classes.autocompleteField}>
+        <div className={classes.autocompleteField}>
             <SubjectSearchField
                 presenter={presenter}
                 collaboratorsUtil={collaboratorsUtil}
                 parentId={parentId}
-                onSelect={(collaborator) => input.onChange(collaborator)}
+                onBlur={() => setFieldTouched(fieldName, true)}
+                onSelect={(collaborator) =>
+                    setFieldValue(fieldName, collaborator)
+                }
             />
             {collaborator && (
                 <UserPanel
                     users={collaborator ? [collaborator] : null}
                     id={build(parentId, ids.userList)}
                     collaboratorsUtil={collaboratorsUtil}
-                    onDelete={() => input.onChange(null)}
+                    onDelete={() => setFieldValue(fieldName, null)}
                 />
             )}
-        </Grid>
+            <FormHelperText error>{errorMsg}</FormHelperText>
+        </div>
     );
 }
 
-export default Owner;
+export { Owner, OWNER_DEFAULT };

@@ -26,7 +26,16 @@ export default {
 
     condition: {
         paddingLeft: "20px",
-        marginTop: "5px",
+        "& div": {
+            marginRight: "5px",
+        },
+    },
+
+    fileSize: {
+        width: "100px",
+        display: "inline-flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
 
     permissionUsers: {
@@ -39,15 +48,14 @@ export default {
     },
 
     autocompleteField: {
-        flexGrow: 1,
-        flexBasis: "200px",
-    },
-
-    errorField: {
-        color: "red",
+        display: "inline-block",
+        width: "250px",
+        marginTop: "12px",
     },
 
     conditionButton: {
-        margin: "0px 5px 0px 5px",
+        margin: "10px 10px 0px 5px",
+        display: "inline-flex",
+        verticalAlign: "top",
     },
 };

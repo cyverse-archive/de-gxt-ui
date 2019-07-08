@@ -32,21 +32,22 @@ class TagPanel extends Component {
 
     render() {
         const classes = this.props.classes;
-        let tagItems = this.props.tags
-            ? this.props.tags.map((tag, index) => (
-                  <Tag
-                      tag={tag}
-                      key={tag.id}
-                      removeTag={this.props.handleRemoveClick.bind(
-                          null,
-                          tag,
-                          index
-                      )}
-                      onClick={this.props.onTagClick}
-                  />
-              ))
-            : [];
-        let { placeholder } = this.props;
+        let tagItems =
+            this.props.tags && this.props.tags.length
+                ? this.props.tags.map((tag, index) => (
+                      <Tag
+                          tag={tag}
+                          key={tag.id}
+                          removeTag={this.props.handleRemoveClick.bind(
+                              null,
+                              tag,
+                              index
+                          )}
+                          onClick={this.props.onTagClick}
+                      />
+                  ))
+                : null;
+        let { placeholder, onBlur } = this.props;
         return (
             <div id={build(this.props.baseID, ids.DETAILS_TAGS_PANEL)}>
                 <Autocomplete
@@ -63,13 +64,16 @@ class TagPanel extends Component {
                             values: { tag: tagValue },
                         });
                     }}
+                    onBlur={onBlur}
                 />
-                <div
-                    id={build(this.props.baseID, ids.DETAILS_TAGS)}
-                    className={classes.tagPanelStyle}
-                >
-                    {tagItems}
-                </div>
+                {tagItems && (
+                    <div
+                        id={build(this.props.baseID, ids.DETAILS_TAGS)}
+                        className={classes.tagPanelStyle}
+                    >
+                        {tagItems}
+                    </div>
+                )}
             </div>
         );
     }

@@ -3,51 +3,75 @@ import React, { Fragment } from "react";
 import { options } from "./Operators";
 import SearchFormTagPanel from "../SearchFormTagPanel";
 import SelectOperator from "./SelectOperator";
+import styles from "../styles";
 
-import { Field } from "redux-form";
-import Grid from "@material-ui/core/Grid";
+import { getFormError } from "@cyverse-de/ui-lib";
+import { FieldArray, getIn } from "formik";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A component which allows users to specify tags in QueryBuilder
  */
+const TAGS_DEFAULT = { tags: [] };
 function Tags(props) {
     const operators = [options.Are, options.AreNot];
 
     const {
         parentId,
-        helperProps: { array, presenter, classes },
+        field: { name },
+        presenter,
     } = props;
 
     return (
         <Fragment>
-            <SelectOperator operators={operators} parentId={parentId} />
-            <Field
-                name="tags"
+            <SelectOperator
+                operators={operators}
                 parentId={parentId}
-                placeholder={""}
-                array={array}
-                classes={classes}
-                presenter={presenter}
-                validate={[]}
-                component={renderTagSearchField}
+                name={name}
+            />
+            <FieldArray
+                name={`${name}.tags`}
+                render={(arrayHelpers) => (
+                    <TagSearchField
+                        parentId={parentId}
+                        presenter={presenter}
+                        arrayHelpers={arrayHelpers}
+                    />
+                )}
             />
         </Fragment>
     );
 }
 
+const TagSearchField = withStyles(styles)(renderTagSearchField);
+
 function renderTagSearchField(props) {
-    const { input, array, parentId, placeholder, presenter, classes } = props;
+    const {
+        parentId,
+        presenter,
+        classes,
+        arrayHelpers: {
+            name,
+            form: { values, touched, errors },
+            ...arrayHelpers
+        },
+    } = props;
+
+    let input = getIn(values, name);
+    const errorMsg = getFormError(name, touched, errors);
+
     return (
-        <Grid item className={classes.autocompleteField}>
+        <div className={classes.autocompleteField}>
             <SearchFormTagPanel
                 parentId={parentId}
-                placeholder={placeholder}
                 presenter={presenter}
-                array={array}
+                array={arrayHelpers}
                 tagQuery={input}
             />
-        </Grid>
+            <FormHelperText error>{errorMsg}</FormHelperText>
+        </div>
     );
 }
 
-export default Tags;
+export { Tags, TAGS_DEFAULT };
