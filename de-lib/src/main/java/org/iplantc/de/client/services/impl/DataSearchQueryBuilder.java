@@ -172,6 +172,10 @@ public class DataSearchQueryBuilder {
     }
 
     private String getDateTime(String dateTime) {
+        //Add time, if missing (old searches only have a date)
+        if (dateTime.length() == 10) {
+            dateTime = dateTime + " 00:00:00";
+        }
         //Add seconds, if missing
         if (dateTime.length() == 16) {
             dateTime = dateTime + ":00";
