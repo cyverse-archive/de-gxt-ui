@@ -155,8 +155,11 @@ public class DataSearchQueryBuilder {
     public void dateRange(Splittable child) {
         Splittable range = getArgs(child);
         if (range != null) {
-            String from = range.get(FROM).asString();
-            String to = range.get(TO).asString();
+            Splittable fromSpl = range.get(FROM);
+            Splittable toSpl = range.get(TO);
+            String from = fromSpl != null ? fromSpl.asString() : null;
+            String to = toSpl != null ? toSpl.asString() : null;
+
             if (!Strings.isNullOrEmpty(from)) {
                 String time = getDateTime(from);
                 assignKeyValue(range, FROM, time);
