@@ -1,3 +1,24 @@
+/**
+ * @author aramsey
+ *
+ * A Clause is basically a component meant to mimic the building blocks of a search, which at its
+ * most basic is {type: "someType", args: someObjectOrArrayOfObjects}
+ *
+ * The ClauseType is a Select field which allows you to choose which clause type you want to use.
+ * For example the type could be "all" (a group) or the type could be "label".
+ *
+ * ClauseArgs changes based on the type selected. When a type is selected, ClauseArgs is responsible
+ * for looking up and rendering the corresponding component which contains the "args" for that type.
+ * For example, if the type is "label", then ClauseArgs will render a text field for the user to enter
+ * a file name.  If the type is then switched to "modified", then ClauseArgs will render date pickers
+ * for the user to create a date range.
+ *
+ * More specifically, ClauseType's Select field is populated by the "labels" array in the Clauses file.
+ * Each value in the "labels" array is a key in the "componentMap" object in the Clauses file.
+ * Each key maps to the corresponding component that needs to be rendered.  This is what allows the
+ * Clause component to be dynamic and change based on a Select field's value.
+ */
+
 import React, { Fragment } from "react";
 
 import Clauses from "./Clauses";
@@ -110,6 +131,13 @@ function ClauseArgs(props) {
     }
 }
 
+/**
+ * This function is necessary to preset the default values for each clause.  Without this, formik's
+ * validations don't seem to trigger properly and also cause an error about an uncontrolled component
+ * switching to controlled.
+ *
+ * The default values are defined within each clause's component file, towards the top.
+ */
 function resetOnClauseChange(event, typeField, argsField, form) {
     let formValues = form.values;
     let currentClauseName = getIn(formValues, typeField);
@@ -120,6 +148,14 @@ function resetOnClauseChange(event, typeField, argsField, form) {
     }
 }
 
+/**
+ * This function makes sure the very first clause in any search form is always a grouping of some sort.
+ *
+ * In the UI, we thought it would be easier and more intuitive if every search query began with a
+ * grouping (any or all). Technically this is not needed, but it's confusing if the form is filled out
+ * with two non-grouping clauses (for example, Label and Owner) with no explicit understanding of
+ * whether the user intends both clauses to be true or if either can be true.
+ */
 function ClauseOptions(root, parentId) {
     let clauses = root
         ? Clauses.labels.filter((item) => {

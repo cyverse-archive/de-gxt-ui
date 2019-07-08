@@ -1,3 +1,16 @@
+/**
+ * @author aramsey
+ *
+ * A Select field which enables the user to toggle different parameters such as "exact", "negated", and
+ * "permission_recurse".
+ *
+ * An operator is a way of mapping English terms such as "contains" or "is" to values for those
+ * parameters.  For example, "contains" would mean "exact" is set to false whereas "is" would mean
+ * "exact" is set to true.
+ *
+ * This enables each rendered Clause in a search query to be readable in English.
+ * For example, "File Name Contains ___" or "Path Begins With ___".
+ */
 import React from "react";
 
 import ids from "../ids";
@@ -7,9 +20,6 @@ import { build, FormSelectField } from "@cyverse-de/ui-lib";
 import { Field } from "formik";
 import MenuItem from "@material-ui/core/MenuItem";
 
-/**
- * A Select which prompts the user to choose between different Operators
- */
 function SelectOperator(props) {
     const { operators, parentId, name } = props;
 
