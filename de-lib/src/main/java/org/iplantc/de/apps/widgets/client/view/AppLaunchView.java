@@ -11,6 +11,7 @@ import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 
 import com.google.gwt.editor.client.Editor;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -81,6 +82,8 @@ public interface AppLaunchView extends IsWidget,
         String createQuickLaunchSuccess(String name);
 
         String launchButtonPositionClassName();
+
+        SafeHtml quickLaunchDeleted();
     }
 
     @JsType

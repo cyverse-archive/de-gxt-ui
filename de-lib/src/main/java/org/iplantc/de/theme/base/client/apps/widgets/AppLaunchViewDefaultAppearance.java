@@ -10,6 +10,8 @@ import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
  * @author aramsey
@@ -62,6 +64,11 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     @Override
     public String launchButtonPositionClassName() {
         return style.launchButtonPosition();
+    }
+
+    @Override
+    public SafeHtml quickLaunchDeleted() {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.quickLaunchDeleted());
     }
 
     @Override
