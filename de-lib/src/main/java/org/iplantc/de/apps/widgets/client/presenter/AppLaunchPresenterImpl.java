@@ -1,13 +1,13 @@
 package org.iplantc.de.apps.widgets.client.presenter;
 
 import org.iplantc.de.apps.shared.AppsModule;
-import org.iplantc.de.apps.widgets.client.view.ReactQuickLaunch;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
+import org.iplantc.de.apps.widgets.client.view.ReactQuickLaunch;
 import org.iplantc.de.apps.widgets.client.view.dialogs.HPCWaitTimeDialog;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
@@ -62,7 +62,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     private ReactQuickLaunch.CreateQLProps props;
     private String integratorsEmail;
 
-    private final class AppTemplateCallback extends AppLaunchCallback<AppTemplate> {
+    private class AppTemplateCallback extends AppLaunchCallback<AppTemplate> {
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
@@ -79,6 +79,21 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
             }
             appTemplate = result;
             createJobExecution();
+        }
+    }
+
+    private class QuickLaunchTemplateCallback extends AppTemplateCallback {
+        private AppWizardConfig config;
+
+        public QuickLaunchTemplateCallback(AppWizardConfig config) {
+            this.config = config;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
+            announcer.schedule(new ErrorAnnouncementConfig(appearance.quickLaunchDeleted(), true, 0));
+            config.setQuickLaunchId(null);
+            go(container, config);
         }
     }
 
@@ -139,7 +154,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         } else if (config.isRelaunchAnalysis()) {
             atServices.rerunAnalysis(config.getAnalysisId(), config.getAppId(), new AppTemplateCallback());
         } else if (!Strings.isNullOrEmpty(config.getQuickLaunchId())) {
-            qlServices.reLaunchInfo(config.getQuickLaunchId(), new AppTemplateCallback());
+            qlServices.reLaunchInfo(config.getQuickLaunchId(), new QuickLaunchTemplateCallback(config));
         } else {
             final HasQualifiedId id = getQualifiedIdFromConfig(config);
             atServices.getAppTemplate(id, new AppTemplateCallback());

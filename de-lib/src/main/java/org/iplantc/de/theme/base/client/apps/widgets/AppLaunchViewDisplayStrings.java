@@ -17,4 +17,6 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String launchPreviewHeader(String templateName);
 
     String createQuickLaunchSuccess(String name);
+
+    String quickLaunchDeleted();
 }
