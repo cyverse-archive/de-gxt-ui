@@ -1,14 +1,15 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { DeleteBtn, StyledAddBtn } from "./Buttons";
 import ids from "./ids";
 import SimpleExpansionPanel from "./SimpleExpansionPanel";
-import { nonEmptyMinValue } from "./Validations";
+import { minValue, nonEmptyMinValue } from "./Validations";
 
 import {
     build,
     EmptyTable,
     EnhancedTableHead,
+    FormCheckbox,
     FormNumberField,
     getMessage,
 } from "@cyverse-de/ui-lib";
@@ -23,19 +24,37 @@ import {
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 
-const TABLE_COLUMNS = [
-    { name: "Container Port", numeric: false, enableSorting: false },
-    {
-        name: "Remove?",
-        numeric: false,
-        enableSorting: false,
-        key: "remove",
-    },
-];
+function getTableColumns(isAdmin) {
+    let tableColumns = [
+        { name: "Container Port", numeric: false, enableSorting: false },
+        {
+            name: "",
+            numeric: false,
+            enableSorting: false,
+            key: "remove",
+        },
+    ];
+
+    if (isAdmin) {
+        tableColumns.splice(1, 0, {
+            name: "Bind to Host",
+            numeric: false,
+            enableSorting: false,
+        });
+        tableColumns.splice(1, 0, {
+            name: "Host Port",
+            numeric: false,
+            enableSorting: false,
+        });
+    }
+
+    return tableColumns;
+}
 
 function ContainerPorts(props) {
     const {
         name,
+        isAdmin,
         parentId,
         push,
         remove,
@@ -44,6 +63,8 @@ function ContainerPorts(props) {
 
     let ports = getIn(values, name);
     let hasErrors = !!getIn(errors, name);
+
+    const tableColumns = getTableColumns(isAdmin);
 
     return (
         <SimpleExpansionPanel
@@ -66,7 +87,7 @@ function ContainerPorts(props) {
                     {(!ports || ports.length === 0) && (
                         <EmptyTable
                             message={getMessage("noContainerPorts")}
-                            numColumns={TABLE_COLUMNS.length}
+                            numColumns={tableColumns.length}
                         />
                     )}
                     {ports &&
@@ -87,6 +108,38 @@ function ContainerPorts(props) {
                                         component={FormNumberField}
                                     />
                                 </TableCell>
+                                {isAdmin && (
+                                    <Fragment>
+                                        <TableCell>
+                                            <Field
+                                                name={`${name}.${index}.host_port`}
+                                                id={build(
+                                                    parentId,
+                                                    index,
+                                                    ids.EDIT_TOOL_DLG.HOST_PORT
+                                                )}
+                                                label={getMessage("portNumber")}
+                                                validate={minValue}
+                                                component={FormNumberField}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Field
+                                                name={`${name}.${index}.bind_to_host`}
+                                                id={build(
+                                                    parentId,
+                                                    index,
+                                                    ids.EDIT_TOOL_DLG
+                                                        .BIND_TO_HOST
+                                                )}
+                                                label={getMessage("bindToHost")}
+                                                required
+                                                validate={minValue}
+                                                component={FormCheckbox}
+                                            />
+                                        </TableCell>
+                                    </Fragment>
+                                )}
                                 <TableCell>
                                     <DeleteBtn
                                         parentId={build(parentId, index)}
@@ -101,7 +154,7 @@ function ContainerPorts(props) {
                     rowCount={ports ? ports.length : 0}
                     baseId={parentId}
                     ids={ids.PORTS_TABLE}
-                    columnData={TABLE_COLUMNS}
+                    columnData={tableColumns}
                 />
             </Table>
         </SimpleExpansionPanel>
@@ -110,6 +163,7 @@ function ContainerPorts(props) {
 
 ContainerPorts.propTypes = {
     name: PropTypes.string.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
     parentId: PropTypes.string.isRequired,
     push: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,

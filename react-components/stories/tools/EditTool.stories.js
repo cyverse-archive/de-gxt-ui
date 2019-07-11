@@ -16,6 +16,11 @@ class EditToolTest extends Component {
                 ((tool) => {
                     console.log(tool);
                 }),
+            onPublish:
+                this.props.logger ||
+                ((tool) => {
+                    console.log(tool);
+                }),
             closeEditToolDlg: () => console.log("close"),
         };
 
@@ -84,6 +89,8 @@ class EditToolTest extends Component {
         return (
             <EditToolDialog
                 open={true}
+                isAdmin={boolean("isAdmin", true)}
+                isAdminPublishing={boolean("isAdminPublishing", false)}
                 loading={false}
                 parentId={parentId}
                 tool={object("tool", tool)}

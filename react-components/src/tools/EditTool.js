@@ -2,16 +2,23 @@
  * @author aramsey
  */
 import React from "react";
+
+import ContainerDevices from "./ContainerDevices";
 import ContainerImage from "./ContainerImage";
 import ContainerPorts from "./ContainerPorts";
+import ContainerVolumes from "./ContainerVolumes";
+import ContainerVolumesFrom from "./ContainerVolumesFrom";
 import ids from "./ids";
 import messages from "./messages";
 import Restrictions from "./ToolRestrictions";
+import styles from "./styles";
+import ToolImplementation from "./ToolImplementation";
 import { nonEmptyField } from "./Validations";
 
 import {
     build,
     DEDialogHeader,
+    FormCheckbox,
     FormMultilineTextField,
     FormNumberField,
     FormSelectField,
@@ -27,7 +34,10 @@ import {
     DialogActions,
     DialogContent,
     MenuItem,
+    Paper,
+    Typography,
 } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 function EditToolDialog(props) {
@@ -36,6 +46,8 @@ function EditToolDialog(props) {
         parentId,
         tool,
         loading,
+        isAdmin,
+        isAdminPublishing,
         toolTypes,
         maxCPUCore,
         maxMemory,
@@ -66,8 +78,9 @@ function EditToolDialog(props) {
             />
             <DialogContent>
                 <LoadingMask loading={loading}>
-                    <EditToolForm
+                    <StyledEditToolForm
                         values={values}
+                        isAdmin={isAdmin}
                         parentId={parentId}
                         toolTypes={toolTypes}
                         maxCPUCore={maxCPUCore}
@@ -91,21 +104,27 @@ function EditToolDialog(props) {
                     color="primary"
                     onClick={handleSubmit}
                 >
-                    {getMessage("save")}
+                    {isAdminPublishing
+                        ? getMessage("makePublic")
+                        : getMessage("save")}
                 </Button>
             </DialogActions>
         </Dialog>
     );
 }
 
+const StyledEditToolForm = withStyles(styles)(EditToolForm);
+
 function EditToolForm(props) {
     const {
+        isAdmin,
         values,
         parentId,
         toolTypes,
         maxCPUCore,
         maxMemory,
         maxDiskSpace,
+        classes,
     } = props;
 
     const selectedToolType = getIn(values, "type");
@@ -136,6 +155,22 @@ function EditToolForm(props) {
                 validate={nonEmptyField}
                 component={FormTextField}
             />
+            {isAdmin && (
+                <Field
+                    name="attribution"
+                    label={getMessage("attribution")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.ATTRIBUTION)}
+                    component={FormTextField}
+                />
+            )}
+            {isAdmin && (
+                <Field
+                    name="location"
+                    label={getMessage("location")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.LOCATION)}
+                    component={FormTextField}
+                />
+            )}
             <Field
                 name="type"
                 validate={nonEmptyField}
@@ -167,12 +202,46 @@ function EditToolForm(props) {
                     </FormSelectField>
                 )}
             />
+            {isAdmin && (
+                <Field
+                    name="interactive"
+                    label={getMessage("interactive")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.INTERACTIVE)}
+                    component={FormCheckbox}
+                />
+            )}
+            {isAdmin && (
+                <Field
+                    name="implementation"
+                    isAdmin={isAdmin}
+                    parentId={build(
+                        parentId,
+                        ids.EDIT_TOOL_DLG.TOOL_IMPLEMENTATION
+                    )}
+                    component={ToolImplementation}
+                />
+            )}
             <Field
                 name={"container.image"}
                 parentId={parentId}
                 isOSGTool={isOSGTool}
                 component={ContainerImage}
             />
+            {isAdmin && (
+                <Field
+                    name="container.name"
+                    label={getMessage("containerName")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.CONTAINER_NAME)}
+                    component={FormTextField}
+                />
+            )}
+            {isAdmin && (
+                <Paper elevation={1} classes={{ root: classes.paper }}>
+                    <Typography variant="body2">
+                        {getMessage("entrypointWarning")}
+                    </Typography>
+                </Paper>
+            )}
             <Field
                 name="container.entrypoint"
                 label={getMessage("entrypoint")}
@@ -191,11 +260,12 @@ function EditToolForm(props) {
                 id={build(parentId, ids.EDIT_TOOL_DLG.CONTAINER_UID)}
                 component={FormNumberField}
             />
-            {isInteractiveTool && (
+            {(isAdmin || isInteractiveTool) && (
                 <FieldArray
                     name="container.container_ports"
                     render={(arrayHelpers) => (
                         <ContainerPorts
+                            isAdmin={isAdmin}
                             parentId={build(
                                 parentId,
                                 ids.EDIT_TOOL_DLG.CONTAINER_PORTS
@@ -205,7 +275,65 @@ function EditToolForm(props) {
                     )}
                 />
             )}
+            {isAdmin && (
+                <FieldArray
+                    name="container.container_devices"
+                    render={(arrayHelpers) => (
+                        <ContainerDevices
+                            parentId={build(
+                                parentId,
+                                ids.EDIT_TOOL_DLG.CONTAINER_DEVICES
+                            )}
+                            {...arrayHelpers}
+                        />
+                    )}
+                />
+            )}
+            {isAdmin && (
+                <Paper elevation={1} classes={{ root: classes.paper }}>
+                    <Typography variant="body2">
+                        {getMessage("volumesWarning")}
+                    </Typography>
+                </Paper>
+            )}
+            {isAdmin && (
+                <Field
+                    name="container.skip_tmp_mount"
+                    label={getMessage("skipTmpMount")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.SKIP_TMP_MOUNT)}
+                    component={FormCheckbox}
+                />
+            )}
+            {isAdmin && (
+                <FieldArray
+                    name="container.container_volumes"
+                    render={(arrayHelpers) => (
+                        <ContainerVolumes
+                            parentId={build(
+                                parentId,
+                                ids.EDIT_TOOL_DLG.CONTAINER_VOLUMES
+                            )}
+                            {...arrayHelpers}
+                        />
+                    )}
+                />
+            )}
+            {isAdmin && (
+                <FieldArray
+                    name="container.container_volumes_from"
+                    render={(arrayHelpers) => (
+                        <ContainerVolumesFrom
+                            parentId={build(
+                                parentId,
+                                ids.EDIT_TOOL_DLG.CONTAINER_VOLUMES
+                            )}
+                            {...arrayHelpers}
+                        />
+                    )}
+                />
+            )}
             <Restrictions
+                isAdmin={isAdmin}
                 parentId={build(parentId, ids.EDIT_TOOL_DLG.RESTRICTIONS)}
                 maxDiskSpace={maxDiskSpace}
                 maxCPUCore={maxCPUCore}
@@ -234,9 +362,13 @@ function resetOnTypeChange(currentType, form) {
 }
 
 const handleSubmit = (values, { props }) => {
-    const { tool, presenter } = props;
+    const { tool, presenter, isAdmin, isAdminPublishing } = props;
     if (tool) {
-        presenter.updateTool(values);
+        if (isAdmin && isAdminPublishing) {
+            presenter.onPublish(values);
+        } else {
+            presenter.updateTool(values);
+        }
     } else {
         presenter.addTool(values);
     }
@@ -255,10 +387,22 @@ const DEFAULT_TOOL = {
     type: "",
 };
 
+const DEFAULT_ADMIN_TOOL = {
+    ...DEFAULT_TOOL,
+    implementation: {
+        implementor: "",
+        implementor_email: "",
+        test: {
+            input_files: [],
+            output_files: [],
+        },
+    },
+};
+
 function mapPropsToValues(props) {
-    const { tool } = props;
+    const { tool, isAdmin } = props;
     if (!tool) {
-        return { ...DEFAULT_TOOL };
+        return isAdmin ? { ...DEFAULT_ADMIN_TOOL } : { ...DEFAULT_TOOL };
     } else {
         return { ...tool };
     }
@@ -266,10 +410,13 @@ function mapPropsToValues(props) {
 
 EditToolDialog.propTypes = {
     open: PropTypes.bool.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
+    isAdminPublishing: PropTypes.bool.isRequired,
     presenter: PropTypes.shape({
-        addTool: PropTypes.func.isRequired,
-        updateTool: PropTypes.func.isRequired,
+        addTool: PropTypes.func,
+        updateTool: PropTypes.func,
         closeEditToolDlg: PropTypes.func.isRequired,
+        onPublish: PropTypes.func,
     }),
     loading: PropTypes.bool.isRequired,
     tool: PropTypes.object,

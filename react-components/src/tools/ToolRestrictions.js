@@ -5,6 +5,7 @@ import SimpleExpansionPanel from "./SimpleExpansionPanel";
 
 import {
     build,
+    FormCheckbox,
     FormNumberField,
     FormSelectField,
     FormTextField,
@@ -13,6 +14,8 @@ import {
 import { Field } from "formik";
 import { MenuItem, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
+
+const NETWORK_MODES = ["bridge", "none"];
 
 const ONE_GB = 1024 * 1024 * 1024;
 
@@ -35,7 +38,7 @@ function buildLimitList(startValue, maxValue) {
 }
 
 function Restrictions(props) {
-    const { parentId, maxCPUCore, maxMemory, maxDiskSpace } = props;
+    const { parentId, isAdmin, maxCPUCore, maxMemory, maxDiskSpace } = props;
 
     const maxCPUCoreList = buildLimitList(1, maxCPUCore);
     const memoryLimitList = buildLimitList(2 * ONE_GB, maxMemory);
@@ -46,6 +49,22 @@ function Restrictions(props) {
             header={getMessage("restrictions")}
             parentId={parentId}
         >
+            {isAdmin && (
+                <Field
+                    name="restricted"
+                    label={getMessage("restricted")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.RESTRICTED)}
+                    component={FormCheckbox}
+                />
+            )}
+            {isAdmin && (
+                <Field
+                    name="container.min_cpu_cores"
+                    label={getMessage("minCPUCores")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.MIN_CPU_CORES)}
+                    component={FormNumberField}
+                />
+            )}
             <Field
                 name="container.max_cpu_cores"
                 label={getMessage("maxCPUCores")}
@@ -66,6 +85,14 @@ function Restrictions(props) {
                     </MenuItem>
                 ))}
             </Field>
+            {isAdmin && (
+                <Field
+                    name="container.min_memory_limit"
+                    label={getMessage("minMemoryLimit")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.MIN_MEMORY_LIMIT)}
+                    component={FormNumberField}
+                />
+            )}
             <Field
                 name="container.memory_limit"
                 label={getMessage("memoryLimit")}
@@ -87,6 +114,14 @@ function Restrictions(props) {
                     </MenuItem>
                 ))}
             </Field>
+            {isAdmin && (
+                <Field
+                    name="container.cpu_shares"
+                    label={getMessage("cpuShares")}
+                    id={build(parentId, ids.EDIT_TOOL_DLG.CPU_SHARES)}
+                    component={FormNumberField}
+                />
+            )}
             <Field
                 name="container.min_disk_space"
                 label={getMessage("minDiskSpace")}
@@ -108,28 +143,44 @@ function Restrictions(props) {
                     </MenuItem>
                 ))}
             </Field>
-            <Typography variant="caption">
-                {getMessage("restrictionsSupport")}
-            </Typography>
+            {!isAdmin && (
+                <Typography variant="caption">
+                    {getMessage("restrictionsSupport")}
+                </Typography>
+            )}
             <Field
                 name="container.pids_limit"
                 label={getMessage("pidsLimit")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.PIDS_LIMIT)}
-                disabled
+                disabled={!isAdmin}
                 component={FormNumberField}
             />
             <Field
                 name="container.network_mode"
                 label={getMessage("networkMode")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.NETWORK_MODE)}
-                disabled
-                component={FormTextField}
-            />
+                disabled={!isAdmin}
+                component={FormSelectField}
+            >
+                {NETWORK_MODES.map((mode, index) => (
+                    <MenuItem
+                        key={index}
+                        value={mode}
+                        id={build(
+                            parentId,
+                            ids.EDIT_TOOL_DLG.NETWORK_MODE,
+                            mode
+                        )}
+                    >
+                        {mode}
+                    </MenuItem>
+                ))}
+            </Field>
             <Field
                 name="time_limit_seconds"
                 label={getMessage("timeLimit")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.TIME_LIMIT)}
-                disabled
+                disabled={!isAdmin}
                 component={FormNumberField}
             />
         </SimpleExpansionPanel>
@@ -137,6 +188,7 @@ function Restrictions(props) {
 }
 
 Restrictions.propTypes = {
+    isAdmin: PropTypes.bool.isRequired,
     parentId: PropTypes.string.isRequired,
     maxCPUCore: PropTypes.number.isRequired,
     maxDiskSpace: PropTypes.number.isRequired,
