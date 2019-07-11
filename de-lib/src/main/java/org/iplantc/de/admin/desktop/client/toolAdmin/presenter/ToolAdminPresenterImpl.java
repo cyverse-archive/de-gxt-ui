@@ -10,7 +10,6 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.DeleteToolDialog;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.OverwriteToolDialog;
-import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
@@ -23,12 +22,17 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.tools.client.ReactToolViews;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -42,7 +46,6 @@ import java.util.List;
 public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
                                                AddToolSelectedEvent.AddToolSelectedEventHandler,
                                                ToolSelectedEvent.ToolSelectedEventHandler,
-                                               SaveToolSelectedEvent.SaveToolSelectedEventHandler,
                                                DeleteToolSelectedEvent.DeleteToolSelectedEventHandler {
 
     private final ToolAdminView view;
@@ -50,6 +53,7 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
     private final ToolAutoBeanFactory factory;
     private final ToolAdminView.ToolAdminViewAppearance appearance;
     private final ListStore<Tool> listStore;
+    EditToolView editToolView;
     @Inject IplantAnnouncer announcer;
     @Inject DEProperties deProperties;
     @Inject AsyncProviderWrapper<OverwriteToolDialog> overwriteAppDialog;
@@ -60,13 +64,14 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
                                   ToolAdminServiceFacade toolAdminServiceFacade,
                                   ToolAutoBeanFactory factory,
                                   ToolProperties toolProperties,
-                                  ToolAdminView.ToolAdminViewAppearance appearance) {
+                                  ToolAdminView.ToolAdminViewAppearance appearance,
+                                  EditToolViewFactory editToolViewFactory) {
         this.listStore = createListStore(toolProperties);
         this.view = viewFactory.create(listStore);
         view.addAddToolSelectedEventHandler(this);
-        view.addSaveToolSelectedEventHandler(this);
         view.addToolSelectedEventHandler(this);
         view.addDeleteToolSelectedEventHandler(this);
+        this.editToolView = editToolViewFactory.create(getBaseProps());
         this.factory = factory;
         this.appearance = appearance;
         this.toolAdminServiceFacade = toolAdminServiceFacade;
@@ -84,7 +89,7 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
             public void onSuccess(List<ToolType> result) {
                 List<String> toolTypes = Lists.newArrayList();
                 result.forEach(toolType -> toolTypes.add(toolType.getName()));
-                view.setToolTypes(toolTypes);
+                editToolView.setToolTypes(toolTypes.toArray(new String[0]));
             }
         });
         container.setWidget(view);
@@ -105,29 +110,42 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
 
     @Override
     public void onAddToolSelected(AddToolSelectedEvent event) {
+        editToolView.edit(null);
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void addTool(Splittable toolSpl) {
         //The UI handles creating a single tool request, but the admin/tools POST endpoint requires
         // an array of requests.  Wrapping the request inside an array.
-        Tool tool = event.getTool();
+        Tool tool = convertSplittableToTool(toolSpl);
         checkForViceTool(tool);
         ToolList toolList = factory.getToolList().as();
         List<Tool> listTool = new ArrayList<>();
         listTool.add(tool);
         toolList.setToolList(listTool);
+        editToolView.mask();
 
         toolAdminServiceFacade.addTool(toolList, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                editToolView.unmask();
+                ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(Void result) {
+                editToolView.close();
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.addToolSuccessText()));
                 updateView();
             }
-
         });
+    }
+
+    @Override
+    public void closeEditToolDlg() {
+        editToolView.close();
     }
 
     @Override
@@ -167,22 +185,27 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
         toolAdminServiceFacade.getToolDetails(event.getTool().getId(), new AsyncCallback<Tool>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(Tool result) {
-                view.editToolDetails(result, ToolAdminDetailsDialog.Mode.EDIT);
+                Splittable tool = convertToolToSplittable(result);
+                editToolView.edit(tool);
             }
         });
     }
 
     @Override
-    public void onSaveToolSelected(SaveToolSelectedEvent event) {
-        updateTool(event.getTool(), false);
+    @SuppressWarnings("unusable-by-js")
+    public void updateTool(Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
+        updateTool(tool, false);
     }
 
     void updateTool(final Tool tool, final boolean overwrite) {
+        editToolView.mask();
+
         checkForViceTool(tool);
         toolAdminServiceFacade.updateTool(tool, overwrite, new AsyncCallback<Void>() {
             @Override
@@ -209,12 +232,14 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
                     });
 
                 } else {
-                    ErrorHandler.post(caught);
+                    editToolView.unmask();
+                    ErrorHandler.postReact(caught);
                 }
             }
 
             @Override
             public void onSuccess(Void result) {
+                editToolView.close();
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.updateToolSuccessText()));
                 updateView();
             }
@@ -255,5 +280,23 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
                 listStore.replaceAll(result);
             }
         });
+    }
+
+    ReactToolViews.AdminEditToolProps getBaseProps() {
+        ReactToolViews.AdminEditToolProps baseProps = new ReactToolViews.AdminEditToolProps();
+        baseProps.presenter = this;
+        baseProps.parentId = Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG;
+        baseProps.isAdmin = true;
+        baseProps.isAdminPublishing = false;
+
+        return baseProps;
+    }
+
+    Tool convertSplittableToTool(Splittable toolSpl) {
+        return AutoBeanCodex.decode(factory, Tool.class, toolSpl.getPayload()).as();
+    }
+
+    Splittable convertToolToSplittable(Tool tool) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
     }
 }

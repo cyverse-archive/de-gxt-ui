@@ -346,6 +346,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         ReactToolViews.EditToolProps props = new ReactToolViews.EditToolProps();
         props.presenter = this;
         props.parentId = ToolsModule.EditToolIds.EDIT_DIALOG;
+        props.isAdmin = false;
+        props.isAdminPublishing = false;
 
         return props;
     }

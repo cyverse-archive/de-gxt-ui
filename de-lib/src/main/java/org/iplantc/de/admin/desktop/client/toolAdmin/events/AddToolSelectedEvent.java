@@ -1,25 +1,13 @@
 package org.iplantc.de.admin.desktop.client.toolAdmin.events;
 
-import org.iplantc.de.client.models.tool.Tool;
-
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * @author jstroot
+ * @author aramsey
  */
 public class AddToolSelectedEvent extends GwtEvent<AddToolSelectedEvent.AddToolSelectedEventHandler> {
-
-    private Tool tool;
-
-    public AddToolSelectedEvent(Tool tool) {
-        this.tool = tool;
-    }
-
-    public Tool getTool() {
-        return tool;
-    }
 
     public interface AddToolSelectedEventHandler extends EventHandler {
         void onAddToolSelected(AddToolSelectedEvent event);

@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.toolAdmin.presenter;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -19,7 +20,6 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.DeleteToolDialog;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.OverwriteToolDialog;
-import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.models.tool.Tool;
@@ -27,11 +27,15 @@ import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.tools.client.ReactToolViews;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -66,6 +70,11 @@ public class ToolAdminPresenterImplTest {
     @Mock IplantAnnouncer iplantAnnouncerMock;
     @Mock AsyncProviderWrapper<OverwriteToolDialog> overwriteAppDialogMock;
     @Mock AsyncProviderWrapper<DeleteToolDialog> deleteAppDialogMock;
+    @Mock EditToolViewFactory editToolViewFactoryMock;
+    @Mock EditToolView editToolViewMock;
+    @Mock Splittable toolSplMock;
+    @Mock Tool toolMock;
+    @Mock ReactToolViews.AdminEditToolProps baseEditToolPropsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Tool>> asyncCallbackToolCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Tool>>> asyncCallbackToolListCaptor;
@@ -84,13 +93,31 @@ public class ToolAdminPresenterImplTest {
         when(toolAdminViewAppearanceMock.addToolSuccessText()).thenReturn("sample");
         when(toolAdminViewAppearanceMock.deleteToolSuccessText()).thenReturn("sample");
         when(toolAdminViewAppearanceMock.updateToolSuccessText()).thenReturn("sample");
+        when(editToolViewFactoryMock.create(baseEditToolPropsMock)).thenReturn(editToolViewMock);
         uut = new ToolAdminPresenterImpl(toolAdminViewFactoryMock,
                                          toolAdminServiceFacadeMock,
                                          toolAutoBeanFactoryMock,
                                          toolPropertiesMock,
-                                         toolAdminViewAppearanceMock){
+                                         toolAdminViewAppearanceMock,
+                                         editToolViewFactoryMock) {
             @Override
-            void checkForViceTool(Tool tool) {}
+            void checkForViceTool(Tool tool) {
+            }
+
+            @Override
+            Tool convertSplittableToTool(Splittable toolSpl) {
+                return toolMock;
+            }
+
+            @Override
+            Splittable convertToolToSplittable(Tool tool) {
+                return toolSplMock;
+            }
+
+            @Override
+            ReactToolViews.AdminEditToolProps getBaseProps() {
+                return baseEditToolPropsMock;
+            }
         };
         uut.announcer = iplantAnnouncerMock;
         uut.overwriteAppDialog = overwriteAppDialogMock;
@@ -102,7 +129,6 @@ public class ToolAdminPresenterImplTest {
     private void verifyConstructor(ToolAdminPresenterImpl uut) {
         verify(toolAdminViewFactoryMock).create(Matchers.<ListStore<Tool>>any());
         verify(viewMock).addAddToolSelectedEventHandler(eq(uut));
-        verify(viewMock).addSaveToolSelectedEventHandler(eq(uut));
         verify(viewMock).addToolSelectedEventHandler(eq(uut));
         verify(viewMock).addDeleteToolSelectedEventHandler(eq(uut));
 
@@ -113,37 +139,22 @@ public class ToolAdminPresenterImplTest {
     public void testOnAddToolSelected() {
         AddToolSelectedEvent addToolSelectedEventMock = mock(AddToolSelectedEvent.class);
 
-        Tool toolMock = mock(Tool.class);
-        when(addToolSelectedEventMock.getTool()).thenReturn(toolMock);
-
-        ToolList toolListMock = mock(ToolList.class);
-        when(toolAutoBeanFactoryMock.getToolList()).thenReturn(toolListAutoBeanMock);
-        when(toolListAutoBeanMock.as()).thenReturn(toolListMock);
-
         /** CALL METHOD UNDER TEST **/
         uut.onAddToolSelected(addToolSelectedEventMock);
 
-        verify(toolAdminServiceFacadeMock).addTool(eq(toolListMock),
-                                                      asyncCallbackVoidCaptor.capture());
-
+        verify(editToolViewMock).edit(eq(null));
     }
 
     @Test
-    public void testOnAddToolSelected_callbackSuccess() {
-        AddToolSelectedEvent addToolSelectedEventMock = mock(AddToolSelectedEvent.class);
-
-        Tool toolMock = mock(Tool.class);
-        when(addToolSelectedEventMock.getTool()).thenReturn(toolMock);
-
+    public void testAddTool() {
         ToolList toolListMock = mock(ToolList.class);
         when(toolAutoBeanFactoryMock.getToolList()).thenReturn(toolListAutoBeanMock);
         when(toolListAutoBeanMock.as()).thenReturn(toolListMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onAddToolSelected(addToolSelectedEventMock);
+        uut.addTool(toolSplMock);
 
-        verify(toolAdminServiceFacadeMock).addTool(eq(toolListMock),
-                                                   asyncCallbackVoidCaptor.capture());
+        verify(toolAdminServiceFacadeMock).addTool(eq(toolListMock), asyncCallbackVoidCaptor.capture());
 
         /** CALL METHOD UNDER TEST **/
         asyncCallbackVoidCaptor.getValue().onSuccess(null);
@@ -185,7 +196,8 @@ public class ToolAdminPresenterImplTest {
                                                                  toolAdminServiceFacadeMock,
                                                                  toolAutoBeanFactoryMock,
                                                                  toolPropertiesMock,
-                                                                 toolAdminViewAppearanceMock) {
+                                                                 toolAdminViewAppearanceMock,
+                                                                 editToolViewFactoryMock) {
             @Override
             String getServiceError(Throwable caught) {
                 return "ERR_NOT_WRITEABLE";
@@ -216,8 +228,7 @@ public class ToolAdminPresenterImplTest {
     }
 
     @Test
-    public void onToolSelected() {
-        Tool toolMock = mock(Tool.class);
+    public void onToolSelected_callbackSuccess() {
         String idMock = "mockToolId";
         ToolSelectedEvent eventMock = mock(ToolSelectedEvent.class);
         when(toolMock.getId()).thenReturn(idMock);
@@ -226,53 +237,38 @@ public class ToolAdminPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onToolSelected(eventMock);
 
-        verify(toolAdminServiceFacadeMock).getToolDetails(eq(idMock),
-                                                          Matchers.<AsyncCallback<Tool>>any());
-        verifyNoMoreInteractions(toolAdminServiceFacadeMock, viewMock);
-    }
-
-    @Test public void onToolSelected_callbackSuccess() {
-        Tool toolMock = mock(Tool.class);
-        String idMock = "mockToolId";
-        ToolSelectedEvent eventMock = mock(ToolSelectedEvent.class);
-        when(toolMock.getId()).thenReturn(idMock);
-        when(eventMock.getTool()).thenReturn(toolMock);
-
-        /** CALL METHOD UNDER TEST **/
-        uut.onToolSelected(eventMock);
-
-        verify(toolAdminServiceFacadeMock).getToolDetails(eq(idMock),
-                                                          asyncCallbackToolCaptor.capture());
+        verify(viewMock).mask(any());
+        verify(toolAdminServiceFacadeMock).getToolDetails(eq(idMock), asyncCallbackToolCaptor.capture());
         AsyncCallback<Tool> value = asyncCallbackToolCaptor.getValue();
 
         /** CALL METHOD UNDER TEST **/
         value.onSuccess(toolMock);
-        verify(viewMock).editToolDetails(eq(toolMock), eq(ToolAdminDetailsDialog.Mode.EDIT));
+        verify(viewMock).unmask();
+        verify(editToolViewMock).edit(eq(toolSplMock));
 
         verifyNoMoreInteractions(toolAdminServiceFacadeMock, viewMock);
     }
 
-    @Test public void testOnSaveToolSelected() {
-        Tool toolMock = mock(Tool.class);
-        SaveToolSelectedEvent saveToolSelectedEventMock = mock(SaveToolSelectedEvent.class);
-        when(saveToolSelectedEventMock.getTool()).thenReturn(toolMock);
-
+    @Test
+    public void testUpdateTool() {
         /** CALL METHOD UNDER TEST **/
-        uut.onSaveToolSelected(saveToolSelectedEventMock);
-
-        uut.updateTool(eq(toolMock), eq(anyBoolean()));
+        uut.updateTool(toolSplMock);
+        verify(toolAdminServiceFacadeMock).updateTool(eq(toolMock),
+                                                      anyBoolean(),
+                                                      asyncCallbackVoidCaptor.capture());
     }
 
-    @Test public void testUpdateTool_overwriteFalse() {
+    @Test
+    public void testUpdateTool_overwriteFalse() {
         Tool toolMock = mock(Tool.class);
         String idMock = "sample";
         when(toolMock.getId()).thenReturn(idMock);
 
 
         /** CALL METHOD UNDER TEST **/
-        uut.updateTool(eq(toolMock), eq(anyBoolean()));
+        uut.updateTool(toolMock, false);
 
-        verify(toolAdminServiceFacadeMock).updateTool(Matchers.<Tool>any(),
+        verify(toolAdminServiceFacadeMock).updateTool(eq(toolMock),
                                                       anyBoolean(),
                                                       asyncCallbackVoidCaptor.capture());
 
@@ -280,7 +276,8 @@ public class ToolAdminPresenterImplTest {
         uut.updateView();
     }
 
-    @Test public void testUpdateTool_overwriteTrue() {
+    @Test
+    public void testUpdateTool_overwriteTrue() {
         Tool toolMock = mock(Tool.class);
         String idMock = "sample";
         when(toolMock.getId()).thenReturn(idMock);
@@ -289,10 +286,11 @@ public class ToolAdminPresenterImplTest {
         when(simpleServiceErrorMock.getErrorCode()).thenReturn("ERR_NOT_WRITEABLE");
 
         ToolAdminPresenterImpl uuti = new ToolAdminPresenterImpl(toolAdminViewFactoryMock,
-                                         toolAdminServiceFacadeMock,
-                                         toolAutoBeanFactoryMock,
-                                         toolPropertiesMock,
-                                         toolAdminViewAppearanceMock) {
+                                                                 toolAdminServiceFacadeMock,
+                                                                 toolAutoBeanFactoryMock,
+                                                                 toolPropertiesMock,
+                                                                 toolAdminViewAppearanceMock,
+                                                                 editToolViewFactoryMock) {
             @Override
             String getServiceError(Throwable caught) {
                 return "ERR_NOT_WRITEABLE";
@@ -303,9 +301,10 @@ public class ToolAdminPresenterImplTest {
             }
         };
         uuti.overwriteAppDialog = overwriteAppDialogMock;
+        uuti.editToolView = editToolViewMock;
 
         /** CALL METHOD UNDER TEST **/
-        uuti.updateTool(eq(toolMock), eq(anyBoolean()));
+        uuti.updateTool(toolMock, true);
 
         verify(toolAdminServiceFacadeMock).updateTool(Matchers.<Tool>any(),
                                                       anyBoolean(),
@@ -332,12 +331,14 @@ public class ToolAdminPresenterImplTest {
 
     }
 
-    @Test public void testUpdateView() {
+    @Test
+    public void testUpdateView() {
         final ToolAdminPresenterImpl uuti = new ToolAdminPresenterImpl(toolAdminViewFactoryMock,
-                                                                 toolAdminServiceFacadeMock,
-                                                                 toolAutoBeanFactoryMock,
-                                                                 toolPropertiesMock,
-                                                                 toolAdminViewAppearanceMock) {
+                                                                       toolAdminServiceFacadeMock,
+                                                                       toolAutoBeanFactoryMock,
+                                                                       toolPropertiesMock,
+                                                                       toolAdminViewAppearanceMock,
+                                                                       editToolViewFactoryMock) {
             @Override
             ListStore<Tool> createListStore(ToolProperties toolProps) {
                 return listStoreToolMock;
@@ -348,7 +349,8 @@ public class ToolAdminPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         uuti.updateView(searchTermMock);
-        verify(toolAdminServiceFacadeMock).getTools(eq(searchTermMock), asyncCallbackToolListCaptor.capture());
+        verify(toolAdminServiceFacadeMock).getTools(eq(searchTermMock),
+                                                    asyncCallbackToolListCaptor.capture());
 
         AsyncCallback<List<Tool>> listAsyncCallback = asyncCallbackToolListCaptor.getValue();
 

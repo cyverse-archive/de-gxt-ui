@@ -18,12 +18,6 @@ import com.sencha.gxt.core.client.XTemplates;
  */
 public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminViewAppearance {
 
-
-    interface Templates extends XTemplates {
-        @XTemplates.XTemplate("<span style='color: red;'>*&nbsp</span>{label}")
-        SafeHtml requiredFieldLabel(String label);
-    }
-
     interface HelpTemplates extends SafeHtmlTemplates {
         @SafeHtmlTemplates.Template("{0}<img style='float: right;' src='{1}' qtip='{2}'></img>")
         SafeHtml fieldLabelImgFloatRight(SafeHtml label, SafeUri img, String toolTip);
@@ -31,30 +25,22 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
 
     private final ToolAdminDisplayStrings displayStrings;
     private final IplantResources iplantResources;
-    private final IplantDisplayStrings iplantDisplayStrings;
-    private final Templates templates;
     private final HelpTemplates helpTemplates;
 
 
     public ToolAdminViewDefaultAppearance() {
         this(GWT.<ToolAdminDisplayStrings>create(ToolAdminDisplayStrings.class),
              GWT.<IplantResources>create(IplantResources.class),
-             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
-             GWT.<Templates>create(Templates.class),
              GWT.<HelpTemplates> create(HelpTemplates.class));
 
     }
 
     ToolAdminViewDefaultAppearance(final ToolAdminDisplayStrings displayStrings,
                                    final IplantResources iplantResources,
-                                   final IplantDisplayStrings iplantDisplayStrings,
-                                   Templates templates,
                                    HelpTemplates helpTemplates) {
         this.displayStrings = displayStrings;
         this.iplantResources = iplantResources;
-        this.templates = templates;
         this.helpTemplates = helpTemplates;
-        this.iplantDisplayStrings = iplantDisplayStrings;
     }
 
     SafeHtml getContextualHelp (String labelText, String helpText) {
@@ -142,277 +128,6 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
-    public String toolImportDescriptionLabel() {
-        return displayStrings.toolImportDescriptionLabel();
-    }
-
-    @Override
-    public SafeHtml toolImportNameLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImportNameLabel());
-    }
-
-    @Override
-    public SafeHtml toolImportTypeLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImportTypeLabel());
-    }
-
-    @Override
-    public String toolImportTypeDefaultValue() {
-        return displayStrings.toolImportTypeDefaultValue();
-    }
-
-    @Override
-    public String toolImportAttributionLabel() {
-        return displayStrings.toolImportAttributionLabel();
-    }
-
-    @Override
-    public SafeHtml toolImportVersionLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImportVersionLabel());
-    }
-
-    @Override
-    public String toolImportLocationLabel() {
-        return displayStrings.toolImportLocationLabel();
-    }
-
-    @Override
-    public String containerDetailsFieldSetLabel() {
-        return displayStrings.containerDetailsFieldSetLabel();
-    }
-
-    @Override
-    public String containerNameLabel() {
-        return displayStrings.containerNameLabel();
-    }
-
-    @Override
-    public String containerWorkingDirLabel() {
-        return displayStrings.containerWorkingDirLabel();
-    }
-
-    @Override
-    public String containerUIDLabel() {
-        return displayStrings.containerUIDLabel();
-    }
-
-    @Override
-    public String containerEntryPointLabel() {
-        return displayStrings.containerEntryPointLabel();
-    }
-
-    @Override
-    public String containerMemoryLimitLabel() {
-        return displayStrings.containerMemoryLimitLabel();
-    }
-
-    @Override
-    public int containerMemoryLimitDefaultValue() {
-        return 0;
-    }
-
-    @Override
-    public String containerCPUSharesLabel() {
-        return displayStrings.containerCPUSharesLabel();
-    }
-
-    @Override
-    public int containerCPUSharesDefaultValue() {
-        return 0;
-    }
-
-    @Override
-    public String containerNetworkModeLabel() {
-        return displayStrings.containerNetworkModeLabel();
-    }
-
-    @Override
-    public SafeHtml containerDevicesLabel() {
-        return getContextualHelp(displayStrings.containerDevicesLabel(), displayStrings.containerDeviceHelp());
-    }
-
-    @Override
-    public String containerDevicesHostPathLabel() {
-        return displayStrings.containerDevicesHostPathLabel();
-    }
-
-    @Override
-    public int containerDevicesHostPathWidth() {
-        return 400;
-    }
-
-    @Override
-    public String containerDevicesContainerPathLabel() {
-        return displayStrings.containerDevicesContainerPathLabel();
-    }
-
-    @Override
-    public int containerDevicesContainerPathWidth() {
-        return 400;
-    }
-
-    @Override
-    public SafeHtml containerVolumesLabel() {
-        return getContextualHelp(displayStrings.containerVolumesLabel(), displayStrings.containerVolumeHelp());
-    }
-
-    @Override
-    public String containerVolumesHostPathLabel() {
-        return displayStrings.containerVolumesHostPathLabel();
-    }
-
-    @Override
-    public int containerVolumesHostPathWidth() {
-        return 400;
-    }
-
-    @Override
-    public String containerVolumesContainerPathLabel() {
-        return displayStrings.containerVolumesContainerPathLabel();
-    }
-
-    @Override
-    public int containerVolumesContainerPathWidth() {
-        return 400;
-    }
-
-    @Override
-    public String containerImageFieldSetLabel() {
-        return displayStrings.containerImageFieldSetLabel();
-    }
-
-    @Override
-    public SafeHtml containerImageNameLabel() {
-        return templates.requiredFieldLabel(displayStrings.containerImageNameLabel());
-    }
-
-    @Override
-    public String containerImageTagLabel() {
-        return displayStrings.containerImageTagLabel();
-    }
-
-    @Override
-    public String containerImageURLLabel() {
-        return displayStrings.containerImageURLLabel();
-    }
-
-    @Override
-    public SafeHtml containerVolumesFromLabel() {
-        return getContextualHelp(displayStrings.containerVolumesFromLabel(), displayStrings.containerVolumesFromHelp());
-    }
-
-    @Override
-    public String containerVolumesFromNameLabel() {
-        return displayStrings.containerVolumesFromNameLabel();
-    }
-
-    @Override
-    public int containerVolumesFromNameWidth() {
-        return 300;
-    }
-
-    @Override
-    public String containerVolumesFromTagLabel() {
-        return displayStrings.containerVolumesFromTagLabel();
-    }
-
-    @Override
-    public int containerVolumesFromTagWidth() {
-        return 50;
-    }
-
-    @Override
-    public String containerVolumesFromURLLabel() {
-        return displayStrings.containerVolumesFromURLLabel();
-    }
-
-    @Override
-    public int containerVolumesFromURLWidth() {
-        return 350;
-    }
-
-    @Override
-    public String containerVolumesFromNamePrefixLabel() {
-        return displayStrings.containerVolumesFromNamePrefixLabel();
-    }
-
-    @Override
-    public int containerVolumesFromNamePrefixWidth() {
-        return 150;
-    }
-
-    @Override
-    public String containerVolumesFromReadOnlyLabel() {
-        return displayStrings.containerVolumesFromReadyOnlyLabel();
-    }
-
-    @Override
-    public int containerVolumesFromReadOnlyWidth() {
-        return 75;
-    }
-
-    @Override
-    public String toolImplementationFieldSetLabel() {
-        return displayStrings.toolImplementationFieldSetLabel();
-    }
-
-    @Override
-    public SafeHtml toolImplementationImplementorLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImplementationImplementorLabel());
-    }
-
-    @Override
-    public SafeHtml toolImplementationImplementorEmailLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImplementationImplementorEmailLabel());
-    }
-
-    @Override
-    public int toolTestDataParamsWidth() {
-        return 500;
-    }
-
-    @Override
-    public SafeHtml toolTestDataInputFilesLabel() {
-        return getContextualHelp(displayStrings.testToolDataInputFilesLabel(),
-                                 displayStrings.inputFilesHelp());
-    }
-
-    @Override
-    public String toolTestDataInputFilesColumnLabel() {
-        return displayStrings.testToolDataInputFilesColumnLabel();
-    }
-
-    @Override
-    public int toolTestDataInputFilesWidth() {
-        return 500;
-    }
-
-    @Override
-    public SafeHtml toolTestDataOutputFilesLabel() {
-        return getContextualHelp(displayStrings.testToolOutputFilesLabel(), displayStrings.outputFilesHelp());
-    }
-
-    @Override
-    public String toolTestDataOutputFilesColumnLabel() {
-        return displayStrings.testToolOutputFilesColumnLabel();
-    }
-
-    @Override
-    public int toolTestDataOutputFilesWidth() {
-        return 500;
-    }
-
-    @Override
-    public String dialogWindowName() {
-        return displayStrings.dialogWindowName();
-    }
-
-    @Override
-    public String dialogWindowUpdateBtnText() {
-        return displayStrings.dialogWindowUpdateBtnText();
-    }
-
-    @Override
     public String addToolSuccessText() {
         return displayStrings.addToolSuccessText();
     }
@@ -430,11 +145,6 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     @Override
     public String deleteToolSuccessText() {
         return displayStrings.deleteToolSuccessText();
-    }
-
-    @Override
-    public String completeRequiredFieldsError() {
-        return iplantDisplayStrings.completeRequiredFieldsError();
     }
 
     @Override
@@ -500,130 +210,5 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     @Override
     public String publicAppDisabledLabel() {
         return displayStrings.publicAppDisabledLabel();
-    }
-
-    @Override
-    public SafeHtml toolAdminHelp() {
-        return displayStrings.toolAdminHelp();
-    }
-
-    @Override
-    public SafeHtml toolEntryPointWarning() {
-        return displayStrings.toolEntryPointWarning();
-    }
-
-    @Override
-    public SafeHtml toolVolumeWarning() {
-        return displayStrings.toolVolumeWarning();
-    }
-
-    @Override
-    public String dialogMakePublicText() {
-        return displayStrings.dialogMakePublicText();
-    }
-
-    @Override
-    public SafeHtml timeLimit() {
-        return templates.requiredFieldLabel(displayStrings.timeLimit());
-    }
-
-    @Override
-    public String restricted() {
-        return displayStrings.restricted();
-    }
-
-    @Override
-    public String defaultImgPrefix() {
-        return displayStrings.defaultImgPrefix();
-    }
-
-    /**
-     * Field Label for PIDs limit field
-     *
-     * @return
-     */
-    @Override
-    public String pidsLimit() {
-        return displayStrings.pidsLimit();
-    }
-
-    @Override
-    public String timeLimitEmptyText() {
-        return displayStrings.timeLimitEmptyText();
-    }
-
-    @Override
-    public String interactive() {
-        return displayStrings.interactive();
-    }
-
-    @Override
-    public String maxCPUCoresLabel() {
-        return displayStrings.maxCPUCoresLabel();
-    }
-
-    @Override
-    public String minMemoryLimitLabel() {
-        return displayStrings.minMemoryLimitLabel();
-    }
-
-    @Override
-    public String minCPUCoresLabel() {
-        return displayStrings.minCPUCoresLabel();
-    }
-
-    @Override
-    public String skipTmpMountLabel() {
-        return displayStrings.skipTmpMountLabel();
-    }
-
-    @Override
-    public String minDiskSpaceLabel() {
-        return displayStrings.minDiskSpaceLabel();
-    }
-
-    @Override
-    public SafeHtml osgImagePathLabel() {
-        return templates.requiredFieldLabel(displayStrings.osgImagePathLabel());
-    }
-
-    @Override
-    public String delete() {
-        return displayStrings.delete();
-    }
-
-    @Override
-    public String containerPortsLabel() {
-        return displayStrings.containerPortsLabel();
-    }
-
-    @Override
-    public int containerHostPortWidth() {
-        return 200;
-    }
-
-    @Override
-    public String containerHostPortLabel() {
-        return displayStrings.containerHostPortLabel();
-    }
-
-    @Override
-    public int containerPortWidth() {
-        return 200;
-    }
-
-    @Override
-    public String containerPortLabel() {
-        return displayStrings.containerPortLabel();
-    }
-
-    @Override
-    public int containerBindToHostWidth() {
-        return 100;
-    }
-
-    @Override
-    public String containerBindToHostLabel() {
-        return displayStrings.containerBindToHostLabel();
     }
 }

@@ -11,8 +11,12 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * @author jstroot
@@ -100,10 +104,11 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
         void renderRequestName(SafeHtmlBuilder safeHtmlBuilder, ToolRequest toolRequest);
     }
 
-    public interface Presenter
+    @JsType
+    interface Presenter
             extends AdminMakeToolPublicSelectedEvent.AdminMakeToolPublicSelectedEventHandler {
 
-        public interface ToolRequestPresenterAppearance {
+        interface ToolRequestPresenterAppearance {
 
             String getToolRequestDetailsLoadingMask();
 
@@ -121,6 +126,7 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
          * Upon success, the presenter will refresh the view.
          * 
          */
+        @JsIgnore
         void updateToolRequest(String id, ToolRequestUpdate update);
 
         /**
@@ -130,12 +136,19 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
          * Upon success, the presenter will refresh the view.
          * 
          */
+        @JsIgnore
         void fetchToolRequestDetails(ToolRequest toolRequest);
 
+        @JsIgnore
         void go(HasOneWidget container);
 
+        @JsIgnore
         void setViewDebugId(String baseId);
 
+        @SuppressWarnings("unusable-by-js")
+        void onPublish(Splittable toolSpl);
+
+        void closeEditToolDlg();
     }
 
     void setPresenter(Presenter presenter);
