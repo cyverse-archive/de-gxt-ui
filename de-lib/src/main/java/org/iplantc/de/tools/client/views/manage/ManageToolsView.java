@@ -1,7 +1,6 @@
 
 package org.iplantc.de.tools.client.views.manage;
 
-import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
@@ -12,18 +11,22 @@ import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
 import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
+import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by sriram on 4/20/17.
@@ -36,7 +39,7 @@ public interface ManageToolsView extends IsWidget,
                                          ToolSelectionChangedEvent.HasToolSelectionChangedEventHandlers {
 
 
-    public interface ManageToolsViewAppearance {
+    interface ManageToolsViewAppearance {
         String name();
 
         String version();
@@ -90,6 +93,10 @@ public interface ManageToolsView extends IsWidget,
         int windowMinWidth();
 
         int windowMinHeight();
+
+        String create();
+
+        String edit();
     }
 
 
@@ -107,7 +114,8 @@ public interface ManageToolsView extends IsWidget,
 
     HandlerRegistration addShowToolInfoEventHandlers(ShowToolInfoEvent.ShowToolInfoEventHandler handler);
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
+    @JsType
+    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                        RefreshToolsSelectedEvent.RefreshToolsSelectedEventHandler,
                                        AddNewToolSelected.NewToolSelectedHandler,
                                        DeleteToolSelected.DeleteToolsSelectedHandler,
@@ -117,18 +125,21 @@ public interface ManageToolsView extends IsWidget,
                                        RequestToolSelected.RequestToolSelectedHandler, EditToolSelected.EditToolSelectedHandler,
                                        RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler,
                                        ShowToolInfoEvent.ShowToolInfoEventHandler{
+        @JsIgnore
         void setViewDebugId(String baseId);
 
+        @JsIgnore
         void loadTools(Boolean isPublic);
 
-        void addTool(Tool tool, Command dialogCallbackCommand);
+        @SuppressWarnings("unusable-by-js")
+        void addTool(Splittable tool);
 
-        void updateTool(Tool tool, Command dialogCallbackCommand);
+        @SuppressWarnings("unusable-by-js")
+        void updateTool(Splittable tool);
 
-        Tool getSelectedTool();
+        void closeEditToolDlg();
 
-        List<String> getToolTypes();
-
+        @JsIgnore
         HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
     }
 }

@@ -8,13 +8,9 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  */
 public interface ToolMessages extends Messages {
 
-    String manageTools();
-
     String tools();
 
     String requestTool();
-
-    String edit();
 
     String delete();
 
@@ -40,29 +36,7 @@ public interface ToolMessages extends Messages {
 
     String addTool();
 
-    String toolName();
-
-    String description();
-
-    String imgName();
-
     String tag();
-
-    String dockerUrl();
-
-    String pidsLimit();
-
-    String memLimit();
-
-    String nwMode();
-
-    String timeLimit();
-
-    String create();
-
-    String restrictions();
-
-    String toolInfo();
 
     String shareTools();
     
@@ -88,13 +62,6 @@ public interface ToolMessages extends Messages {
 
     String done();
 
-    /**
-     * The field label for entrypoint
-     *
-     * @return  label for entrypoint field
-     */
-    String entryPoint();
-
     SafeHtml sameFileError(String filename);
 
     SafeHtml alert();
@@ -103,17 +70,4 @@ public interface ToolMessages extends Messages {
 
     String toolInfoError();
 
-    String osgImagePathLabel();
-
-    String maxCPUCoresLabel();
-
-    String minDiskSpaceLabel();
-
-    String toolImportTypeLabel();
-
-    String workingDir();
-
-    String userID();
-
-    String containerPorts();
 }
