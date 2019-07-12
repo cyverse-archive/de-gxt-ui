@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 @JsType
 public interface NotificationView extends IsWidget {
@@ -32,8 +33,9 @@ public interface NotificationView extends IsWidget {
     }
 
     @JsType
-    public interface Presenter {
+    interface Presenter {
 
+        @JsIgnore
         void go(final HasOneWidget container, String baseDebugId, NotificationCategory category);
 
         void getNotifications(int limit,
@@ -51,6 +53,7 @@ public interface NotificationView extends IsWidget {
                                                     ReactSuccessCallback callback,
                                                     ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onMessageClicked(Splittable notificationMessage);
 
         NotificationCategory getCurrentCategory();

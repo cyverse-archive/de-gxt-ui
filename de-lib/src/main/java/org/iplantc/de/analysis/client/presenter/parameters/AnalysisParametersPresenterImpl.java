@@ -211,6 +211,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onAnalysisParamValueSelected(Splittable param) {
         AnalysisParameter value =
                 AutoBeanCodex.decode(analysesAutoBeanFactory, AnalysisParameter.class, param).as();

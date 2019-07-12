@@ -25,6 +25,7 @@ public class JoinTeamRequestViewImpl implements JoinTeamRequestView {
 
     }
 
+    @Override
     public void edit(Presenter presenter, Splittable payloadTeam) {
         Scheduler.get().scheduleFinally(() -> {
             ReactNotifications.JoinTeamProps props = new ReactNotifications.JoinTeamProps();

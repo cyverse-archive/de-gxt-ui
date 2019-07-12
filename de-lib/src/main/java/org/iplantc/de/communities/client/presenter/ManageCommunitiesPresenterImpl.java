@@ -2,7 +2,6 @@ package org.iplantc.de.communities.client.presenter;
 
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.RetagAppsConfirmationDialog;
 import org.iplantc.de.apps.client.AppsView;
-import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.HasStringList;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
@@ -28,7 +27,6 @@ import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -275,6 +273,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void removeCommunityAdmins(String communityName,
                                       Splittable adminList,
                                       ReactSuccessCallback callback,
@@ -295,6 +294,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void addCommunityAdmins(String communityName,
                                    Splittable adminIds,
                                    ReactSuccessCallback successCallback,

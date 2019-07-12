@@ -208,6 +208,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void getAnalyses(int limit,
                             int offset,
                             Splittable filters,
@@ -246,6 +247,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onShareAnalysisSelected(Splittable[] analysisList) {
         ArrayList<Analysis> selected = new ArrayList<>();
         for(Splittable sp: analysisList) {
@@ -446,6 +448,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onUserSupportRequested(Splittable analysis,
                                        String comment,
                                        ReactSuccessCallback callback,
