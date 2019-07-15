@@ -12,10 +12,12 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
@@ -24,7 +26,7 @@ import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
-import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
@@ -38,6 +40,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
@@ -65,19 +68,10 @@ public class ManageToolsViewPresenterTest {
     ManageToolsView.ManageToolsViewAppearance appearanceMock;
 
     @Mock
-    EditToolView.EditToolViewAppearance editToolViewAppearanceMock;
-
-    @Mock
     ToolServices toolServicesMock;
 
-    @Mock
-    AsyncProviderWrapper<EditToolDialog> editDialogProviderMock;
-
-    @Captor
-    ArgumentCaptor<AsyncCallback<EditToolDialog>> editDialogCaptor;
-
-    @Mock
-    EditToolDialog editToolDialogMock;
+    @Mock Splittable toolSplMock;
+    @Mock Tool toolMock;
 
     @Mock
     IplantAnnouncer announcerMock;
@@ -108,6 +102,11 @@ public class ManageToolsViewPresenterTest {
 
     @Mock
     ToolInfoDialog toolInfoDialogMock;
+
+    @Mock EditToolView editToolViewMock;
+    @Mock EditToolViewFactory editToolViewFactoryMock;
+    @Mock ReactToolViews.EditToolProps baseEditToolPropsMock;
+    @Mock ToolContainer toolContainerMock;
 
     @Mock
     EventBus eventBusMock;
@@ -141,7 +140,7 @@ public class ManageToolsViewPresenterTest {
 
     @Before
     public void setUp() {
-        uut = new ManageToolsViewPresenter(appearanceMock, editToolViewAppearanceMock) {
+        uut = new ManageToolsViewPresenter(appearanceMock, editToolViewFactoryMock) {
 
             @Override
             void displayInfoMessage(String title, String message) {
@@ -151,19 +150,32 @@ public class ManageToolsViewPresenterTest {
             @Override
             void checkForViceTool(Tool tool) {
             }
+
+            @Override
+            Tool convertSplittableToTool(Splittable toolSpl) {
+                return toolMock;
+            }
+
+            @Override
+            Splittable convertToolToSplittable(Tool tool) {
+                return toolSplMock;
+            }
         };
         uut.toolsView = toolsViewMock;
         uut.announcer = announcerMock;
-        uut.editToolViewAppearance = editToolViewAppearanceMock;
         uut.appearance = appearanceMock;
         uut.toolServices = toolServicesMock;
-        uut.editDialogProvider = editDialogProviderMock;
+        uut.editToolView = editToolViewMock;
         uut.shareDialogProvider = shareDialogProviderMock;
         uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
         uut.factory = factoryMock;
+
+        when(editToolViewFactoryMock.create(baseEditToolPropsMock)).thenReturn(editToolViewMock);
+        when(toolMock.getType()).thenReturn("executable");
+        when(toolMock.getContainer()).thenReturn(toolContainerMock);
     }
 
     @Test
@@ -227,32 +239,22 @@ public class ManageToolsViewPresenterTest {
 
     @Test
     public void testAddTool() {
-        Tool t1Mock = mock(Tool.class);
-        when(t1Mock.getName()).thenReturn("Shiny Tool");
-        Command mockCmd = mock(Command.class);
-        when(appearanceMock.toolAdded("Shiny Tool")).thenReturn("Tool Shiny Tool added successfully!");
-
-        uut.addTool(t1Mock, mockCmd);
-        verify(toolServicesMock).addTool(eq(t1Mock), toolCaptor.capture());
-        toolCaptor.getValue().onSuccess(t1Mock);
-
-        verify(mockCmd).execute();
-        verify(toolsViewMock).addTool(eq(t1Mock));
+        uut.addTool(toolSplMock);
+        verify(toolServicesMock).addTool(eq(toolMock), toolCaptor.capture());
+        toolCaptor.getValue().onSuccess(toolMock);
+        verify(toolsViewMock).addTool(eq(toolMock));
     }
 
     @Test
     public void testUpdateTool() {
-        Tool t1Mock = mock(Tool.class);
-        when(t1Mock.getName()).thenReturn("Shiny Tool");
-        Command mockCmd = mock(Command.class);
+        when(toolMock.getName()).thenReturn("Shiny Tool");
         when(appearanceMock.toolUpdated("Shiny Tool")).thenReturn("Tool Shiny Tool updated successfully!");
 
-        uut.updateTool(t1Mock, mockCmd);
-        verify(toolServicesMock).updateTool(eq(t1Mock), toolCaptor.capture());
-        toolCaptor.getValue().onSuccess(t1Mock);
+        uut.updateTool(toolSplMock);
+        verify(toolServicesMock).updateTool(eq(toolMock), toolCaptor.capture());
+        toolCaptor.getValue().onSuccess(toolMock);
 
-        verify(mockCmd).execute();
-        verify(toolsViewMock).updateTool(eq(t1Mock));
+        verify(toolsViewMock).updateTool(eq(toolMock));
     }
 
     @Test
@@ -288,19 +290,10 @@ public class ManageToolsViewPresenterTest {
 
     @Test
     public void testOnNewToolSelected() {
-        AddNewToolSelected antsMock = mock(AddNewToolSelected.class);
-        AutoBean<Tool> abt = mock(AutoBean.class);
-        Tool t = mock(Tool.class);
-        when(appearanceMock.editDialogHeight()).thenReturn("300px");
-        when(appearanceMock.editDialogWidth()).thenReturn("600px");
-        when(factoryMock.getDefaultTool()).thenReturn(abt);
-        when(abt.as()).thenReturn(t);
+        AddNewToolSelected eventMock = mock(AddNewToolSelected.class);
 
-        uut.onNewToolSelected(antsMock);
-
-        verify(editDialogProviderMock).get(editDialogCaptor.capture());
-        editDialogCaptor.getValue().onSuccess(editToolDialogMock);
-        verify(editToolDialogMock).show(eq(uut));
+        uut.onNewToolSelected(eventMock);
+        verify(editToolViewMock).edit(eq(null));
     }
 
     @Test
@@ -318,14 +311,10 @@ public class ManageToolsViewPresenterTest {
 
         uut.onEditToolSelected(etsMock);
 
-        verify(editDialogProviderMock).get(editDialogCaptor.capture());
-        editDialogCaptor.getValue().onSuccess(editToolDialogMock);
-
         verify(toolServicesMock).getToolInfo(eq(t1Mock.getId()), toolCaptor.capture());
         toolCaptor.getValue().onSuccess(t1Mock);
 
-        verify(editToolDialogMock).editTool(eq(t1Mock));
-        verify(editToolDialogMock).show(eq(uut));
+        verify(editToolViewMock).edit(eq(toolSplMock));
     }
 
     @Test

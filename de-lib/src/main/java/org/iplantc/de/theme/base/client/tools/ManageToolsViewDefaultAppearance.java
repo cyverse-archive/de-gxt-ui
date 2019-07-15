@@ -44,7 +44,7 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
 
     @Override
     public String edit() {
-        return toolMessages.edit();
+        return iplantDisplayStrings.edit();
     }
 
     @Override
@@ -201,6 +201,11 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     @Override
     public int windowMinHeight() {
         return 500;
+    }
+
+    @Override
+    public String create() {
+        return iplantDisplayStrings.create();
     }
 
     @Override

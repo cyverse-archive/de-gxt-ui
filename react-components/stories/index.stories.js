@@ -35,6 +35,8 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
+import EditToolTest from "./tools/EditTool.stories";
+
 import {
     EditDataCiteMetadataTest,
     EditMetadataTest,
@@ -206,3 +208,7 @@ storiesOf("notifications/view/dialogs", module).add(
     "with test RequestHistoryDialogTest",
     () => <RequestHistoryDialogTest logger={action("notification window")} />
 );
+
+storiesOf("tools/EditTool", module).add("with test tool data", () => (
+    <EditToolTest logger={action("Saved Tool")} />
+));

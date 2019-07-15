@@ -1,84 +1,20 @@
 package org.iplantc.de.tools.client.views.manage;
 
-import org.iplantc.de.client.models.tool.Tool;
-
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
-
-import java.util.List;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
- * Created by sriram on 4/27/17.
+ * @author aramsey
  */
-public interface EditToolView extends IsWidget{
+public interface EditToolView extends IsWidget {
 
-    Tool getTool();
+    void edit(Splittable tool);
 
-    void editTool(Tool t);
+    void setToolTypes(String[] toolTypes);
 
-    void setToolTypes(List<String> toolTypes);
+    void mask();
 
-    interface EditToolViewAppearance {
-        String toolName();
+    void unmask();
 
-        String description();
-
-        String imgName();
-
-        String tag();
-
-        String dockerUrl();
-
-        String pidsLimit();
-
-        String memLimit();
-
-        String nwMode();
-
-        String timeLimit();
-
-        String edit();
-
-        String create();
-
-        String restrictions();
-
-        String toolInfo();
-
-        String version();
-
-        SafeHtml buildRequiredFieldLabel(String label);
-
-        /**
-         * The field label for entrypoint
-         *
-         * @return  label for entrypoint field
-         */
-        String entryPoint();
-
-        String osgImagePathLabel();
-
-        String maxCPUCoresLabel();
-
-        String minDiskSpaceLabel();
-
-        String typeLabel();
-
-        String workingDir();
-
-        String userID();
-
-        String containerPorts();
-
-        String add();
-
-        String delete();
-
-        ImageResource addIcon();
-
-        ImageResource deleteIcon();
-    }
-
-    boolean validate();
+    void close();
 }

@@ -17,6 +17,7 @@ import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
@@ -27,20 +28,23 @@ import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
-import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
@@ -49,54 +53,31 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * Created by sriram on 4/24/17.
  */
 public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
-
-    @Inject
-    ManageToolsView toolsView;
-
+    @Inject ManageToolsView toolsView;
+    EditToolView editToolView;
+    ReactToolViews.EditToolProps editToolProps;
     ManageToolsView.ManageToolsViewAppearance appearance;
-
-    EditToolView.EditToolViewAppearance editToolViewAppearance;
-
     ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
-
-    @Inject
-    AsyncProviderWrapper<EditToolDialog> editDialogProvider;
-
-    @Inject
-    IplantAnnouncer announcer;
-
-    @Inject
-    AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
-
-    @Inject
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
-
-    @Inject
-    AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
-
-    @Inject
-    EventBus eventBus;
-
-    @Inject
-    ToolAutoBeanFactory factory;
-
-    @Inject
-    DEProperties deProperties;
-
+    @Inject IplantAnnouncer announcer;
+    @Inject AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
+    @Inject AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
+    @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
+    @Inject EventBus eventBus;
+    @Inject ToolAutoBeanFactory factory;
+    @Inject DEProperties deProperties;
     protected List<Tool> currentSelection = Lists.newArrayList();
-
-    private List<String> toolTypes = Lists.newArrayList();
 
     @Inject
     public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance,
-                                    EditToolView.EditToolViewAppearance editToolViewAppearance) {
+                                    EditToolViewFactory editToolViewFactory) {
         this.appearance = appearance;
-        this.editToolViewAppearance = editToolViewAppearance;
+        this.editToolView = editToolViewFactory.create(getBaseProps());
     }
 
     @Override
@@ -126,11 +107,13 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(List<ToolType> result) {
+                List<String> types = Lists.newArrayList();
                 result.forEach(toolType -> {
                     if (!toolType.getName().equals("fAPI") && !toolType.getName().equals("internal")) {
-                        toolTypes.add(toolType.getName());
+                        types.add(toolType.getName());
                     }
                 });
+                editToolView.setToolTypes(types.toArray(new String[0]));
                 toolsView.unmask();
                 loadTools(null);
             }
@@ -166,20 +149,25 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void addTool(final Tool tool, final Command dialogCallbackCommand) {
+    @SuppressWarnings("unusable-by-js")
+    public void addTool(final Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
         checkForViceTool(tool);
+
+        editToolView.mask();
 
         toolServices.addTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                ErrorHandler.post(exception);
+                editToolView.unmask();
+                ErrorHandler.postReact(exception);
             }
 
             @Override
             public void onSuccess(Tool result) {
-                displayInfoMessage(editToolViewAppearance.create(),
-                                                      appearance.toolAdded(result.getName()));
-                dialogCallbackCommand.execute();
+                editToolView.close();
+                displayInfoMessage(appearance.create(),
+                                   appearance.toolAdded(result.getName()));
                 tool.setId(result.getId());
                 tool.setPermission(result.getPermission());
                 tool.setType(result.getType());
@@ -189,21 +177,25 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void updateTool(final Tool tool, final Command dialogCallbackCommand) {
+    @SuppressWarnings("unusable-by-js")
+    public void updateTool(final Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
         checkForViceTool(tool);
+
+        editToolView.mask();
 
         toolServices.updateTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                ErrorHandler.post(exception);
+                editToolView.unmask();
+                ErrorHandler.postReact(exception);
             }
 
             @Override
             public void onSuccess(Tool result) {
-                displayInfoMessage(editToolViewAppearance.edit(),
-                                                      appearance.toolUpdated(result.getName()));
-
-                dialogCallbackCommand.execute();
+                displayInfoMessage(appearance.edit(),
+                                   appearance.toolUpdated(result.getName()));
+                editToolView.close();
                 toolsView.updateTool(result);
             }
         });
@@ -229,14 +221,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         tool.getContainer().setNetworkMode(networkMode);
     }
 
-    @Override
-    public Tool getSelectedTool() {
+    Tool getSelectedTool() {
         return currentSelection.get(0);
-    }
-
-    @Override
-    public List<String> getToolTypes() {
-        return toolTypes;
     }
 
     @Override
@@ -246,20 +232,12 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onNewToolSelected(AddNewToolSelected event) {
-        editDialogProvider.get(new AsyncCallback<EditToolDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
+        editToolView.edit(null);
+    }
 
-            }
-
-            @Override
-            public void onSuccess(EditToolDialog etd) {
-                etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
-                etd.editTool(factory.getDefaultTool().as());
-                etd.show(ManageToolsViewPresenter.this);
-            }
-        });
-
+    @Override
+    public void closeEditToolDlg() {
+        editToolView.close();
     }
 
     @Override
@@ -347,33 +325,29 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onEditToolSelected(EditToolSelected event) {
-        editDialogProvider.get(new AsyncCallback<EditToolDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
+        toolsView.mask(appearance.mask());
 
+        toolServices.getToolInfo(getSelectedTool().getId(), new AppsCallback<Tool>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                toolsView.unmask();
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
             }
 
             @Override
-            public void onSuccess(EditToolDialog etd) {
-                etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
-                etd.show(ManageToolsViewPresenter.this);
-                etd.mask();
-
-                toolServices.getToolInfo(getSelectedTool().getId(), new AppsCallback<Tool>() {
-                    @Override
-                    public void onFailure(Integer statusCode, Throwable exception) {
-                        announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
-                        etd.hide();
-                    }
-
-                    @Override
-                    public void onSuccess(Tool result) {
-                        etd.editTool(result);
-                        etd.unmask();
-                    }
-                });
+            public void onSuccess(Tool result) {
+                toolsView.unmask();
+                editToolView.edit(convertToolToSplittable(result));
             }
         });
+    }
+
+    private ReactToolViews.EditToolProps getBaseProps() {
+        ReactToolViews.EditToolProps props = new ReactToolViews.EditToolProps();
+        props.presenter = this;
+        props.parentId = ToolsModule.EditToolIds.EDIT_DIALOG;
+
+        return props;
     }
 
     @Override
@@ -447,6 +421,14 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     void displayInfoMessage(String title, String message) {
         IplantInfoBox iib = new IplantInfoBox(title, message);
         iib.show();
+    }
+
+    Tool convertSplittableToTool(Splittable toolSpl) {
+        return AutoBeanCodex.decode(factory, Tool.class, toolSpl.getPayload()).as();
+    }
+
+    Splittable convertToolToSplittable(Tool tool) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
     }
 }
 
