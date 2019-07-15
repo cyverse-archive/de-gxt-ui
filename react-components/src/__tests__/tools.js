@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { getDefaultTheme, MuiThemeProvider } from "../lib";
 
-import { EditToolTest } from "../../stories/tools/EditTool.stories";
+import EditToolTest from "../../stories/tools/EditTool.stories";
 
 it("renders EditToolTest without crashing", () => {
     const div = document.createElement("div");
