@@ -91,6 +91,8 @@ public interface ToolAdminView extends IsWidget,
         int publicAppDisabledColumnWidth();
 
         String publicAppDisabledLabel();
+
+        String loadingMask();
     }
 
     @JsType

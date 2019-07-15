@@ -147,14 +147,17 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
     }
 
     protected void getToolDetails(AdminMakeToolPublicSelectedEvent event) {
+        view.mask(appearance.getToolRequestsLoadingMask());
         toolAdminServiceFacade.getToolDetails(event.getToolId(), new AsyncCallback<Tool>() {
             @Override
             public void onFailure(Throwable caught) {
+                view.unmask();
                 ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(Tool result) {
+                view.unmask();
                 Splittable tool = convertToolToSplittable(result);
                 editToolView.edit(tool);
             }

@@ -24,21 +24,24 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     private final ToolAdminDisplayStrings displayStrings;
+    private final IplantDisplayStrings iplantDisplayStrings;
     private final IplantResources iplantResources;
     private final HelpTemplates helpTemplates;
 
 
     public ToolAdminViewDefaultAppearance() {
         this(GWT.<ToolAdminDisplayStrings>create(ToolAdminDisplayStrings.class),
+             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<IplantResources>create(IplantResources.class),
              GWT.<HelpTemplates> create(HelpTemplates.class));
-
     }
 
     ToolAdminViewDefaultAppearance(final ToolAdminDisplayStrings displayStrings,
+                                   final IplantDisplayStrings iplantDisplayStrings,
                                    final IplantResources iplantResources,
                                    HelpTemplates helpTemplates) {
         this.displayStrings = displayStrings;
+        this.iplantDisplayStrings = iplantDisplayStrings;
         this.iplantResources = iplantResources;
         this.helpTemplates = helpTemplates;
     }
@@ -210,5 +213,10 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     @Override
     public String publicAppDisabledLabel() {
         return displayStrings.publicAppDisabledLabel();
+    }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
     }
 }

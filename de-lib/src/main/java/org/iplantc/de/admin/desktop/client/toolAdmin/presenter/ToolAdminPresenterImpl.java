@@ -3,7 +3,6 @@ package org.iplantc.de.admin.desktop.client.toolAdmin.presenter;
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
-import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.gin.factory.ToolAdminViewFactory;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
@@ -182,14 +181,17 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
 
     @Override
     public void onToolSelected(ToolSelectedEvent event) {
+        view.mask(appearance.loadingMask());
         toolAdminServiceFacade.getToolDetails(event.getTool().getId(), new AsyncCallback<Tool>() {
             @Override
             public void onFailure(Throwable caught) {
+                view.unmask();
                 ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(Tool result) {
+                view.unmask();
                 Splittable tool = convertToolToSplittable(result);
                 editToolView.edit(tool);
             }
