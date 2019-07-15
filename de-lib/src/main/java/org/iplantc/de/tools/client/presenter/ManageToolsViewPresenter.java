@@ -325,14 +325,18 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onEditToolSelected(EditToolSelected event) {
+        toolsView.mask(appearance.mask());
+
         toolServices.getToolInfo(getSelectedTool().getId(), new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
+                toolsView.unmask();
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
             }
 
             @Override
             public void onSuccess(Tool result) {
+                toolsView.unmask();
                 editToolView.edit(convertToolToSplittable(result));
             }
         });
