@@ -11,11 +11,21 @@ import tour from "../NewUserTourSteps";
 
 import { build, DEHyperlink, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import Divider from "@material-ui/core/Divider";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import PersonIcon from "@material-ui/icons/Person";
-import Tooltip from "@material-ui/core/Tooltip";
+import {
+    Divider,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Tooltip,
+} from "@material-ui/core";
+import {
+    ExitToApp,
+    Group,
+    Lock,
+    Person,
+    Public,
+    Settings,
+} from "@material-ui/icons";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -51,7 +61,7 @@ class UserMenu extends Component {
         return (
             <span>
                 <Tooltip title={getMessage("preferencesTooltip")}>
-                    <PersonIcon
+                    <Person
                         id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                         className={classes.menuIcon}
                         onClick={this.onUserMenuClick}
@@ -71,35 +81,62 @@ class UserMenu extends Component {
                             this.handleClose();
                         }}
                     >
+                        <ListItemIcon>
+                            <Settings />
+                        </ListItemIcon>
                         <DEHyperlink text={getMessage("preferences")} />
                     </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
-                        onClick={() => {
-                            presenter.onCollaboratorsClick();
-                            this.handleClose();
-                        }}
+                    <Tooltip
+                        title={getMessage("collaboratorsTooltip")}
+                        placement="left"
                     >
-                        <DEHyperlink text={getMessage("collaborators")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.TEAMS_LINK)}
-                        onClick={() => {
-                            presenter.onTeamsClick();
-                            this.handleClose();
-                        }}
+                        <MenuItem
+                            id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
+                            onClick={() => {
+                                presenter.onCollaboratorsClick();
+                                this.handleClose();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Lock />
+                            </ListItemIcon>
+                            <DEHyperlink text={getMessage("collaborators")} />
+                        </MenuItem>
+                    </Tooltip>
+                    <Tooltip
+                        title={getMessage("teamsTooltip")}
+                        placement="left"
                     >
-                        <DEHyperlink text={getMessage("teams")} />
-                    </MenuItem>
-                    <MenuItem
-                        id={build(ids.DESKTOP, ids.COMMUNITIES_LINK)}
-                        onClick={() => {
-                            presenter.onCommunitiesClick();
-                            this.handleClose();
-                        }}
+                        <MenuItem
+                            id={build(ids.DESKTOP, ids.TEAMS_LINK)}
+                            onClick={() => {
+                                presenter.onTeamsClick();
+                                this.handleClose();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Group />
+                            </ListItemIcon>
+                            <DEHyperlink text={getMessage("teams")} />
+                        </MenuItem>
+                    </Tooltip>
+                    <Tooltip
+                        title={getMessage("communitiesTooltip")}
+                        placement="left"
                     >
-                        <DEHyperlink text={getMessage("communities")} />
-                    </MenuItem>
+                        <MenuItem
+                            id={build(ids.DESKTOP, ids.COMMUNITIES_LINK)}
+                            onClick={() => {
+                                presenter.onCommunitiesClick();
+                                this.handleClose();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Public />
+                            </ListItemIcon>
+                            <DEHyperlink text={getMessage("communities")} />
+                        </MenuItem>
+                    </Tooltip>
                     <Divider />
                     <MenuItem
                         id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
@@ -108,6 +145,9 @@ class UserMenu extends Component {
                             this.handleClose();
                         }}
                     >
+                        <ListItemIcon>
+                            <ExitToApp />
+                        </ListItemIcon>
                         <DEHyperlink text={getMessage("logout")} />
                     </MenuItem>
                 </Menu>
