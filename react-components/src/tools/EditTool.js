@@ -412,12 +412,29 @@ EditToolDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     isAdmin: PropTypes.bool.isRequired,
     isAdminPublishing: PropTypes.bool.isRequired,
-    presenter: PropTypes.shape({
-        addTool: PropTypes.func,
-        updateTool: PropTypes.func,
-        closeEditToolDlg: PropTypes.func.isRequired,
-        onPublish: PropTypes.func,
-    }),
+    presenter: function(props, propName, componentName) {
+        let presenterFuncs = props[propName];
+        if (!presenterFuncs["closeEditToolDlg"]) {
+            return new Error(
+                "`presenter` in `" +
+                    componentName +
+                    "` missing required prop `closeEditToolDlg`"
+            );
+        }
+        if (
+            !(
+                (presenterFuncs["addTool"] && presenterFuncs["updateTool"]) ||
+                presenterFuncs["onPublish"]
+            )
+        ) {
+            return new Error(
+                "`presenter` in `" +
+                    componentName +
+                    "` must have either `addTool` and " +
+                    "`updateTool`, or `onPublish`"
+            );
+        }
+    },
     loading: PropTypes.bool.isRequired,
     tool: PropTypes.object,
     parentId: PropTypes.string.isRequired,
