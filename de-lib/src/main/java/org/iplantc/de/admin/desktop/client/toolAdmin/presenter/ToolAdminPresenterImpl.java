@@ -14,6 +14,7 @@ import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -249,8 +250,16 @@ public class ToolAdminPresenterImpl implements ToolAdminView.Presenter,
     }
 
     void checkForViceTool(Tool tool) {
-        if ("interactive".equals(tool.getType()) && tool.getContainer().getInteractiveApps() == null) {
-            factory.appendDefaultInteractiveAppValues(tool, deProperties);
+        if ("interactive".equals(tool.getType())) {
+            if (tool.getContainer().getInteractiveApps() == null) {
+                factory.appendDefaultInteractiveAppValues(tool, deProperties);
+            }
+            tool.setInteractive(true);
+            tool.getContainer().setSkipTmpMount(true);
+        } else {
+            tool.getContainer().setInteractiveApps(null);
+            tool.setInteractive(false);
+            tool.getContainer().setSkipTmpMount(false);
         }
     }
 

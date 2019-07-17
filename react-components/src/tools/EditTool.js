@@ -204,14 +204,6 @@ function EditToolForm(props) {
             />
             {isAdmin && (
                 <Field
-                    name="interactive"
-                    label={getMessage("interactive")}
-                    id={build(parentId, ids.EDIT_TOOL_DLG.INTERACTIVE)}
-                    component={FormCheckbox}
-                />
-            )}
-            {isAdmin && (
-                <Field
                     name="implementation"
                     isAdmin={isAdmin}
                     parentId={build(
@@ -297,14 +289,6 @@ function EditToolForm(props) {
                 </Paper>
             )}
             {isAdmin && (
-                <Field
-                    name="container.skip_tmp_mount"
-                    label={getMessage("skipTmpMount")}
-                    id={build(parentId, ids.EDIT_TOOL_DLG.SKIP_TMP_MOUNT)}
-                    component={FormCheckbox}
-                />
-            )}
-            {isAdmin && (
                 <FieldArray
                     name="container.container_volumes"
                     render={(arrayHelpers) => (
@@ -347,7 +331,9 @@ function EditToolForm(props) {
  * Ensures that if the user previously filled out information for an OSG
  * or interactive/VICE tool, and then selects a different type,
  * that those fields get cleared out to prevent any validation errors and
- * also to prevent empty values being unintentionally sent to the service
+ * also to prevent empty values being unintentionally sent to the service.
+ *
+ * Also auto-sets the container.network_mode based on tool type
  *
  * @param currentType
  * @param form
@@ -358,6 +344,9 @@ function resetOnTypeChange(currentType, form) {
     }
     if (currentType !== "interactive") {
         form.setFieldValue("container.container_ports", null);
+        form.setFieldValue("container.network_mode", "none");
+    } else {
+        form.setFieldValue("container.network_mode", "bridge");
     }
 }
 
