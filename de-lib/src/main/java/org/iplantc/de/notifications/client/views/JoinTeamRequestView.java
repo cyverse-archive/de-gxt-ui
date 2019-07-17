@@ -7,6 +7,7 @@ import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
 /**
@@ -37,6 +38,7 @@ public interface JoinTeamRequestView {
          * @param message
          * @param payloadTeam
          */
+        @JsIgnore
         void go(NotificationMessage message, PayloadTeam payloadTeam);
 
         /**
@@ -67,5 +69,6 @@ public interface JoinTeamRequestView {
      * @param  presenter
      * @param payloadTeam
      */
+    @JsIgnore
     void edit(Presenter presenter, Splittable payloadTeam);
 }

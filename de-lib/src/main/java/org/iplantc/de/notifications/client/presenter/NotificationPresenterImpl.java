@@ -58,6 +58,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
         this.eventBus = eventBus;
         currentCategory = NotificationCategory.ALL;
     }
+
     @Override
     public void go(HasOneWidget container, String baseDebugId, NotificationCategory category) {
         container.setWidget(view.asWidget());
@@ -158,6 +159,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onMessageClicked(Splittable notificationMessage) {
         NotificationMessage nm = AutoBeanCodex.decode(factory, NotificationMessage.class, notificationMessage).as();
         notificationUtil.onNotificationClick(nm);

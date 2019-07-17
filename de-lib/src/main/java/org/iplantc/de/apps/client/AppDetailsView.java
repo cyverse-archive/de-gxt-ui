@@ -32,24 +32,29 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
     @JsType
     interface Presenter {
 
+        @JsIgnore
         void go(App app,
                 String searchRegexPattern);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppFavoriteSelected(Splittable app,
                                    ReactSuccessCallback callback,
                                    ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppRatingSelected(Splittable app,
                                  int score,
                                  ReactSuccessCallback callback,
                                  ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppRatingDeSelected(Splittable app,
                                    ReactSuccessCallback callback,
                                    ReactErrorCallback errorCallback);
 
         void onClose();
 
+        @SuppressWarnings("unusable-by-js")
         void getAppDoc(Splittable appSplittable,
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);

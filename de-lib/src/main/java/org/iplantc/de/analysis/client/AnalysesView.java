@@ -94,6 +94,7 @@ public interface AnalysesView extends IsWidget {
         @JsIgnore
         AppTypeFilter getCurrentTypeFilter();
 
+        @SuppressWarnings("unusable-by-js")
         void getAnalyses(int limit,
                          int offset,
                          Splittable filters,
@@ -121,12 +122,14 @@ public interface AnalysesView extends IsWidget {
                                       ReactSuccessCallback callback,
                                       ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onShareAnalysisSelected(Splittable[] analysisList);
 
         void deleteAnalyses(String[] analysesToDelete,
                             ReactSuccessCallback callback,
                             ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onUserSupportRequested(Splittable analysis,
                                     String comment,
                                     ReactSuccessCallback callback,
@@ -153,6 +156,7 @@ public interface AnalysesView extends IsWidget {
 
     }
 
+    @JsIgnore
     void load(Presenter presenter,
               String baseDebugId,
               Analysis selectedAnalysis);

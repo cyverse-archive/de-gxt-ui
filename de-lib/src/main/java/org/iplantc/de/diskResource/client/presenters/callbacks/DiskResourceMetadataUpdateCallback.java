@@ -15,6 +15,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 /**
  * @author jstroot psarando
  */
+@SuppressWarnings("unusable-by-js")
 public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceAsyncCallback<String> {
 
     private final DiskResourceCallbackAppearance appearance = GWT.create(DiskResourceCallbackAppearance.class);

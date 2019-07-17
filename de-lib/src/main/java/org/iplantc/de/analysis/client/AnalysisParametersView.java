@@ -47,6 +47,7 @@ public interface AnalysisParametersView {
                                             ReactSuccessCallback callback,
                                             ReactErrorCallback errorCallback);
 
+        @SuppressWarnings("unusable-by-js")
         void onAnalysisParamValueSelected(Splittable param);
 
         void saveParamsToFile(String contents,

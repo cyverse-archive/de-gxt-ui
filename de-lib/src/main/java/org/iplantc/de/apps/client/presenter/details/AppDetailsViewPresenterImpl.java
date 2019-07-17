@@ -136,6 +136,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void getAppDoc(Splittable appSplittable,
                           ReactSuccessCallback callback,
                           ReactErrorCallback errorCallback) {
@@ -224,6 +225,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onAppFavoriteSelected(Splittable appSplittable,
                                       ReactSuccessCallback callback,
                                       ReactErrorCallback errorCallback) {
@@ -253,6 +255,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onAppRatingSelected(Splittable appSplittable,
                                     int score,
                                     ReactSuccessCallback callback,
@@ -262,6 +265,7 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onAppRatingDeSelected(Splittable appSplittable,
                                       ReactSuccessCallback callback,
                                       ReactErrorCallback errorCallback) {
