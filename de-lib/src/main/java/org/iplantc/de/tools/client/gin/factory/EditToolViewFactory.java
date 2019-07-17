@@ -7,5 +7,5 @@ import org.iplantc.de.tools.client.views.manage.EditToolView;
  * @author aramsey
  */
 public interface EditToolViewFactory {
-    EditToolView create(ReactToolViews.EditToolProps baseProps);
+    EditToolView create(ReactToolViews.BaseEditToolProps baseProps);
 }

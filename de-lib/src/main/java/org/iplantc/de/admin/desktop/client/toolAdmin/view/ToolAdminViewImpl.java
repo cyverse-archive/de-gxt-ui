@@ -4,16 +4,12 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
-import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.cells.ToolAdminNameCell;
-import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.util.StaticIdHelper;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -24,7 +20,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -88,11 +83,9 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
     @UiField ColumnModel<Tool> cm;
     @UiField(provided = true) ListStore<Tool> listStore;
     @UiField(provided = true) ToolAdminViewAppearance appearance;
-    @Inject AsyncProviderWrapper<ToolAdminDetailsDialog> toolDetailsDialog;
 
     private final ToolProperties toolProps;
     private final NameFilter nameFilter;
-    List<String> toolTypes;
 
     @Inject
     public ToolAdminViewImpl(final ToolAdminViewAppearance appearance,
@@ -138,18 +131,8 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
     }
 
     @Override
-    public HandlerRegistration addSaveToolSelectedEventHandler(SaveToolSelectedEvent.SaveToolSelectedEventHandler handler) {
-        return addHandler(handler, SaveToolSelectedEvent.TYPE);
-    }
-
-    @Override
     public HandlerRegistration addToolSelectedEventHandler(ToolSelectedEvent.ToolSelectedEventHandler handler) {
         return addHandler(handler, ToolSelectedEvent.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addPublishToolEventHandler(PublishToolEvent.PublishToolEventHandler handler) {
-        return addHandler(handler, PublishToolEvent.TYPE);
     }
 
     @UiFactory
@@ -185,61 +168,9 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         return new ColumnModel<>(list);
     }
 
-    /**
-     * TODO SS Move launching new view to Presenter
-     * @param tool
-     * @param mode
-     */
-    @Override
-    public void editToolDetails(final Tool tool, final ToolAdminDetailsDialog.Mode mode) {
-        toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show(tool, mode, toolTypes);
-                result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
-                result.addSaveToolSelectedEventHandler(event -> {
-                    fireEvent(event);
-                    result.hide();
-                    grid.getSelectionModel().deselect(grid.getSelectionModel().getSelectedItem());
-                });
-
-                result.addPublishToolEventHandler(event -> {
-                    fireEvent(event);
-                    result.hide();
-                });
-            }
-        });
-    }
-
-    /**
-     * TODO SS Move launching new view to Presenter
-     * @param event
-     */
     @UiHandler("addButton")
     void addButtonClicked(SelectEvent event) {
-        toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show(toolTypes);
-                result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
-                result.addSaveToolSelectedEventHandler(event1 -> {
-                    AddToolSelectedEvent addToolSelectedEvent =
-                            new AddToolSelectedEvent(event1.getTool());
-                    fireEvent(addToolSelectedEvent);
-                    result.hide();
-                });
-            }
-        });
+        fireEvent(new AddToolSelectedEvent());
     }
 
     @UiHandler("deleteButton")
@@ -272,11 +203,6 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         ToolSelectedEvent toolSelectedEvent =
                 new ToolSelectedEvent(tool);
         fireEvent(toolSelectedEvent);
-    }
-
-    @Override
-    public void setToolTypes(List<String> toolTypes) {
-        this.toolTypes = toolTypes;
     }
 
     @UiHandler("filterField")

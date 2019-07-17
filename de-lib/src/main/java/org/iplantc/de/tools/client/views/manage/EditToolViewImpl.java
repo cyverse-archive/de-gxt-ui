@@ -16,21 +16,20 @@ import com.google.web.bindery.autobean.shared.Splittable;
 public class EditToolViewImpl extends Composite implements EditToolView {
 
     private final HTMLPanel panel;
-    private final ReactToolViews.EditToolProps currentProps;
+    private final ReactToolViews.BaseEditToolProps currentProps;
 
     @Inject
-    public EditToolViewImpl(@Assisted ReactToolViews.EditToolProps baseProps,
+    public EditToolViewImpl(@Assisted ReactToolViews.BaseEditToolProps baseProps,
                             DEProperties deProperties) {
         this.currentProps = baseProps;
         currentProps.maxCPUCore = deProperties.getToolsMaxCPULimit();
         currentProps.maxMemory = deProperties.getToolsMaxMemLimit();
         currentProps.maxDiskSpace = deProperties.getToolsMaxDiskLimit();
-        
+
         panel = new HTMLPanel("<div></div>");
     }
 
     @Override
-
     public void edit(Splittable tool) {
         currentProps.open = true;
         currentProps.loading = false;

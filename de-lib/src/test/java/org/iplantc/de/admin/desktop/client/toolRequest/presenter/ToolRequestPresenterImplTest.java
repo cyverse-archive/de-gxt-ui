@@ -9,21 +9,24 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.gin.factory.ToolAdminViewFactory;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
-import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.toolRequest.events.AdminMakeToolPublicSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
 import org.iplantc.de.admin.desktop.client.toolRequest.view.ToolRequestDetailsPanel;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +51,12 @@ public class ToolRequestPresenterImplTest {
 
     @Mock
     UserInfo mockUserInfo;
+
+    @Mock EditToolViewFactory editToolViewFactoryMock;
+    @Mock EditToolView editToolViewMock;
+    @Mock ToolAutoBeanFactory factoryMock;
+    @Mock Tool toolMock;
+    @Mock Splittable toolSplMock;
 
     @Mock
     ToolRequestView.Presenter.ToolRequestPresenterAppearance mockAppearance;
@@ -87,14 +96,26 @@ public class ToolRequestPresenterImplTest {
                                            mockRequestServiceFacade,
                                            mockUserInfo,
                                            mockAppearance,
-                                           mockAdminFactory,
-                                           mockToolAdminServiceFacade);
+                                           editToolViewFactoryMock,
+                                           factoryMock,
+                                           mockToolAdminServiceFacade){
+            @Override
+            Tool convertSplittableToTool(Splittable toolSpl) {
+                return toolMock;
+            }
+
+            @Override
+            Splittable convertToolToSplittable(Tool tool) {
+                return toolSplMock;
+            }
+        };
         uut.view = mockRequestView;
         uut.toolReqService = mockRequestServiceFacade;
         uut.userInfo = mockUserInfo;
         uut.appearance = mockAppearance;
-        uut.adminFactory = mockAdminFactory;
-        uut.adminView = mockAdminView;
+        uut.editToolViewFactory = editToolViewFactoryMock;
+        uut.editToolView = editToolViewMock;
+        uut.factory = factoryMock;
         uut.toolAdminServiceFacade = mockToolAdminServiceFacade;
         uut.announcer = mockAnnouncer;
     }
@@ -154,26 +175,22 @@ public class ToolRequestPresenterImplTest {
     public void testGetToolDetails() {
         AdminMakeToolPublicSelectedEvent amtpseMock = mock(AdminMakeToolPublicSelectedEvent.class);
         when(amtpseMock.getToolId()).thenReturn("1234567890");
-        Tool t1Mock = mock(Tool.class);
 
         uut.getToolDetails(amtpseMock);
 
         verify(mockToolAdminServiceFacade).getToolDetails(eq(amtpseMock.getToolId()),
                                                           toolCaptor.capture());
-        toolCaptor.getValue().onSuccess(t1Mock);
-        verify(mockAdminView).editToolDetails(eq(t1Mock), eq(ToolAdminDetailsDialog.Mode.MAKEPUBLIC));
+        toolCaptor.getValue().onSuccess(toolMock);
+        verify(editToolViewMock).edit(eq(toolSplMock));
    }
 
    @Test
     public void testOnPublish() {
-       PublishToolEvent pteMock = mock(PublishToolEvent.class);
-       Tool t1Mock = mock(Tool.class);
-       when(pteMock.getTool()).thenReturn(t1Mock);
        when(mockAppearance.publishSuccess()).thenReturn("Tool published successfully!");
 
-       uut.onPublish(pteMock);
+       uut.onPublish(toolSplMock);
 
-       verify(mockToolAdminServiceFacade).publishTool(eq(t1Mock), voidCaptor.capture());
+       verify(mockToolAdminServiceFacade).publishTool(eq(toolMock), voidCaptor.capture());
        voidCaptor.getValue().onSuccess(null);
    }
 }

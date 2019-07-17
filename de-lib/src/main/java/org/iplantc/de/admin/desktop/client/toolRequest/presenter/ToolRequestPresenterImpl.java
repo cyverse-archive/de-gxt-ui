@@ -1,17 +1,13 @@
 package org.iplantc.de.admin.desktop.client.toolRequest.presenter;
 
-import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
-import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
-import org.iplantc.de.admin.desktop.client.toolAdmin.gin.factory.ToolAdminViewFactory;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
-import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.toolRequest.events.AdminMakeToolPublicSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
@@ -19,27 +15,32 @@ import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.tools.client.ReactToolViews;
+import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-
-import com.sencha.gxt.data.shared.ListStore;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
 /**
  * @author jstroot sriram
  */
-public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, PublishToolEvent.PublishToolEventHandler {
+public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
 
     ToolRequestView view;
     ToolRequestServiceFacade toolReqService;
     UserInfo userInfo;
     ToolRequestPresenterAppearance appearance;
-    ToolAdminViewFactory adminFactory;
-    ToolAdminView adminView;
+    EditToolViewFactory editToolViewFactory;
+    EditToolView editToolView;
+    ToolAutoBeanFactory factory;
     ToolAdminServiceFacade toolAdminServiceFacade;
     @Inject IplantAnnouncer announcer;
 
@@ -48,13 +49,15 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
                              final ToolRequestServiceFacade toolReqService,
                              final UserInfo userInfo,
                              final ToolRequestPresenterAppearance appearance,
-                             final ToolAdminViewFactory adminFactory,
+                             final EditToolViewFactory editToolViewFactory,
+                             final ToolAutoBeanFactory factory,
                              final ToolAdminServiceFacade toolAdminServiceFacade) {
         this.view = view;
         this.toolReqService = toolReqService;
         this.userInfo = userInfo;
         this.appearance = appearance;
-        this.adminFactory = adminFactory;
+        this.editToolViewFactory = editToolViewFactory;
+        this.factory = factory;
         this.toolAdminServiceFacade = toolAdminServiceFacade;
         view.setPresenter(this);
     }
@@ -124,19 +127,19 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
 
     @Override
     public void onAdminMakeToolPublicSelected(AdminMakeToolPublicSelectedEvent event) {
+        editToolView = editToolViewFactory.create(getBaseProps());
+
         toolAdminServiceFacade.getToolTypes(new AsyncCallback<List<ToolType>>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(List<ToolType> result) {
                 List<String> toolTypes = Lists.newArrayList();
                 result.forEach(toolType -> toolTypes.add(toolType.getName()));
-                adminView = adminFactory.create(new ListStore<>(HasId::getId));
-                adminView.setToolTypes(toolTypes);
-                adminView.addPublishToolEventHandler(ToolRequestPresenterImpl.this);
+                editToolView.setToolTypes(toolTypes.toArray(new String[0]));
 
                 getToolDetails(event);
             }
@@ -144,31 +147,63 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
     }
 
     protected void getToolDetails(AdminMakeToolPublicSelectedEvent event) {
+        view.mask(appearance.getToolRequestsLoadingMask());
         toolAdminServiceFacade.getToolDetails(event.getToolId(), new AsyncCallback<Tool>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                view.unmask();
+                ErrorHandler.postReact(caught);
             }
 
             @Override
             public void onSuccess(Tool result) {
-                adminView.editToolDetails(result, ToolAdminDetailsDialog.Mode.MAKEPUBLIC);
+                view.unmask();
+                Splittable tool = convertToolToSplittable(result);
+                editToolView.edit(tool);
             }
         });
     }
 
     @Override
-    public void onPublish(PublishToolEvent event) {
-        toolAdminServiceFacade.publishTool(event.getTool(), new AsyncCallback<Void>() {
+    @SuppressWarnings("unusable-by-js")
+    public void onPublish(Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
+        editToolView.mask();
+        toolAdminServiceFacade.publishTool(tool, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
-                ErrorHandler.post(appearance.publishFailed(), throwable);
+                editToolView.unmask();
+                ErrorHandler.postReact(appearance.publishFailed(), throwable);
             }
 
             @Override
             public void onSuccess(Void aVoid) {
+                editToolView.close();
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.publishSuccess()));
             }
         });
+    }
+
+    @Override
+    public void closeEditToolDlg() {
+        editToolView.close();
+    }
+
+    ReactToolViews.AdminPublishingToolProps getBaseProps() {
+        ReactToolViews.AdminPublishingToolProps baseProps = new ReactToolViews.AdminPublishingToolProps();
+        baseProps.presenter = this;
+        baseProps.parentId = Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG;
+        baseProps.isAdmin = true;
+        baseProps.isAdminPublishing = true;
+
+        return baseProps;
+    }
+
+    Tool convertSplittableToTool(Splittable toolSpl) {
+        return AutoBeanCodex.decode(factory, Tool.class, toolSpl.getPayload()).as();
+    }
+
+    Splittable convertToolToSplittable(Tool tool) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
     }
 }

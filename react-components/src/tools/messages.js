@@ -70,5 +70,6 @@ export default {
         volumesWarning:
             "WARNING: Do not add Container Volumes or Container Volumes From settings to " +
             "tools unless it is certain that tool is authorized to access that data.",
+        makePublic: "Make Public",
     },
 };
