@@ -1,4 +1,19 @@
 export default {
+    BUTTONS: {
+        SAVE: "save",
+        CANCEL: "cancel",
+    },
+    ADMIN_DETAILS: {
+        NAME: "name",
+        DESCRIPTION: "description",
+        INTEGRATOR: "integrator",
+        INTEGRATOR_EMAIL: "integratorEmail",
+        DELETED: "deleted",
+        DISABLED: "disabled",
+        BETA: "beta",
+        WIKI_URL: "wikiURL",
+        DOCUMENTATION: "documentation",
+    },
     DETAILS: {
         APP_INFO: "appInfo",
         APP_TOOLS_TAB: "toolInfoTab",

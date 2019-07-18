@@ -7,6 +7,7 @@ import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.s
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
 
+import AdminAppDetailsTest from "./apps/admin/AdminAppDetails.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";
 import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
@@ -73,6 +74,9 @@ storiesOf("analysis/view/dialogs", module).add(
     () => <ShareWithSupportDialogTest />
 );
 
+storiesOf("apps/admin", module).add("AdminAppDetails", () => (
+    <AdminAppDetailsTest />
+));
 storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
     <AppStatsTest />
 ));
