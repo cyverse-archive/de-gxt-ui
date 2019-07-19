@@ -30,6 +30,11 @@ var intlData = {
         emailSupportTooltip: "support@cyverse.org",
         supportChatLink: "Chat With Support",
         supportChatTooltip: "Chat may be disabled by your browser's settings",
+        collaboratorsTooltip: "Manage your private collaborator lists",
+        teamsTooltip:
+            "Manage public or private groups of collaborators. Collaborators in a team can all share resources with that team.",
+        communitiesTooltip:
+            "Manage public collections of apps for display in Community categories in the Apps window",
     },
 };
 
