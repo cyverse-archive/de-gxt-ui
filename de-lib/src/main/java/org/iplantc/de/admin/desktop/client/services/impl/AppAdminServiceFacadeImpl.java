@@ -201,6 +201,7 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
         appClone.setDeleted(app.isDeleted());
         appClone.setDisabled(app.isDisabled());
         appClone.setWikiUrl(app.getWikiUrl());
+        appClone.setExtra(app.getExtra());
 
         Splittable payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appClone));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH,

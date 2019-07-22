@@ -33,7 +33,6 @@ public class ReactAppsAdmin {
         public String restrictedStartingChars;
         public String createDocWikiUrl;
         public String documentationTemplateUrl;
-        public String documentation;
         public String parentId;
         public boolean open;
     }

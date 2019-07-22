@@ -25,10 +25,9 @@ public class AppEditor extends Composite {
         currentProps = baseProps;
     }
 
-    public void edit(Splittable app, String appDoc) {
+    public void edit(Splittable app) {
         currentProps.open = true;
         currentProps.app = app;
-        currentProps.documentation = appDoc;
         render();
     }
 

@@ -113,7 +113,7 @@ function AdminAppDetailsForm(props) {
     return (
         <Form>
             <Field
-                name={"app.name"}
+                name={"name"}
                 label={getMessage("appName")}
                 id={build(parentId, ids.ADMIN_DETAILS.NAME)}
                 validate={(value) =>
@@ -126,37 +126,43 @@ function AdminAppDetailsForm(props) {
                 component={FormTextField}
             />
             <Field
-                name={"app.description"}
+                name={"description"}
                 label={getMessage("descriptionLabel")}
                 id={build(parentId, ids.ADMIN_DETAILS.DESCRIPTION)}
                 component={FormMultilineTextField}
             />
             <Field
-                name={"app.integrator_name"}
+                name={"integrator_name"}
                 label={getMessage("integratorName")}
                 id={build(parentId, ids.ADMIN_DETAILS.INTEGRATOR)}
                 component={FormTextField}
             />
             <Field
-                name={"app.integrator_email"}
+                name={"integrator_email"}
                 label={getMessage("integratorEmail")}
                 id={build(parentId, ids.ADMIN_DETAILS.INTEGRATOR_EMAIL)}
                 component={FormTextField}
             />
             <Field
-                name={"app.deleted"}
+                name={"extra.htcondor.extra_requirements"}
+                label={getMessage("htcondorExtraRequirements")}
+                id={build(parentId, ids.ADMIN_DETAILS.HTCONDOR_EXTRA_REQS)}
+                component={FormTextField}
+            />
+            <Field
+                name={"deleted"}
                 label={getMessage("deleted")}
                 id={build(parentId, ids.ADMIN_DETAILS.DELETED)}
                 component={FormCheckbox}
             />
             <Field
-                name={"app.disabled"}
+                name={"disabled"}
                 label={getMessage("disabled")}
                 id={build(parentId, ids.ADMIN_DETAILS.DISABLED)}
                 component={FormCheckbox}
             />
             <Field
-                name={"app.beta"}
+                name={"beta"}
                 label={getMessage("beta")}
                 id={build(parentId, ids.ADMIN_DETAILS.BETA)}
                 component={FormCheckbox}
@@ -168,7 +174,7 @@ function AdminAppDetailsForm(props) {
                 />
             </div>
             <Field
-                name={"app.wiki_url"}
+                name={"wiki_url"}
                 label={getMessage("wikiUrl")}
                 id={build(parentId, ids.ADMIN_DETAILS.WIKI_URL)}
                 component={FormTextField}
@@ -183,7 +189,7 @@ function AdminAppDetailsForm(props) {
                 </Typography>
             </Paper>
             <Field
-                name={"documentation"}
+                name={"documentation.documentation"}
                 label={getMessage("appDocumentation")}
                 id={build(parentId, ids.ADMIN_DETAILS.DOCUMENTATION)}
                 multiline
@@ -233,37 +239,43 @@ const handleSubmit = (values, { props, setSubmitting }) => {
     const { presenter } = props;
 
     let promises = [];
-    if (props.app !== values.app) {
+    if (props.app !== values) {
         let saveApp = new Promise((resolve, reject) => {
-            presenter.onSaveAppSelected(values.app, resolve, reject);
+            presenter.onSaveAppSelected(values, resolve, reject);
         });
         promises.push(saveApp);
     }
 
-    if (props.app.beta !== values.app.beta) {
+    if (props.app.beta !== values.beta) {
         let betaUpdate = new Promise((resolve, reject) => {
-            presenter.updateBetaStatus(values.app, resolve, reject);
+            presenter.updateBetaStatus(values, resolve, reject);
         });
         promises.push(betaUpdate);
     }
 
-    if (!props.documentation && values.documentation) {
+    if (
+        !props.app.documentation.documentation &&
+        values.documentation.documentation
+    ) {
         let addAppDoc = new Promise((resolve, reject) => {
             presenter.addAppDocumentation(
-                values.app.system_id,
-                values.app.id,
-                values.documentation,
+                values.system_id,
+                values.id,
+                values.documentation.documentation,
                 resolve,
                 reject
             );
         });
         promises.push(addAppDoc);
-    } else if (props.documentation !== values.documentation) {
+    } else if (
+        props.app.documentation.documentation !==
+        values.documentation.documentation
+    ) {
         let updateAppDoc = new Promise((resolve, reject) => {
             presenter.updateAppDocumentation(
-                values.app.system_id,
-                values.app.id,
-                values.documentation,
+                values.system_id,
+                values.id,
+                values.documentation.documentation,
                 resolve,
                 reject
             );
@@ -282,11 +294,8 @@ const handleSubmit = (values, { props, setSubmitting }) => {
 };
 
 function mapPropsToValues(props) {
-    const { app, documentation } = props;
-    return {
-        app: app,
-        documentation: documentation,
-    };
+    const { app } = props;
+    return { ...app };
 }
 
 AdminAppDetailsDialog.propTypes = {
@@ -299,7 +308,6 @@ AdminAppDetailsDialog.propTypes = {
         closeAppDetailsDlg: PropTypes.func.isRequired,
     }),
     app: PropTypes.object.isRequired,
-    documentation: PropTypes.string.isRequired,
     restrictedChars: PropTypes.string.isRequired,
     restrictedStartingChars: PropTypes.string.isRequired,
     createDocWikiUrl: PropTypes.string.isRequired,

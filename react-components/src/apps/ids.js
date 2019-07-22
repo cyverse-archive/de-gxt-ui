@@ -13,6 +13,7 @@ export default {
         BETA: "beta",
         WIKI_URL: "wikiURL",
         DOCUMENTATION: "documentation",
+        HTCONDOR_EXTRA_REQS: "htcondorExtraReqs",
     },
     DETAILS: {
         APP_INFO: "appInfo",

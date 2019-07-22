@@ -76,10 +76,24 @@ class AdminAppDetailsTest extends Component {
                 average: 4.75,
                 total: 4,
             },
+            documentation: {
+                app_id: "f4818d90-13e9-11e5-ae9c-d3fdcba95883",
+                documentation:
+                    "### Add GO to Blastp-uniprot output \n> #### Description and Quick Start \n>> Takes a Blastp output from mapping against a uniprot database and retrieves the matching GO headings. \n> #### Test Data \n>> /iplant/home/shared/iplantcollaborative/example_data/Add_GO_to_blast-uniprot_output \n> #### Input File(s) \n>> blastp_out.txt from Blastp a subset of uniprot, or similar tab-delimited blast output, where the ids are uniprot ids. \n> #### Parameters Used in App \n>> None. \n> #### Output File(s) \n>> A non-redundant list of the blast ids used. The goa_entries.srt.txt file, which is the sorted list of blast ids matched with appropriate GO annotation headings.",
+                references: [
+                    "http://archive.sysbio.harvard.edu/csb/resources/computational/scriptome/UNIX/Tools/Merge.html",
+                ],
+                created_on: "2015-06-18T19:12:46Z",
+                modified_on: "2019-07-19T21:53:27Z",
+                created_by: "rogerab@iplantcollaborative.org",
+                modified_by: "aramsey@iplantcollaborative.org",
+            },
+            extra: {
+                htcondor: {
+                    extra_requirements: "TRUE && TRUE",
+                },
+            },
         };
-
-        const documentation =
-            "### Add GO to Blastp-uniprot output \\n> #### Description and Quick Start \\n>> Takes a Blastp output from mapping against a uniprot database and retrieves the matching GO headings. \\n> #### Test Data \\n>> /iplant/home/shared/iplantcollaborative/example_data/Add_GO_to_blast-uniprot_output \\n> #### Input File(s) \\n>> blastp_out.txt from Blastp a subset of uniprot, or similar tab-delimited blast output, where the ids are uniprot ids. \\n> #### Parameters Used in App \\n>> None. \\n> #### Output File(s) \\n>> A non-redundant list of the blast ids used. The goa_entries.srt.txt file, which is the sorted list of blast ids matched with appropriate GO annotation headings.";
 
         const restrictedChars = ":@/\\|^#;[]{}<>";
         const restrictedStartingChars = "~.$";
@@ -94,7 +108,6 @@ class AdminAppDetailsTest extends Component {
                 open={true}
                 parentId={parentId}
                 app={object("app", app)}
-                documentation={object("documentation", documentation)}
                 restrictedChars={restrictedChars}
                 restrictedStartingChars={restrictedStartingChars}
                 createDocWikiUrl={createDocWikiUrl}
