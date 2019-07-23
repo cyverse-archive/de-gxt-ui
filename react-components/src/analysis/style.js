@@ -42,6 +42,12 @@ export default (theme) => ({
             cursor: "pointer",
         },
     },
+    interactiveButton: {
+        color: palette.darkBlue,
+        "&:hover": {
+            cursor: "pointer",
+        },
+    },
     menuItem: {
         fontSize: 10,
         padding: 5,
