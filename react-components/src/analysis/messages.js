@@ -100,7 +100,7 @@ var intlData = {
             "</p>\n" +
             '<p style="margin:10px;">Other common reasons for analysis failure:</p>\n' +
             '<p style="margin:10px;">\n' +
-            '<p style="padding-left:10px;margin:10px;">* <b>Invalid parameters:</b> Each tool will report errors differently. You will need to search the log files for an error message. Start by searching the (stdout) file, which lists all of the output from the tool. Also check the app documentation, including the original documentation for the tool.</p>\n' +
+            '<p style="padding-left:10px;margin:10px;">* <b>Invalid parameters:</b> Each tool will report errors differently. You will need to search the log files for an error message. Start by searching the ‘condor_stderr’ file which lists all the errors encountered by the tool, and the ‘condor_stdout’ file which lists all of the output from the tool. Also check the app documentation, including the original documentation for the tool.</p>\n' +
             '<p style="padding-left:10px;margin:10px;">* <b>Problem with app: </b> </p>\n' +
             '<p style="margin:10px;">\n' +
             '            <p style="padding-left:20px;margin:10px;">* <b>If the app is <a href="https://wiki.cyverse.org/wiki/x/6gGO#UsingtheAppsWindowandSubmittinganAnalysis-AppStatus" target="_blank">public</a>:</b> Please post a <a href="https://wiki.cyverse.org/wiki/display/DEmanual/Using+App+Ratings+and+App+Comments" target="_blank">comment</a>.</p>\n' +
