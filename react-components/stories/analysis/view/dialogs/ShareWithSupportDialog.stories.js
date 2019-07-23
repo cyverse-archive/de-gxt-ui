@@ -4,6 +4,7 @@
  **/
 import React, { Component } from "react";
 import ShareWithSupportDialog from "../../../../src/analysis/view/dialogs/ShareWithSupportDialog";
+import { text } from "@storybook/addon-knobs";
 
 class ShareWithSupportDialogTest extends Component {
     render() {
@@ -13,11 +14,11 @@ class ShareWithSupportDialogTest extends Component {
             can_share: true,
             username: "sriram@iplantcollaborative.org",
             app_id: "c7f05682-23c8-4182-b9a2-e09650a5f49b",
-            system_id: "de",
+            system_id: text("system_id", "de"),
             app_disabled: false,
             batch: false,
             enddate: "1533684920402",
-            status: "Completed",
+            status: text("status", "Completed"),
             id: "71380ffa-9a9a-11e8-9ac7-f64e9b87c109",
             startdate: "1533684874626",
             app_description:
