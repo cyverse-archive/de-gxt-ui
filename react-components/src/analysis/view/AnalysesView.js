@@ -3,7 +3,7 @@
  *
  **/
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -30,7 +30,6 @@ import {
     formatMessage,
     LoadingMask,
     getMessage,
-    palette,
     TablePaginationActions,
     withI18N,
 } from "@cyverse-de/ui-lib";
@@ -55,6 +54,7 @@ function AnalysisName(props) {
     const name = props.analysis.name;
     const isBatch = props.analysis.batch;
     const className = props.classes.analysisName;
+    const interactiveStyle = props.classes.interactiveButton;
     const handleGoToOutputFolder = props.handleGoToOutputFolder;
     const handleBatchIconClick = props.handleBatchIconClick;
     const handleViewAllIconClick = props.handleViewAllIconClick;
@@ -92,20 +92,22 @@ function AnalysisName(props) {
         interactiveUrls.length > 0
     ) {
         return (
-            <span
-                title={formatMessage(intl, "goOutputFolderOf") + " " + name}
-                className={className}
-                onClick={() => handleGoToOutputFolder(analysis)}
-            >
+            <Fragment>
                 <LaunchIcon
                     onClick={() =>
                         handleInteractiveUrlClick(interactiveUrls[0])
                     }
                     id={build(baseId, ids.ICONS.INTERACTIVE)}
-                    style={{ color: palette.darkBlue }}
+                    className={interactiveStyle}
                 />
-                <sup>{name}</sup>
-            </span>
+                <span
+                    title={formatMessage(intl, "goOutputFolderOf") + " " + name}
+                    className={className}
+                    onClick={() => handleGoToOutputFolder(analysis)}
+                >
+                    <sup>{name}</sup>
+                </span>
+            </Fragment>
         );
     } else if (parentId) {
         return (
