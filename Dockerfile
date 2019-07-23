@@ -18,7 +18,7 @@ ADD de-application.yaml /etc/iplant/de/de-application.yaml
 RUN ln -s "/usr/bin/java" "/bin/cyverse-ui"
 
 # Add the Internet2 InCommon intermediate CA certificate.
-ADD "https://incommon.org/wp-content/uploads/2019/06/sha384-Intermediate-cert.txt" "/uyr/local/share/ca-certificates/"
+ADD "https://incommon.org/wp-content/uploads/2019/06/sha384-Intermediate-cert.txt" "/usr/local/share/ca-certificates/"
 RUN "update-ca-certificates"
 
 EXPOSE 8080
