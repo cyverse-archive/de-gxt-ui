@@ -87,4 +87,10 @@ export default (theme) => ({
     analysisInfoFont: {
         fontSize: 11,
     },
+    expansionPanelDetails: {
+        display: "block",
+    },
+    copyAnalysisId: {
+        paddingBottom: "20px",
+    },
 });

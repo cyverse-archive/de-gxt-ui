@@ -14,6 +14,7 @@ import { injectIntl } from "react-intl";
 import {
     build,
     formatDate,
+    CopyTextArea,
     DEDialogHeader,
     EnhancedTableHead,
     getMessage,
@@ -109,7 +110,15 @@ function Step(props) {
                     {getMessage("analysisId")}: {external_id}
                 </Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            <ExpansionPanelDetails
+                classes={{ root: classes.expansionPanelDetails }}
+            >
+                <div className={classes.copyAnalysisId}>
+                    <CopyTextArea
+                        text={external_id}
+                        btnText={getMessage("copyAnalysisId")}
+                    />
+                </div>
                 <Updates
                     updates={updates}
                     classes={classes}

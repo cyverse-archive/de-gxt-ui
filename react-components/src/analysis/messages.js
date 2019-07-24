@@ -48,6 +48,7 @@ var intlData = {
         htDetails: "View HT analyses details",
         viewAll: "View All analyses",
         analysisInfoDlgTitle: "Analysis Info",
+        copyAnalysisId: "Copy Analysis ID",
         analysesExecDeleteWarning:
             "This will remove the selected analyses and the parameters information associated with those analyses. Outputs can still be viewed in the Data window within the folder created by these analyses.",
 
