@@ -1,2 +1,3 @@
+import AdminAppDetails from "./admin/AdminAppDetails";
 import AppStats from "./admin/AppStats";
-export { AppStats };
+export { AdminAppDetails, AppStats };

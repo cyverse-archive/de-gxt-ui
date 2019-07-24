@@ -182,15 +182,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     String appCountSingular();
 
     /**
-     * Translated "Disabled".
-     *
-     * @return translated "Disabled"
-     */
-    @DefaultMessage("Disabled")
-    @Key("appDisabled")
-    String appDisabled();
-
-    /**
      * Translated "App Info".
      *
      * @return translated "App Info"
@@ -1115,24 +1106,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @Key("integrator")
     String integrator();
 
-    /**
-     * Translated "Integrator email".
-     *
-     * @return translated "Integrator email"
-     */
-    @DefaultMessage("Integrator email")
-    @Key("integratorEmail")
-    String integratorEmail();
-
-    /**
-     * Translated "Integrator name".
-     *
-     * @return translated "Integrator name"
-     */
-    @DefaultMessage("Integrator name")
-    @Key("integratorName")
-    String integratorName();
-    
     /**
      * Translated
      * "A valid URL must begin with either ftp or http or https and cannot end with a space or a /. It must contain a valid path to a file after the domain name."
@@ -2808,18 +2781,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @DefaultMessage("Welcome")
     @Key("welcome")
     String welcome();
-
-    /**
-     * Translated
-     * "Enter the URL for the CyVerse wiki documentation, created using <a href=\"{0}\" target=\"_blank\">these instructions</a>"
-     * .
-     *
-     * @return translated
-     *         "Enter the URL for the CyVerse wiki documentation, created using <a href=\"{0}\" target=\"_blank\">these instructions</a>"
-     */
-    @DefaultMessage("Enter the URL for the CyVerse wiki documentation, created using <a href=\"{0}\" target=\"_blank\">these instructions</a>")
-    @Key("wikiUrlLabel")
-    String wikiUrlLabel(String arg0);
 
     /**
      * Translated "Workflow Information".

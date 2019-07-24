@@ -1,5 +1,6 @@
 package org.iplantc.de.client.models.apps;
 
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.FileParameters;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequest;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
@@ -43,4 +44,6 @@ public interface AppAutoBeanFactory extends AutoBeanFactory {
     AutoBean<AppDeletionRequest> appDeletionRequest();
 
     AutoBean<Publishable> publishable();
+
+    AutoBean<HasQualifiedId> hasQualifiedId();
 }

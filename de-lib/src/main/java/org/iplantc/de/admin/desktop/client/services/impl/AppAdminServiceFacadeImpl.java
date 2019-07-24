@@ -231,26 +231,26 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
 
     @Override
     public void saveAppDoc(final HasQualifiedId app,
-                           final AppDoc doc,
+                           final String doc,
                            final AsyncCallback<AppDoc> callback) {
         sendAppDocUpdate(app, doc, callback, POST);
     }
 
     @Override
     public void updateAppDoc(final HasQualifiedId app,
-                             final AppDoc doc,
+                             final String doc,
                              final AsyncCallback<AppDoc> callback) {
         sendAppDocUpdate(app, doc, callback, PATCH);
     }
 
     private void sendAppDocUpdate(HasQualifiedId app,
-                                  AppDoc doc,
+                                  String doc,
                                   final AsyncCallback<AppDoc> callback,
                                   BaseServiceCallWrapper.Type method) {
         String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
 
         Splittable payload = StringQuoter.createSplittable();
-        StringQuoter.create(doc.getDocumentation()).assign(payload, "documentation");
+        StringQuoter.create(doc).assign(payload, "documentation");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(method, address, payload.getPayload());
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, AppDoc>(callback) {
             @Override

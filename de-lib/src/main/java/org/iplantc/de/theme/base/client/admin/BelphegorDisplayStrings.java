@@ -17,11 +17,6 @@ public interface BelphegorDisplayStrings extends Messages {
     @Key("appCategorizeSuccess")
     String appCategorizeSuccess(String name, @PluralCount List<String> groupNames);
 
-    @Key("appDescription")
-    String appDescription();
-
-    String appDocumentationLabel();
-
     @Key("avgUserRatingColumnLabel")
     String avgUserRatingColumnLabel();
 
@@ -42,8 +37,6 @@ public interface BelphegorDisplayStrings extends Messages {
 
     @Key("deleteCategory")
     String deleteCategory();
-
-    String docHelpHtml();
 
     @Key("editApp")
     String editApp();
@@ -69,13 +62,6 @@ public interface BelphegorDisplayStrings extends Messages {
     @Key("selectCategories")
     String selectCategories(String name);
 
-    @Key("tempDisable")
-    String tempDisable();
-
-    String templateLinkPopupHeading();
-
-    String templateLinkTitle();
-
     @Key("toolRequests")
     String toolRequests();
 
@@ -89,19 +75,11 @@ public interface BelphegorDisplayStrings extends Messages {
 
     String ontologies();
 
-    String betaLabel();
-
-    String betaCheckBoxText();
-
     String betaTagAddedSuccess();
 
     String betaTagRemovedSuccess();
 
     String appStats();
-
-    String appDeleted();
-
-    String appDelete();
 
     String communities();
 }

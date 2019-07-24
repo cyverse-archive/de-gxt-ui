@@ -1,7 +1,6 @@
 package org.iplantc.de.admin.apps.client.presenter.grid;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -13,8 +12,8 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.apps.client.events.selection.RestoreAppSelected;
-import org.iplantc.de.admin.apps.client.events.selection.SaveAppSelected;
 import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsGridViewFactory;
+import org.iplantc.de.admin.apps.client.views.editor.AppEditor;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -28,7 +27,10 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.OntologyUtil;
+import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.DECallback;
@@ -36,6 +38,7 @@ import org.iplantc.de.shared.DECallback;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
@@ -91,6 +94,11 @@ public class AdminAppsListPresenterImplTest {
     App appMock;
     @Mock
     OntologyServiceFacade ontologyServiceFacadeMock;
+    @Mock Splittable appSplMock;
+    @Mock ReactSuccessCallback reactSuccessCallbackMock;
+    @Mock ReactErrorCallback reactErrorCallbackMock;
+    @Mock CommonUiConstants uiConstantsMock;
+    @Mock AppEditor appEditorMock;
 
     @Captor
     ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
@@ -112,7 +120,17 @@ public class AdminAppsListPresenterImplTest {
         when(appearanceMock.betaTagRemovedSuccess()).thenReturn("Success");
         when(ontologyUtilMock.getBetaAvuList()).thenReturn(avuListMock);
         when(ontologyUtilMock.removeBetaAvu(listAvuMock)).thenReturn(avuListMock);
-        uut = new AdminAppsGridPresenterImpl(viewFactoryMock, listStoreMock);
+        uut = new AdminAppsGridPresenterImpl(viewFactoryMock, listStoreMock){
+            @Override
+            Splittable convertAppToSplittable(App app) {
+                return appSplMock;
+            }
+
+            @Override
+            App convertSplittableToApp(Splittable appSpl) {
+                return appMock;
+            }
+        };
         uut.adminAppService = adminAppServiceMock;
         uut.factory = autoBeanFactory;
         uut.appService = appServiceMock;
@@ -120,6 +138,8 @@ public class AdminAppsListPresenterImplTest {
         uut.announcer = announcerMock;
         uut.ontologyUtil = ontologyUtilMock;
         uut.ontologyServiceFacade = ontologyServiceFacadeMock;
+        uut.uiConstants = uiConstantsMock;
+        uut.appEditor = appEditorMock;
     }
 
     @Test
@@ -181,6 +201,7 @@ public class AdminAppsListPresenterImplTest {
 
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppInfoSelected(eventMock);
+        verify(viewMock).mask(anyString());
 
         verify(adminAppServiceMock).getAppDoc(eq(appMock), Matchers.<AsyncCallback<AppDoc>>any());
 
@@ -264,60 +285,13 @@ public class AdminAppsListPresenterImplTest {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
-        uut.isDocUpdate = false;
-        SaveAppSelected eventMock = mock(SaveAppSelected.class);
-        App appMock = mock(App.class);
-        AppDoc docMock = mock(AppDoc.class);
         when(appMock.getName()).thenReturn("mock name");
-        when(docMock.getDocumentation()).thenReturn("mock documentation");
-        when(eventMock.getApp()).thenReturn(appMock);
-        when(eventMock.getDoc()).thenReturn(docMock);
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.onSaveAppSelected(eventMock);
+        uut.onSaveAppSelected(appSplMock, reactSuccessCallbackMock, reactErrorCallbackMock);
 
         verify(appMock).getName();
-        verify(viewMock).mask(anyString());
         verify(adminAppServiceMock).updateApp(eq(appMock), Matchers.<AsyncCallback<App>>any());
-
-        verify(docMock).getDocumentation();
-        verify(adminAppServiceMock).saveAppDoc(eq(appMock),
-                                               eq(docMock),
-                                               Matchers.<AsyncCallback<AppDoc>>any());
-
-        verifyNoMoreInteractions(viewMock, adminAppServiceMock, appMock, docMock);
-        verifyZeroInteractions(appServiceMock);
-    }
-
-
-    @Test
-    public void verifyDocUpdated_onSaveAppSelected() {
-        // Record keeping
-        verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
-
-        uut.isDocUpdate = true;
-        SaveAppSelected eventMock = mock(SaveAppSelected.class);
-        App appMock = mock(App.class);
-        AppDoc docMock = mock(AppDoc.class);
-        when(appMock.getName()).thenReturn("mock name");
-        when(docMock.getDocumentation()).thenReturn("mock documentation");
-        when(eventMock.getApp()).thenReturn(appMock);
-        when(eventMock.getDoc()).thenReturn(docMock);
-
-        /*** CALL METHOD UNDER TEST ***/
-        uut.onSaveAppSelected(eventMock);
-
-        verify(appMock).getName();
-        verify(viewMock).mask(anyString());
-        verify(adminAppServiceMock).updateApp(eq(appMock), Matchers.<AsyncCallback<App>>any());
-
-        verify(docMock).getDocumentation();
-        verify(adminAppServiceMock).updateAppDoc(eq(appMock),
-                                                 eq(docMock),
-                                                 Matchers.<AsyncCallback<AppDoc>>any());
-
-        verifyNoMoreInteractions(viewMock, adminAppServiceMock, appMock, docMock);
-        verifyZeroInteractions(appServiceMock);
     }
 
     @Test
@@ -325,7 +299,7 @@ public class AdminAppsListPresenterImplTest {
         when(appMock.isBeta()).thenReturn(true);
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.updateBetaStatus(appMock);
+        uut.updateBetaStatus(appSplMock, reactSuccessCallbackMock, reactErrorCallbackMock);
 
         verify(ontologyUtilMock).getBetaAvuList();
         verify(ontologyServiceFacadeMock).addAVUsToApp(eq(appMock),
@@ -334,8 +308,6 @@ public class AdminAppsListPresenterImplTest {
 
         avuListCallbackCaptor.getValue().onSuccess(listAvuMock);
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
-        verify(appMock).setBeta(anyBoolean());
-        verify(listStoreMock).update(eq(appMock));
     }
 
     @Test
@@ -343,7 +315,7 @@ public class AdminAppsListPresenterImplTest {
         when(appMock.isBeta()).thenReturn(false);
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.updateBetaStatus(appMock);
+        uut.updateBetaStatus(appSplMock, reactSuccessCallbackMock, reactErrorCallbackMock);
 
         verify(ontologyServiceFacadeMock).getAppAVUs(eq(appMock), avuListCallbackCaptor.capture());
 
@@ -354,8 +326,6 @@ public class AdminAppsListPresenterImplTest {
                                                      avuListCallbackCaptor.capture());
 
         avuListCallbackCaptor.getValue().onSuccess(listAvuMock);
-        verify(appMock).setBeta(anyBoolean());
-        verify(listStoreMock).update(eq(appMock));
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 

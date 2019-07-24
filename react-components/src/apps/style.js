@@ -62,4 +62,7 @@ export default (theme) => ({
     disableFavorite: {
         backgroundImage: `url(${notFav})`,
     },
+    paper: {
+        padding: "20px",
+    },
 });

@@ -21,9 +21,9 @@ public class AdminAppStatsGridViewImpl implements AdminAppStatsGridView{
     @Override
     public void load(Presenter presenter) {
         Scheduler.get().scheduleFinally(() -> {
-            ReactAppStats.AppStatsProps props = new ReactAppStats.AppStatsProps();
+            ReactAppsAdmin.AppStatsProps props = new ReactAppsAdmin.AppStatsProps();
             props.presenter = presenter;
-            CyVerseReactComponents.render(ReactAppStats.appStats, props, panel.getElement());
+            CyVerseReactComponents.render(ReactAppsAdmin.AppStats, props, panel.getElement());
         });
     }
 

@@ -72,8 +72,8 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
 
     void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
-    void saveAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void saveAppDoc(HasQualifiedId app, String doc, AsyncCallback<AppDoc> callback);
 
-    void updateAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void updateAppDoc(HasQualifiedId app, String doc, AsyncCallback<AppDoc> callback);
 
 }

@@ -1,16 +1,18 @@
 package org.iplantc.de.admin.apps.client.presenter.grid;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
+import org.iplantc.de.admin.apps.client.ReactAppsAdmin;
 import org.iplantc.de.admin.apps.client.events.selection.RestoreAppSelected;
-import org.iplantc.de.admin.apps.client.events.selection.SaveAppSelected;
 import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsGridViewFactory;
 import org.iplantc.de.admin.apps.client.views.editor.AppEditor;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -18,8 +20,11 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
+import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -28,17 +33,19 @@ import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
@@ -49,69 +56,81 @@ import java.util.List;
  * @author jstroot
  */
 public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
-                                                   AppInfoSelectedEvent.AppInfoSelectedEventHandler,
-                                                   SaveAppSelected.SaveAppSelectedHandler {
+                                                   AppInfoSelectedEvent.AppInfoSelectedEventHandler {
 
 
     private static class DocSaveCallback implements AsyncCallback<AppDoc> {
         private final IplantAnnouncer announcer;
         private final Appearance appearance;
+        private ReactSuccessCallback callback;
+        private ReactErrorCallback errorCallback;
 
         public DocSaveCallback(final IplantAnnouncer announcer,
-                               final Appearance appearance) {
+                               final Appearance appearance,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback) {
             this.announcer = announcer;
             this.appearance = appearance;
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Throwable caught) {
-            ErrorHandler.post(caught);
+            ErrorHandler.postReact(caught);
+            errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
         }
 
         @Override
         public void onSuccess(AppDoc result) {
             announcer.schedule(new SuccessAnnouncementConfig(appearance.updateDocumentationSuccess()));
-
+            callback.onSuccess(null);
         }
     }
 
     class RemoveBetaAvuCallback implements AsyncCallback<List<Avu>> {
-        App app;
+        private ReactSuccessCallback callback;
+        private ReactErrorCallback errorCallback;
 
-        public RemoveBetaAvuCallback(App app) {
-            this.app = app;
+        public RemoveBetaAvuCallback(ReactSuccessCallback callback,
+                                     ReactErrorCallback errorCallback) {
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Throwable caught) {
-            ErrorHandler.post(caught);
+            errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+            ErrorHandler.postReact(caught);
         }
 
         @Override
         public void onSuccess(List<Avu> result) {
-            app.setBeta(false);
-            listStore.update(app);
             announcer.schedule(new SuccessAnnouncementConfig(appearance.betaTagRemovedSuccess()));
+            callback.onSuccess(null);
         }
     }
 
     class AddBetaAvuCallback implements AsyncCallback<List<Avu>> {
-        private final App app;
+        private ReactSuccessCallback callback;
+        private ReactErrorCallback errorCallback;
 
-        public AddBetaAvuCallback(App app) {
-            this.app = app;
+        public AddBetaAvuCallback(ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
         public void onFailure(Throwable caught) {
-            ErrorHandler.post(caught);
+            errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+            ErrorHandler.postReact(caught);
         }
 
         @Override
         public void onSuccess(List<Avu> result) {
             announcer.schedule(new SuccessAnnouncementConfig(appearance.betaTagAddedSuccess()));
-            app.setBeta(true);
-            listStore.update(app);
+            callback.onSuccess(null);
         }
     }
 
@@ -122,10 +141,11 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     @Inject AppAutoBeanFactory factory;
     @Inject JsonUtil jsonUtil;
     @Inject IplantAnnouncer announcer;
+    @Inject AppEditor appEditor;
+    @Inject CommonUiConstants uiConstants;
 
     private final ListStore<App> listStore;
     private final AdminAppsGridView view;
-    boolean isDocUpdate;
     OntologyUtil ontologyUtil = OntologyUtil.getInstance();
 
     @Inject
@@ -191,37 +211,35 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
+        appEditor.setBaseProps(getBaseProps());
+        view.mask(appearance.saveAppLoadingMask());
         App selectedApp = event.getApp();
         //get doc only for public apps!
         if (selectedApp.isPublic()) {
             adminAppService.getAppDoc(selectedApp, new AsyncCallback<AppDoc>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    AutoBean<AppDoc> doc = AutoBeanCodex.decode(factory, AppDoc.class, "{}");
-                    showAppEditor(event, doc.as());
-                    isDocUpdate = false;
-                    ErrorHandler.post(caught);
+                    view.unmask();
+                    showAppEditor(selectedApp, "");
+                    ErrorHandler.postReact(caught);
                 }
 
                 @Override
                 public void onSuccess(final AppDoc result) {
                     // Get result
-                    showAppEditor(event, result);
-                    isDocUpdate = true;
+                    view.unmask();
+                    showAppEditor(selectedApp, result.getDocumentation());
                 }
             });
         } else {
-            AutoBean<AppDoc> doc = AutoBeanCodex.decode(factory, AppDoc.class, "{}");
-            showAppEditor(event,doc.as());
+            view.unmask();
+            showAppEditor(selectedApp, "");
         }
     }
 
-    protected void showAppEditor(AppInfoSelectedEvent event, AppDoc as) {
-        final AppEditor appEditor = new AppEditor(event.getApp(), as);
-        appEditor.addSaveAppSelectedHandler(AdminAppsGridPresenterImpl.this);
-        appEditor.show();
+    protected void showAppEditor(App app, String appDoc) {
+        appEditor.edit(convertAppToSplittable(app), appDoc);
     }
-
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
@@ -293,50 +311,78 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     }
 
     @Override
-    public void onSaveAppSelected(SaveAppSelected event) {
+    @SuppressWarnings("unusable-by-js")
+    public void onSaveAppSelected(Splittable appSpl,
+                                  ReactSuccessCallback callback,
+                                  ReactErrorCallback errorCallback) {
 
-        final App app = event.getApp();
-        final AppDoc doc = event.getDoc();
+        final App app = convertSplittableToApp(appSpl);
 
         if (app.getName() != null) {
-            view.mask(appearance.saveAppLoadingMask());
             adminAppService.updateApp(app, new AsyncCallback<App>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    view.unmask();
-                    ErrorHandler.post(caught);
+                    ErrorHandler.postReact(caught);
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
                 @Override
                 public void onSuccess(App result) {
-                    result.setBeta(app.isBeta());
-                    view.unmask();
-                    listStore.update(result);
-                    updateBetaStatus(app);
+                    listStore.update(app);
+                    callback.onSuccess(null);
                 }
             });
         }
-        if(!Strings.isNullOrEmpty(doc.getDocumentation())) {
-            if (isDocUpdate) {
-                adminAppService.updateAppDoc(app,
-                                             doc,
-                                             new DocSaveCallback(announcer,
-                                                                 appearance));
-            } else {
-                adminAppService.saveAppDoc(app,
-                                           doc,
-                                           new DocSaveCallback(announcer,
-                                                               appearance));
-            }
-        }
     }
 
-    public void updateBetaStatus(final App app) {
-        Preconditions.checkNotNull(app);
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void addAppDocumentation(String systemId,
+                                    String appId,
+                                    String appDoc,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback) {
+        HasQualifiedId hasQualifiedId = factory.hasQualifiedId().as();
+        hasQualifiedId.setSystemId(systemId);
+        hasQualifiedId.setId(appId);
+
+        adminAppService.saveAppDoc(hasQualifiedId,
+                                   appDoc,
+                                   new DocSaveCallback(announcer,
+                                                       appearance,
+                                                       callback,
+                                                       errorCallback));
+    }
+
+    @Override
+    public void updateAppDocumentation(String systemId,
+                                       String appId,
+                                       String appDoc,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback) {
+        HasQualifiedId hasQualifiedId = factory.hasQualifiedId().as();
+        hasQualifiedId.setSystemId(systemId);
+        hasQualifiedId.setId(appId);
+
+        adminAppService.updateAppDoc(hasQualifiedId,
+                                     appDoc,
+                                     new DocSaveCallback(announcer,
+                                                         appearance,
+                                                         callback,
+                                                         errorCallback));
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void updateBetaStatus(Splittable appSpl,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        App app = convertSplittableToApp(appSpl);
 
         if (app.isBeta()) {
             AvuList betaAvus = ontologyUtil.getBetaAvuList();
-            ontologyServiceFacade.addAVUsToApp(app, betaAvus, new AddBetaAvuCallback(app));
+            ontologyServiceFacade.addAVUsToApp(app, betaAvus, new AddBetaAvuCallback(callback,
+                                                                                     errorCallback));
         } else {
             ontologyServiceFacade.getAppAVUs(app, new AsyncCallback<List<Avu>>() {
                 @Override
@@ -347,9 +393,36 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
                 @Override
                 public void onSuccess(List<Avu> result) {
                     AvuList avuList = ontologyUtil.removeBetaAvu(result);
-                    ontologyServiceFacade.setAppAVUs(app, avuList, new RemoveBetaAvuCallback(app));
+                    ontologyServiceFacade.setAppAVUs(app, avuList, new RemoveBetaAvuCallback(callback,
+                                                                                             errorCallback));
                 }
             });
         }
+    }
+
+    @Override
+    public void closeAppDetailsDlg() {
+        appEditor.close();
+    }
+
+    ReactAppsAdmin.AdminAppDetailsProps getBaseProps() {
+        ReactAppsAdmin.AdminAppDetailsProps props = new ReactAppsAdmin.AdminAppDetailsProps();
+        props.presenter = this;
+        props.restrictedChars = uiConstants.appNameRestrictedChars();
+        props.restrictedStartingChars = uiConstants.appNameRestrictedStartingChars();
+        props.createDocWikiUrl = uiConstants.publishDocumentationUrl();
+        props.documentationTemplateUrl = GWT.getHostPageBaseURL() + uiConstants.documentationTemplateUrl();
+
+        props.parentId = Belphegor.AppIds.APP_EDITOR;
+
+        return props;
+    }
+
+    Splittable convertAppToSplittable(App app) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+    }
+
+    App convertSplittableToApp(Splittable appSpl) {
+        return AutoBeanCodex.decode(factory, App.class, appSpl.getPayload()).as();
     }
 }

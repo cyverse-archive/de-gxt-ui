@@ -1,8 +1,8 @@
 package org.iplantc.de.theme.base.client.admin.desktop;
 
 import org.iplantc.de.admin.desktop.client.views.BelphegorView;
+import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.theme.base.client.admin.BelphegorConstants;
 import org.iplantc.de.theme.base.client.admin.BelphegorDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
@@ -42,20 +42,20 @@ public class BelphegorViewDefaultAppearance implements BelphegorView.BelphegorVi
         ImageResource headerLogoFill();
     }
 
-    private final BelphegorConstants constants;
+    private final CommonUiConstants constants;
     private final BelphegorDisplayStrings belphegorDisplayStrings;
     private final IplantDisplayStrings displayStrings;
     private final BelphegorView.BelphegorStyle style;
     private final MyTemplate template;
 
     public BelphegorViewDefaultAppearance() {
-        this(GWT.<BelphegorConstants> create(BelphegorConstants.class),
+        this(GWT.<CommonUiConstants> create(CommonUiConstants.class),
              GWT.<BelphegorDisplayStrings> create(BelphegorDisplayStrings.class),
              GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<MyTemplate> create(MyTemplate.class),
              GWT.<Resources> create(Resources.class));
     }
-    BelphegorViewDefaultAppearance(final BelphegorConstants constants,
+    BelphegorViewDefaultAppearance(final CommonUiConstants constants,
                                    final BelphegorDisplayStrings belphegorDisplayStrings,
                                    final IplantDisplayStrings displayStrings,
                                    final MyTemplate template,

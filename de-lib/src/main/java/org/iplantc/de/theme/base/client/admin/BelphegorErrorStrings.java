@@ -22,9 +22,6 @@ public interface BelphegorErrorStrings extends Messages{
     @Key("deleteCategoryPermissionError")
     String deleteCategoryPermissionError();
 
-    @Key("invalidAppNameMsg")
-    String invalidAppNameMsg(String badStartChars, String badChars);
-
     @Key("invalidMoveCategoryMsg")
     String invalidMoveCategoryMsg();
 
@@ -45,6 +42,4 @@ public interface BelphegorErrorStrings extends Messages{
 
     @Key("updateApplicationError")
     String updateApplicationError();
-
-    String validDocError();
 }

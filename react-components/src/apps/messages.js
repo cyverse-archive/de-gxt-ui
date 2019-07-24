@@ -75,6 +75,17 @@ const intlData = {
         noQuickLaunches: "No Quick Launch(s) to display.",
         quickLaunchNotSupportedMessage:
             "Quick Launch not supported for agave apps!",
+        deleted: "Deleted",
+        disabled: "Temporarily Disabled",
+        beta: "Beta Tag Applied",
+        wikiURLInstructions: "Creating wiki documentation instructions",
+        wikiUrl: "CyVerse wiki documentation URL",
+        documentationInstructions:
+            "NOTE: Please complete the following section for documentation to be " +
+            "displayed within the DE itself. The documentation must be in Markdown format. Please clear " +
+            "the wiki URL field once you fill this field. Replace everything inside \\{\\{\\}\\}.",
+        appDocumentation: "DE App Documentation",
+        documentationTemplate: "View Documentation Template",
     },
 };
 
