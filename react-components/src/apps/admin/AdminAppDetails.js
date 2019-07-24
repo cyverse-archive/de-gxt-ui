@@ -293,11 +293,6 @@ const handleSubmit = (values, { props, setSubmitting }) => {
         });
 };
 
-function mapPropsToValues(props) {
-    const { app } = props;
-    return { ...app };
-}
-
 AdminAppDetailsDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     presenter: PropTypes.shape({
@@ -317,6 +312,6 @@ AdminAppDetailsDialog.propTypes = {
 
 export default withFormik({
     enableReinitialize: true,
-    mapPropsToValues,
+    mapPropsToValues: ({ app }) => ({ ...app }),
     handleSubmit,
 })(withI18N(AdminAppDetailsDialog, messages));
