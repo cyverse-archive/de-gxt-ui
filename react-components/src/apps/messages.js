@@ -83,7 +83,7 @@ const intlData = {
         documentationInstructions:
             "NOTE: Please complete the following section for documentation to be " +
             "displayed within the DE itself. The documentation must be in Markdown format. Please clear " +
-            "the wiki URL field once you fill this field. Replace everything inside \\{\\{\\}\\}.",
+            "the wiki URL field once you fill this field. Replace everything inside {{}}.",
         appDocumentation: "DE App Documentation",
         documentationTemplate: "View Documentation Template",
         htcondorExtraRequirements: "HTCondor Extra Requirements",
