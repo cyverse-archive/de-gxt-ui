@@ -86,6 +86,7 @@ const intlData = {
             "the wiki URL field once you fill this field. Replace everything inside \\{\\{\\}\\}.",
         appDocumentation: "DE App Documentation",
         documentationTemplate: "View Documentation Template",
+        htcondorExtraRequirements: "HTCondor Extra Requirements",
     },
 };
 

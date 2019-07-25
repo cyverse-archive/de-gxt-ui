@@ -16,6 +16,7 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppDeletionRequest;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
@@ -216,29 +217,31 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
         App selectedApp = event.getApp();
         //get doc only for public apps!
         if (selectedApp.isPublic()) {
-            adminAppService.getAppDoc(selectedApp, new AsyncCallback<AppDoc>() {
+            adminAppService.getAppDetails(selectedApp, new AsyncCallback<App>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     view.unmask();
-                    showAppEditor(selectedApp, "");
+                    showAppEditor(selectedApp);
                     ErrorHandler.postReact(caught);
                 }
 
                 @Override
-                public void onSuccess(final AppDoc result) {
+                public void onSuccess(final App details) {
                     // Get result
                     view.unmask();
-                    showAppEditor(selectedApp, result.getDocumentation());
+                    selectedApp.setDocumentation(details.getDocumentation());
+                    selectedApp.setExtra(details.getExtra());
+                    showAppEditor(selectedApp);
                 }
             });
         } else {
             view.unmask();
-            showAppEditor(selectedApp, "");
+            showAppEditor(selectedApp);
         }
     }
 
-    protected void showAppEditor(App app, String appDoc) {
-        appEditor.edit(convertAppToSplittable(app), appDoc);
+    protected void showAppEditor(App app) {
+        appEditor.edit(convertAppToSplittable(app));
     }
 
     @Override

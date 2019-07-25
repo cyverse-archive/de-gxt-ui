@@ -203,7 +203,7 @@ public class AdminAppsListPresenterImplTest {
         uut.onAppInfoSelected(eventMock);
         verify(viewMock).mask(anyString());
 
-        verify(adminAppServiceMock).getAppDoc(eq(appMock), Matchers.<AsyncCallback<AppDoc>>any());
+        verify(adminAppServiceMock).getAppDetails(eq(appMock), Matchers.<AsyncCallback<App>>any());
 
         verifyZeroInteractions(viewMock, appServiceMock, listStoreMock);
     }

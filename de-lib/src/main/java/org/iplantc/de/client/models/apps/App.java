@@ -149,4 +149,10 @@ public interface App extends HasQualifiedId,
 
     @PropertyName("job_stats")
     AppStats getAppStats();
+
+    AppExtra getExtra();
+    void setExtra(AppExtra extra);
+
+    AppDoc getDocumentation();
+    void setDocumentation(AppDoc appDoc);
 }
