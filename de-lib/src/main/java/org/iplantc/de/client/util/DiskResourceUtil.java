@@ -479,16 +479,6 @@ public class DiskResourceUtil {
     }
 
     @JsIgnore
-    public boolean isTreeTab(Splittable obj) {
-        String infoType = getInfoType(obj);
-        return (infoType != null) && (InfoType.NEXUS.toString().equals(infoType)
-                                      || InfoType.NEXML.toString().equals(infoType)
-                                      || InfoType.NEWICK.toString().equals(infoType) || InfoType.PHYLOXML
-                                              .toString()
-                                              .equals(infoType));
-    }
-
-    @JsIgnore
     public boolean isGenomeVizTab(Splittable obj) {
         String infoType = getInfoType(obj);
         return infoType != null && InfoType.FASTA.toString().equals(infoType);

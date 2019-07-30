@@ -69,10 +69,6 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
 
         String sendToEnsemblLoadingMask();
 
-        String sendToTreeViewerMenuItem();
-
-        String sentToTreeViewerLoadingMask();
-
         String toolbarHeight();
 
         String urlColumnHeaderLabel();

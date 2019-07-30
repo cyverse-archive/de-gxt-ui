@@ -110,7 +110,6 @@ public class FileViewerPresenterImplTest {
         when(appearanceMock.retrieveFileManifestMask()).thenReturn("mask");
         when(appearanceMock.retrievingFileContentsMask()).thenReturn("mask");
         when(appearanceMock.savingMask()).thenReturn("mask");
-        when(appearanceMock.retrieveTreeUrlsMask()).thenReturn("mask");
         when(fileMock.getName()).thenReturn("fileName");
         when(viewersMock.size()).thenReturn(3);
         when(viewersMock.iterator()).thenReturn(viewerIteratorMock);

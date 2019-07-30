@@ -70,16 +70,6 @@ public class ExternalVisualizationURLViewerDefaultAppearance implements External
     }
 
     @Override
-    public String sendToTreeViewerMenuItem() {
-        return displayStrings.sendToTreeViewerMenuItem();
-    }
-
-    @Override
-    public String sentToTreeViewerLoadingMask() {
-        return displayStrings.loadingMask();
-    }
-
-    @Override
     public String toolbarHeight() {
         return "30";
     }

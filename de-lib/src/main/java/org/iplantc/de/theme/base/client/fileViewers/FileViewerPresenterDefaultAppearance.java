@@ -38,11 +38,6 @@ public class FileViewerPresenterDefaultAppearance implements FileViewer.FileView
     }
 
     @Override
-    public String retrieveTreeUrlsMask() {
-        return fileViewerStrings.retrieveTreeUrlsMask();
-    }
-
-    @Override
     public String retrievingFileContentsMask() {
         return fileViewerStrings.retrievingFileContentsMask();
     }

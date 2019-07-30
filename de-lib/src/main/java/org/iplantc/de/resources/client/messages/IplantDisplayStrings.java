@@ -2837,15 +2837,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     String sendToEnsemblMenuItem();
 
     /**
-     * Translated "Send to Tree Viewer"
-     *
-     * @return translated "Send to Tree Viewer"
-     */
-    @DefaultMessage("View in Tree Viewer")
-    @Key("sendToTreeViewerMenuItem")
-    String sendToTreeViewerMenuItem();
-
-    /**
      * Translated "Learn more."
      *
      * @return translated "Learn more."
