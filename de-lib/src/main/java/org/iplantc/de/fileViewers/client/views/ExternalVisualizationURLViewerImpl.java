@@ -11,7 +11,7 @@ import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
-import org.iplantc.de.fileViewers.client.views.cells.TreeUrlCell;
+import org.iplantc.de.fileViewers.client.views.cells.UrlCell;
 import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Preconditions;
@@ -176,7 +176,7 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
 
         ColumnConfig<VizUrl, VizUrl> url = new ColumnConfig<>(new IdentityValueProvider<VizUrl>(), appearance.urlColumnHeaderWidth());
         url.setHeader(appearance.urlColumnHeaderLabel());
-        url.setCell(new TreeUrlCell());
+        url.setCell(new UrlCell());
         configs.add(url);
 
         return new ColumnModel<>(configs);

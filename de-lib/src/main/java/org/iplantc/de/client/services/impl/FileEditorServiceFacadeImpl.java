@@ -137,14 +137,6 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public void getTreeUrl(String pathToFile, boolean refresh, AsyncCallback<String> callback) {
-        String address = "org.iplantc.services.buggalo.baseUrl?refresh=" + refresh + "&path=" + URL.encodeQueryString(pathToFile); //$NON-NLS-1$
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        callService(wrapper, callback);
-    }
-
-    @Override
     public void uploadTextAsFile(String destination, String fileContents, boolean newFile,
             DECallback<File> callback) {
 

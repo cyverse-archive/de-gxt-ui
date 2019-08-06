@@ -39,7 +39,6 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
@@ -82,7 +81,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
                                                            OpenAppForRelaunchEvent.OpenAppForRelaunchEventHandler,
                                                            RequestSendToCoGeEvent.RequestSendToCoGeEventHandler,
                                                            RequestSendToEnsemblEvent.RequestSendToEnsemblEventHandler,
-                                                           RequestSendToTreeViewerEvent.RequestSendToTreeViewerEventHandler,
                                                            RequestSimpleDownloadEvent.RequestSimpleDownloadEventHandler,
                                                            RequestSimpleUploadEvent.RequestSimpleUploadEventHandler,
                                                            QuickLaunchEvent.QuickLaunchEventHandler,
@@ -188,12 +186,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         }
 
         genomeBrowserUtil.sendToGenomeBrowser(resourcesToSend, null);
-    }
-
-    @Override
-    public void onRequestSendToTreeViewer(RequestSendToTreeViewerEvent event) {
-        checkNotNull(event.getFile());
-        showFile(event.getFile());
     }
 
     @Override
@@ -339,8 +331,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         handlerRegistration = eventBus.addHandler(OpenFolderEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSendToCoGeEvent.TYPE, this);
-        registrations.add(handlerRegistration);
-        handlerRegistration = eventBus.addHandler(RequestSendToTreeViewerEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSendToEnsemblEvent.TYPE, this);
         registrations.add(handlerRegistration);

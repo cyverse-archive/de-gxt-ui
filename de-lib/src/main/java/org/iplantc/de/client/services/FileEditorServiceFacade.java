@@ -59,16 +59,7 @@ public interface FileEditorServiceFacade {
      */
     void readChunk(File file, long chunkPosition, long chunkSize, DECallback<String> callback);
 
-    /**
-     * Get Tree URLs for the given tree's file ID.
-     * 
-     * @param pathToFile file ID (path) of the tree.
-     * @param refresh discard existing tree and create new one
-     * @param callback executes when RPC call is complete.
-     */
-    void getTreeUrl(String pathToFile, boolean refresh, AsyncCallback<String> callback);
-    
-    
+
     /**
      * Load genome in Coge
      * 

@@ -3,10 +3,11 @@
  */
 package org.iplantc.de.fileViewers.client.views.cells;
 
+import static com.google.gwt.dom.client.BrowserEvents.CLICK;
+
 import org.iplantc.de.client.models.viewer.VizUrl;
 import org.iplantc.de.commons.client.util.WindowUtil;
 
-import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -17,17 +18,17 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 /**
  * @author sriram, jstroot
  */
-public class TreeUrlCell extends AbstractCell<VizUrl> {
+public class UrlCell extends AbstractCell<VizUrl> {
 
-    public interface TreeUrlCellAppearance {
+    public interface UrlCellAppearance {
         void render(SafeHtmlBuilder sb, VizUrl model);
 
-        String treeUrlExternalWindowWidthHeight();
+        String urlExternalWindowWidthHeight();
     }
 
-    private final TreeUrlCellAppearance appearance = GWT.create(TreeUrlCellAppearance.class);
+    private final UrlCellAppearance appearance = GWT.create(UrlCellAppearance.class);
 
-    public TreeUrlCell() {
+    public UrlCell() {
         super(CLICK);
     }
 
@@ -39,7 +40,7 @@ public class TreeUrlCell extends AbstractCell<VizUrl> {
         }
         // Call the super handler, which handlers the enter key.
         super.onBrowserEvent(context, parent, value, event, valueUpdater);
-        WindowUtil.open(value.getUrl(), appearance.treeUrlExternalWindowWidthHeight());
+        WindowUtil.open(value.getUrl(), appearance.urlExternalWindowWidthHeight());
     }
 
     @Override
