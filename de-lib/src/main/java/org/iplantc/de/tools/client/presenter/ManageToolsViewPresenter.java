@@ -60,6 +60,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     ReactToolViews.EditToolProps editToolProps;
     ManageToolsView.ManageToolsViewAppearance appearance;
     ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
+
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
     @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
@@ -375,6 +376,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         });
 
     }
+
 
     @Override
     public void onToolRequestDialogClose() {
