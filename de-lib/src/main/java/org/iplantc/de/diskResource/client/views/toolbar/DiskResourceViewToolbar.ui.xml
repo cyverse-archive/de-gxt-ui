@@ -198,10 +198,6 @@
                                        text="{appearance.sendToEnsemblMenuItem}"
                                        icon="{appearance.sendToEnsemblIcon}"
                                        enabled="false"/>
-                        <menu:MenuItem ui:field="sendToTreeViewerMi"
-                                       text="{appearance.sendToTreeViewerMenuItem}"
-                                       icon="{appearance.sendToTreeViewerIcon}"
-                                       enabled="false"/>
                     </menu:Menu>
                 </button:menu>
             </button:TextButton>

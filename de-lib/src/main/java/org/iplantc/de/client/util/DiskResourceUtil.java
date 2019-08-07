@@ -433,12 +433,6 @@ public class DiskResourceUtil {
     }
 
     @JsIgnore
-    public boolean isTreeInfoType(InfoType infoType) {
-        return InfoType.NEXUS.equals(infoType) || InfoType.NEXML.equals(infoType)
-               || InfoType.NEWICK.equals(infoType) || InfoType.PHYLOXML.equals(infoType);
-    }
-
-    @JsIgnore
     public boolean isGenomeVizInfoType(InfoType infoType) {
         return InfoType.FASTA.equals(infoType);
     }
@@ -451,13 +445,6 @@ public class DiskResourceUtil {
                || InfoType.BEDGZ.equals(infoType) || InfoType.BIGWIG.equals(infoType);
     }
 
-
-   public boolean isTreeInfoType(String infoType) {
-        return InfoType.NEXUS.getTypeString().equals(infoType) || InfoType.NEXML.getTypeString()
-                                                                                .equals(infoType)
-               || InfoType.NEWICK.getTypeString().equals(infoType) || InfoType.PHYLOXML.getTypeString()
-                                                                                       .equals(infoType);
-    }
 
     public boolean isGenomeVizInfoType(String infoType) {
         return InfoType.FASTA.getTypeString().equals(infoType);
@@ -489,16 +476,6 @@ public class DiskResourceUtil {
         } else {
             return null;
         }
-    }
-
-    @JsIgnore
-    public boolean isTreeTab(Splittable obj) {
-        String infoType = getInfoType(obj);
-        return (infoType != null) && (InfoType.NEXUS.toString().equals(infoType)
-                                      || InfoType.NEXML.toString().equals(infoType)
-                                      || InfoType.NEWICK.toString().equals(infoType) || InfoType.PHYLOXML
-                                              .toString()
-                                              .equals(infoType));
     }
 
     @JsIgnore

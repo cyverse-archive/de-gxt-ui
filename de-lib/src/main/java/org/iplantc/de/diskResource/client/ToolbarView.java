@@ -34,7 +34,6 @@ import org.iplantc.de.diskResource.client.events.selection.RequestDOISelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected.HasRestoreDiskResourceSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.HasShareByDataLinkSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.HasSimpleDownloadSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.HasSimpleUploadSelectedHandlers;
@@ -55,7 +54,6 @@ public interface ToolbarView extends IsWidget,
                                      HasShareByDataLinkSelectedEventHandlers,
                                      HasSendToEnsemblSelectedHandlers,
                                      HasSendToCogeSelectedHandlers,
-                                     HasSendToTreeViewerSelectedHandlers,
                                      HasDeleteDiskResourcesSelectedEventHandlers,
                                      HasEditInfoTypeSelectedEventHandlers,
                                      HasEmptyTrashSelectedHandlers,
@@ -204,10 +202,6 @@ public interface ToolbarView extends IsWidget,
 
         ImageResource sendToEnsemblIcon();
 
-        String sendToTreeViewerMenuItem();
-
-        ImageResource sendToTreeViewerIcon();
-
         ImageResource sendNcbiSraIcon();
 
         String refresh();
@@ -310,11 +304,8 @@ public interface ToolbarView extends IsWidget,
 
     void maskSendToEnsembl();
 
-    void maskSendToTreeViewer();
-
     void unmaskSendToCoGe();
 
     void unmaskSendToEnsembl();
 
-    void unmaskSendToTreeViewer();
 }

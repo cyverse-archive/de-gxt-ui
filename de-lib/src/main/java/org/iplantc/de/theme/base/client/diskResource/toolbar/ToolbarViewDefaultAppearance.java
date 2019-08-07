@@ -364,16 +364,6 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
     }
 
     @Override
-    public String sendToTreeViewerMenuItem() {
-        return iplantDisplayStrings.sendToTreeViewerMenuItem();
-    }
-
-    @Override
-    public ImageResource sendToTreeViewerIcon() {
-        return iplantResources.arrowUp();
-    }
-
-    @Override
     public ImageResource sendNcbiSraIcon() {
         return iplantResources.arrowUp();
     }

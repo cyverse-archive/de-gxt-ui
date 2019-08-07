@@ -55,8 +55,6 @@ public interface FileViewer extends IsWidget, IsMaskable, HasHandlers, FileSaved
 
         String retrieveFileManifestMask();
 
-        String retrieveTreeUrlsMask();
-
         String retrievingFileContentsMask();
 
         String savingMask(); // display string with same name

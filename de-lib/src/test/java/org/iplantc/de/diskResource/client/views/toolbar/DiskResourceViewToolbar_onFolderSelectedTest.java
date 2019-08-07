@@ -424,7 +424,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
         uut.createPublicLinkMi = mockCreatePublicLink;
         uut.sendToCogeMi = mockSendToCoge;
         uut.sendToEnsemblMi = mockSendToEnsembl;
-        uut.sendToTreeViewerMi = mockSendToTreeViewer;
 
         // Refresh
         uut.refreshButton = mockRefreshButton;

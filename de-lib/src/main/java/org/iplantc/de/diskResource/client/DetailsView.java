@@ -11,7 +11,6 @@ import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd5ValueClickedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.HasSetInfoTypeSelectedHandlers;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
@@ -54,7 +53,6 @@ public interface DetailsView extends IsWidget,
             HasManageSharingSelectedEventHandlers,
             HasEditInfoTypeSelectedEventHandlers,
             HasSetInfoTypeSelectedHandlers,
-            HasSendToTreeViewerSelectedHandlers,
             HasSendToCogeSelectedHandlers,
             HasSendToEnsemblSelectedHandlers,
             HasMd5ValueClickedHandlers {

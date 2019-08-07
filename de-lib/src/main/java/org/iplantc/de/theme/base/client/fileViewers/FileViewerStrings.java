@@ -90,9 +90,6 @@ public interface FileViewerStrings extends Messages {
     @Key("retrieveFileManifestMask")
     String retrieveFileManifestMask();
 
-    @Key("retrieveTreeUrlsMask")
-    String retrieveTreeUrlsMask();
-
     @Key("retrievingFileContentsMask")
     String retrievingFileContentsMask();
 

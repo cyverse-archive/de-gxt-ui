@@ -130,9 +130,6 @@ public interface DiskResourceMessages extends Messages {
     @Key("unsupportedEnsemblInfoType")
     String unsupportedEnsemblInfoType();
 
-    @Key("unsupportedTreeInfoType")
-    String unsupportedTreeInfoType();
-
     String uploadingToFolder(String path);
 
     String urlImport();

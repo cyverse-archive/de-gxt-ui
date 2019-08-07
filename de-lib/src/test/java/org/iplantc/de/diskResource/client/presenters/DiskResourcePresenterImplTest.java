@@ -33,7 +33,6 @@ import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
@@ -43,7 +42,6 @@ import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSele
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
@@ -190,8 +188,7 @@ public class DiskResourcePresenterImplTest {
         verify(detailsPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewPresenterMock));
         verify(detailsPresenterMock).addSendToCogeSelectedHandler(eq(uut));
         verify(detailsPresenterMock).addSendToEnsemblSelectedHandler(eq(uut));
-        verify(detailsPresenterMock).addSendToTreeViewerSelectedHandler(eq(uut));
-
+        
         // Toolbar
         verify(toolbarMock).getSearchField();
         verify(dataSearchPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewMock));
@@ -212,7 +209,6 @@ public class DiskResourcePresenterImplTest {
         verify(toolbarMock).addShareByDataLinkSelectedEventHandler(eq(gridViewPresenterMock));
         verify(toolbarMock).addSendToCogeSelectedHandler(eq(uut));
         verify(toolbarMock).addSendToEnsemblSelectedHandler(eq(uut));
-        verify(toolbarMock).addSendToTreeViewerSelectedHandler(eq(uut));
         verify(toolbarMock).addSimpleUploadSelectedHandler(eq(navigationPresenterMock));
         verify(toolbarMock).addImportFromUrlSelectedHandler(eq(navigationPresenterMock));
         verify(toolbarPresenterMock).addCreateNcbiSraFolderStructureSubmittedHandler(eq(uut));
@@ -247,7 +243,7 @@ public class DiskResourcePresenterImplTest {
         verify(detailsPresenterMock, times(3)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
-        verify(toolbarPresenterMock, times(23)).getView();
+        verify(toolbarPresenterMock, times(22)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
                                  navigationViewMock,
@@ -442,21 +438,6 @@ public class DiskResourcePresenterImplTest {
 
         uut.onSendToCogeSelected(eventMock);
         verify(eventBusMock).fireEvent(isA(RequestSendToCoGeEvent.class));
-    }
-
-    @Test
-    public void onSendToTreeViewerSelected() {
-        SendToTreeViewerSelected eventMock = mock(SendToTreeViewerSelected.class);
-        File fileMock = mock(File.class);
-        when(diskResourceIteratorMock.next()).thenReturn(fileMock);
-        when(eventMock.getResourcesToSend()).thenReturn(diskResourcesMock);
-        when(fileMock.getInfoType()).thenReturn(InfoType.NEWICK.toString());
-        when(diskResourceUtilMock.isTreeInfoType(InfoType.NEWICK)).thenReturn(true);
-        when(appearanceMock.unsupportedTreeInfoType()).thenReturn("fail");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.onSendToTreeViewerSelected(eventMock);
-        verify(eventBusMock).fireEvent(isA(RequestSendToTreeViewerEvent.class));
     }
 
     @Test

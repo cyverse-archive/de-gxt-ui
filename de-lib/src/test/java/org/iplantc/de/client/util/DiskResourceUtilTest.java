@@ -67,32 +67,6 @@ public class DiskResourceUtilTest {
         assertEquals("", diskResourceUtil.asCommaSeparatedNameList(empty));
     }
 
-    @Test public void testTreeTab() {
-        Splittable s = diskResourceUtil.createInfoTypeSplittable(InfoType.ACE.toString());
-        boolean expected = diskResourceUtil.isTreeTab(s);
-        assertFalse(expected);
-
-        s = diskResourceUtil.createInfoTypeSplittable(InfoType.NEXUS.toString());
-        expected = diskResourceUtil.isTreeTab(s);
-        assertTrue(expected);
-
-        s = diskResourceUtil.createInfoTypeSplittable(InfoType.PHYLIP.toString());
-        expected = diskResourceUtil.isTreeTab(s);
-        assertFalse(expected);
-
-        s = diskResourceUtil.createInfoTypeSplittable(InfoType.PHYLOXML.toString());
-        expected = diskResourceUtil.isTreeTab(s);
-        assertTrue(expected);
-
-        s = diskResourceUtil.createInfoTypeSplittable(InfoType.NEWICK.toString());
-        expected = diskResourceUtil.isTreeTab(s);
-        assertTrue(expected);
-
-        s = diskResourceUtil.createInfoTypeSplittable("");
-        expected = diskResourceUtil.isTreeTab(s);
-        assertFalse(expected);
-    }
-
     @Test public void testGenomeTab() {
         Splittable s = diskResourceUtil.createInfoTypeSplittable(InfoType.ACE.toString());
         boolean expected = diskResourceUtil.isGenomeVizTab(s);

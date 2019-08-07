@@ -110,7 +110,6 @@ public class FileViewerPresenterImplTest {
         when(appearanceMock.retrieveFileManifestMask()).thenReturn("mask");
         when(appearanceMock.retrievingFileContentsMask()).thenReturn("mask");
         when(appearanceMock.savingMask()).thenReturn("mask");
-        when(appearanceMock.retrieveTreeUrlsMask()).thenReturn("mask");
         when(fileMock.getName()).thenReturn("fileName");
         when(viewersMock.size()).thenReturn(3);
         when(viewersMock.iterator()).thenReturn(viewerIteratorMock);
@@ -340,17 +339,6 @@ public class FileViewerPresenterImplTest {
         uut.setViewDirtyState(false, fileViewerMock);
 
         verify(simpleContainerMock).fireEvent(isA(DirtyStateChangedEvent.class));
-    }
-
-    @Test
-    public void testCallTreeCreateService() {
-        when(fileMock.getPath()).thenReturn("path");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.callTreeCreateService(fileViewerMock, fileMock);
-
-        verify(simpleContainerMock).mask(eq(appearanceMock.retrieveTreeUrlsMask()));
-        verify(fileEditorServiceMock).getTreeUrl(eq("path"), eq(false), stringAsyncCaptor.capture());
     }
 
     @Test

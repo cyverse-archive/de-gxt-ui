@@ -138,11 +138,6 @@ public class DiskResourceViewPresenterDefaultAppearance implements DiskResourceV
     }
 
     @Override
-    public String unsupportedTreeInfoType() {
-        return diskResourceMessages.unsupportedTreeInfoType();
-    }
-
-    @Override
     public String warning() {
         return iplantDisplayStrings.warning();
     }

@@ -11,8 +11,7 @@ import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
-import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
-import org.iplantc.de.fileViewers.client.views.cells.TreeUrlCell;
+import org.iplantc.de.fileViewers.client.views.cells.UrlCell;
 import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Preconditions;
@@ -69,10 +68,6 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
         String sendToEnsemblMenuItem();
 
         String sendToEnsemblLoadingMask();
-
-        String sendToTreeViewerMenuItem();
-
-        String sentToTreeViewerLoadingMask();
 
         String toolbarHeight();
 
@@ -181,7 +176,7 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
 
         ColumnConfig<VizUrl, VizUrl> url = new ColumnConfig<>(new IdentityValueProvider<VizUrl>(), appearance.urlColumnHeaderWidth());
         url.setHeader(appearance.urlColumnHeaderLabel());
-        url.setCell(new TreeUrlCell());
+        url.setCell(new UrlCell());
         configs.add(url);
 
         return new ColumnModel<>(configs);
@@ -204,32 +199,13 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
     }
 
     private void buildToolBar(Splittable infoTypeSplittable) {
-        if (diskResourceUtil.isTreeTab(infoTypeSplittable)) {
-            TextButton button = buildTreeViewerButton();
-            toolbar.add(button);
-        } else if (diskResourceUtil.isGenomeVizTab(infoTypeSplittable)) {
+       if (diskResourceUtil.isGenomeVizTab(infoTypeSplittable)) {
             TextButton button = buildCogeButton();
             toolbar.add(button);
         } else if (diskResourceUtil.isEnsemblVizTab(infoTypeSplittable)) {
             TextButton button = buildEnsemblButton();
             toolbar.add(button);
         }
-    }
-
-    private TextButton buildTreeViewerButton() {
-        TextButton button = new TextButton(appearance.sendToTreeViewerMenuItem(), appearance.arrowUp());
-        button.addSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                mask(appearance.sentToTreeViewerLoadingMask());
-                fileEditorService.getTreeUrl(file.getPath(),
-                                             true,
-                                              new TreeUrlCallback(file, ExternalVisualizationURLViewerImpl.this, ExternalVisualizationURLViewerImpl.this));
-
-            }
-        });
-        return button;
     }
 
     @Override
