@@ -1,4 +1,4 @@
 import EditTool from "./tools/EditTool";
-import * as requests from "./tools/requests";
+import NewToolRequestForm from "./tools/requests/NewToolRequestForm";
 
-export { EditTool, requests };
+export { EditTool, NewToolRequestForm };

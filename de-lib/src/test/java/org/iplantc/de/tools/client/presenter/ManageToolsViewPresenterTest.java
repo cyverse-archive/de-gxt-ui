@@ -20,7 +20,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
-import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
@@ -129,13 +128,9 @@ public class ManageToolsViewPresenterTest {
     @Mock
     NewToolRequestFormView requestFormViewMock;
 
-    @Mock
-    NewToolRequestFormView.Presenter requestPresenterMock;
-
     @Before
     public void setUp() {
-        uut = new ManageToolsViewPresenter(requestPresenterMock,
-                                           requestFormViewMock,
+        uut = new ManageToolsViewPresenter(requestFormViewMock,
                                            appearanceMock,
                                            editToolViewFactoryMock) {
 
