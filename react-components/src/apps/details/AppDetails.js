@@ -109,7 +109,7 @@ class AppDetails extends Component {
         );
     }
 
-    onRatingChange(value) {
+    onRatingChange(event, value) {
         const { presenter, details } = this.props;
         this.setState({ loading: true });
         //service accepts only long
@@ -165,14 +165,11 @@ class AppDetails extends Component {
         if (details) {
             return (
                 <React.Fragment>
-                    <Paper
-                        id={baseDebugId}
-                        style={{ padding: 5, fontSize: 11 }}
-                    >
+                    <Paper id={baseDebugId} style={{ padding: 5 }}>
                         <LoadingMask loading={loading}>
                             <Grid
                                 container
-                                spacing={24}
+                                spacing={2}
                                 style={{ paddingLeft: 5 }}
                             >
                                 <Grid item xs={12}>
@@ -198,7 +195,7 @@ class AppDetails extends Component {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography variant="h6">
-                                        {getMessage("detailsLabel")}
+                                        {getMessage("detailsLabel")}:
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -235,26 +232,6 @@ class AppDetails extends Component {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <span className={labelClass}>
-                                        {getMessage("detailsRatingLbl")}
-                                    </span>
-                                    <Rate
-                                        value={
-                                            userRating
-                                                ? userRating
-                                                : averageRating
-                                        }
-                                        readOnly={isExternal}
-                                        total={totalRating}
-                                        onChange={this.onRatingChange}
-                                        onDelete={
-                                            userRating
-                                                ? this.onDeleteRatingClick
-                                                : undefined
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <span className={labelClass}>
                                         {getMessage("analysesCompleted")}
                                     </span>
                                     <span className={valueClass}>
@@ -285,6 +262,26 @@ class AppDetails extends Component {
                                         />
                                     </Grid>
                                 )}
+                                <Grid item xs={12}>
+                                    <div className={labelClass}>
+                                        {getMessage("detailsRatingLbl")}
+                                    </div>
+                                    <Rate
+                                        value={
+                                            userRating
+                                                ? userRating
+                                                : averageRating
+                                        }
+                                        readOnly={isExternal}
+                                        total={totalRating}
+                                        onChange={this.onRatingChange}
+                                        onDelete={
+                                            userRating
+                                                ? this.onDeleteRatingClick
+                                                : undefined
+                                        }
+                                    />
+                                </Grid>
                                 {details.hierarchies && (
                                     <React.Fragment>
                                         <Grid
@@ -295,9 +292,9 @@ class AppDetails extends Component {
                                             item
                                             xs={12}
                                         >
-                                            <span className={labelClass}>
+                                            <Typography variant="h6">
                                                 {getMessage("category")}
-                                            </span>
+                                            </Typography>
                                             <CategoryTree
                                                 searchRegexPattern={
                                                     searchRegexPattern
@@ -319,9 +316,9 @@ class AppDetails extends Component {
                                             item
                                             xs={12}
                                         >
-                                            <span className={labelClass}>
+                                            <Typography variant="h6">
                                                 {getMessage("category")}
-                                            </span>
+                                            </Typography>
                                             <br />
                                             <img
                                                 src={Book}

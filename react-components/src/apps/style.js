@@ -23,12 +23,10 @@ export default (theme) => ({
         fontWeight: "bold",
         fontSize: 10,
         width: 90,
-        paddingBottom: "0.5em",
     },
     detailsValue: {
         fontSize: 10,
         paddingLeft: 2,
-        paddingBottom: "0.5em",
     },
     statContainer: {
         width: "100%",
