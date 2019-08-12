@@ -10,8 +10,7 @@ import { validate } from "./queryBuilder/Validations";
 
 import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 import { Field, Form, withFormik } from "formik";
-import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core/styles";
+import { Button, withStyles } from "@material-ui/core";
 
 /**
  * A form which allows users to build their own custom data search queries

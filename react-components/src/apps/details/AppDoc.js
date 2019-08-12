@@ -22,14 +22,10 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Fab from "@material-ui/core/Fab";
-import TextField from "@material-ui/core/TextField";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
+
+import { Fab, TextField, Tooltip, Typography, Paper } from "@material-ui/core";
 
 function References(props) {
     const { references } = props;

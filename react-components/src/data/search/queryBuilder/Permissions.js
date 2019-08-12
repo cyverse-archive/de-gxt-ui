@@ -16,9 +16,7 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 import { Field, FieldArray, getIn } from "formik";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import MenuItem from "@material-ui/core/MenuItem";
-import { withStyles } from "@material-ui/core/styles";
+import { FormHelperText, MenuItem, withStyles } from "@material-ui/core";
 
 /**
  * A component which allows users to specify a list of users which must have certain

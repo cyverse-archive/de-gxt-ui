@@ -25,18 +25,20 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Popover from "@material-ui/core/Popover";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-
 import Code from "@material-ui/icons/Code";
 import Play from "@material-ui/icons/PlayArrow";
 import Share from "@material-ui/icons/Share";
+
+import {
+    Dialog,
+    DialogContent,
+    Grid,
+    IconButton,
+    Paper,
+    Popover,
+    Tooltip,
+    Typography,
+} from "@material-ui/core";
 
 function ActionsPopper(props) {
     const {

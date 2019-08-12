@@ -7,8 +7,7 @@ import styles from "../styles";
 
 import { getFormError } from "@cyverse-de/ui-lib";
 import { FieldArray, getIn } from "formik";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import { withStyles } from "@material-ui/core/styles";
+import { FormHelperText, withStyles } from "@material-ui/core";
 
 /**
  * A component which allows users to specify tags in QueryBuilder

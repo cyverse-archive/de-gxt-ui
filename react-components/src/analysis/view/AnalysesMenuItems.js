@@ -9,9 +9,6 @@ import exStyles from "../style";
 import ids from "../ids";
 import { build, getMessage, palette } from "@cyverse-de/ui-lib";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import { withStyles } from "@material-ui/core/styles";
-
 import CancelIcon from "@material-ui/icons/Cancel";
 import CommentIcon from "@material-ui/icons/Comment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -21,6 +18,8 @@ import InfoIcon from "@material-ui/icons/Info";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import SaveIcon from "@material-ui/icons/Save";
 import ShareIcon from "@material-ui/icons/Share";
+
+import { MenuItem, withStyles } from "@material-ui/core";
 
 class AnalysesMenuItems extends Component {
     render() {

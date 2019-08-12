@@ -14,11 +14,13 @@ import ids from "../ids";
 import messages from "../messages";
 import styles from "../styles";
 
-import Button from "@material-ui/core/Button/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+} from "@material-ui/core";
 
 /**
  * @author aramsey

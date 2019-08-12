@@ -25,10 +25,7 @@ import {
 import QuickLaunchListing from "../quickLaunch/QuickLaunchListing";
 import ToolDetails from "./ToolDetails";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { Dialog, DialogContent, Tabs, Tab } from "@material-ui/core";
 
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";

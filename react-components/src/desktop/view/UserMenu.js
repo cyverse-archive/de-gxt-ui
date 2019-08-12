@@ -17,6 +17,7 @@ import {
     Menu,
     MenuItem,
     Tooltip,
+    withStyles,
 } from "@material-ui/core";
 import {
     ExitToApp,
@@ -26,8 +27,6 @@ import {
     Public,
     Settings,
 } from "@material-ui/icons";
-
-import { withStyles } from "@material-ui/core/styles";
 
 class UserMenu extends Component {
     constructor(props) {

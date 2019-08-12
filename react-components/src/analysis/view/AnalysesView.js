@@ -34,21 +34,23 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import ToolTip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import LaunchIcon from "@material-ui/icons/Launch";
 import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
 import analysesCollapseIcon from "../../resources/images/analyses-collapseList.svg";
 import altAnalysesExpandIcon from "../../resources/images/analyses-expandList.png";
 import altAnalysesCollapseIcon from "../../resources/images/analyses-collapseList.png";
+
+import {
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TablePagination,
+    TableRow,
+    Tooltip as ToolTip,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
 function AnalysisName(props) {
     const name = props.analysis.name;

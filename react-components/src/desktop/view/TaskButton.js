@@ -3,8 +3,7 @@
  */
 import React, { Component } from "react";
 import styles from "../style";
-import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core/styles";
+import { Button, withStyles } from "@material-ui/core";
 
 class TaskButton extends Component {
     constructor(props) {

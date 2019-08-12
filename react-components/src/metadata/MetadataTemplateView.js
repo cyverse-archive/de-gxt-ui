@@ -34,27 +34,28 @@ import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
 import SlideUpTransition from "./SlideUpTransition";
 
-import { withStyles } from "@material-ui/core/styles";
-
-import AppBar from "@material-ui/core/AppBar/AppBar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-
 import ContentAdd from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from "@material-ui/icons/Delete";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
+import {
+    withStyles,
+    AppBar,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Fab,
+    Grid,
+    IconButton,
+    MenuItem,
+    Toolbar,
+    Typography,
+} from "@material-ui/core";
 
 const ConfirmationDialog = withI18N(DEConfirmationDialog, intlData);
 

@@ -12,14 +12,11 @@ import ids from "./ids";
 
 import { build, formatMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import Fab from "@material-ui/core/Fab";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import ContentAdd from "@material-ui/icons/Add";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+
+import { Fab, Toolbar, Typography, withStyles } from "@material-ui/core";
 
 class OrderedGridToolbar extends Component {
     static propTypes = {

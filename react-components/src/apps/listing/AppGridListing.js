@@ -16,11 +16,13 @@ import {
 import ids from "./ids";
 import messages from "../messages";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import {
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+} from "@material-ui/core";
 
 /**
  * @author aramsey

@@ -11,7 +11,9 @@ import * as tools from "./tools";
 import { ErrorHandler, palette } from "@cyverse-de/ui-lib";
 import React from "react";
 import ReactDOM from "react-dom";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"; // v1.x
+import { createMuiTheme } from "@material-ui/core/styles"; // v1.x
+
+import { MuiThemeProvider } from "@material-ui/core";
 
 // gwt-react needs React and ReactDOM on the global object
 window.React = React;

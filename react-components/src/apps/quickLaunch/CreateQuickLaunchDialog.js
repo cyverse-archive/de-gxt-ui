@@ -20,11 +20,13 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Tooltip from "@material-ui/core/Tooltip";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Tooltip,
+} from "@material-ui/core";
 
 function CreateQuickLaunchDialog(props) {
     const { dialogOpen, appName, presenter, intl, baseDebugId } = props;

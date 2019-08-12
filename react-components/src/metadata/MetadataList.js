@@ -21,22 +21,24 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import ContentAdd from "@material-ui/icons/Add";
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 import ContentView from "@material-ui/icons/List";
+
+import {
+    Checkbox,
+    Fab,
+    Grid,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    Toolbar,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
 class MetadataGridToolbar extends Component {
     static propTypes = {

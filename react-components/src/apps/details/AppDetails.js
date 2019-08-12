@@ -31,9 +31,14 @@ import {
 
 import Book from "../../resources/images/bookIcon.png";
 
-import Grid from "@material-ui/core/Grid";
-import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Dialog,
+    DialogContent,
+    Paper,
+    Typography,
+    Grid,
+    withStyles,
+} from "@material-ui/core";
 
 function Favorite(props) {
     const { is_favorite, id } = props.details;

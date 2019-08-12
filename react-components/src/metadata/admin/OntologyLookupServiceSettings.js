@@ -16,9 +16,7 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Grid from "@material-ui/core/Grid";
-import MenuItem from "@material-ui/core/MenuItem";
-import { withStyles } from "@material-ui/core/styles";
+import { Grid, MenuItem, withStyles } from "@material-ui/core";
 
 const OLSEntityTypes = ["CLASS", "PROPERTY", "INDIVIDUAL", "ONTOLOGY"];
 

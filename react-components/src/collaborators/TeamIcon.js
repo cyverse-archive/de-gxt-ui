@@ -5,8 +5,7 @@ import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import Group from "@material-ui/icons/Group";
 
-import ToolTip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core/styles";
+import { Tooltip as ToolTip, withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey

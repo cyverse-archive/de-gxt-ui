@@ -11,13 +11,14 @@ import tour from "../NewUserTourSteps";
 
 import { build, DEHyperlink, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import { withStyles } from "@material-ui/core/styles";
-
-import Divider from "@material-ui/core/Divider";
 import HelpIcon from "@material-ui/icons/Help";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Tooltip from "@material-ui/core/Tooltip";
+import {
+    withStyles,
+    Divider,
+    Menu,
+    MenuItem,
+    Tooltip,
+} from "@material-ui/core";
 
 class Help extends Component {
     constructor(props) {

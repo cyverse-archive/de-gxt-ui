@@ -2,9 +2,7 @@ import React from "react";
 import styles from "../styles";
 
 import AddIcon from "@material-ui/icons/Add";
-import Fab from "@material-ui/core/Fab";
-
-import { withStyles } from "@material-ui/core/styles";
+import { Fab, withStyles } from "@material-ui/core";
 
 /**
  * A button used by QueryBuilder.  Clicking it adds a Condition

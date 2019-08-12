@@ -7,7 +7,7 @@ import CommunityListing from "./CommunityListing";
 import styles from "../styles";
 
 import EditCommunityDialog from "./EditCommunityDialog";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey

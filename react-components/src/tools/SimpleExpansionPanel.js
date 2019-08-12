@@ -10,8 +10,8 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     Typography,
+    withStyles,
 } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
 import { ExpandMore } from "@material-ui/icons";
 import PropTypes from "prop-types";
 

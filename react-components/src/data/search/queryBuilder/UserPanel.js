@@ -2,10 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "../styles";
 
-import Chip from "@material-ui/core/Chip";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core/styles";
+import { Chip, Paper, Tooltip, withStyles } from "@material-ui/core";
 
 /**
  * A simple Paper panel that will hold Collaborator objects as chips

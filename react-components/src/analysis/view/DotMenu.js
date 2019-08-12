@@ -7,10 +7,9 @@ import React, { Component } from "react";
 
 import AnalysesMenuItems from "./AnalysesMenuItems";
 
-import Menu from "@material-ui/core/Menu";
-
-import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+import { Menu, IconButton } from "@material-ui/core";
 
 const ITEM_HEIGHT = 48;
 

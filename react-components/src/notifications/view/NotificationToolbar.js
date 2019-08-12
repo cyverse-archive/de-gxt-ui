@@ -10,18 +10,21 @@ import ids from "../ids";
 
 import { build, getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
 
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import ToolbarSeparator from "@material-ui/core/Toolbar";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import FormControl from "@material-ui/core/FormControl";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckIcon from "@material-ui/icons/Check";
 import intlData from "../messages";
-import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core/styles";
+
+import {
+    Toolbar as ToolbarGroup,
+    Toolbar as ToolbarSeparator,
+    Select,
+    InputLabel,
+    OutlinedInput,
+    FormControl,
+    Button,
+    withStyles,
+} from "@material-ui/core";
 
 class NotificationToolbar extends Component {
     render() {

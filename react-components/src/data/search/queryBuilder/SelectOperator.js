@@ -18,7 +18,7 @@ import { operatorMap } from "./Operators";
 
 import { build, FormSelectField } from "@cyverse-de/ui-lib";
 import { Field } from "formik";
-import MenuItem from "@material-ui/core/MenuItem";
+import { MenuItem } from "@material-ui/core";
 
 function SelectOperator(props) {
     const { operators, parentId, name } = props;

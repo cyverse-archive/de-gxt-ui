@@ -12,7 +12,7 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core";
 
 /**
  * A component that allows users to search for Collaborators (individuals, teams, collaboration

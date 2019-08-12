@@ -4,9 +4,8 @@ import ids from "./ids";
 import styles from "./styles";
 
 import { build } from "@cyverse-de/ui-lib";
-import { Fab } from "@material-ui/core";
+import { Fab, withStyles } from "@material-ui/core";
 import { Add, Delete } from "@material-ui/icons";
-import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 const StyledAddBtn = withStyles(styles)(AddBtn);
