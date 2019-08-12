@@ -22,21 +22,23 @@ import {
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
 
-import AppBar from "@material-ui/core/AppBar";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Divider from "@material-ui/core/Divider";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import IconButton from "@material-ui/core/IconButton";
-import Toolbar from "@material-ui/core/Toolbar";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
+import {
+    AppBar,
+    Dialog,
+    DialogContent,
+    Divider,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
 class EditAVU extends Component {
     constructor(props) {

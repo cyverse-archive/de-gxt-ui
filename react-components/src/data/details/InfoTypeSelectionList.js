@@ -7,11 +7,13 @@ import styles from "../style";
 import intlData from "../messages";
 import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    FormControl,
+    MenuItem,
+    Select,
+    InputLabel,
+} from "@material-ui/core";
 
 class InfoTypeSelectionList extends Component {
     handleChange = (event) => {

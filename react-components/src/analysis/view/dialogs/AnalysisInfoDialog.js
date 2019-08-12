@@ -21,19 +21,21 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import { withStyles } from "@material-ui/core/styles";
-
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TableBody from "@material-ui/core/TableBody";
-import Table from "@material-ui/core/Table";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
+
+import {
+    DialogContent,
+    Dialog,
+    withStyles,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    Typography,
+    ExpansionPanelDetails,
+    TableBody,
+    Table,
+    TableRow,
+    TableCell,
+} from "@material-ui/core";
 
 const columnData = [
     {

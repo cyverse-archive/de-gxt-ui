@@ -5,7 +5,7 @@ import messages from "../messages";
 import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
 import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button/Button";
+import { Button } from "@material-ui/core";
 
 /**
  * @author aramsey

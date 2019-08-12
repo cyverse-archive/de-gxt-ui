@@ -4,8 +4,7 @@
 import React, { Component } from "react";
 import styles from "../style";
 import TaskButton from "./TaskButton";
-import Toolbar from "@material-ui/core/Toolbar";
-import { withStyles } from "@material-ui/core/styles";
+import { Toolbar, withStyles } from "@material-ui/core";
 
 class Taskbar extends Component {
     render() {

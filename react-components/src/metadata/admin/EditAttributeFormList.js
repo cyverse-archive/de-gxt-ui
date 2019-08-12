@@ -25,22 +25,24 @@ import {
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
 
-import Divider from "@material-ui/core/Divider";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import ContentAdd from "@material-ui/icons/Add";
 import ContentRemove from "@material-ui/icons/Delete";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+
+import {
+    Divider,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Fab,
+    Grid,
+    IconButton,
+    MenuItem,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
 const AttributeTypeMenuItems = [
     constants.ATTRIBUTE_TYPE.STRING,

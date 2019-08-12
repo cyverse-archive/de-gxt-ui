@@ -13,8 +13,7 @@ import {
     FormNumberField,
 } from "@cyverse-de/ui-lib";
 import { Field } from "formik";
-import MenuItem from "@material-ui/core/MenuItem";
-import { withStyles } from "@material-ui/core/styles";
+import { MenuItem, withStyles } from "@material-ui/core";
 
 /**
  * A component which allows users to specify a file size range in QueryBuilder

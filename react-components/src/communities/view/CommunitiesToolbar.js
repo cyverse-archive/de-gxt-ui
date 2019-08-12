@@ -8,10 +8,7 @@ import messages from "../messages";
 import styles from "../styles";
 import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Toolbar from "@material-ui/core/Toolbar";
-import { withStyles } from "@material-ui/core/styles";
+import { MenuItem, Select, Toolbar, withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey

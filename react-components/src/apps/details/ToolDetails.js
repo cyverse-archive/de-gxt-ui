@@ -7,13 +7,15 @@ import intlData from "../messages";
 import style from "../style";
 import { build, getMessage, Highlighter, withI18N } from "@cyverse-de/ui-lib";
 
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Typography,
+} from "@material-ui/core";
 
 class ToolDetailsV1 extends Component {
     constructor(props) {

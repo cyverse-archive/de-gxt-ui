@@ -16,20 +16,22 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableHead from "@material-ui/core/TableHead";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import ToolbarSeparator from "@material-ui/core/Toolbar";
-import TextField from "@material-ui/core/TextField";
-import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TablePagination,
+    TableRow,
+    TableHead,
+    TableSortLabel,
+    Toolbar,
+    Toolbar as ToolbarGroup,
+    Toolbar as ToolbarSeparator,
+    TextField,
+    Tooltip,
+} from "@material-ui/core";
 
 const columnData = [
     { name: "appName", numeric: false },

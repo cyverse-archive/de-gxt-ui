@@ -8,9 +8,6 @@ import styles from "../styles";
 import SubjectSearchField from "../../collaborators/SubjectSearchField";
 
 import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button/Button";
-
-import Fab from "@material-ui/core/Fab";
 import {
     build,
     DEConfirmationDialog,
@@ -19,10 +16,14 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import TextField from "@material-ui/core/TextField";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography/Typography";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    Button,
+    Fab,
+    TextField,
+    Toolbar,
+    Typography,
+} from "@material-ui/core";
 
 /**
  * @author aramsey

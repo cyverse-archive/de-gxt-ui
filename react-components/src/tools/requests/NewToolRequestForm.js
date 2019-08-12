@@ -17,9 +17,7 @@ import {
     getMessage,
     withI18N,
 } from "@cyverse-de/ui-lib";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
+import { Dialog, DialogContent, Button } from "@material-ui/core";
 
 /**
  *

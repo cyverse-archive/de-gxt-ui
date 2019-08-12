@@ -26,7 +26,7 @@ import ids from "../../search/ids";
 
 import { build, FormSelectField } from "@cyverse-de/ui-lib";
 import { Field, FieldArray, getIn } from "formik";
-import MenuItem from "@material-ui/core/MenuItem";
+import { MenuItem } from "@material-ui/core";
 
 function ClauseSelector(props) {
     const {

@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 
 import { FormSearchField, getMessage } from "@cyverse-de/ui-lib";
 
-import ListItemText from "@material-ui/core/ListItemText";
-import MenuItem from "@material-ui/core/MenuItem";
+import { ListItemText, MenuItem } from "@material-ui/core";
 
 const customStyles = {
     menu: (base) => ({

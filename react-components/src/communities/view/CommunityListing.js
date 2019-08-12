@@ -16,12 +16,14 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    Tooltip,
+    withStyles,
+} from "@material-ui/core";
 
 /**
  * @author aramsey

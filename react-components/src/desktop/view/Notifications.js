@@ -18,16 +18,17 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Badge from "@material-ui/core/Badge";
-import Fab from "@material-ui/core/Fab";
-import Divider from "@material-ui/core/Divider";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import Tooltip from "@material-ui/core/Tooltip";
-
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Badge,
+    Fab,
+    Divider,
+    Menu,
+    MenuItem,
+    Tooltip,
+    withStyles,
+} from "@material-ui/core";
 
 function ErrorComponent(props) {
     return (

@@ -23,7 +23,7 @@ import styles from "../style";
 import Taskbar from "./Taskbar";
 import tour from "../NewUserTourSteps";
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core";
 
 class DesktopView extends Component {
     constructor(props) {

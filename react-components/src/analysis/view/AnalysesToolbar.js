@@ -23,18 +23,20 @@ import {
 
 import AnalysesMenuItems from "./AnalysesMenuItems";
 
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import Select from "@material-ui/core/Select";
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import { withStyles } from "@material-ui/core/styles";
-
 import MenuIcon from "@material-ui/icons/Menu";
 import RefreshIcon from "@material-ui/icons/Refresh";
+
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    Menu,
+    MenuItem,
+    Select,
+    Toolbar as ToolbarGroup,
+    withStyles,
+} from "@material-ui/core";
 
 class AnalysesToolbar extends Component {
     constructor(props) {

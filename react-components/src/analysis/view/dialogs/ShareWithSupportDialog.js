@@ -22,17 +22,19 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button/Button";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import FormControl from "@material-ui/core/FormControl/FormControl";
-import FormLabel from "@material-ui/core/FormLabel/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
-import Grid from "@material-ui/core/Grid/Grid";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import TextField from "@material-ui/core/TextField";
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogContent,
+    FormControl,
+    FormLabel,
+    FormControlLabel,
+    Grid,
+    Radio,
+    RadioGroup,
+    TextField,
+} from "@material-ui/core";
 
 function AnalysisInfo(props) {
     const { analysis, name, email } = props;

@@ -8,7 +8,7 @@ import styles from "../styles";
 
 import { build } from "@cyverse-de/ui-lib";
 import { Field, getIn } from "formik";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core";
 
 /**
  * A component which allows users to create different groupings in QueryBuilder

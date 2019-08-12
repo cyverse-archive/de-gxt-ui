@@ -25,25 +25,27 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import IconButton from "@material-ui/core/IconButton";
-import Popover from "@material-ui/core/Popover";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Toolbar from "@material-ui/core/Toolbar";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-
 import CloseIcon from "@material-ui/icons/Close";
 import HelpIcon from "@material-ui/icons/Help";
 import ContentView from "@material-ui/icons/List";
 import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
+
+import {
+    AppBar,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    IconButton,
+    Popover,
+    Tab,
+    Tabs,
+    Toolbar,
+    Tooltip,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
 const ConfirmationDialog = withI18N(DEConfirmationDialog, intlData);
 

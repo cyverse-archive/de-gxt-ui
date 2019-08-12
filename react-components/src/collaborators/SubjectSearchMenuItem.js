@@ -5,10 +5,7 @@ import styles from "./styles";
 import TeamIcon from "./TeamIcon";
 import { getRegExp, Highlighter } from "@cyverse-de/ui-lib";
 
-import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import { Divider, Paper, Typography, withStyles } from "@material-ui/core";
 
 /**
  * A custom menu item used for displaying Subjects in SubjectSearchField

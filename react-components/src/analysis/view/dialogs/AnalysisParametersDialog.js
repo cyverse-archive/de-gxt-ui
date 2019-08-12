@@ -15,15 +15,17 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    TableCell,
+    TableRow,
+    Table,
+    TableBody,
+    withStyles,
+} from "@material-ui/core";
 
 function ParameterValue(props) {
     const {
