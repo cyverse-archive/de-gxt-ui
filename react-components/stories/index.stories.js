@@ -38,6 +38,7 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
 import EditToolTest from "./tools/EditTool.stories";
+import ManageToolsTest from "./tools/ManageTools.stories";
 
 import {
     EditDataCiteMetadataTest,
@@ -217,6 +218,8 @@ storiesOf("notifications/view/dialogs", module).add(
     () => <RequestHistoryDialogTest logger={action("notification window")} />
 );
 
-storiesOf("tools/EditTool", module).add("with test tool data", () => (
-    <EditToolTest logger={action("Saved Tool")} />
-));
+storiesOf("tools", module)
+    .add("Edit Tool", () => <EditToolTest logger={action("Saved Tool")} />)
+    .add("Manage Tools", () => (
+        <ManageToolsTest logger={action("Manage Tools")} />
+    ));

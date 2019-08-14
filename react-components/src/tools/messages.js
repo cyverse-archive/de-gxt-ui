@@ -71,5 +71,18 @@ export default {
             "WARNING: Do not add Container Volumes or Container Volumes From settings to " +
             "tools unless it is certain that tool is authorized to access that data.",
         makePublic: "Make Public",
+        public: "Public",
+        noTools: "No tools",
+        allTools: "All",
+        myTools: "Only my tools",
+        publicTools: "Public tools",
+        requestToolMI: "Request Tool",
+        edit: "Edit",
+        delete: "Delete",
+        useToolInApp: "Use in app",
+        shareWithCollaborators: "Share with collaborators",
+        tools: "Tools",
+        share: "Share",
+        searchTools: "Search tools",
     },
 };
