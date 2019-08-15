@@ -8,6 +8,7 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.OK
 
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.inject.Inject;
@@ -19,7 +20,7 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 /**
  * @author sriram
  */
-public class ToolListingDialog extends IPlantDialog implements SelectionChangedEvent.SelectionChangedHandler<Tool> {
+public class ToolListingDialog extends IPlantDialog implements ToolSelectionChangedEvent.ToolSelectionChangedEventHandler {
 
 
     public interface ToolsListingViewAppearance {
@@ -68,7 +69,7 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
         });
         getButton(PredefinedButton.OK).ensureDebugId(INSTALLED_TOOLS_DLG + OK);
         toolsPresenter.go(this);
-        toolsPresenter.addSelectionChangedHandler(this);
+        toolsPresenter.addToolSelectionChangedEventHandler(this);
     }
 
     public Tool getSelectedTool() {
@@ -76,15 +77,15 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
     }
 
     @Override
-    public void show() {
-        super.show();
-        ensureDebugId(INSTALLED_TOOLS_DLG);
+    public void onToolSelectionChanged(ToolSelectionChangedEvent event) {
+        getOkButton().enable();
+        selectedTool = event.getTool();
     }
 
     @Override
-    public void onSelectionChanged(SelectionChangedEvent<Tool> event) {
-        getOkButton().enable();
-        selectedTool = event.getSelection().get(0);
+    public void show() {
+        super.show();
+        ensureDebugId(INSTALLED_TOOLS_DLG);
     }
 
     @Override

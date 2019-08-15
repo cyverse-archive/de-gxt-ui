@@ -9,9 +9,9 @@
                 class="org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView.ManageToolsToolbarAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.tools.ToolInfoCellDefaultAppearance">
+    <replace-with class="org.iplantc.de.theme.base.client.tools.ToolInfoDefaultAppearance">
         <when-type-is
-                class="org.iplantc.de.tools.client.views.cells.ToolInfoCell.ToolInfoCellAppearance"/>
+                class="org.iplantc.de.tools.client.views.manage.ToolInfoView.ToolInfoAppearance"/>
     </replace-with>
     <replace-with class="org.iplantc.de.theme.base.client.tools.NewToolRequestFormViewDefaultAppearance">
         <when-type-is

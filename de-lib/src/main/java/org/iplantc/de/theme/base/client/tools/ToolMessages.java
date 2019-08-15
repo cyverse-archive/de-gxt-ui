@@ -8,33 +8,9 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  */
 public interface ToolMessages extends Messages {
 
-    String tools();
-
-    String requestTool();
-
     String delete();
 
-    String useInApp();
-
-    String shareCollab();
-
-    String share();
-
     String name();
-
-    String version();
-
-    String imaName();
-
-    String status();
-
-    String submitForUse();
-
-    String refresh();
-
-    String searchTools();
-
-    String addTool();
 
     String tag();
 

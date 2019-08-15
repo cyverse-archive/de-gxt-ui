@@ -22,21 +22,21 @@ public class ToolSelectionChangedEvent extends GwtEvent<ToolSelectionChangedEven
         void onToolSelectionChanged(ToolSelectionChangedEvent event);
     }
 
-    public static interface HasToolSelectionChangedEventHandlers {
+    public interface HasToolSelectionChangedEventHandlers {
         HandlerRegistration addToolSelectionChangedEventHandler(ToolSelectionChangedEventHandler handler);
     }
 
     public static final Type<ToolSelectionChangedEventHandler> TYPE = new Type<>();
 
-    private final List<Tool> toolSelection;
+    private final Tool tool;
 
-    public ToolSelectionChangedEvent(final List<Tool> ToolSelection) {
-        Preconditions.checkNotNull(ToolSelection);
-        this.toolSelection = ToolSelection;
+    public ToolSelectionChangedEvent(final Tool tool) {
+        Preconditions.checkNotNull(tool);
+        this.tool = tool;
     }
 
-    public List<Tool> getToolSelection() {
-        return toolSelection;
+    public Tool getTool() {
+        return tool;
     }
 
     @Override

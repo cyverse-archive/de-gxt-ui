@@ -1,7 +1,6 @@
 package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.client.models.tool.Tool;
-import org.iplantc.de.tools.client.views.cells.ToolInfoCell;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -47,8 +46,7 @@ public class ToolInfoViewImpl extends Composite implements ToolInfoView {
     @UiField
     VerticalLayoutContainer infoContainer;
 
-    @UiField
-    ToolInfoCell.ToolInfoCellAppearance appearance;
+    @UiField ToolInfoAppearance appearance;
 
     @Inject
     public ToolInfoViewImpl(@Assisted Tool tool) {

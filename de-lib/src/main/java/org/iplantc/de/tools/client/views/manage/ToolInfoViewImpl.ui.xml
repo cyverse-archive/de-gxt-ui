@@ -3,7 +3,7 @@
              xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.tools.client.views.cells.ToolInfoCell.ToolInfoCellAppearance"/>
+             type="org.iplantc.de.tools.client.views.manage.ToolInfoView.ToolInfoAppearance"/>
 
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="toolInfoConfig">
         <ui:attributes text="{appearance.toolInformation}"/>

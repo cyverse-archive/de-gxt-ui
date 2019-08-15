@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.models.tool.ToolTypeList;
 import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
@@ -85,11 +86,35 @@ public class ToolServicesImpl implements ToolServices {
             address += "&public=" + isPublic;
         }
 
-
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
         deServiceFacade.getServiceData(wrapper, callbackCnvt);
+    }
+
+    @Override
+    public void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<ToolList> callback) {
+        String address = TOOLS + "?";
+
+        String search = Strings.isNullOrEmpty(searchTerm) ? "*" : searchTerm;
+        address += "search=" + URL.encodeQueryString(search);
+        address += "&limit=" + limit;
+        address += "&offset=" + offset;
+        if(isPublic != null) {
+            address += "&public=" + isPublic;
+        }
+        address += "&sort-field=" + orderBy.toLowerCase();
+        address += "&sort-dir=" + order.toUpperCase();
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, ToolList>(callback) {
+            @Override
+            protected ToolList convertFrom(String object) {
+                AutoBean<ToolList> autoBean = AutoBeanCodex.decode(factory, ToolList.class, object);
+                return autoBean.as();
+            }
+        });
     }
 
     @Override
@@ -104,8 +129,8 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void deleteTool(Tool tool, AppsCallback<Void> callback) {
-        String address = TOOLS + "/" + tool.getId();
+    public void deleteTool(String toolId, AppsCallback<Void> callback) {
+        String address = TOOLS + "/" + toolId;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
 
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
