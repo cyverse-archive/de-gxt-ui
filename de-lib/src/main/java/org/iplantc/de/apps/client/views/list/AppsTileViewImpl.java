@@ -1,63 +1,38 @@
 package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
-import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
-import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
-import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
-import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
-import org.iplantc.de.apps.shared.AppsModule;
-import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.Store;
-import com.sencha.gxt.data.shared.StringLabelProvider;
-import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.dnd.core.client.ListViewDragSource;
-import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * @author aramsey
  */
-public class AppsTileViewImpl extends ContentPanel
-        implements AppsListView, SelectionChangedEvent.SelectionChangedHandler<App>, HasHandlers {
+public class AppsTileViewImpl implements AppsListView {
+
+    @Override
+    public Widget asWidget() {
+        return null;
+    }
 
     interface AppsGridViewImplUiBinder extends UiBinder<Widget, AppsTileViewImpl> {
     }
@@ -92,6 +67,10 @@ public class AppsTileViewImpl extends ContentPanel
     private AppProperties properties;
     @Inject DEProperties deProperties;
 
+    HTMLPanel panel;
+
+    private ReactAppListing.AppListingProps props;
+
     @Inject
     AppsTileViewImpl(final AppsListView.AppsListAppearance appearance,
                      @Assisted final ListStore<App> listStore,
@@ -107,37 +86,16 @@ public class AppsTileViewImpl extends ContentPanel
         this.deProperties = DEProperties.getInstance();
         this.typeFilter = typeFilter;
 
-        appTileCell.setHasHandlers(this);
-        appTileCell.setCardUrl(deProperties.getAppsCardUrl(), deProperties.getAppsCardUrlOptions());
+        //  appTileCell.setHasHandlers(this);
+       // appTileCell.setCardUrl(deProperties.getAppsCardUrl(), deProperties.getAppsCardUrlOptions());
 
-        setWidget(ourUiBinder.createAndBindUi(this));
+        // setWidget(ourUiBinder.createAndBindUi(this));
 
-        listView.getSelectionModel().addSelectionChangedHandler(this);
-        listView.setCell(this.appTileCell);
+      //  listView.getSelectionModel().addSelectionChangedHandler(this);
+     //   listView.setCell(this.appTileCell);
     }
 
-    @UiFactory
-    SimpleComboBox<SortChoice> createSortBox() {
-        SimpleComboBox<SortChoice> comboBox = new SimpleComboBox<>(new StringLabelProvider<>());
-        comboBox.add(Arrays.asList(SortChoice.Name,
-                                   SortChoice.Integrator,
-                                   SortChoice.Rating));
-        comboBox.setValue(SortChoice.Name);
-        return comboBox;
-    }
 
-    @UiFactory
-    ListView<App, App> createListView() {
-        return new ListView<>(listStore, new IdentityValueProvider<App>(), listAppearance);
-    }
-
-    @UiHandler("sortBox")
-    void onSortBoxSelection(SelectionEvent<SortChoice> event) {
-        mask();
-        listStore.clearSortInfo();
-        listStore.addSortInfo(getSortInfo());
-        unmask();
-    }
 
     public Store.StoreSortInfo<App> getSortInfo() {
         SortChoice sortField = sortBox.getCurrentValue();
@@ -154,7 +112,7 @@ public class AppsTileViewImpl extends ContentPanel
         }
     }
 
-    @Override
+ /*   @Override
     public HandlerRegistration addAppNameSelectedEventHandler(AppNameSelectedEvent.AppNameSelectedEventHandler handler) {
         return addHandler(handler, AppNameSelectedEvent.TYPE);
     }
@@ -193,8 +151,8 @@ public class AppsTileViewImpl extends ContentPanel
     public HandlerRegistration addAppRatingSelectedHandler(AppRatingSelected.AppRatingSelectedHandler handler) {
         return addHandler(handler, AppRatingSelected.TYPE);
     }
-
-    @Override
+*/
+/*    @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
         // FIXME Move to appearance
         setHeading(Joiner.on(" >> ").join(event.getGroupHierarchy()));
@@ -240,16 +198,16 @@ public class AppsTileViewImpl extends ContentPanel
     @Override
     public void onSelectionChanged(SelectionChangedEvent<App> event) {
         fireEvent(new AppSelectionChangedEvent(event.getSelection()));
-    }
+    }*/
 
-    @Override
+/*    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         listView.ensureDebugId(baseID + AppsModule.Ids.APP_TILES);
         appTileCell.setDebugBaseId(baseID + AppsModule.Ids.APP_TILES);
-    }
+    }*/
 
-    @Override
+  /*  @Override
     public List<DragSource> getAppsDragSources() {
         List<DragSource> sources = Lists.newArrayList();
         sources.add(new ListViewDragSource<>(listView));
@@ -277,6 +235,11 @@ public class AppsTileViewImpl extends ContentPanel
     }
 
     @Override
+    public void setHeading(String text) {
+
+    }
+
+    @Override
     public void setAppTypeFilter(AppTypeFilter filter) {
         typeFilter.setFilter(filter);
     }
@@ -288,5 +251,5 @@ public class AppsTileViewImpl extends ContentPanel
         } else {
             typeFilter.disbale();
         }
-    }
+    }*/
 }

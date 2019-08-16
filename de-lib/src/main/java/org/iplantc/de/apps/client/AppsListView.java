@@ -1,23 +1,15 @@
 package org.iplantc.de.apps.client;
 
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
-import org.iplantc.de.client.models.AppTypeFilter;
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 
@@ -32,10 +24,14 @@ import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
 import java.util.List;
 
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
+
 /**
  * @author aramsey
  */
-public interface AppsListView extends IsWidget,
+@JsType
+public interface AppsListView extends IsWidget/*   ,
                                       IsMaskable,
                                       AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
                                       AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
@@ -49,7 +45,7 @@ public interface AppsListView extends IsWidget,
                                       AppFavoritedEvent.HasAppFavoritedEventHandlers,
                                       BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                       OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
-                                      CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+                                      CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler*/ {
     String GRID_VIEW = "grid";
     String TILE_VIEW = "tile";
 
@@ -97,6 +93,7 @@ public interface AppsListView extends IsWidget,
      * To update the {@code ListStore}, it listens for {@link AppCategory} selection and search result
      * load events.
      */
+    @JsType
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                 AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
@@ -114,20 +111,26 @@ public interface AppsListView extends IsWidget,
                                 CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
         App getSelectedApp();
 
+        @JsIgnore
         List<DragSource> getAppsDragSources();
 
+        @JsIgnore
         void go(CardLayoutContainer container);
 
+        @JsIgnore
         void setViewDebugId(String baseID);
 
+        @JsIgnore
         void loadApps(List<App> apps);
 
+        @JsIgnore
         String getActiveView();
 
+        @JsIgnore
         void setActiveView(String activeView);
     }
 
-    List<DragSource> getAppsDragSources();
+ /*   List<DragSource> getAppsDragSources();
 
     App getSelectedItem();
 
@@ -141,5 +144,5 @@ public interface AppsListView extends IsWidget,
 
     void setAppTypeFilter(AppTypeFilter filter);
 
-    void enableAppTypeFilter(boolean enabled);
+    void enableAppTypeFilter(boolean enabled);*/
 }

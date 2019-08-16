@@ -1,7 +1,6 @@
 package org.iplantc.de.apps.client.presenter.list;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppTypeFilterChangedEvent;
@@ -31,7 +30,6 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -44,22 +42,16 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.shared.exceptions.HttpRedirectException;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreAddEvent;
@@ -67,9 +59,7 @@ import com.sencha.gxt.data.shared.event.StoreClearEvent;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 
@@ -129,7 +119,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         this.gridView = viewFactory.createGridView(listStore);
         this.tileView = viewFactory.createTileView(listStore);
 
-        this.gridView.addAppNameSelectedEventHandler(this);
+/*        this.gridView.addAppNameSelectedEventHandler(this);
         this.gridView.addAppRatingDeselectedHandler(this);
         this.gridView.addAppRatingSelectedHandler(this);
         this.gridView.addAppCommentSelectedEventHandlers(this);
@@ -143,7 +133,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         this.tileView.addAppCommentSelectedEventHandlers(this);
         this.tileView.addAppFavoriteSelectedEventHandlers(this);
         this.tileView.addAppSelectionChangedEventHandler(this);
-        this.tileView.addAppInfoSelectedEventHandler(this);
+        this.tileView.addAppInfoSelectedEventHandler(this);*/
 
         activeView = tileView;
 
@@ -171,7 +161,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         listStore.clear();
         listStore.addAll(apps);
 
-        if (getDesiredSelectedApp() != null) {
+  /*      if (getDesiredSelectedApp() != null) {
 
             activeView.select(getDesiredSelectedApp(), false);
 
@@ -180,7 +170,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             activeView.select(listStore.get(0), false);
         }
         setDesiredSelectedApp(null);
-        activeView.unmask();
+        activeView.unmask();*/
     }
 
     /**
@@ -216,8 +206,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     private void setTypeFilterPreferences() {
         filter = AppTypeFilter.ALL;
-        activeView.setAppTypeFilter(filter);
-        activeView.enableAppTypeFilter(true);
+   /*     activeView.setAppTypeFilter(filter);
+        activeView.enableAppTypeFilter(true);*/
         disableTypeFilterForHPC();
     }
 
@@ -270,9 +260,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
         filter = AppTypeFilter.ALL;
-        activeView.setAppTypeFilter(filter);
+   /*     activeView.setAppTypeFilter(filter);
         activeView.enableAppTypeFilter(false);
-        activeView.mask(appearance.beforeAppSearchLoadingMask());
+        activeView.mask(appearance.beforeAppSearchLoadingMask());*/
     }
 
     public App getDesiredSelectedApp() {
@@ -285,20 +275,22 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public App getSelectedApp() {
-        return activeView.getSelectedItem();
+
+        return null;
     }
 
     @Override
     public List<DragSource> getAppsDragSources() {
-        List<DragSource> sources = Lists.newArrayList();
+/*        List<DragSource> sources = Lists.newArrayList();
         sources.addAll(gridView.getAppsDragSources());
         sources.addAll(tileView.getAppsDragSources());
-        return sources;
+        return sources;*/
+        return null;
     }
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
-        tileView.onAppCategorySelectionChanged(event);
+     /*   tileView.onAppCategorySelectionChanged(event);
         gridView.onAppCategorySelectionChanged(event);
 
         if (event.getAppCategorySelection().isEmpty()) {
@@ -308,12 +300,12 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         appCategory = event.getAppCategorySelection().iterator().next();
 
         disableTypeFilterForHPC();
-        getAppsWithSelectedCategory();
+        getAppsWithSelectedCategory();*/
     }
 
     @Override
     public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
-        tileView.onCommunitySelectionChanged(event);
+       /* tileView.onCommunitySelectionChanged(event);
         gridView.onCommunitySelectionChanged(event);
 
         Group selectedCommunity = event.getCommunitySelection();
@@ -323,11 +315,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             getCommunityApps(selectedCommunity);
         } else {
             loadApps(Lists.newArrayList());
-        }
+        }*/
     }
 
     protected void disableTypeFilterForHPC() {
-        if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
+        /*if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
             filter = AppTypeFilter.AGAVE;
             activeView.enableAppTypeFilter(false);
         } else {
@@ -336,11 +328,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                 filter = AppTypeFilter.ALL;
             }
         }
-        activeView.setAppTypeFilter(filter);
+        activeView.setAppTypeFilter(filter);*/
     }
 
     void getCommunityApps(Group community) {
-        activeView.mask(appearance.getAppsLoadingMask());
+      /*  activeView.mask(appearance.getAppsLoadingMask());
         appService.getCommunityApps(community.getDisplayName(), filter, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -352,27 +344,27 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                 List<App> apps = AutoBeanCodex.decode(factory, AppList.class, result).as().getApps();
                 new AppListCallback().onSuccess(apps);
             }
-        });
+        });*/
     }
 
     protected void getAppsWithSelectedCategory() {
-        activeView.mask(appearance.getAppsLoadingMask());
+       // activeView.mask(appearance.getAppsLoadingMask());
         appService.getApps(appCategory, filter, new AppListCallback());
     }
 
     @Override
     public void onOntologyHierarchySelectionChanged(OntologyHierarchySelectionChangedEvent event) {
-        tileView.onOntologyHierarchySelectionChanged(event);
+     /*   tileView.onOntologyHierarchySelectionChanged(event);
         gridView.onOntologyHierarchySelectionChanged(event);
-
+*/
         selectedHierarchy = event.getSelectedHierarchy();
-        activeView.enableAppTypeFilter(true);
+    //    activeView.enableAppTypeFilter(true);
         getAppsWithSelectedHierarchy();
     }
 
     protected void getAppsWithSelectedHierarchy() {
         if (selectedHierarchy != null) {
-            activeView.mask(appearance.getAppsLoadingMask());
+           // activeView.mask(appearance.getAppsLoadingMask());
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
             if (ontologyUtil.isUnclassified(selectedHierarchy)) {
@@ -444,10 +436,10 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        tileView.onAppSearchResultLoad(event);
+/*        tileView.onAppSearchResultLoad(event);
         gridView.onAppSearchResultLoad(event);
 
-        activeView.setSearchPattern(event.getSearchPattern());
+        activeView.setSearchPattern(event.getSearchPattern());*/
         listStore.clear();
         listStore.addAll(event.getResults());
     }
@@ -494,7 +486,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onSwapViewButtonClicked(SwapViewButtonClickedEvent event) {
-        activeView.deselectAll();
+      //  activeView.deselectAll();
         if (activeView == gridView) {
             activeView = tileView;
         } else {
@@ -538,7 +530,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     private class AppListCallback extends AppsCallback<List<App>> {
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
-            if (caught instanceof HttpRedirectException) {
+/*            if (caught instanceof HttpRedirectException) {
                 final String uri = ((HttpRedirectException)caught).getLocation();
                 AgaveAuthPrompt prompt = new AgaveAuthPrompt(uri);
                 prompt.show();
@@ -558,7 +550,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                 gridView.setHeading(appearance.appLoadError());
                 tileView.setHeading(appearance.appLoadError());
             }
-            activeView.unmask();
+            activeView.unmask();*/
         }
 
         @Override
