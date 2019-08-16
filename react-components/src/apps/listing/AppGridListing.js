@@ -167,7 +167,7 @@ class AppGridListing extends Component {
                     order={order}
                     orderBy={orderBy}
                     baseId={parentId}
-                    ids={ids.TABLE_HEADER}
+                    ids={ids.FIELD}
                     columnData={columnData}
                     onRequestSort={this.onRequestSort}
                     onSelectAllClick={this.handleSelectAllClick}
@@ -186,6 +186,12 @@ function getTableColumns(deletable) {
             numeric: false,
             enableSorting: true,
             key: "integrator_name",
+        },
+        {
+            name: "Rating",
+            numeric: false,
+            enableSorting: true,
+            key: "rating",
         },
         {
             name: "System",

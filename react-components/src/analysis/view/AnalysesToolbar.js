@@ -9,7 +9,7 @@ import { injectIntl } from "react-intl";
 
 import ids from "../ids";
 import intlData from "../messages";
-import appType from "../model/appType";
+import appType from "../../appType";
 import viewFilter from "../model/viewFilterOptions";
 import exStyles from "../style";
 

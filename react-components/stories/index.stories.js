@@ -61,6 +61,7 @@ import NotificationViewTest from "./notifications/view/NotificationView.stories"
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
+import AppTileListingTest from "./apps/listing/AppTileListing.stories";
 
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
@@ -102,6 +103,8 @@ storiesOf("apps/qlaunch", module).add("CreateQuickLaunch", () => (
 storiesOf("apps/qlaunch", module).add("QuickLaunchListing", () => (
     <QuickLaunchListingTest />
 ));
+
+storiesOf("app/listing", module).add("AppTile", () => <AppTileListingTest />);
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />
