@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import { DEDialogHeader, palette, formatDate } from "@cyverse-de/ui-lib";
 import Dialog from "@material-ui/core/Dialog";
 import { withStyles } from "@material-ui/core/styles";
-import DEDialogHeader from "./../../util/dialog/DEDialogHeader.js";
 import DialogContent from "@material-ui/core/DialogContent";
 import exStyles from "./style.js";
 import DotMenu from "./DotMenu.js";
@@ -9,14 +9,11 @@ import Comment from "./Comment.js";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import CyVersePalette from "../../util/CyVersePalette";
 import List from "@material-ui/core/List";
-import formatDate from "../../util/DateFormatter";
 import constants from "../../constants";
 
 let COMMENTS = "Comments";
 const ADD_A_COMMENT = "Add a Comment";
-
 
 class EditComments extends Component {
     constructor(props) {
@@ -142,7 +139,7 @@ class EditComments extends Component {
 
     handleChange(event) {
         this.setState({ commentText: event.target.value });
-    };
+    }
     createComment = () => {
         const text = this.state.commentText;
         console.log(text);
@@ -155,13 +152,10 @@ class EditComments extends Component {
                   <Comment
                       message={comment.comment}
                       id={comment.id}
-                      retracted={
-                          comment.retracted}
+                      retracted={comment.retracted}
                       date={formatDate(
                           comment.post_time,
                           constants.DATE_FORMAT
-                      
-                      
                       )}
                       owner={comment.commenter}
                       classes={this.props.classes}
@@ -185,12 +179,8 @@ class EditComments extends Component {
                     <hr />
 
                     <DotMenu
-                        handleSortMostRecent={
-                            this.handleSortMostRecent}
-                        handleSortLeastRecent
-                        ={
-                            this.handleSortLeastRecent
-                        }
+                        handleSortMostRecent={this.handleSortMostRecent}
+                        handleSortLeastRecent={this.handleSortLeastRecent}
                         handleSortOwner={this.handleSortOwner}
                         className={this.props.classes.dropDownDots}
                     />
@@ -214,7 +204,7 @@ class EditComments extends Component {
                     />
                     <Fab
                         size="medium"
-                        color={CyVersePalette.blue}
+                        color={palette.blue}
                         aria-label="Add"
                         onClick={this.createComment}
                         className={classes.addCommentButton}

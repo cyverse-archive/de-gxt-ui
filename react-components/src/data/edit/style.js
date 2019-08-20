@@ -1,4 +1,4 @@
-import CyVersePalette from "../../util/CyVersePalette";
+import { palette } from "@cyverse-de/ui-lib";
 
 export default {
     main: {
@@ -31,7 +31,7 @@ export default {
         width: 40,
         marginBottom: 8,
         marginLeft: 323,
-        color: CyVersePalette.blue,
+        color: palette.blue,
     },
 
     addCommentTextField: {

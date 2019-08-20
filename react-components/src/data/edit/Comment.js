@@ -3,8 +3,9 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Fab from "@material-ui/core/Fab";
-import Divider from '@material-ui/core/Divider';
+import Divider from "@material-ui/core/Divider";
 
+const RETRACTED = "Retracted";
 
 class Comment extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class Comment extends Component {
                         On <b>{date}</b> {owner} wrote:
                         <br />
                         {retracted ? (
-                            <Typography color="error">Retracted</Typography>
+                            <Typography color="error">{RETRACTED}</Typography>
                         ) : (
                             <Typography>{message}</Typography>
                         )}

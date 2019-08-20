@@ -15,38 +15,41 @@ class EditCommentsTest extends Component {
 
         const commentList = [
             {
-                owner: "ipctest",
-                message: "This is a test comment",
-                id: "1",
-                date: "today",
+                commenter: "ipctest",
+                comment: "This is a test comment",
+                id: "2bb4f5c8-729a-11e9-b1c8-5a03816fc427",
+                post_time: "1557434209531",
                 retracted: true,
             },
             {
-                owner: "a scientist",
-                message:
+                commenter: "a scientist",
+                comment:
                     "I am writting this long comment because i am a scientist and that is what i do",
-                id: "2",
-                date: "04/1/2019",
+                id: "2bb4f5c8-729a-11e9-b1c8-5a03816fc428",
+                post_time: "1557434209531",
+                retracted: false,
             },
             {
-                owner: "donald j trump",
-                message: "thank you cyverse, very cool!",
-                id: "3",
-                date: "MM/DD/YYYY",
+                commenter: "donald j trump",
+                comment: "thank you cyverse, very cool!",
+                id: "2bb4f5c8-729a-11e9-b1c8-5a03816fc429",
+                post_time: "1557434209531",
+                retracted: false,
             },
             {
-                owner: "retracted commentet",
-                message: "doesn't really matter",
-                id: "4",
-                date: "12/12/2012",
+                commenter: "retracted",
+                comment: "doesn't really matter",
+                id: "2bb4f5c8-729a-11e9-b1c8-5a03816fc430",
+                post_time: "1557434209531",
                 retracted: true,
             },
             {
-                owner: "creator",
-                message:
+                commenter: "creator",
+                comment:
                     "i created this file, please comment and say things. javascript",
-                id: "5",
-                date: "the/dawn/oftime",
+                id: "2bb4f5c8-729a-11e9-b1c8-5a03816fc431",
+                post_time: "1557434209531",
+                retracted: false,
             },
         ];
 
