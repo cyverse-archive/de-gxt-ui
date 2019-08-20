@@ -14,7 +14,6 @@ import List from "@material-ui/core/List";
 import formatDate from "../../util/DateFormatter";
 import constants from "../../constants";
 
-
 let COMMENTS = "Comments";
 const ADD_A_COMMENT = "Add a Comment";
 
@@ -39,8 +38,6 @@ class EditComments extends Component {
         this.createComment = this.createComment.bind(this);
         this.retractComment = this.retractComment.bind(this);
         this.getComments = this.getComments.bind(this);
-
-
     }
 
     componentDidMount() {
@@ -143,11 +140,11 @@ class EditComments extends Component {
         this.setState({ commentList: temp });
     };
 
-    handleChange = (event) => {
-        this.setState({commentText: event.target.value});
+    handleChange(event) {
+        this.setState({ commentText: event.target.value });
     };
     createComment = () => {
-        const text = document.getElementById("addCommentTextField").value;
+        const text = this.state.commentText;
         console.log(text);
     };
 
@@ -158,8 +155,14 @@ class EditComments extends Component {
                   <Comment
                       message={comment.comment}
                       id={comment.id}
-                      retracted={comment.retracted}
-                      date={formatDate(comment.post_time, constants.DATE_FORMAT)}
+                      retracted={
+                          comment.retracted}
+                      date={formatDate(
+                          comment.post_time,
+                          constants.DATE_FORMAT
+                      
+                      
+                      )}
                       owner={comment.commenter}
                       classes={this.props.classes}
                       retractComment={this.retractComment}
@@ -182,8 +185,12 @@ class EditComments extends Component {
                     <hr />
 
                     <DotMenu
-                        handleSortMostRecent={this.handleSortMostRecent}
-                        handleSortLeastRecent={this.handleSortLeastRecent}
+                        handleSortMostRecent={
+                            this.handleSortMostRecent}
+                        handleSortLeastRecent
+                        ={
+                            this.handleSortLeastRecent
+                        }
                         handleSortOwner={this.handleSortOwner}
                         className={this.props.classes.dropDownDots}
                     />
@@ -195,6 +202,8 @@ class EditComments extends Component {
                         <List component="nav">{commentItems}</List>
                     </DialogContent>
                     <TextField
+                        value={this.state.commentText}
+                        onChange={this.handleChange}
                         className={classes.addCommentTextField}
                         label={ADD_A_COMMENT}
                         margin="normal"
