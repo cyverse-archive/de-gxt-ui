@@ -64,6 +64,28 @@ public class AppLoggerUtil {
         return request;
     }
 
+    /**
+     * Adds the specified header name and list of IP addresses to the given request, performing validation on
+     * each IP address in the list.
+     *
+     * @param request to which the new header is added.
+     * @param headerName the name of the new header.
+     * @param ipAddresses the list of IP addresses to use as the header value.
+     * @param <T> Basic request object
+     * @return the request with the new header added.
+     */
+    public <T extends HttpRequestBase> T addIpListHeader(T request,
+                                                         final String headerName,
+                                                         final String ipAddresses) {
+        for (String addr : ipAddresses.split("\\s*,\\s*")) {
+            Preconditions.checkArgument(InetAddresses.isInetAddress(addr),
+                                        "Invalid IP address: " + addr);
+        }
+        request.addHeader(headerName, ipAddresses);
+
+        return request;
+    }
+
     public <T extends HttpRequestBase> T addRequestIdHeader(T request) {
         final String requestId = "UI-" + UUID.randomUUID().toString();
         API_METRICS_LOG.trace("Adding unique request id to constructed request. Request-Id = {}", requestId);
