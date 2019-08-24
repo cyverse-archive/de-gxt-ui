@@ -161,9 +161,9 @@ abstract class BaseUrlConnector implements UrlConnector {
                                             realIp);
         }
         if(!Strings.isNullOrEmpty(forwardedForIp)){
-            ret = appLoggerUtil.addIpHeader(c,
-                                            FWDED_FOR_IP_HEADER_NAME,
-                                            forwardedForIp);
+            ret = appLoggerUtil.addIpListHeader(c,
+                                                FWDED_FOR_IP_HEADER_NAME,
+                                                forwardedForIp);
         }
 
         return ret;
