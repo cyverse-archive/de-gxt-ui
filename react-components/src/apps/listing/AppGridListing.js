@@ -137,8 +137,8 @@ class AppGridListing extends Component {
                                         <TableCell>
                                             <AppStatusIcon
                                                 isPublic={app.is_public}
-                                                isBeta={app.disabled}
-                                                isDisabled={app.beta}
+                                                isBeta={app.beta}
+                                                isDisabled={app.disabled}
                                             />
                                         </TableCell>
                                         <TableCell>{app.name}</TableCell>
