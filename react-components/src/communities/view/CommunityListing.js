@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import messages from "../messages";
@@ -63,68 +63,66 @@ class CommunityListing extends Component {
         } = this.props;
 
         return (
-            <Fragment>
+            <div className={classes.table}>
                 <LoadingMask loading={loading}>
-                    <div className={classes.table}>
-                        <Table>
-                            <TableBody>
-                                {(!data || data.length === 0) && (
-                                    <EmptyTable
-                                        message={getMessage("noCommunities")}
-                                        numColumns={tableColumns.length}
-                                    />
-                                )}
-                                {data &&
-                                    data.length > 0 &&
-                                    stableSort(
-                                        data,
-                                        getSorting(order, orderBy)
-                                    ).map((community) => {
-                                        return (
-                                            <TableRow
-                                                tabIndex={-1}
-                                                hover
-                                                key={community.id}
-                                            >
-                                                <TableCell>
-                                                    <Tooltip
-                                                        title={getMessage(
-                                                            "communityNameToolTip"
-                                                        )}
-                                                    >
-                                                        <DEHyperlink
-                                                            onClick={() =>
-                                                                onCommunityClicked(
-                                                                    community
-                                                                )
-                                                            }
-                                                            text={collaboratorsUtil.getSubjectDisplayName(
+                    <Table>
+                        <TableBody>
+                            {(!data || data.length === 0) && (
+                                <EmptyTable
+                                    message={getMessage("noCommunities")}
+                                    numColumns={tableColumns.length}
+                                />
+                            )}
+                            {data &&
+                                data.length > 0 &&
+                                stableSort(
+                                    data,
+                                    getSorting(order, orderBy)
+                                ).map((community) => {
+                                    return (
+                                        <TableRow
+                                            tabIndex={-1}
+                                            hover
+                                            key={community.id}
+                                        >
+                                            <TableCell>
+                                                <Tooltip
+                                                    title={getMessage(
+                                                        "communityNameToolTip"
+                                                    )}
+                                                >
+                                                    <DEHyperlink
+                                                        onClick={() =>
+                                                            onCommunityClicked(
                                                                 community
-                                                            )}
-                                                        />
-                                                    </Tooltip>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {community.description}
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                            <EnhancedTableHead
-                                selectable={false}
-                                rowCount={data ? data.length : 0}
-                                order={order}
-                                orderBy={orderBy}
-                                baseId={parentId}
-                                ids={ids.TABLE_HEADER}
-                                columnData={tableColumns}
-                                onRequestSort={this.onRequestSort}
-                            />
-                        </Table>
-                    </div>
+                                                            )
+                                                        }
+                                                        text={collaboratorsUtil.getSubjectDisplayName(
+                                                            community
+                                                        )}
+                                                    />
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell>
+                                                {community.description}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                        <EnhancedTableHead
+                            selectable={false}
+                            rowCount={data ? data.length : 0}
+                            order={order}
+                            orderBy={orderBy}
+                            baseId={parentId}
+                            ids={ids.TABLE_HEADER}
+                            columnData={tableColumns}
+                            onRequestSort={this.onRequestSort}
+                        />
+                    </Table>
                 </LoadingMask>
-            </Fragment>
+            </div>
         );
     }
 }
