@@ -11,6 +11,7 @@ import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.HasFolderS
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent.HasRootFoldersRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.HasSavedSearchesRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.HasDeleteSavedSearchClickedEventHandlers;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.UpdateSavedSearchesHandler;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
@@ -38,7 +39,8 @@ import java.util.List;
  */
 public interface NavigationView extends IsWidget,
                                         HasFolderSelectionEventHandlers,
-                                        HasDeleteSavedSearchClickedEventHandlers {
+                                        HasDeleteSavedSearchClickedEventHandlers,
+                                        SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler {
 
     String FAVORITES_FOLDER_NAME = "Favorites";
 

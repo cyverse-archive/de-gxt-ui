@@ -242,7 +242,7 @@ public class DiskResourcePresenterImplTest {
 
         verify(detailsPresenterMock, times(3)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
-        verify(navigationPresenterMock, times(5)).getView();
+        verify(navigationPresenterMock, times(6)).getView();
         verify(toolbarPresenterMock, times(22)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
