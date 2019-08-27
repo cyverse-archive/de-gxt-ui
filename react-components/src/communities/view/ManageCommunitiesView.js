@@ -1,13 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 
 import CommunitiesToolbar from "./CommunitiesToolbar";
 import CommunityFilter from "./CommunityFilter";
 import CommunityListing from "./CommunityListing";
-import styles from "../styles";
-
 import EditCommunityDialog from "./EditCommunityDialog";
-import { withStyles } from "@material-ui/core/styles";
 
 /**
  * @author aramsey
@@ -147,11 +144,10 @@ class ManageCommunitiesView extends Component {
             collaboratorsUtil,
             presenter,
             currentUser,
-            classes,
         } = this.props;
 
         return (
-            <div className={classes.wrapper}>
+            <Fragment>
                 <CommunitiesToolbar
                     parentId={parentId}
                     currentCommunityType={this.state.communityType}
@@ -178,7 +174,7 @@ class ManageCommunitiesView extends Component {
                     onCommunitySaved={this.onCommunitySaved}
                     onClose={this.handleCloseEditDlg}
                 />
-            </div>
+            </Fragment>
         );
     }
 }
@@ -201,4 +197,4 @@ ManageCommunitiesView.propTypes = {
     }),
 };
 
-export default withStyles(styles)(ManageCommunitiesView);
+export default ManageCommunitiesView;

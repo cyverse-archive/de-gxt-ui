@@ -28,11 +28,6 @@ const styles = (theme) => ({
         margin: "10px",
     },
 
-    wrapper: {
-        width: "100%",
-        height: "100%",
-    },
-
     hidden: {
         visibility: "hidden",
     },
