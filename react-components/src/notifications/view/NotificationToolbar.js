@@ -36,6 +36,7 @@ class NotificationToolbar extends Component {
                                 {getMessage("filter")}
                             </InputLabel>
                             <Select
+                                id={build(baseId, ids.NOTIFICATION_FILTER)}
                                 native
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
