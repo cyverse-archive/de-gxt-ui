@@ -9,6 +9,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.inject.Inject;
 
@@ -46,6 +47,8 @@ public class ToolSharingDialog extends IPlantDialog {
         presenter = factory.create(resourcesToShare);
         presenter.go(this);
         super.show();
+
+        onEnsureDebugId(ToolsModule.ToolIds.SHARING_DLG);
     }
 
     @Override
@@ -53,4 +56,11 @@ public class ToolSharingDialog extends IPlantDialog {
         throw new UnsupportedOperationException("This method is not supported for this class. ");
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+        getOkButton().ensureDebugId(baseID + ToolsModule.ToolIds.DONE_BTN);
+    }
 }

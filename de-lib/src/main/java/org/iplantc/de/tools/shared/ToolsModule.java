@@ -26,6 +26,8 @@ public interface ToolsModule {
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
         String TOOL_SEARCH =".search";
+        String SHARING_DLG = "toolSharingDlg";
+        String DONE_BTN = ".doneBtn";
     }
 
     interface EditToolIds {

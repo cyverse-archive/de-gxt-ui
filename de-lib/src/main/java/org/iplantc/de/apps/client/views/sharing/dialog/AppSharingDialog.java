@@ -64,5 +64,6 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
         super.onEnsureDebugId(baseID);
 
         sharingPresenter.setViewDebugId(baseID);
+        getOkButton().ensureDebugId(baseID + AppsModule.Ids.DONE_BTN);
     }
 }

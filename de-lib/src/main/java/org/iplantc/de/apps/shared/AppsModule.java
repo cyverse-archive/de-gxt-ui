@@ -91,6 +91,7 @@ public interface AppsModule {
         String APP_URL_TEXT = ".appUrlText";
         String COMMUNITIES = ".communities";
         String COMMUNITIES_TREE = ".tree";
+        String DONE_BTN = ".doneBtn";
     }
 }
 
