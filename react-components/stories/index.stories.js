@@ -41,6 +41,8 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
+import TeamsTest from "./teams/Teams.stories";
+
 import EditToolTest from "./tools/EditTool.stories";
 import ManageToolsTest from "./tools/ManageTools.stories";
 
@@ -227,6 +229,10 @@ storiesOf("notifications/view/dialogs", module).add(
     "with test RequestHistoryDialogTest",
     () => <RequestHistoryDialogTest logger={action("notification window")} />
 );
+
+storiesOf("teams", module).add("Teams", () => (
+    <TeamsTest logger={action("Teams View")} />
+));
 
 storiesOf("tools", module)
     .add("Edit Tool", () => <EditToolTest logger={action("Saved Tool")} />)

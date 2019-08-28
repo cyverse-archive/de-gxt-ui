@@ -7,6 +7,7 @@ import * as desktop from "./desktop";
 import * as fileViewers from "./fileViewers";
 import * as metadata from "./metadata";
 import * as notifications from "./notifications";
+import * as teams from "./teams";
 import * as tools from "./tools";
 import { ErrorHandler, palette } from "@cyverse-de/ui-lib";
 import React from "react";
@@ -57,6 +58,7 @@ export {
     fileViewers,
     metadata,
     notifications,
+    teams,
     tools,
     ErrorHandler,
     getDefaultTheme,
