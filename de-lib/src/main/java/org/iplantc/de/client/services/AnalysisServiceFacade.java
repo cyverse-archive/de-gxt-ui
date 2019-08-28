@@ -63,4 +63,8 @@ public interface AnalysisServiceFacade {
 
     void getPermissions(List<Analysis> analyses, DECallback<String> callback);
 
+    void getVICELogs(String id,
+                     String sinceTime,
+                     DECallback<String> callback);
+
 }

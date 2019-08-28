@@ -306,5 +306,16 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
+    @Override
+    public void getVICELogs(String id,
+                            String sinceTime,
+                            DECallback<String> callback) {
+
+        String address = ANALYSES + "/" + id +"/" + "logs?since-time="+ sinceTime;
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deServiceFacade.getServiceData(wrapper,callback);
+
+    }
+
 }
 

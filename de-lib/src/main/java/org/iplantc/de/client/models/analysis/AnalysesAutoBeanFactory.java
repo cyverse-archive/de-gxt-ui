@@ -29,4 +29,6 @@ public interface AnalysesAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<AnalysisStep> getAnalysisStep();
 
+    AutoBean<VICELogs> getVICELogs();
+
 }

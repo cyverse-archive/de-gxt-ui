@@ -7,6 +7,7 @@ import org.iplantc.de.analysis.client.presenter.AnalysesPresenterImpl;
 import org.iplantc.de.analysis.client.presenter.parameters.AnalysisParametersPresenterImpl;
 import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter;
 import org.iplantc.de.analysis.client.views.AnalysesViewImpl;
+import org.iplantc.de.analysis.client.views.ViceLogsView;
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
@@ -27,5 +28,6 @@ public class AnalysisGinModule extends AbstractGinModule {
                         .implement(SharingPresenter.class, AnalysisSharingPresenter.class)
                         .build(AnalysisSharingPresenterFactory.class));
         bind(AnalysisSharingView.class).to(AnalysisSharingViewImpl.class);
+        bind(ViceLogsView.class);
     }
 }

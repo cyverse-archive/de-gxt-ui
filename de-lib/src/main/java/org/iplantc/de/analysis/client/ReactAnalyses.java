@@ -34,5 +34,18 @@ public class ReactAnalyses {
         public String nameFilter;
         public String idFilter;
     }
+
+    @JsProperty
+    public static ComponentConstructorFn<ViceLogsProps> ViceLogsViewer;
+
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class ViceLogsProps extends BaseProps {
+        public String logs;
+        public boolean loading;
+        public boolean dialogOpen;
+        public String analysisName;
+        public AnalysesView.Presenter presenter;
+    }
 }
 
