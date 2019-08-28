@@ -21,6 +21,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import SaveIcon from "@material-ui/icons/Save";
 import ShareIcon from "@material-ui/icons/Share";
+import LogsIcon from "@material-ui/icons/Notes";
 
 class AnalysesMenuItems extends Component {
     render() {
@@ -30,6 +31,7 @@ class AnalysesMenuItems extends Component {
             handleClose,
             handleUpdateComments,
             handleGoToOutputFolder,
+            handleViewLogs,
             handleRelaunch,
             handleCancel,
             handleShare,
@@ -62,6 +64,19 @@ class AnalysesMenuItems extends Component {
                 >
                     <FolderIcon style={{ color: palette.darkBlue }} />
                     {getMessage("goOutputFolder")}
+                </MenuItem>
+                <MenuItem
+                    id={build(baseDebugId, ids.MENUITEM_VIEW_LOGS)}
+                    disabled={disableSingleSelectionMenuItem || disableCancel}
+                    onClick={() => {
+                        handleClose();
+                        handleViewLogs();
+                    }}
+                    className={classes.menuItem}
+                    data-disabled={disableSingleSelectionMenuItem}
+                >
+                    <LogsIcon style={{ color: palette.darkBlue }} />
+                    {getMessage("viewLogs")}
                 </MenuItem>
                 <MenuItem
                     id={build(baseDebugId, ids.MENUITEM_VIEW_PARAMS)}

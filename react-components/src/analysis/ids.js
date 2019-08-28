@@ -15,6 +15,7 @@ export default {
 
     MENUITEM_ANALYSES: "analyses",
     MENUITEM_GO_TO_FOLDER: "goToFolder",
+    MENUITEM_VIEW_LOGS: "goToLogs",
     MENUITEM_VIEW_PARAMS: "viewParams",
     MENUITEM_VIEW_ANALYSES_INFO: "viewInfo",
     MENUITEM_RELAUNCH: "relaunch",

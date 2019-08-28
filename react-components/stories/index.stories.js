@@ -6,6 +6,7 @@ import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
+import ViceLogsViewerTest from "./analysis/view/ViceLogsViewerDialog.stories";
 
 import AdminAppDetailsTest from "./apps/admin/AdminAppDetails.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";
@@ -69,10 +70,10 @@ storiesOf("analysis/view/dialogs", module).add(
     "with test analysis parameters",
     () => <AnalysisParametersDialogTest />
 );
-storiesOf("analysis/view/dialogs", module).add(
-    "with test analysis support",
-    () => <ShareWithSupportDialogTest />
-);
+
+storiesOf("analysis/view/dialogs", module).add("with test VICE logs", () => (
+    <ViceLogsViewerTest />
+));
 
 storiesOf("apps/admin", module).add("AdminAppDetails", () => (
     <AdminAppDetailsTest />
