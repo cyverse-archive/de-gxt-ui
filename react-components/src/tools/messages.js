@@ -84,5 +84,6 @@ export default {
         tools: "Tools",
         share: "Share",
         searchTools: "Search tools",
+        refresh: "Refresh",
     },
 };

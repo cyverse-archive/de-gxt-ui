@@ -34,7 +34,12 @@ import {
     Toolbar,
     withStyles,
 } from "@material-ui/core";
-import { InfoOutlined, Refresh } from "@material-ui/icons";
+import {
+    InfoOutlined,
+    Menu as MenuIcon,
+    Refresh,
+    Share,
+} from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
@@ -163,7 +168,9 @@ function ToolsToolbar(props) {
                     setState({ toolMenuEl: event.currentTarget })
                 }
                 id={build(parentId, ids.MANAGE_TOOLS.TOOLS_MENU)}
+                variant="contained"
             >
+                <MenuIcon />
                 {getMessage("tools")}
             </Button>
             <Menu
@@ -229,7 +236,9 @@ function ToolsToolbar(props) {
                     setState({ shareMenuEl: event.currentTarget })
                 }
                 id={build(parentId, ids.MANAGE_TOOLS.SHARE_MENU)}
+                variant="contained"
             >
+                <Share />
                 {getMessage("share")}
             </Button>
             <Menu
@@ -260,12 +269,14 @@ function ToolsToolbar(props) {
                     {getMessage("makePublic")}
                 </MenuItem>
             </Menu>
-            <IconButton
+            <Button
                 onClick={refreshToolList}
                 id={build(parentId, ids.MANAGE_TOOLS.REFRESH)}
+                variant="contained"
             >
                 <Refresh />
-            </IconButton>
+                {getMessage("refresh")}
+            </Button>
             <Select
                 value={toolFilterValue}
                 className={classes.toolTypeSelector}

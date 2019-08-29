@@ -16,15 +16,18 @@ const styles = (theme) => ({
     toolbar: {
         backgroundColor: palette.lightGray,
         "& div": {
-            marginRight: "10px",
+            marginRight: "20px",
         },
         "& button": {
-            marginRight: "8px",
+            marginRight: "20px",
+        },
+        "& svg": {
+            color: palette.darkBlue,
         },
     },
 
     toolTypeSelector: {
-        width: "200px",
+        width: "150px",
     },
 
     container: {
