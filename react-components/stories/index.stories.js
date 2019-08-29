@@ -6,7 +6,7 @@ import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
 import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupportDialog.stories";
-import ViceLogsViewerTest from "./analysis/view/ViceLogsViewerDialog.stories";
+import ViceLogsViewerTest from "./analysis/view/dialogs/ViceLogsViewerDialog.stories";
 
 import AdminAppDetailsTest from "./apps/admin/AdminAppDetails.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";

@@ -6,8 +6,8 @@
 
 import React from "react";
 import { injectIntl } from "react-intl";
-import intlData from "../messages";
-import ids from "../../notifications/ids";
+import intlData from "../../messages";
+import ids from "../../../notifications/ids";
 import {
     Button,
     Dialog,
@@ -17,7 +17,6 @@ import {
     FormGroup,
     makeStyles,
     Switch,
-    Toolbar,
 } from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {
@@ -28,7 +27,6 @@ import {
     palette,
     withI18N,
 } from "@cyverse-de/ui-lib";
-import AppBar from "@material-ui/core/AppBar";
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {

@@ -62,7 +62,7 @@ class AnalysesMenuItems extends Component {
                     className={classes.menuItem}
                     data-disabled={disableSingleSelectionMenuItem}
                 >
-                    <FolderIcon style={{ color: palette.darkBlue }} />
+                    <FolderIcon lassName={classes.toolbarItemColor} />
                     {getMessage("goOutputFolder")}
                 </MenuItem>
                 <MenuItem
@@ -75,7 +75,7 @@ class AnalysesMenuItems extends Component {
                     className={classes.menuItem}
                     data-disabled={disableSingleSelectionMenuItem}
                 >
-                    <LogsIcon style={{ color: palette.darkBlue }} />
+                    <LogsIcon lassName={classes.toolbarItemColor} />
                     {getMessage("viewLogs")}
                 </MenuItem>
                 <MenuItem

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ViceLogsViewer from "../../../src/analysis/view/ViceLogsViewer";
+import ViceLogsViewer from "../../../../src/analysis/view/dialogs/ViceLogsViewer";
 
 class ViceLogsViewerTest extends Component {
     constructor(props) {
