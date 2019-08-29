@@ -314,16 +314,16 @@ function ToolsToolbar(props) {
 }
 
 const TABLE_COLUMNS = [
-    { name: "", numeric: false, enableSorting: false, key: "info", id: "info" },
-    { name: "Name", numeric: false, enableSorting: true, id: "name" },
+    { name: "", align: "left", enableSorting: false, key: "info", id: "info" },
+    { name: "Name", align: "left", enableSorting: true, id: "name" },
     {
         name: "Image Name",
-        numeric: false,
+        align: "left",
         enableSorting: false,
         id: "image_name",
     },
-    { name: "Tag", numeric: false, enableSorting: false, id: "tag" },
-    { name: "Status", numeric: false, enableSorting: false, id: "status" },
+    { name: "Tag", align: "left", enableSorting: false, id: "tag" },
+    { name: "Status", align: "left", enableSorting: false, id: "status" },
 ];
 
 const StyledToolListing = withStyles(styles)(ToolListing);
