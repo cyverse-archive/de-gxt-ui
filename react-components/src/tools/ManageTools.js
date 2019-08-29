@@ -5,6 +5,7 @@ import React, { Fragment, useEffect, useState } from "react";
 
 import ids from "./ids";
 import messages from "./messages";
+import PERMISSION from "../models/Permission";
 import styles from "./styles";
 
 import {
@@ -141,9 +142,11 @@ function ToolsToolbar(props) {
     } = props;
 
     const hasWritePermission = selectedTool
-        ? selectedTool.permission === "write"
+        ? selectedTool.permission === PERMISSION.WRITE
         : false;
-    const isOwner = selectedTool ? selectedTool.permission === "own" : false;
+    const isOwner = selectedTool
+        ? selectedTool.permission === PERMISSION.OWN
+        : false;
     const isEditable = selectedTool
         ? !selectedTool.is_public && (isOwner || hasWritePermission)
         : false;
