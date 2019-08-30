@@ -167,8 +167,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     @Inject
     ViceLogsView viceLogsView;
 
-    private final HasHandlers eventBus;
-
     AnalysisPermissionFilter currentPermFilter;
     AppTypeFilter currentTypeFilter;
 
@@ -176,6 +174,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     private String viceLogsSinceTime = "0";
     private String viceLogsAnalysisName;
     private Timer viceLogsFollowTimer;
+    private final HasHandlers eventBus;
+    private String baseDebugId;
+
+
     final int VICE_LOGS_FOLLOW_INTERVAL = 10000;
 
     @Inject
@@ -335,6 +337,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
+        this.baseDebugId = baseDebugId;
         container.setWidget(view);
         if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
             view.load(this, baseDebugId, selectedAnalyses.get(0));
@@ -485,7 +488,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                     viceLogsSinceTime = viceLogs.getSinceTime();
                     viceLogsView.load(AnalysesPresenterImpl.this,
                                       analysisName,
-                                      viceLogs.getLines().stream().collect(Collectors.joining("\n")));
+                                      viceLogs.getLines().stream().collect(Collectors.joining("\n")),
+                                      baseDebugId);
                 } else {
                     viceLogsSinceTime = viceLogs.getSinceTime();
                     viceLogsView.update(viceLogs.getLines().stream().collect(Collectors.joining("\n")));

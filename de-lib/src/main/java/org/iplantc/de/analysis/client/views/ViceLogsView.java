@@ -26,12 +26,16 @@ public class ViceLogsView implements IsWidget {
         viceLogsProps.logs = "";
     }
 
-    public void load(AnalysesView.Presenter presenter, String analysisName, String logs) {
+    public void load(AnalysesView.Presenter presenter,
+                     String analysisName,
+                     String logs,
+                     String baseDebugId) {
         viceLogsProps.logs = viceLogsProps.logs.concat(logs);
         viceLogsProps.analysisName = analysisName;
         viceLogsProps.loading = false;
         viceLogsProps.dialogOpen = true;
         viceLogsProps.presenter = presenter;
+        viceLogsProps.baseDebugId = baseDebugId;
         CyVerseReactComponents.render(ReactAnalyses.ViceLogsViewer, viceLogsProps, panel.getElement());
     }
 

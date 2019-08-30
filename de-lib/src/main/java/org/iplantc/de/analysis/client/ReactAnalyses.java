@@ -46,6 +46,7 @@ public class ReactAnalyses {
         public boolean dialogOpen;
         public String analysisName;
         public AnalysesView.Presenter presenter;
+        public String baseDebugId;
     }
 }
 

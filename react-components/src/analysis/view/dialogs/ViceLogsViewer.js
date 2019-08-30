@@ -7,7 +7,7 @@
 import React from "react";
 import { injectIntl } from "react-intl";
 import intlData from "../../messages";
-import ids from "../../../notifications/ids";
+import ids from "../../ids";
 import {
     Button,
     Dialog,
@@ -48,12 +48,14 @@ function ViceLogsViewer(props) {
     const [autoRefresh, setAutoRefresh] = React.useState(false);
     const {
         logs,
-        debugId,
+        baseDebugId,
         loading,
         dialogOpen,
         analysisName,
         presenter,
     } = props;
+
+    const baseId = baseDebugId + ids.VICE_LOGS_VIEWER.VIEWER;
 
     const handleAutoRefreshChange = (event) => {
         setAutoRefresh(event.target.checked);
@@ -75,6 +77,7 @@ function ViceLogsViewer(props) {
             disableBackdropClick
             disableEscapeKeyDown
             scroll="paper"
+            id={baseId}
         >
             <DEDialogHeader
                 heading={analysisName}
@@ -91,16 +94,21 @@ function ViceLogsViewer(props) {
                                     onChange={handleAutoRefreshChange}
                                     value="autoRefresh"
                                     color="primary"
+                                    id={build(
+                                        baseId,
+                                        ids.VICE_LOGS_VIEWER.FOLLLOW_LOGS
+                                    )}
                                 />
                             }
                             label={getMessage("followLogs")}
                         />
                         <Button
-                            id={build(debugId, ids.REFRESH_BTN)}
+                            id={build(baseId, ids.REFRESH_BTN)}
                             variant="contained"
                             size="small"
                             className={classes.toolbarButton}
                             onClick={onRefreshClicked}
+                            id={build(baseId, ids.VICE_LOGS_VIEWER.REFRESH)}
                         >
                             <RefreshIcon style={{ color: palette.darkBlue }} />
                             {getMessage("refresh")}

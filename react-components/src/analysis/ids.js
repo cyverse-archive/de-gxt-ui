@@ -68,4 +68,10 @@ export default {
         STATUS: "status",
         INFO: "info",
     },
+
+    VICE_LOGS_VIEWER: {
+        VIEWER: ".viceLogViewer",
+        FOLLLOW_LOGS: "followLogs",
+        REFRESH: "refresh",
+    },
 };
