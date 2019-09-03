@@ -8,8 +8,6 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,12 +31,6 @@ public class AppsTileViewImpl implements AppsListView {
     public Widget asWidget() {
         return null;
     }
-
-    interface AppsGridViewImplUiBinder extends UiBinder<Widget, AppsTileViewImpl> {
-    }
-
-    private static final AppsGridViewImplUiBinder ourUiBinder =
-            GWT.create(AppsGridViewImplUiBinder.class);
 
     class AppRatingComparator implements Comparator<App> {
 

@@ -4,8 +4,6 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.client.models.apps.App;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -26,10 +24,6 @@ public class AppsGridViewImpl implements AppsListView {
     public Widget asWidget() {
         return null;
     }
-
-    interface AppsGridViewImplUiBinder extends UiBinder<Widget, AppsGridViewImpl> { }
-
-    private static final AppsGridViewImplUiBinder ourUiBinder = GWT.create(AppsGridViewImplUiBinder.class);
 
     @UiField(provided = true) final ListStore<App> listStore;
     @UiField ColumnModel cm;
