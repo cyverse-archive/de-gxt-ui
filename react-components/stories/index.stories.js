@@ -104,7 +104,7 @@ storiesOf("apps/qlaunch", module).add("QuickLaunchListing", () => (
     <QuickLaunchListingTest />
 ));
 
-storiesOf("app/listing", module).add("AppTile", () => <AppTileListingTest />);
+storiesOf("apps/listing", module).add("AppTile", () => <AppTileListingTest />);
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />
