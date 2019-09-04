@@ -19,4 +19,5 @@ export default {
     DENY_REQUEST_DLG: "denyRequestDlg",
     STATUS: "requestStatusColumn",
     COMMENT: "commentColumn",
+    NOTIFICATION_FILTER: "notificationFilter",
 };

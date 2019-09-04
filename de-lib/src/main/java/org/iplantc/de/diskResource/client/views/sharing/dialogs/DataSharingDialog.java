@@ -68,5 +68,6 @@ public class DataSharingDialog extends IPlantDialog implements SelectHandler {
         super.onEnsureDebugId(baseID);
 
         sharingPresenter.setViewDebugId(baseID);
+        getOkButton().ensureDebugId(baseID + DiskResourceModule.Ids.DONE_BTN);
     }
 }

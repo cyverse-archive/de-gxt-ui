@@ -272,6 +272,7 @@ public class DiskResourcePresenterImpl implements
         this.dataSearchPresenter = searchField.getSearchPresenter();
         dataSearchPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
         dataSearchPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
+        dataSearchPresenter.addSubmitDiskResourceQueryEventHandler(this.navigationPresenter.getView());
         dataSearchPresenter.addUpdateSavedSearchesEventHandler(this.navigationPresenter);
 
         // Grid Presenter

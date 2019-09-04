@@ -38,6 +38,7 @@ public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler
         super.onEnsureDebugId(baseID);
 
         sharingPresenter.setViewDebugId(baseID);
+        getOkButton().ensureDebugId(baseID + AnalysisModule.Ids.DONE_BTN);
     }
 
     @Override

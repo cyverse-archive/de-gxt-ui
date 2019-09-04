@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.views.navigation.cells.TreeCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
@@ -172,5 +173,10 @@ public class NavigationViewImpl extends ContentPanel implements NavigationView {
 
         new QuickTip(tree);
         return tree;
+    }
+
+    @Override
+    public void doSubmitDiskResourceQuery(SubmitDiskResourceQueryEvent event) {
+        tree.getSelectionModel().deselectAll();
     }
 }
