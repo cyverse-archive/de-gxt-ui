@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AppTileListing(props) {
     const onTypeFilterChange = () => {};
+    const onSortChange = () => {};
 
     const { apps, intl, baseDebugID, heading, typeFilter } = props;
     const classes = useStyles();
@@ -55,6 +56,7 @@ function AppTileListing(props) {
                 baseDebugId={baseDebugID}
                 typeFilter={typeFilter}
                 onTypeFilterChange={onTypeFilterChange}
+                onSortChange={onSortChange}
                 view={viewType.TABLE}
             />
             <Grid container className={classes.root} spacing={1}>
