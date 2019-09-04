@@ -7,9 +7,7 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-
-import javax.inject.Inject;
-
+import com.google.inject.Inject;
 
 /**
  * @author sriram
@@ -30,12 +28,13 @@ public class ViceLogsView implements IsWidget {
                      String analysisName,
                      String logs,
                      String baseDebugId) {
-        viceLogsProps.logs = viceLogsProps.logs.concat(logs);
+        viceLogsProps.logs = logs;
         viceLogsProps.analysisName = analysisName;
         viceLogsProps.loading = false;
         viceLogsProps.dialogOpen = true;
         viceLogsProps.presenter = presenter;
         viceLogsProps.baseDebugId = baseDebugId;
+        viceLogsProps.followLogs = false;
         CyVerseReactComponents.render(ReactAnalyses.ViceLogsViewer, viceLogsProps, panel.getElement());
     }
 
@@ -55,6 +54,10 @@ public class ViceLogsView implements IsWidget {
         CyVerseReactComponents.render(ReactAnalyses.ViceLogsViewer, viceLogsProps, panel.getElement());
     }
 
+    public void setFollowLogs(boolean follow) {
+        viceLogsProps.followLogs = follow;
+        CyVerseReactComponents.render(ReactAnalyses.ViceLogsViewer, viceLogsProps, panel.getElement());
+    }
 
     @Override
     public Widget asWidget() {

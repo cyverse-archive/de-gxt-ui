@@ -52,8 +52,8 @@ var intlData = {
         copyAnalysisId: "Copy Analysis ID",
         followLogs: "Follow Logs",
         jobLogsUnavailableMessage:
-            "Logs will be available under your output folder after status of" +
-            " this analysis changes to Completed or Failed.",
+            "The logs will be available within the analysis output folder after the status of this" +
+            " analysis changes to Completed or Failed.",
         jobLogsUnavailableHeading: "Logs not available",
         analysesExecDeleteWarning:
             "This will remove the selected analyses and the parameters information associated with those analyses. Outputs can still be viewed in the Data window within the folder created by these analyses.",

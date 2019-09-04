@@ -71,7 +71,7 @@ export default {
 
     VICE_LOGS_VIEWER: {
         VIEWER: ".viceLogViewer",
-        FOLLLOW_LOGS: "followLogs",
+        FOLLOW_LOGS: "followLogs",
         REFRESH: "refresh",
     },
 };
