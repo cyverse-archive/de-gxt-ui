@@ -20,7 +20,7 @@ public interface ToolServices {
 
     void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<Splittable> callback);
 
-    void addTool(Tool tool, AppsCallback<Tool> callback);
+    void addTool(Tool tool, AppsCallback<Splittable> callback);
 
     void deleteTool(String toolId, AppsCallback<Void> callback);
 

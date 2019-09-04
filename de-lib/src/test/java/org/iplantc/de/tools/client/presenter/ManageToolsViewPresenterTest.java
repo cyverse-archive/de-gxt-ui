@@ -39,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -121,6 +122,9 @@ public class ManageToolsViewPresenterTest {
     @Captor
     ArgumentCaptor<AppsCallback<Tool>> toolCaptor;
 
+    @Captor
+    ArgumentCaptor<AppsCallback<Splittable>> splittableCaptor;
+
 
     @Captor
     ArgumentCaptor<AppsCallback<Void>> voidCaptor;
@@ -129,6 +133,7 @@ public class ManageToolsViewPresenterTest {
 
     @Mock
     Iterator<Tool> iteratorMock;
+    @Mock ManageToolsViewPresenter spy;
 
     @Before
     public void setUp() {
@@ -144,16 +149,6 @@ public class ManageToolsViewPresenterTest {
             }
 
             @Override
-            Splittable convertToolListToSplittable(ToolList tools) {
-                return toolListSpl;
-            }
-
-            @Override
-            Splittable updateToolInToolList(Tool updatedTool, Splittable currentToolList) {
-                return toolListSpl;
-            }
-
-            @Override
             Tool convertSplittableToTool(Splittable toolSpl) {
                 return toolMock;
             }
@@ -161,16 +156,6 @@ public class ManageToolsViewPresenterTest {
             @Override
             Splittable convertToolToSplittable(Tool tool) {
                 return toolSplMock;
-            }
-
-            @Override
-            ToolList convertSplittableToToolList(Splittable toolListSpl) {
-                return toolListMock;
-            }
-
-            @Override
-            Splittable deleteToolInToolList(String deletedToolId, Splittable currentToolList) {
-                return toolListSpl;
             }
         };
         uut.toolsView = toolsViewMock;
@@ -184,6 +169,7 @@ public class ManageToolsViewPresenterTest {
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
         uut.factory = factoryMock;
+        spy = Mockito.spy(uut);
 
         when(editToolViewFactoryMock.create(baseEditToolPropsMock)).thenReturn(editToolViewMock);
         when(toolMock.getType()).thenReturn("executable");
@@ -207,16 +193,16 @@ public class ManageToolsViewPresenterTest {
         Boolean isPublic = null;
 
         uut.loadTools(isPublic, "", "asc", "name", 100, 0);
+        verify(toolsViewMock).setListingConfig(eq(isPublic), eq(""), eq("asc"), eq("name"), eq(100), eq(0));
         verify(toolServicesMock).searchTools(eq(isPublic),
                                              eq(""),
                                              eq("asc"),
                                              eq("name"),
                                              eq(100),
                                              eq(0),
-                                             toolListCaptor.capture());
-        toolListCaptor.getValue().onSuccess(toolListMock);
+                                             splittableCaptor.capture());
+        splittableCaptor.getValue().onSuccess(toolListSpl);
 
-        verify(toolsViewMock).unmask();
         verify(toolsViewMock).loadTools(toolListSpl);
     }
 
@@ -225,10 +211,10 @@ public class ManageToolsViewPresenterTest {
         when(toolsViewMock.getCurrentToolList()).thenReturn(toolListSpl);
         when(toolListToolsSpl.size()).thenReturn(3);
 
-        uut.addTool(toolSplMock);
-        verify(toolServicesMock).addTool(eq(toolMock), toolCaptor.capture());
-        toolCaptor.getValue().onSuccess(toolMock);
-        verify(toolsViewMock).loadTools(eq(toolListSpl));
+        spy.addTool(toolSplMock);
+        verify(toolServicesMock).addTool(eq(toolMock), splittableCaptor.capture());
+        splittableCaptor.getValue().onSuccess(toolSplMock);
+        verify(spy).refreshListing();
     }
 
     @Test
@@ -236,11 +222,11 @@ public class ManageToolsViewPresenterTest {
         when(toolMock.getName()).thenReturn("Shiny Tool");
         when(appearanceMock.toolUpdated("Shiny Tool")).thenReturn("Tool Shiny Tool updated successfully!");
 
-        uut.updateTool(toolSplMock);
+        spy.updateTool(toolSplMock);
         verify(toolServicesMock).updateTool(eq(toolMock), toolCaptor.capture());
         toolCaptor.getValue().onSuccess(toolMock);
 
-        verify(toolsViewMock).loadTools(toolListSpl);
+        verify(spy).refreshListing();
     }
 
     @Test
@@ -249,11 +235,11 @@ public class ManageToolsViewPresenterTest {
         String toolName = "shiny";
         when(appearanceMock.toolDeleted(toolName)).thenReturn("Tool Shiny Tool deleted successfully!");
 
-        uut.doDelete(toolId, toolName);
+        spy.doDelete(toolId, toolName);
         verify(toolServicesMock).deleteTool(eq(toolId), voidCaptor.capture());
         voidCaptor.getValue().onSuccess(null);
 
-        verify(toolsViewMock).loadTools(toolListSpl);
+        verify(spy).refreshListing();
     }
 
     @Test

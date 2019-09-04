@@ -112,14 +112,13 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void addTool(Tool tool, AppsCallback<Tool> callback) {
+    public void addTool(Tool tool, AppsCallback<Splittable> callback) {
         String address = TOOLS;
         String newTool = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload();
-        ToolCallbackConverter callbackCnvt = new ToolCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper =
                 new ServiceCallWrapper(BaseServiceCallWrapper.Type.POST, address, newTool);
 
-        deServiceFacade.getServiceData(wrapper, callbackCnvt);
+        deServiceFacade.getServiceData(wrapper, new StringToSplittableDECallbackConverter(callback));
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
-import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -154,7 +153,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
         editToolView.mask();
 
-        toolServices.addTool(tool, new AppsCallback<Tool>() {
+        toolServices.addTool(tool, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 editToolView.unmask();
@@ -162,18 +161,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             }
 
             @Override
-            public void onSuccess(Tool result) {
+            public void onSuccess(Splittable toolSpl) {
                 editToolView.close();
-                displayInfoMessage(appearance.create(), appearance.toolAdded(result.getName()));
-                tool.setId(result.getId());
-                tool.setPermission(result.getPermission());
-                tool.setType(result.getType());
-                Splittable toolSpl = convertToolToSplittable(tool);
-                Splittable currentToolList = toolsView.getCurrentToolList();
-                Splittable tools = currentToolList.get("tools");
-                toolSpl.assign(tools, tools.size());
-
-                toolsView.loadTools(currentToolList);
+                refreshListing();
             }
         });
     }
@@ -196,27 +186,10 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(Tool result) {
                 displayInfoMessage(appearance.edit(), appearance.toolUpdated(result.getName()));
-                Splittable currentToolList = toolsView.getCurrentToolList();
-                Splittable updatedToolListing = updateToolInToolList(result, currentToolList);
-                toolsView.loadTools(updatedToolListing);
-
                 editToolView.close();
+                refreshListing();
             }
         });
-    }
-
-    Splittable updateToolInToolList(Tool updatedTool, Splittable currentToolList) {
-        ToolList toolList = convertSplittableToToolList(currentToolList);
-        List<Tool> tools = toolList.getToolList();
-        Tool oldTool = tools.stream()
-                            .filter(tool -> tool.getId().equals(updatedTool.getId()))
-                            .findFirst()
-                            .get();
-        tools.remove(oldTool);
-        tools.add(updatedTool);
-
-        toolList.setToolList(tools);
-        return convertToolListToSplittable(toolList);
     }
 
     void checkForViceTool(Tool tool) {
@@ -282,23 +255,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(Void s) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.toolDeleted(toolName)));
-                Splittable currentToolList = toolsView.getCurrentToolList();
-                Splittable updatedToolList = deleteToolInToolList(toolId, currentToolList);
-                toolsView.loadTools(updatedToolList);
-                toolsView.unmask();
+                refreshListing();
             }
         });
-    }
-
-    Splittable deleteToolInToolList(String deletedToolId, Splittable currentToolList) {
-        ToolList toolList = convertSplittableToToolList(currentToolList);
-        List<Tool> tools = toolList.getToolList();
-        Tool oldTool =
-                tools.stream().filter(tool -> tool.getId().equals(deletedToolId)).findFirst().get();
-        tools.remove(oldTool);
-
-        toolList.setToolList(tools);
-        return convertToolListToSplittable(toolList);
     }
 
     @Override
@@ -469,16 +428,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     Splittable convertToolToSplittable(Tool tool) {
         return tool != null ? AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)) : null;
-    }
-
-    Splittable convertToolListToSplittable(ToolList tools) {
-        return tools != null ? AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tools)) : null;
-    }
-
-    ToolList convertSplittableToToolList(Splittable toolListSpl) {
-        return toolListSpl != null ?
-               AutoBeanCodex.decode(factory, ToolList.class, toolListSpl.getPayload()).as() :
-               null;
     }
 
     ReactToolViews.ManageToolsProps getBaseManageToolsProps() {
