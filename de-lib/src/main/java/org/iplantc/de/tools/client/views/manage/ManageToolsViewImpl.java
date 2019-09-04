@@ -58,6 +58,51 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
         render();
     }
 
+    @Override
+    public void setListingConfig(Boolean isPublic,
+                                 String searchTerm,
+                                 String order,
+                                 String orderBy,
+                                 int rowsPerPage,
+                                 int page) {
+        currentProps.isPublic = isPublic;
+        currentProps.searchTerm = searchTerm;
+        currentProps.order = order;
+        currentProps.orderBy = orderBy;
+        currentProps.rowsPerPage = rowsPerPage;
+        currentProps.page = page;
+        render();
+    }
+
+    public Boolean isPublic() {
+        return currentProps.isPublic;
+    }
+
+    @Override
+    public String getSearchTerm() {
+        return currentProps.searchTerm;
+    }
+
+    @Override
+    public String getOrder() {
+        return currentProps.order;
+    }
+
+    @Override
+    public String getOrderBy() {
+        return currentProps.orderBy;
+    }
+
+    @Override
+    public int getRowsPerPage() {
+        return currentProps.rowsPerPage;
+    }
+
+    @Override
+    public int getPage() {
+        return currentProps.page;
+    }
+
     void render() {
         CyVerseReactComponents.render(ReactToolViews.ManageTools, currentProps, htmlPanel.getElement());
     }

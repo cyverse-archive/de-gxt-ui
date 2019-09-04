@@ -103,4 +103,18 @@ public interface ManageToolsView extends IsWidget {
     void unmask();
 
     void setBaseId(String id);
+
+    void setListingConfig(Boolean isPublic, String searchTerm, String order, String orderBy, int rowsPerPage, int page);
+
+    Boolean isPublic();
+
+    String getSearchTerm();
+
+    String getOrder();
+
+    String getOrderBy();
+
+    int getRowsPerPage();
+
+    int getPage();
 }

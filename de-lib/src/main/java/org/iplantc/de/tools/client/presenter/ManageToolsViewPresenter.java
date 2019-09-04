@@ -112,16 +112,17 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                           String searchTerm,
                           String order,
                           String orderBy,
-                          int limit,
-                          int offset) {
+                          int rowsPerPage,
+                          int page) {
+        toolsView.setListingConfig(isPublic, searchTerm, order, orderBy, rowsPerPage, page);
         toolsView.mask();
         toolServices.searchTools(isPublic,
                                  searchTerm,
                                  order,
                                  orderBy,
-                                 limit,
-                                 offset,
-                                 new AppsCallback<ToolList>() {
+                                 rowsPerPage,
+                                 rowsPerPage * page,
+                                 new AppsCallback<Splittable>() {
                                      @Override
                                      public void onFailure(Integer statusCode, Throwable exception) {
                                          toolsView.unmask();
@@ -129,12 +130,20 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                                      }
 
                                      @Override
-                                     public void onSuccess(ToolList tools) {
-                                         Splittable toolList = convertToolListToSplittable(tools);
+                                     public void onSuccess(Splittable toolList) {
                                          toolsView.loadTools(toolList);
                                          toolsView.unmask();
                                      }
                                  });
+    }
+
+    void refreshListing() {
+        loadTools(toolsView.isPublic(),
+                  toolsView.getSearchTerm(),
+                  toolsView.getOrder(),
+                  toolsView.getOrderBy(),
+                  toolsView.getRowsPerPage(),
+                  toolsView.getPage());
     }
 
     @Override
@@ -476,6 +485,11 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         ReactToolViews.ManageToolsProps props = new ReactToolViews.ManageToolsProps();
         props.presenter = this;
         props.loading = false;
+        props.searchTerm = "";
+        props.order = "asc";
+        props.orderBy = "name";
+        props.rowsPerPage = 100;
+        props.page = 0;
 
         return props;
     }

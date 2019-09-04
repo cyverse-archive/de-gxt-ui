@@ -26,15 +26,22 @@ class ManageToolsTest extends Component {
                 logger("Share with Collaborators selected", tool),
             onRequestToMakeToolPublicSelected: (tool) =>
                 logger("Make Tool Public selected", tool),
-            loadTools: (isPublic, searchTerm, order, orderBy, limit, offset) =>
+            loadTools: (
+                isPublic,
+                searchTerm,
+                order,
+                orderBy,
+                rowsPerPage,
+                page
+            ) =>
                 logger(
                     "Load tools selected",
                     isPublic,
                     searchTerm,
                     order,
                     orderBy,
-                    limit,
-                    offset
+                    rowsPerPage,
+                    page
                 ),
             searchTools: (searchTerm) => logger("Search for tools", searchTerm),
         };
@@ -140,12 +147,27 @@ class ManageToolsTest extends Component {
             ],
         };
 
+        const searchTerm = "";
+
+        const order = "asc";
+
+        const orderBy = "name";
+
+        const rowsPerPage = 100;
+
+        const page = 0;
+
         return (
             <ManageTools
                 loading={false}
                 parentId={parentId}
                 toolList={toolList}
                 presenter={presenter}
+                searchTerm={searchTerm}
+                order={order}
+                orderBy={orderBy}
+                rowsPerPage={rowsPerPage}
+                page={page}
             />
         );
     }

@@ -7,7 +7,6 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
-import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.models.tool.ToolType;
 import org.iplantc.de.client.models.tool.ToolTypeList;
 import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
@@ -17,6 +16,7 @@ import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.StringToSplittableDECallbackConverter;
 import org.iplantc.de.client.services.converters.ToolCallbackConverter;
 import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
 import org.iplantc.de.shared.AppsCallback;
@@ -93,7 +93,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<ToolList> callback) {
+    public void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<Splittable> callback) {
         String address = TOOLS + "?";
 
         String search = Strings.isNullOrEmpty(searchTerm) ? "*" : searchTerm;
@@ -108,13 +108,7 @@ public class ToolServicesImpl implements ToolServices {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, ToolList>(callback) {
-            @Override
-            protected ToolList convertFrom(String object) {
-                AutoBean<ToolList> autoBean = AutoBeanCodex.decode(factory, ToolList.class, object);
-                return autoBean.as();
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, new StringToSplittableDECallbackConverter(callback));
     }
 
     @Override

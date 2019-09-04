@@ -52,7 +52,18 @@ const TOOL_FILTER_VALUES = {
 const PAGING_OPTIONS = [25, 50, 100, 200, 500, 1000];
 
 function ManageTools(props) {
-    const { parentId, toolList, loading, presenter, intl } = props;
+    const {
+        parentId,
+        toolList,
+        loading,
+        presenter,
+        searchTerm,
+        order,
+        orderBy,
+        rowsPerPage,
+        page,
+        intl,
+    } = props;
 
     const [state, setHookState] = useState({
         selectedTool: null,
@@ -60,11 +71,6 @@ function ManageTools(props) {
         toolMenuEl: null,
         shareMenuEl: null,
         numToolsSelected: 0,
-        order: "asc",
-        orderBy: "name",
-        page: 0,
-        rowsPerPage: PAGING_OPTIONS[0],
-        searchTerm: "",
     });
 
     const setState = (stateObj) => {
@@ -72,36 +78,41 @@ function ManageTools(props) {
     };
 
     useEffect(() => {
-        refreshToolList();
-    }, [
-        state.toolFilterValue,
-        state.order,
-        state.orderBy,
-        state.page,
-        state.rowsPerPage,
-        state.searchTerm,
-    ]);
-
-    useEffect(() => {
         presenter.onToolSelectionChanged(state.selectedTool);
     }, [state.selectedTool]);
 
-    const refreshToolList = () => {
+    const updateListingConfig = (listingObj) => {
+        const currentListingConfig = {
+            toolFilterValue: state.toolFilterValue,
+            searchTerm: searchTerm,
+            order: order,
+            orderBy: orderBy,
+            rowsPerPage: rowsPerPage,
+            page: page,
+        };
+        let updatedListingConfig = { ...currentListingConfig, ...listingObj };
+        setState({
+            toolFilterValue: updatedListingConfig.toolFilterValue,
+        });
         let isPublic;
-        if (state.toolFilterValue === TOOL_FILTER_VALUES.MY_TOOLS) {
+        if (
+            updatedListingConfig.toolFilterValue === TOOL_FILTER_VALUES.MY_TOOLS
+        ) {
             isPublic = false;
         }
-        if (state.toolFilterValue === TOOL_FILTER_VALUES.PUBLIC) {
+        if (
+            updatedListingConfig.toolFilterValue === TOOL_FILTER_VALUES.PUBLIC
+        ) {
             isPublic = true;
         }
 
         presenter.loadTools(
             isPublic,
-            state.searchTerm,
-            state.order,
-            state.orderBy,
-            state.rowsPerPage,
-            state.rowsPerPage * state.page
+            updatedListingConfig.searchTerm,
+            updatedListingConfig.order,
+            updatedListingConfig.orderBy,
+            updatedListingConfig.rowsPerPage,
+            updatedListingConfig.page
         );
     };
 
@@ -113,8 +124,9 @@ function ManageTools(props) {
                 parentId={baseId}
                 presenter={presenter}
                 intl={intl}
+                searchTerm={searchTerm}
                 setState={setState}
-                refreshToolList={refreshToolList}
+                updateListingConfig={updateListingConfig}
                 {...state}
             />
             <StyledToolListing
@@ -122,7 +134,13 @@ function ManageTools(props) {
                 parentId={baseId}
                 toolList={toolList}
                 presenter={presenter}
+                searchTerm={searchTerm}
+                order={order}
+                orderBy={orderBy}
+                rowsPerPage={rowsPerPage}
+                page={page}
                 setState={setState}
+                updateListingConfig={updateListingConfig}
                 {...state}
             />
         </Fragment>
@@ -141,7 +159,7 @@ function ToolsToolbar(props) {
         shareMenuEl,
         searchTerm,
         setState,
-        refreshToolList,
+        updateListingConfig,
         intl,
         classes,
     } = props;
@@ -268,7 +286,7 @@ function ToolsToolbar(props) {
                 </MenuItem>
             </Menu>
             <Button
-                onClick={refreshToolList}
+                onClick={() => updateListingConfig({})}
                 id={build(parentId, ids.MANAGE_TOOLS.REFRESH)}
                 variant="contained"
             >
@@ -280,8 +298,9 @@ function ToolsToolbar(props) {
                 className={classes.toolTypeSelector}
                 onChange={(event) => {
                     let updatedFilter = event.target.value;
-                    setState({
+                    updateListingConfig({
                         toolFilterValue: updatedFilter,
+                        page: 0,
                         searchTerm: "",
                     });
                 }}
@@ -308,7 +327,7 @@ function ToolsToolbar(props) {
             </Select>
             <SearchField
                 handleSearch={(searchTerm) =>
-                    setState({
+                    updateListingConfig({
                         toolFilterValue: "",
                         searchTerm: searchTerm,
                         page: 0,
@@ -350,12 +369,13 @@ function ToolListing(props) {
         page,
         rowsPerPage,
         setState,
+        updateListingConfig,
         classes,
     } = props;
 
     const onRequestSort = (event, property) => {
         const isDesc = orderBy === property && order === "desc";
-        setState({
+        updateListingConfig({
             order: isDesc ? "asc" : "desc",
             orderBy: property,
         });
@@ -464,10 +484,13 @@ function ToolListing(props) {
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={(event, page) => {
-                        setState({ page: page });
+                        updateListingConfig({ page: page });
                     }}
                     onChangeRowsPerPage={(event) => {
-                        setState({ rowsPerPage: event.target.value });
+                        updateListingConfig({
+                            rowsPerPage: event.target.value,
+                            page: 0,
+                        });
                     }}
                     ActionsComponent={TablePaginationActions}
                     rowsPerPageOptions={PAGING_OPTIONS}
@@ -493,6 +516,11 @@ ManageTools.propTypes = {
     loading: PropTypes.bool.isRequired,
     parentId: PropTypes.string.isRequired,
     toolList: PropTypes.object,
+    searchTerm: PropTypes.string.isRequired,
+    order: PropTypes.string.isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
 };
 
 export default withI18N(injectIntl(ManageTools), messages);

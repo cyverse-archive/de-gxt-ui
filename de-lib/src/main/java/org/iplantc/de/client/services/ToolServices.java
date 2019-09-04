@@ -8,6 +8,8 @@ import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
 import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.shared.AppsCallback;
 
+import com.google.web.bindery.autobean.shared.Splittable;
+
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public interface ToolServices {
 
     void searchTools(Boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback);
 
-    void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<ToolList> callback);
+    void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<Splittable> callback);
 
     void addTool(Tool tool, AppsCallback<Tool> callback);
 

@@ -54,5 +54,11 @@ public class ReactToolViews {
         public String parentId;
         public Splittable toolList;
         public ManageToolsView.Presenter presenter;
+        public Boolean isPublic;
+        public String order;
+        public String orderBy;
+        public int page;
+        public int rowsPerPage;
+        public String searchTerm;
     }
 }
