@@ -5,6 +5,7 @@ import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.UpdateAnalysesWindowTitleEvent;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
+import org.iplantc.de.analysis.client.views.ViceLogsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
@@ -15,6 +16,7 @@ import org.iplantc.de.client.models.analysis.AnalysesList;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
+import org.iplantc.de.client.models.analysis.VICELogs;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequest;
@@ -39,8 +41,10 @@ import org.iplantc.de.shared.DEProperties;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -49,12 +53,11 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import org.apache.http.HttpStatus;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A presenter for analyses view
@@ -62,6 +65,7 @@ import java.util.List;
  * @author sriram, jstroot
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter {
+
 
     private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
         private final String analysisName;
@@ -158,13 +162,21 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     AnalysesView view;
     @Inject
     FilterAutoBeanFactory filterAutoBeanFactory;
+    @Inject
+    AnalysesAutoBeanFactory factory;
+    @Inject
+    ViceLogsView viceLogsView;
 
-    private final HasHandlers eventBus;
     AnalysisPermissionFilter currentPermFilter;
     AppTypeFilter currentTypeFilter;
 
-    @Inject
-    AnalysesAutoBeanFactory factory;
+    private String viceLogsAnalysisId;
+    private String viceLogsSinceTime = "0";
+    private String viceLogsAnalysisName;
+    private Timer viceLogsFollowTimer;
+    private final HasHandlers eventBus;
+    private String baseDebugId;
+
 
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
@@ -323,6 +335,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     public void go(final HasOneWidget container,
                    String baseDebugId,
                    List<Analysis> selectedAnalyses) {
+        this.baseDebugId = baseDebugId;
         container.setWidget(view);
         if (selectedAnalyses != null && selectedAnalyses.size() > 0) {
             view.load(this, baseDebugId, selectedAnalyses.get(0));
@@ -448,6 +461,83 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    public void getVICELogs(String id,
+                            String analysisName) {
+        viceLogsAnalysisId = id;
+        viceLogsAnalysisName = analysisName;
+        getLogs(id, analysisName);
+
+    }
+
+    protected void getLogs(String id,
+                           String analysisName) {
+        analysisService.getVICELogs(id, viceLogsSinceTime, new AnalysisCallback<String>() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage()));
+                viceLogsView.mask(false);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                VICELogs viceLogs = AutoBeanCodex.decode(factory, VICELogs.class, result).as();
+                String logLines = viceLogs.getLines().stream().collect(Collectors.joining("\n"));
+                if (viceLogsSinceTime.equals("0")) {
+                    viceLogsSinceTime = viceLogs.getSinceTime();
+                    viceLogsView.load(AnalysesPresenterImpl.this, analysisName, logLines,
+                                      baseDebugId);
+                } else {
+                    viceLogsSinceTime = viceLogs.getSinceTime();
+                    viceLogsView.update(logLines);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void closeViceLogsViewer() {
+        viceLogsSinceTime = "0";
+        cancelViceLogsFollowTimer();
+        viceLogsView.closeViceLogsViewer();
+    }
+
+    @Override
+    public void onFollowViceLogs(boolean follow) {
+        viceLogsView.setFollowLogs(follow);
+        if (follow) {
+            viceLogsFollowTimer = new Timer() {
+                @Override
+                public void run() {
+                    viceLogsView.mask(true);
+                    getLogs(viceLogsAnalysisId, viceLogsAnalysisName);
+                }
+            };
+            viceLogsFollowTimer.scheduleRepeating(deProperties.getViceLogsPollInterval());
+        } else {
+            cancelViceLogsFollowTimer();
+        }
+    }
+
+    protected void cancelViceLogsFollowTimer() {
+        if (viceLogsFollowTimer != null) {
+            viceLogsFollowTimer.cancel();
+        }
+        viceLogsView.setFollowLogs(false);
+    }
+
+    @Override
+    public void refreshViceLogs() {
+        viceLogsSinceTime = "0";
+        cancelViceLogsFollowTimer();
+        viceLogsView.mask(true);
+        getLogs(viceLogsAnalysisId, viceLogsAnalysisName);
+    }
+
+
+
+    @Override
     @SuppressWarnings("unusable-by-js")
     public void onUserSupportRequested(Splittable analysis,
                                        String comment,
@@ -505,7 +595,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                     @Override
                     public void onFailure(Throwable caught) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.supportRequestFailed()));
-                        errorCallback.onError(HttpStatus.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                        errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                     }
 
                     @Override

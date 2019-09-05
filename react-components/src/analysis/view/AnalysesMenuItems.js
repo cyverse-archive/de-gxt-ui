@@ -7,7 +7,7 @@ import React, { Component } from "react";
 
 import exStyles from "../style";
 import ids from "../ids";
-import { build, getMessage, palette } from "@cyverse-de/ui-lib";
+import { build, getMessage } from "@cyverse-de/ui-lib";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
@@ -21,6 +21,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import SaveIcon from "@material-ui/icons/Save";
 import ShareIcon from "@material-ui/icons/Share";
+import LogsIcon from "@material-ui/icons/Notes";
 
 class AnalysesMenuItems extends Component {
     render() {
@@ -30,6 +31,7 @@ class AnalysesMenuItems extends Component {
             handleClose,
             handleUpdateComments,
             handleGoToOutputFolder,
+            handleViewLogs,
             handleRelaunch,
             handleCancel,
             handleShare,
@@ -47,6 +49,7 @@ class AnalysesMenuItems extends Component {
         const disableSingleSelectionMenuItem = selectionCount !== 1;
         const disableShare = !selectionCount || !owner || !sharable;
         const noSelection = !selectionCount;
+        const disableViewLogs = disableSingleSelectionMenuItem || disableCancel;
 
         return (
             <React.Fragment>
@@ -60,8 +63,21 @@ class AnalysesMenuItems extends Component {
                     className={classes.menuItem}
                     data-disabled={disableSingleSelectionMenuItem}
                 >
-                    <FolderIcon style={{ color: palette.darkBlue }} />
+                    <FolderIcon className={classes.toolbarItemColor} />
                     {getMessage("goOutputFolder")}
+                </MenuItem>
+                <MenuItem
+                    id={build(baseDebugId, ids.MENUITEM_VIEW_LOGS)}
+                    disabled={disableViewLogs}
+                    onClick={() => {
+                        handleClose();
+                        handleViewLogs();
+                    }}
+                    className={classes.menuItem}
+                    data-disabled={disableViewLogs}
+                >
+                    <LogsIcon className={classes.toolbarItemColor} />
+                    {getMessage("viewLogs")}
                 </MenuItem>
                 <MenuItem
                     id={build(baseDebugId, ids.MENUITEM_VIEW_PARAMS)}

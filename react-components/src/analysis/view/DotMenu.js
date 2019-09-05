@@ -12,8 +12,6 @@ import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-const ITEM_HEIGHT = 48;
-
 class DotMenu extends Component {
     constructor(props) {
         super(props);
@@ -50,12 +48,6 @@ class DotMenu extends Component {
                     anchorEl={anchorEl}
                     open={open}
                     onClose={this.handleDotMenuClose}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: 200,
-                        },
-                    }}
                 >
                     <AnalysesMenuItems
                         handleClose={this.handleDotMenuClose}

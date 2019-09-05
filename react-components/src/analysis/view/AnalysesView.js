@@ -22,14 +22,15 @@ import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 
 import {
     build,
-    DEHyperlink,
+    DEAlertDialog,
     DEConfirmationDialog,
+    DEHyperlink,
     DEPromptDialog,
     EnhancedTableHead,
     formatDate,
     formatMessage,
-    LoadingMask,
     getMessage,
+    LoadingMask,
     TablePaginationActions,
     withI18N,
 } from "@cyverse-de/ui-lib";
@@ -278,12 +279,14 @@ class AnalysesView extends Component {
             viewParamsDialogOpen: false,
             shareWithSupportDialogOpen: false,
             confirmDeleteDialogOpen: false,
+            logsMessageDialogOpen: false,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
         this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
         this.isSelected = this.isSelected.bind(this);
         this.handleGoToOutputFolder = this.handleGoToOutputFolder.bind(this);
+        this.handleViewLogs = this.handleViewLogs.bind(this);
         this.handleViewParams = this.handleViewParams.bind(this);
         this.handleRelaunch = this.handleRelaunch.bind(this);
         this.handleRelaunchFromMenu = this.handleRelaunchFromMenu.bind(this);
@@ -590,6 +593,19 @@ class AnalysesView extends Component {
             this.props.presenter.onAnalysisNameSelected(
                 this.findAnalysis(this.state.selected[0]).resultfolderid
             );
+        }
+    }
+
+    handleViewLogs(analysis) {
+        let selected = analysis
+            ? analysis
+            : this.findAnalysis(this.state.selected[0]);
+        const interactiveUrls = selected.interactive_urls;
+        const isInteractive = interactiveUrls && interactiveUrls.length > 0;
+        if (isInteractive) {
+            this.props.presenter.getVICELogs(selected.id, selected.name);
+        } else {
+            this.setState({ logsMessageDialogOpen: true });
         }
     }
 
@@ -958,6 +974,7 @@ class AnalysesView extends Component {
             info,
             infoDialogOpen,
             loading,
+            logsMessageDialogOpen,
         } = this.state;
 
         const selectedAnalysis = this.findAnalysis(selected[0]);
@@ -982,6 +999,7 @@ class AnalysesView extends Component {
                             )}
                             baseToolbarId={toolbarId}
                             handleGoToOutputFolder={this.handleGoToOutputFolder}
+                            handleViewLogs={this.handleViewLogs}
                             handleViewParams={this.handleViewParams}
                             handleRelaunch={this.handleRelaunchFromMenu}
                             handleViewInfo={this.handleViewInfo}
@@ -1153,6 +1171,9 @@ class AnalysesView extends Component {
                                                         handleGoToOutputFolder={
                                                             this
                                                                 .handleGoToOutputFolder
+                                                        }
+                                                        handleViewLogs={
+                                                            this.handleViewLogs
                                                         }
                                                         handleViewParams={
                                                             this
@@ -1329,6 +1350,17 @@ class AnalysesView extends Component {
                     }}
                     okLabel={formatMessage(intl, "okBtnText")}
                     cancelLabel={formatMessage(intl, "cancelBtnText")}
+                />
+                <DEAlertDialog
+                    alertMessage={formatMessage(
+                        intl,
+                        "jobLogsUnavailableMessage"
+                    )}
+                    dialogOpen={logsMessageDialogOpen}
+                    handleClose={() =>
+                        this.setState({ logsMessageDialogOpen: false })
+                    }
+                    heading={formatMessage(intl, "jobLogsUnavailableHeading")}
                 />
             </React.Fragment>
         );

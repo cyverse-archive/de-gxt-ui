@@ -148,6 +148,15 @@ public interface AnalysesView extends IsWidget {
         void handleViewAndTypeFilterChange(String permFilter,
                                            String appTypeFilter);
 
+        void getVICELogs(String id,
+                         String analysisName);
+
+        void closeViceLogsViewer();
+
+        void onFollowViceLogs(boolean follow);
+
+        void refreshViceLogs();
+
         void handleBatchIconClick(String parentId, String analysisName);
 
         void handleSearch(String searchTerm);
