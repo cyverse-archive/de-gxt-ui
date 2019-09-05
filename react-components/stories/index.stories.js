@@ -70,7 +70,10 @@ storiesOf("analysis/view/dialogs", module).add(
     "with test analysis parameters",
     () => <AnalysisParametersDialogTest />
 );
-
+storiesOf("analysis/view/dialogs", module).add(
+    "with test analysis support",
+    () => <ShareWithSupportDialogTest />
+);
 storiesOf("analysis/view/dialogs", module).add("with test VICE logs", () => (
     <ViceLogsViewerTest />
 ));
