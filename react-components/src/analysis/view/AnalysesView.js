@@ -44,6 +44,8 @@ import TableRow from "@material-ui/core/TableRow";
 import ToolTip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import HourGlass from "@material-ui/icons/HourglassEmptyRounded";
+import IconButton from "@material-ui/core/IconButton";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
@@ -94,13 +96,15 @@ function AnalysisName(props) {
     ) {
         return (
             <Fragment>
-                <LaunchIcon
-                    onClick={() =>
-                        handleInteractiveUrlClick(interactiveUrls[0])
-                    }
-                    id={build(baseId, ids.ICONS.INTERACTIVE)}
-                    className={interactiveStyle}
-                />
+                <ToolTip title={getMessage("goToVice")}>
+                    <LaunchIcon
+                        onClick={() =>
+                            handleInteractiveUrlClick(interactiveUrls[0])
+                        }
+                        id={build(baseId, ids.ICONS.INTERACTIVE)}
+                        className={interactiveStyle}
+                    />
+                </ToolTip>
                 <span
                     title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                     className={className}
@@ -164,16 +168,34 @@ function AppName(props) {
 }
 
 function Status(props) {
-    const { analysis, onClick, username } = props;
+    const { analysis, onClick, username, handleTimeLimitExtn, classes } = props;
+    const interactiveStyle = props.classes.interactiveButton;
+    const allowTimeExtn =
+        analysis.interactive_urls &&
+        analysis.interactive_urls.length > 0 &&
+        analysis.status === analysisStatus.RUNNING;
     if (
         username === analysis.username &&
         analysis.status !== analysisStatus.CANCELED
     ) {
         return (
-            <DEHyperlink
-                onClick={(analysis) => onClick(analysis)}
-                text={analysis.status}
-            />
+            <React.Fragment>
+                <DEHyperlink
+                    onClick={(analysis) => onClick(analysis)}
+                    text={analysis.status}
+                />
+                {allowTimeExtn && (
+                    <ToolTip title={getMessage("extendTime")}>
+                        <IconButton
+                            className={interactiveStyle}
+                            onClick={() => handleTimeLimitExtn(analysis)}
+                            size="small"
+                        >
+                            <HourGlass />
+                        </IconButton>
+                    </ToolTip>
+                )}
+            </React.Fragment>
         );
     } else {
         return (
@@ -324,6 +346,7 @@ class AnalysesView extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
         this.handleViewAllIconClick = this.handleViewAllIconClick.bind(this);
+        this.handleTimeLimitExtn = this.handleTimeLimitExtn.bind(this);
     }
 
     componentDidMount() {
@@ -607,6 +630,22 @@ class AnalysesView extends Component {
         } else {
             this.setState({ logsMessageDialogOpen: true });
         }
+    }
+
+    handleTimeLimitExtn(analysis) {
+        this.props.presenter.getViceTimeLimit(
+            analysis.id,
+            (timelimit) => {
+                console.log(
+                    "timelimit for current analysis" + formatDate(timelimit)
+                );
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleInteractiveUrlClick(url) {
@@ -1159,6 +1198,11 @@ class AnalysesView extends Component {
                                                             )
                                                         }
                                                         username={username}
+                                                        classes={classes}
+                                                        handleTimeLimitExtn={
+                                                            this
+                                                                .handleTimeLimitExtn
+                                                        }
                                                     />
                                                 </TableCell>
                                                 <TableCell padding="none">
