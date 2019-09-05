@@ -49,7 +49,7 @@ const TOOL_FILTER_VALUES = {
     PUBLIC: "PUBLIC",
 };
 
-const PAGING_OPTIONS = [25, 50, 100, 200, 500, 1000];
+const PAGING_OPTIONS = [25, 50, 100, 200];
 
 function ManageTools(props) {
     const {

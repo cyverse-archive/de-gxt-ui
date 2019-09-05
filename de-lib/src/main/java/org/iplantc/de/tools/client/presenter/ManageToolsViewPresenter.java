@@ -96,7 +96,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                     }
                 });
                 editToolView.setToolTypes(types.toArray(new String[0]));
-                loadTools(null, "", "asc", "name", 100, 0);
+                loadTools(null, "", "asc", "name", 50, 0);
             }
         });
     }
@@ -435,7 +435,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         props.searchTerm = "";
         props.order = "asc";
         props.orderBy = "name";
-        props.rowsPerPage = 100;
+        props.rowsPerPage = 50;
         props.page = 0;
 
         return props;
