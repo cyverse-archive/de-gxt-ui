@@ -16,10 +16,10 @@ const styles = (theme) => ({
     toolbar: {
         backgroundColor: palette.lightGray,
         "& div": {
-            marginRight: "20px",
+            marginRight: theme.spacing(2),
         },
         "& button": {
-            marginRight: "20px",
+            marginRight: theme.spacing(2),
         },
         "& svg": {
             color: palette.darkBlue,
@@ -27,7 +27,7 @@ const styles = (theme) => ({
     },
 
     toolTypeSelector: {
-        width: "150px",
+        width: theme.spacing(20),
     },
 
     container: {
