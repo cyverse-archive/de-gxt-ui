@@ -7,7 +7,7 @@ import React, { Component } from "react";
 
 import exStyles from "../style";
 import ids from "../ids";
-import { build, getMessage, palette } from "@cyverse-de/ui-lib";
+import { build, getMessage } from "@cyverse-de/ui-lib";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
@@ -49,6 +49,7 @@ class AnalysesMenuItems extends Component {
         const disableSingleSelectionMenuItem = selectionCount !== 1;
         const disableShare = !selectionCount || !owner || !sharable;
         const noSelection = !selectionCount;
+        const disableViewLogs = disableSingleSelectionMenuItem || disableCancel;
 
         return (
             <React.Fragment>
@@ -67,13 +68,13 @@ class AnalysesMenuItems extends Component {
                 </MenuItem>
                 <MenuItem
                     id={build(baseDebugId, ids.MENUITEM_VIEW_LOGS)}
-                    disabled={disableSingleSelectionMenuItem || disableCancel}
+                    disabled={disableViewLogs}
                     onClick={() => {
                         handleClose();
                         handleViewLogs();
                     }}
                     className={classes.menuItem}
-                    data-disabled={disableSingleSelectionMenuItem}
+                    data-disabled={disableViewLogs}
                 >
                     <LogsIcon className={classes.toolbarItemColor} />
                     {getMessage("viewLogs")}
