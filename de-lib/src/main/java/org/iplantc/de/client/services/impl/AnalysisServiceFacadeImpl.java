@@ -317,5 +317,20 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
 
     }
 
+    @Override
+    public void getViceTimeLimit(String id, DECallback<String> callback) {
+        String address = ANALYSES + "/" + id + "/time-limit";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    @Override
+    public void setViceTimeLimit(String id, DECallback<String> callback) {
+        String address = ANALYSES + "/" + id + "/time-limit";
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(BaseServiceCallWrapper.Type.POST, address, "");
+        deServiceFacade.getServiceData(wrapper, callback);
+    }
+
 }
 

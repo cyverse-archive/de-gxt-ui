@@ -52,6 +52,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,6 +137,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             }
         }
 
+    }
+
+    @Override
+    public void getViceTimeLimit(String id,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        analysisService.getViceTimeLimit(id, new ViceTimeLimitCallback(callback, errorCallback));
     }
 
     @Inject
@@ -549,6 +557,39 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                          AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)),
                          callback,
                          errorCallback);
+    }
+
+    @Override
+    public void setViceTimeLimit(String id,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        analysisService.setViceTimeLimit(id, new ViceTimeLimitCallback(callback, errorCallback));
+
+    }
+
+    private final class ViceTimeLimitCallback extends AnalysisCallback<String> {
+
+        final ReactSuccessCallback callback;
+        final ReactErrorCallback errorCallback;
+
+        public ViceTimeLimitCallback(ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+            this.callback = callback;
+            this.errorCallback = errorCallback;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable exception) {
+            if (errorCallback != null) {
+                errorCallback.onError(statusCode, exception.getMessage());
+            }
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            if (callback != null) {
+                callback.onSuccess(StringQuoter.split(result));
+            }
+        }
     }
 
     protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {

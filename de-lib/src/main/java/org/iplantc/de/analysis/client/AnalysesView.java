@@ -163,6 +163,14 @@ public interface AnalysesView extends IsWidget {
 
         void handleViewAllIconClick();
 
+        void getViceTimeLimit(String id,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
+
+        void setViceTimeLimit(String id,
+                              ReactSuccessCallback callback,
+                              ReactErrorCallback errorCallback);
+
     }
 
     @JsIgnore
