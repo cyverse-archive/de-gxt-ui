@@ -37,7 +37,7 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     @Override
     public void loadTools(Splittable tools) {
         currentProps.toolList = tools;
-        render();
+        unmask();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
         currentProps.orderBy = orderBy;
         currentProps.rowsPerPage = rowsPerPage;
         currentProps.page = page;
-        render();
+        mask();
     }
 
     public Boolean isPublic() {

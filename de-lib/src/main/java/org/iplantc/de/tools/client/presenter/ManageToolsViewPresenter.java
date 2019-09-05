@@ -114,7 +114,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                           int rowsPerPage,
                           int page) {
         toolsView.setListingConfig(isPublic, searchTerm, order, orderBy, rowsPerPage, page);
-        toolsView.mask();
         toolServices.searchTools(isPublic,
                                  searchTerm,
                                  order,
@@ -131,7 +130,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                                      @Override
                                      public void onSuccess(Splittable toolList) {
                                          toolsView.loadTools(toolList);
-                                         toolsView.unmask();
                                      }
                                  });
     }
