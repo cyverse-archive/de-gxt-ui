@@ -178,8 +178,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     private String baseDebugId;
 
 
-    final int VICE_LOGS_FOLLOW_INTERVAL = 10000;
-
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -479,20 +477,20 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
             public void onFailure(Integer statusCode,
                                   Throwable exception) {
                 announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage()));
+                viceLogsView.mask(false);
             }
 
             @Override
             public void onSuccess(String result) {
                 VICELogs viceLogs = AutoBeanCodex.decode(factory, VICELogs.class, result).as();
+                String logLines = viceLogs.getLines().stream().collect(Collectors.joining("\n"));
                 if (viceLogsSinceTime.equals("0")) {
                     viceLogsSinceTime = viceLogs.getSinceTime();
-                    viceLogsView.load(AnalysesPresenterImpl.this,
-                                      analysisName,
-                                      viceLogs.getLines().stream().collect(Collectors.joining("\n")),
+                    viceLogsView.load(AnalysesPresenterImpl.this, analysisName, logLines,
                                       baseDebugId);
                 } else {
                     viceLogsSinceTime = viceLogs.getSinceTime();
-                    viceLogsView.update(viceLogs.getLines().stream().collect(Collectors.joining("\n")));
+                    viceLogsView.update(logLines);
                 }
             }
         });
@@ -507,6 +505,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
 
     @Override
     public void onFollowViceLogs(boolean follow) {
+        viceLogsView.setFollowLogs(follow);
         if (follow) {
             viceLogsFollowTimer = new Timer() {
                 @Override
@@ -515,7 +514,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                     getLogs(viceLogsAnalysisId, viceLogsAnalysisName);
                 }
             };
-            viceLogsFollowTimer.scheduleRepeating(VICE_LOGS_FOLLOW_INTERVAL);
+            viceLogsFollowTimer.scheduleRepeating(deProperties.getViceLogsPollInterval());
         } else {
             cancelViceLogsFollowTimer();
         }
@@ -525,6 +524,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         if (viceLogsFollowTimer != null) {
             viceLogsFollowTimer.cancel();
         }
+        viceLogsView.setFollowLogs(false);
     }
 
     @Override

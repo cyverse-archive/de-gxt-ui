@@ -45,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 function ViceLogsViewer(props) {
     const classes = useStyles();
-    const [autoRefresh, setAutoRefresh] = React.useState(false);
     const {
         logs,
+        followLogs,
         baseDebugId,
         loading,
         dialogOpen,
@@ -58,7 +58,6 @@ function ViceLogsViewer(props) {
     const baseId = baseDebugId + ids.VICE_LOGS_VIEWER.VIEWER;
 
     const handleAutoRefreshChange = (event) => {
-        setAutoRefresh(event.target.checked);
         presenter.onFollowViceLogs(event.target.checked);
     };
 
@@ -67,7 +66,6 @@ function ViceLogsViewer(props) {
     };
 
     const onRefreshClicked = () => {
-        setAutoRefresh(false);
         presenter.refreshViceLogs();
     };
     return (
@@ -90,13 +88,13 @@ function ViceLogsViewer(props) {
                             labelPlacement="start"
                             control={
                                 <Switch
-                                    checked={autoRefresh}
+                                    checked={followLogs}
                                     onChange={handleAutoRefreshChange}
                                     value="autoRefresh"
                                     color="primary"
                                     id={build(
                                         baseId,
-                                        ids.VICE_LOGS_VIEWER.FOLLLOW_LOGS
+                                        ids.VICE_LOGS_VIEWER.FOLLOW_LOGS
                                     )}
                                 />
                             }

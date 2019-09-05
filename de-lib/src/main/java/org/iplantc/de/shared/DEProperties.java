@@ -50,6 +50,9 @@ public class DEProperties {
     private static final String NOTIFICATION_POLL_INTERVAL =
             "org.iplantc.discoveryenvironment.notifications.poll-interval";
 
+    private static final String VICE_POLL_INTERVAL =
+            "org.iplantc.discoveryenvironment.vice-logs.poll-interval";
+
     /**
      * Properties key of the context click enabled option
      */
@@ -193,6 +196,13 @@ public class DEProperties {
      * The polling interval
      */
     private int notificationPollInterval;
+
+    /**
+     *  The VICE logs polling interval;
+     *
+     */
+
+    private int viceLogsPollInterval;
 
     /**
      * Context click option
@@ -347,6 +357,7 @@ public class DEProperties {
         keys.add(DATA_MGMT_ADMIN_BASE_URL);
         keys.add(FILE_IO_BASE_URL);
         keys.add(NOTIFICATION_POLL_INTERVAL);
+        keys.add(VICE_POLL_INTERVAL);
         keys.add(CONTEXT_CLICK_ENABLED);
         keys.add(PRIVATE_WORKSPACE);
         keys.add(PRIVATE_WORKSPACE_ITEMS);
@@ -399,6 +410,7 @@ public class DEProperties {
         defaultTrashCategoryId = properties.get(DEFAULT_TRASH_CATEGORY_ID);
         contextClickEnabled = getBoolean(properties, CONTEXT_CLICK_ENABLED, false);
         notificationPollInterval = getInt(properties, NOTIFICATION_POLL_INTERVAL, 60);
+        viceLogsPollInterval = getInt(properties, VICE_POLL_INTERVAL, 10000);
         htPathListFileIdentifier = properties.get(HT_PATH_LIST_FILE_IDENTIFIER);
         multiInputPathListFileIdentifier = properties.get(MULTI_INPUT_LIST_FILE_IDENTIFIER);
         communityDataPath = properties.get(COMMUNITY_DATA_PATH);
@@ -504,6 +516,10 @@ public class DEProperties {
      */
     public int getNotificationPollInterval() {
         return notificationPollInterval;
+    }
+
+    public int getViceLogsPollInterval() {
+        return viceLogsPollInterval;
     }
 
     /**

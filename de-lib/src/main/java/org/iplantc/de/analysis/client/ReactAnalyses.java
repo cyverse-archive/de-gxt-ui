@@ -47,6 +47,7 @@ public class ReactAnalyses {
         public String analysisName;
         public AnalysesView.Presenter presenter;
         public String baseDebugId;
+        public boolean followLogs;
     }
 }
 
