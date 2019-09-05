@@ -146,15 +146,13 @@ function ToolsToolbar(props) {
         classes,
     } = props;
 
-    const hasWritePermission = selectedTool
-        ? selectedTool.permission === PERMISSION.WRITE
-        : false;
-    const isOwner = selectedTool
-        ? selectedTool.permission === PERMISSION.OWN
-        : false;
-    const isEditable = selectedTool
-        ? !selectedTool.is_public && (isOwner || hasWritePermission)
-        : false;
+    const hasWritePermission =
+        selectedTool && selectedTool.permission === PERMISSION.WRITE;
+    const isOwner = selectedTool && selectedTool.permission === PERMISSION.OWN;
+    const isEditable =
+        selectedTool &&
+        !selectedTool.is_public &&
+        (isOwner || hasWritePermission);
 
     const toolFilterId = build(parentId, ids.MANAGE_TOOLS.TOOL_FILTER);
 
@@ -220,7 +218,7 @@ function ToolsToolbar(props) {
                     {getMessage("delete")}
                 </MenuItem>
                 <MenuItem
-                    disabled={selectedTool === null}
+                    disabled={!selectedTool}
                     onClick={() => {
                         setState({ toolMenuEl: null });
                         presenter.useToolInNewApp(selectedTool);
