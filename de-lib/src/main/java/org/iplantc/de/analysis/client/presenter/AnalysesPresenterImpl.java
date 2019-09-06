@@ -138,14 +138,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         }
 
     }
-
-    @Override
-    public void getViceTimeLimit(String id,
-                                 ReactSuccessCallback callback,
-                                 ReactErrorCallback errorCallback) {
-        analysisService.getViceTimeLimit(id, new ViceTimeLimitCallback(callback, errorCallback));
-    }
-
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
@@ -560,36 +552,50 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void setViceTimeLimit(String id,
+    public void getViceTimeLimit(String id,
                                  ReactSuccessCallback callback,
                                  ReactErrorCallback errorCallback) {
-        analysisService.setViceTimeLimit(id, new ViceTimeLimitCallback(callback, errorCallback));
+        analysisService.getViceTimeLimit(id, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage()));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+            }
 
+            @Override
+            public void onSuccess(String result) {
+                if (callback != null) {
+                    callback.onSuccess(StringQuoter.split(result));
+                }
+            }
+        });
     }
 
-    private final class ViceTimeLimitCallback extends AnalysisCallback<String> {
-
-        final ReactSuccessCallback callback;
-        final ReactErrorCallback errorCallback;
-
-        public ViceTimeLimitCallback(ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
-            this.callback = callback;
-            this.errorCallback = errorCallback;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable exception) {
-            if (errorCallback != null) {
-                errorCallback.onError(statusCode, exception.getMessage());
+    @Override
+    public void setViceTimeLimit(String id,
+                                 String analysisName,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        analysisService.setViceTimeLimit(id, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage())) ;
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
             }
-        }
 
-        @Override
-        public void onSuccess(String result) {
-            if (callback != null) {
-                callback.onSuccess(StringQuoter.split(result));
+            @Override
+            public void onSuccess(String result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.newTimeLimitSuccess(analysisName)));
+                if (callback != null) {
+                    callback.onSuccess(StringQuoter.split(result));
+                }
             }
-        }
+        });
+
     }
 
     protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {

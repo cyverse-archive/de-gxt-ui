@@ -79,6 +79,8 @@ public interface AnalysesView extends IsWidget {
             String supportRequestSuccess();
 
             String htAnalysisTitle(String analysisName);
+
+            String newTimeLimitSuccess(String analysisName);
         }
 
         @JsIgnore
@@ -168,6 +170,7 @@ public interface AnalysesView extends IsWidget {
                               ReactErrorCallback errorCallback);
 
         void setViceTimeLimit(String id,
+                              String analysisName,
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);
 
