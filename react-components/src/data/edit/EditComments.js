@@ -11,6 +11,7 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import List from "@material-ui/core/List";
 import constants from "../../constants";
+import stableSort from "@cyverse-de/ui-lib";
 
 let COMMENTS = "Comments";
 const ADD_A_COMMENT = "Add a Comment";
@@ -45,8 +46,6 @@ class EditComments extends Component {
             this.props.presenter.getComments(input, resolve, reject);
         })
             .then((commentList) => {
-                console.log("here");
-                console.log(commentList);
                 this.setState({ commentList: commentList });
             })
             .catch((error) => {
@@ -68,6 +67,19 @@ class EditComments extends Component {
             });
     }
 
+    createComment(commentText, callback) {
+        new Promise((resolve, reject) => {
+            this.props.presenter.createComment(commentText);
+        })
+            .then((commentList) => {
+                this.setState({ commentList: commentList });
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({ loading: false });
+            });
+    }
+
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({ open: true });
     }
@@ -77,7 +89,6 @@ class EditComments extends Component {
     };
 
     handleSortMostRecent = () => {
-        console.log("Sort ascending");
         let swapped;
         let aux = 0;
         let temp = this.state.commentList;
@@ -97,7 +108,6 @@ class EditComments extends Component {
     };
 
     handleSortLeastRecent = () => {
-        console.log("Sort descending");
         let swapped;
         let aux = 0;
         let temp = this.state.commentList;
@@ -117,7 +127,6 @@ class EditComments extends Component {
     };
 
     handleSortOwner = () => {
-        console.log("Sort User");
         let swapped;
         let aux = 0;
         let temp = this.state.commentList;
@@ -140,10 +149,6 @@ class EditComments extends Component {
     handleChange(event) {
         this.setState({ commentText: event.target.value });
     }
-    createComment = () => {
-        const text = this.state.commentText;
-        console.log(text);
-    };
 
     render() {
         const { classes } = this.props;
@@ -206,7 +211,9 @@ class EditComments extends Component {
                         size="medium"
                         color={palette.blue}
                         aria-label="Add"
-                        onClick={this.createComment}
+                        onClick={() => {
+                            this.createComment(this.state.commentText);
+                        }}
                         className={classes.addCommentButton}
                     >
                         <AddIcon />
