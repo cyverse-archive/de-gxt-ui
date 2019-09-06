@@ -11,6 +11,10 @@ class EditCommentsTest extends Component {
             retractComment: (commentId, resolve, reject) => {
                 console.log(commentId);
             },
+
+            createComment: (commentText, resolve, reject) => {
+                console.log(commentText);
+            },
         };
 
         const commentList = [
