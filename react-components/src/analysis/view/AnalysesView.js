@@ -168,7 +168,14 @@ function AppName(props) {
 }
 
 function Status(props) {
-    const { analysis, onClick, username, handleTimeLimitExtn, classes } = props;
+    const {
+        analysis,
+        onClick,
+        username,
+        handleTimeLimitExtn,
+        classes,
+        baseId,
+    } = props;
     const interactiveStyle = props.classes.interactiveButton;
     const allowTimeExtn =
         analysis.interactive_urls &&
@@ -187,6 +194,7 @@ function Status(props) {
                 {allowTimeExtn && (
                     <ToolTip title={getMessage("extendTime")}>
                         <IconButton
+                            id={build(baseId, ids.BUTTON_EXTEND_TIME_LIMIT)}
                             className={interactiveStyle}
                             onClick={() => handleTimeLimitExtn(analysis)}
                             size="small"
@@ -302,6 +310,8 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen: false,
             confirmDeleteDialogOpen: false,
             logsMessageDialogOpen: false,
+            confirmExtendTimeLimitDialogOpen: false,
+            currentTimeLimit: "",
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -347,6 +357,7 @@ class AnalysesView extends Component {
         this.handleRequestSort = this.handleRequestSort.bind(this);
         this.handleViewAllIconClick = this.handleViewAllIconClick.bind(this);
         this.handleTimeLimitExtn = this.handleTimeLimitExtn.bind(this);
+        this.extendTimeLimit = this.extendTimeLimit.bind(this);
     }
 
     componentDidMount() {
@@ -633,12 +644,36 @@ class AnalysesView extends Component {
     }
 
     handleTimeLimitExtn(analysis) {
+        this.setState({ loading: true });
         this.props.presenter.getViceTimeLimit(
             analysis.id,
             (timelimit) => {
-                console.log(
-                    "timelimit for current analysis" + formatDate(timelimit)
-                );
+                this.setState({
+                    selected: [analysis],
+                    loading: false,
+                    confirmExtendTimeLimitDialogOpen: true,
+                    currentTimeLimit: formatDate(timelimit.time_limit * 1000),
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
+    }
+
+    extendTimeLimit() {
+        let selected = this.state.selected[0];
+        this.setState({ loading: true });
+        this.props.presenter.setViceTimeLimit(
+            selected.id,
+            selected.name,
+            (newTimeLimit) => {
+                this.setState({
+                    loading: false,
+                    confirmExtendTimeLimitDialogOpen: false,
+                });
             },
             (errorCode, errorMessage) => {
                 this.setState({
@@ -1014,6 +1049,8 @@ class AnalysesView extends Component {
             infoDialogOpen,
             loading,
             logsMessageDialogOpen,
+            confirmExtendTimeLimitDialogOpen,
+            currentTimeLimit,
         } = this.state;
 
         const selectedAnalysis = this.findAnalysis(selected[0]);
@@ -1192,6 +1229,7 @@ class AnalysesView extends Component {
                                                 >
                                                     <Status
                                                         analysis={analysis}
+                                                        baseId={baseId}
                                                         onClick={() =>
                                                             this.statusClick(
                                                                 analysis
@@ -1405,6 +1443,22 @@ class AnalysesView extends Component {
                         this.setState({ logsMessageDialogOpen: false })
                     }
                     heading={formatMessage(intl, "jobLogsUnavailableHeading")}
+                />
+                <DEConfirmationDialog
+                    debugId={build(baseId, ids.EXTEND_TIME_LIMIT)}
+                    dialogOpen={confirmExtendTimeLimitDialogOpen}
+                    message={formatMessage(intl, "extendTimeLimitMessage", {
+                        timeLimit: currentTimeLimit,
+                    })}
+                    heading={formatMessage(intl, "extendTime")}
+                    onOkBtnClick={this.extendTimeLimit}
+                    onCancelBtnClick={() => {
+                        this.setState({
+                            confirmExtendTimeLimitDialogOpen: false,
+                        });
+                    }}
+                    okLabel={formatMessage(intl, "okBtnText")}
+                    cancelLabel={formatMessage(intl, "cancelBtnText")}
                 />
             </React.Fragment>
         );
