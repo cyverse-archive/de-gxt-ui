@@ -14,3 +14,4 @@ Jenkinsfile
 .gradle
 */build
 log
+node_modules
