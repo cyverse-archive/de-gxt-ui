@@ -574,10 +574,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
-    public void setViceTimeLimit(String id,
-                                 String analysisName,
-                                 ReactSuccessCallback callback,
-                                 ReactErrorCallback errorCallback) {
+    public void extendViceTimeLimit(String id,
+                                    String analysisName,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback) {
         analysisService.setViceTimeLimit(id, new AnalysisCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {

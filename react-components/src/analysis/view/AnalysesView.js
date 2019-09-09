@@ -666,7 +666,7 @@ class AnalysesView extends Component {
     extendTimeLimit() {
         let selected = this.state.selected[0];
         this.setState({ loading: true });
-        this.props.presenter.setViceTimeLimit(
+        this.props.presenter.extendViceTimeLimit(
             selected.id,
             selected.name,
             (newTimeLimit) => {

@@ -169,10 +169,10 @@ public interface AnalysesView extends IsWidget {
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);
 
-        void setViceTimeLimit(String id,
-                              String analysisName,
-                              ReactSuccessCallback callback,
-                              ReactErrorCallback errorCallback);
+        void extendViceTimeLimit(String id,
+                                 String analysisName,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback);
 
     }
 
