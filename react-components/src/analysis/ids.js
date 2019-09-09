@@ -74,4 +74,7 @@ export default {
         FOLLOW_LOGS: "followLogs",
         REFRESH: "refresh",
     },
+
+    BUTTON_EXTEND_TIME_LIMIT: "extendTimeLimitBtn",
+    EXTEND_TIME_LIMIT: "extendTimeLimit",
 };

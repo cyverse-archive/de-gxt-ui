@@ -44,6 +44,8 @@ import TableRow from "@material-ui/core/TableRow";
 import ToolTip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import HourGlass from "@material-ui/icons/HourglassEmptyRounded";
+import IconButton from "@material-ui/core/IconButton";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
@@ -94,13 +96,15 @@ function AnalysisName(props) {
     ) {
         return (
             <Fragment>
-                <LaunchIcon
-                    onClick={() =>
-                        handleInteractiveUrlClick(interactiveUrls[0])
-                    }
-                    id={build(baseId, ids.ICONS.INTERACTIVE)}
-                    className={interactiveStyle}
-                />
+                <ToolTip title={getMessage("goToVice")}>
+                    <LaunchIcon
+                        onClick={() =>
+                            handleInteractiveUrlClick(interactiveUrls[0])
+                        }
+                        id={build(baseId, ids.ICONS.INTERACTIVE)}
+                        className={interactiveStyle}
+                    />
+                </ToolTip>
                 <span
                     title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                     className={className}
@@ -164,16 +168,42 @@ function AppName(props) {
 }
 
 function Status(props) {
-    const { analysis, onClick, username } = props;
+    const {
+        analysis,
+        onClick,
+        username,
+        handleTimeLimitExtn,
+        classes,
+        baseId,
+    } = props;
+    const interactiveStyle = props.classes.interactiveButton;
+    const allowTimeExtn =
+        analysis.interactive_urls &&
+        analysis.interactive_urls.length > 0 &&
+        analysis.status === analysisStatus.RUNNING;
     if (
         username === analysis.username &&
         analysis.status !== analysisStatus.CANCELED
     ) {
         return (
-            <DEHyperlink
-                onClick={(analysis) => onClick(analysis)}
-                text={analysis.status}
-            />
+            <React.Fragment>
+                <DEHyperlink
+                    onClick={(analysis) => onClick(analysis)}
+                    text={analysis.status}
+                />
+                {allowTimeExtn && (
+                    <ToolTip title={getMessage("extendTime")}>
+                        <IconButton
+                            id={build(baseId, ids.BUTTON_EXTEND_TIME_LIMIT)}
+                            className={interactiveStyle}
+                            onClick={() => handleTimeLimitExtn(analysis)}
+                            size="small"
+                        >
+                            <HourGlass />
+                        </IconButton>
+                    </ToolTip>
+                )}
+            </React.Fragment>
         );
     } else {
         return (
@@ -280,6 +310,8 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen: false,
             confirmDeleteDialogOpen: false,
             logsMessageDialogOpen: false,
+            confirmExtendTimeLimitDialogOpen: false,
+            currentTimeLimit: "",
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -324,6 +356,8 @@ class AnalysesView extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleRequestSort = this.handleRequestSort.bind(this);
         this.handleViewAllIconClick = this.handleViewAllIconClick.bind(this);
+        this.handleTimeLimitExtn = this.handleTimeLimitExtn.bind(this);
+        this.extendTimeLimit = this.extendTimeLimit.bind(this);
     }
 
     componentDidMount() {
@@ -607,6 +641,46 @@ class AnalysesView extends Component {
         } else {
             this.setState({ logsMessageDialogOpen: true });
         }
+    }
+
+    handleTimeLimitExtn(analysis) {
+        this.setState({ loading: true });
+        this.props.presenter.getViceTimeLimit(
+            analysis.id,
+            (timelimit) => {
+                this.setState({
+                    selected: [analysis],
+                    loading: false,
+                    confirmExtendTimeLimitDialogOpen: true,
+                    currentTimeLimit: formatDate(timelimit.time_limit * 1000),
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
+    }
+
+    extendTimeLimit() {
+        let selected = this.state.selected[0];
+        this.setState({ loading: true });
+        this.props.presenter.extendViceTimeLimit(
+            selected.id,
+            selected.name,
+            (newTimeLimit) => {
+                this.setState({
+                    loading: false,
+                    confirmExtendTimeLimitDialogOpen: false,
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleInteractiveUrlClick(url) {
@@ -975,6 +1049,8 @@ class AnalysesView extends Component {
             infoDialogOpen,
             loading,
             logsMessageDialogOpen,
+            confirmExtendTimeLimitDialogOpen,
+            currentTimeLimit,
         } = this.state;
 
         const selectedAnalysis = this.findAnalysis(selected[0]);
@@ -1153,12 +1229,18 @@ class AnalysesView extends Component {
                                                 >
                                                     <Status
                                                         analysis={analysis}
+                                                        baseId={baseId}
                                                         onClick={() =>
                                                             this.statusClick(
                                                                 analysis
                                                             )
                                                         }
                                                         username={username}
+                                                        classes={classes}
+                                                        handleTimeLimitExtn={
+                                                            this
+                                                                .handleTimeLimitExtn
+                                                        }
                                                     />
                                                 </TableCell>
                                                 <TableCell padding="none">
@@ -1361,6 +1443,22 @@ class AnalysesView extends Component {
                         this.setState({ logsMessageDialogOpen: false })
                     }
                     heading={formatMessage(intl, "jobLogsUnavailableHeading")}
+                />
+                <DEConfirmationDialog
+                    debugId={build(baseId, ids.EXTEND_TIME_LIMIT)}
+                    dialogOpen={confirmExtendTimeLimitDialogOpen}
+                    message={formatMessage(intl, "extendTimeLimitMessage", {
+                        timeLimit: currentTimeLimit,
+                    })}
+                    heading={formatMessage(intl, "extendTime")}
+                    onOkBtnClick={this.extendTimeLimit}
+                    onCancelBtnClick={() => {
+                        this.setState({
+                            confirmExtendTimeLimitDialogOpen: false,
+                        });
+                    }}
+                    okLabel={formatMessage(intl, "okBtnText")}
+                    cancelLabel={formatMessage(intl, "cancelBtnText")}
                 />
             </React.Fragment>
         );

@@ -45,5 +45,7 @@ public interface AnalysesMessages extends Messages {
     String importRequestSubmit(String name);
 
     String htAnalysisTitle(String analysisName);
+
+    String newTimeLimitSuccess(String analysisName);
 }
 

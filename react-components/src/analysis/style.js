@@ -6,11 +6,6 @@ export default (theme) => ({
         height: "80%",
         width: "100%",
     },
-    tableHead: {
-        backgroundColor: palette.blue,
-        position: "sticky",
-        top: 0,
-    },
     container: {
         width: "100%",
         height: "100%",

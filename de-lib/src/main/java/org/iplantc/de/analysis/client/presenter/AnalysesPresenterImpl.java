@@ -52,6 +52,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,7 +138,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
         }
 
     }
-
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
@@ -549,6 +549,53 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
                          AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)),
                          callback,
                          errorCallback);
+    }
+
+    @Override
+    public void getViceTimeLimit(String id,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback) {
+        analysisService.getViceTimeLimit(id, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage()));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                if (callback != null) {
+                    callback.onSuccess(StringQuoter.split(result));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void extendViceTimeLimit(String id,
+                                    String analysisName,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback) {
+        analysisService.setViceTimeLimit(id, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(exception.getMessage())) ;
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.newTimeLimitSuccess(analysisName)));
+                if (callback != null) {
+                    callback.onSuccess(StringQuoter.split(result));
+                }
+            }
+        });
+
     }
 
     protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {

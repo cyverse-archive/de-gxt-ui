@@ -115,7 +115,7 @@ function ViceLogsViewer(props) {
                 </div>
                 <DialogContent dividers={true}>
                     <DialogContentText className={classes.content}>
-                        {logs}
+                        <pre>{logs}</pre>
                     </DialogContentText>
                 </DialogContent>
             </LoadingMask>

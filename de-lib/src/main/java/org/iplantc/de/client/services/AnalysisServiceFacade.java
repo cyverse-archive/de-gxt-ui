@@ -67,4 +67,8 @@ public interface AnalysisServiceFacade {
                      String sinceTime,
                      DECallback<String> callback);
 
+    void getViceTimeLimit(String id, DECallback<String> callback);
+
+    void setViceTimeLimit(String id, DECallback<String> callback);
+
 }

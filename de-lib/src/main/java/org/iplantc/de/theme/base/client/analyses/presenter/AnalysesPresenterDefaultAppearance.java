@@ -128,4 +128,9 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.htAnalysisTitle(analysisName);
     }
 
+    @Override
+    public String newTimeLimitSuccess(String analysisName) {
+        return analysesMessages.newTimeLimitSuccess(analysisName);
+    }
+
 }
