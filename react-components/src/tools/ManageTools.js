@@ -70,8 +70,6 @@ function ManageTools(props) {
     const [toolFilterValue, setToolFilterValue] = useState(
         TOOL_FILTER_VALUES.ALL
     );
-    const [toolMenuEl, setToolMenuEl] = useState(null);
-    const [shareMenuEl, setShareMenuEl] = useState(null);
     const [numToolsSelected, setNumToolsSelected] = useState(0);
 
     const refreshListing = (
@@ -175,10 +173,6 @@ function ManageTools(props) {
                 intl={intl}
                 searchTerm={searchTerm}
                 selectedTool={selectedTool}
-                toolMenuEl={toolMenuEl}
-                setToolMenuEl={setToolMenuEl}
-                shareMenuEl={shareMenuEl}
-                setShareMenuEl={setShareMenuEl}
                 toolFilterValue={toolFilterValue}
                 onRefreshClicked={onRefreshClicked}
                 onToolFilterValueChanged={onToolFilterValueChanged}
@@ -232,10 +226,6 @@ function ToolsToolbar(props) {
         presenter,
         selectedTool,
         toolFilterValue,
-        toolMenuEl,
-        setToolMenuEl,
-        shareMenuEl,
-        setShareMenuEl,
         searchTerm,
         onRefreshClicked,
         onToolFilterValueChanged,
@@ -243,6 +233,9 @@ function ToolsToolbar(props) {
         intl,
         classes,
     } = props;
+
+    const [toolMenuEl, setToolMenuEl] = useState(null);
+    const [shareMenuEl, setShareMenuEl] = useState(null);
 
     const openToolMenu = (event) => {
         setToolMenuEl(event.currentTarget);
