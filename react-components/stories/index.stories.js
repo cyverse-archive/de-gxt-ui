@@ -31,7 +31,7 @@ import QueryBuilderTest from "./data/search/QueryBuilder.stories";
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
 
-import EditCommentsTest from "./data/edit/EditComments.stories";
+import EditCommentsTest from "./data/comments/EditComments.stories";
 
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
