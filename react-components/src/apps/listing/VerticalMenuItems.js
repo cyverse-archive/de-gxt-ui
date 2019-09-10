@@ -14,12 +14,12 @@ import { makeStyles } from "@material-ui/core";
  */
 const useStyles = makeStyles((theme) => ({
     menuItem: {
-        fontSize: 10,
         padding: 5,
     },
 }));
 
 function VerticalMenuItems(props) {
+    const { isExternal, isFavorite } = props;
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -30,34 +30,51 @@ function VerticalMenuItems(props) {
             >
                 {getMessage("appInfo")}
             </MenuItem>
-            <MenuItem
-                disabled={false}
-                className={classes.menuItem}
-                data-disabled={false}
-            >
-                {getMessage("addToFavorites")}
-            </MenuItem>
-            <MenuItem
-                disabled={false}
-                className={classes.menuItem}
-                data-disabled={false}
-            >
-                {getMessage("removeFromFavorites")}
-            </MenuItem>
-            <MenuItem
-                disabled={false}
-                className={classes.menuItem}
-                data-disabled={false}
-            >
-                {getMessage("comments")}
-            </MenuItem>
-            <MenuItem
-                disabled={false}
-                className={classes.menuItem}
-                data-disabled={false}
-            >
-                {getMessage("notSupported")}
-            </MenuItem>
+            {!isFavorite && !isExternal && (
+                <MenuItem
+                    disabled={false}
+                    className={classes.menuItem}
+                    data-disabled={false}
+                >
+                    {getMessage("addToFavorites")}
+                </MenuItem>
+            )}
+            {isFavorite && !isExternal && (
+                <MenuItem
+                    disabled={false}
+                    className={classes.menuItem}
+                    data-disabled={false}
+                >
+                    {getMessage("removeFromFavorites")}
+                </MenuItem>
+            )}
+            {!isExternal && (
+                <MenuItem
+                    disabled={false}
+                    className={classes.menuItem}
+                    data-disabled={false}
+                >
+                    {getMessage("comments")}
+                </MenuItem>
+            )}
+            {isExternal && (
+                <React.Fragment>
+                    <MenuItem
+                        disabled={false}
+                        className={classes.menuItem}
+                        data-disabled={false}
+                    >
+                        {getMessage("favoriteNotSupported")}
+                    </MenuItem>
+                    <MenuItem
+                        disabled={false}
+                        className={classes.menuItem}
+                        data-disabled={false}
+                    >
+                        {getMessage("commentsNotSupported")}
+                    </MenuItem>
+                </React.Fragment>
+            )}
         </React.Fragment>
     );
 }

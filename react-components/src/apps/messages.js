@@ -91,7 +91,8 @@ const intlData = {
         removeFromFavorites: "Remove From Favorites",
         appInfo: "App Info",
         comments: "Comments",
-        notSupported: "Feature not supported for external apps!",
+        favoriteNotSupported: "Favorites not supported for external apps!",
+        commentsNotSupported: "Comments not supported for external apps!",
     },
 };
 

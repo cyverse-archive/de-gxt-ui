@@ -28,7 +28,7 @@ class AppTileListingTest extends Component {
                 step_count: 1,
                 can_run: true,
                 integrator_email: "rogerab@email.arizona.edu",
-                app_type: "DE",
+                app_type: "AGAVE",
                 wiki_url:
                     "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
                 rating: {

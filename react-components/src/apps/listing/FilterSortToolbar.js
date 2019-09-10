@@ -33,6 +33,7 @@ function FilterSortToolbar(props) {
         onTypeFilterChange,
         view,
         onSortChange,
+        sortField,
     } = props;
 
     return (
@@ -47,8 +48,8 @@ function FilterSortToolbar(props) {
                             {getMessage("sort")}
                         </InputLabel>
                         <Select
-                            value={props.viewFilter}
-                            onChange={(e) => props.onSortChange(e.target.value)}
+                            value={sortField}
+                            onChange={(e) => onSortChange(e.target.value)}
                             input={<OutlinedInput labelWidth={0} name="sort" />}
                             style={{ minWidth: 120 }}
                         >
