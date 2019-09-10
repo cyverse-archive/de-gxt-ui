@@ -64,7 +64,7 @@
 
         <!-- This is the main panel -->
         <container:center layoutData="{centerData}">
-            <container:CardLayoutContainer ui:field="cardContainer"/>
+            <container:SimpleContainer ui:field="container"/>
         </container:center>
 
         <!-- This is the details panel -->

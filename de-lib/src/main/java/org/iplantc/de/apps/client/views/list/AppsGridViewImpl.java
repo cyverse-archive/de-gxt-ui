@@ -1,18 +1,9 @@
 package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
-import org.iplantc.de.client.models.apps.App;
 
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.grid.GridView;
 
 /**
  * Created by jstroot on 3/5/15.
@@ -25,26 +16,13 @@ public class AppsGridViewImpl implements AppsListView {
         return null;
     }
 
-    @UiField(provided = true) final ListStore<App> listStore;
-    @UiField ColumnModel cm;
-    @UiField Grid<App> grid;
-    @UiField GridView<App> gridView;
-    @UiField(provided = true)
-    AppTypeFilterCombo typeFilter;
-    private final AppColumnModel acm; // Convenience class
-
-    private final AppsListAppearance appearance;
-    private String searchRegexPattern;
-
     @Inject
-    AppsGridViewImpl(AppsListView.AppsListAppearance appearance,
-                     @Assisted final ListStore<App> listStore,
-                     AppTypeFilterCombo typeFilter) {
-        this.appearance = appearance;
+    AppsGridViewImpl() {
+/*        this.appearance = appearance;
         this.listStore = listStore;
-        this.typeFilter = typeFilter;
+        this.typeFilter = typeFilter;*/
 
-        this.acm = (AppColumnModel) cm;
+     //   this.acm = (AppColumnModel) cm;
     }
 
    /* //<editor-fold desc="Handler Registrations">

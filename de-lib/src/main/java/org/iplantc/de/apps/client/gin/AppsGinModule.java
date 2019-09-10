@@ -12,7 +12,6 @@ import org.iplantc.de.apps.client.WorkspaceView;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppSharingPresenterFactory;
-import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.apps.client.gin.factory.CommunitiesViewFactory;
@@ -54,7 +53,6 @@ import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -107,13 +105,6 @@ public class AppsGinModule extends AbstractGinModule {
         // List View
         bind(AppsListView.Presenter.class).to(AppsListPresenterImpl.class);
 
-        install(new GinFactoryModuleBuilder().implement(AppsListView.class,
-                                                        Names.named(AppsListView.GRID_VIEW),
-                                                        AppsGridViewImpl.class)
-                                             .implement(AppsListView.class,
-                                                        Names.named(AppsListView.TILE_VIEW),
-                                                        AppsTileViewImpl.class)
-                                             .build(AppsListViewFactory.class));
 
         // Toolbar View
         install(new GinFactoryModuleBuilder().implement(AppsToolbarView.class, AppsViewToolbarImpl.class)
@@ -131,6 +122,8 @@ public class AppsGinModule extends AbstractGinModule {
                                                         AppSharingPresenter.class)
                                              .build(AppSharingPresenterFactory.class));
         bind(AppTypeFilterCombo.class);
+        bind(AppsTileViewImpl.class);
+        bind(AppsGridViewImpl.class);
 
     }
 

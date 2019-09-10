@@ -66,34 +66,36 @@ function AppTileListing(props) {
             />
 
             <Grid container className={classes.root}>
-                {(apps && apps.length > 0) && apps.map((app) => {
-                    const external = app.app_type !== "DE";
-                    const menuItems = () => (
-                        <VerticalMenuItems
-                            isExternal={external}
-                            isFavorite={app.is_favorite}
-                            handleAppInfoClick={onAppInfoClick}
-                            handleCommentsClick={onCommentsClick}
-                            handleFavoriteClick={onFavoriteClick}
-                        />
-                    );
-                    return (
-                        <Grid key={app.id} item>
-                            <AppTile
-                                uuid={app.id}
-                                name={app.name}
-                                creator={app.integrator_name}
-                                rating={app.rating}
-                                type={app.app_type}
-                                isPublic={app.is_public}
-                                isBeta={app.beta}
-                                isDisabled={app.disabled}
+                {apps &&
+                    apps.length > 0 &&
+                    apps.map((app) => {
+                        const external = app.app_type !== "DE";
+                        const menuItems = () => (
+                            <VerticalMenuItems
                                 isExternal={external}
-                                MenuItems={menuItems}
+                                isFavorite={app.is_favorite}
+                                handleAppInfoClick={onAppInfoClick}
+                                handleCommentsClick={onCommentsClick}
+                                handleFavoriteClick={onFavoriteClick}
                             />
-                        </Grid>
-                    );
-                })}
+                        );
+                        return (
+                            <Grid key={app.id} item>
+                                <AppTile
+                                    uuid={app.id}
+                                    name={app.name}
+                                    creator={app.integrator_name}
+                                    rating={app.rating}
+                                    type={app.app_type}
+                                    isPublic={app.is_public}
+                                    isBeta={app.beta}
+                                    isDisabled={app.disabled}
+                                    isExternal={external}
+                                    MenuItems={menuItems}
+                                />
+                            </Grid>
+                        );
+                    })}
             </Grid>
         </Paper>
     );

@@ -1,24 +1,13 @@
 package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.models.AppProperties;
-import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
-import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
-import com.sencha.gxt.widget.core.client.ListView;
-import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.Comparator;
 
@@ -29,7 +18,7 @@ public class AppsTileViewImpl implements AppsListView {
 
     @Override
     public Widget asWidget() {
-        return null;
+        return panel;
     }
 
     class AppRatingComparator implements Comparator<App> {
@@ -48,35 +37,14 @@ public class AppsTileViewImpl implements AppsListView {
         Integrator
     }
 
-    ListStore<App> listStore;
-    @UiField ListView<App, App> listView;
-    @UiField SimpleComboBox<SortChoice> sortBox;
-    @UiField(provided = true) AppsListView.AppsListAppearance appearance;
-    @UiField(provided = true)
-    AppTypeFilterCombo typeFilter;
-    private TileListDefaultAppearance<App> listAppearance;
-    private AppTileCell appTileCell;
-    private AppProperties properties;
-    @Inject DEProperties deProperties;
-
     HTMLPanel panel;
 
     private ReactAppListing.AppListingProps props;
 
     @Inject
-    AppsTileViewImpl(final AppsListView.AppsListAppearance appearance,
-                     @Assisted final ListStore<App> listStore,
-                     TileListDefaultAppearance<App> listAppearance,
-                     AppTileCell appTileCell,
-                     AppProperties properties,
-                     AppTypeFilterCombo typeFilter) {
-        this.appearance = appearance;
-        this.listStore = listStore;
-        this.listAppearance = listAppearance;
-        this.appTileCell = appTileCell;
-        this.properties = properties;
-        this.deProperties = DEProperties.getInstance();
-        this.typeFilter = typeFilter;
+    AppsTileViewImpl() {
+        panel = new HTMLPanel("<div></div>");
+        props = new ReactAppListing.AppListingProps();
 
         //  appTileCell.setHasHandlers(this);
        // appTileCell.setCardUrl(deProperties.getAppsCardUrl(), deProperties.getAppsCardUrlOptions());
@@ -87,10 +55,28 @@ public class AppsTileViewImpl implements AppsListView {
      //   listView.setCell(this.appTileCell);
     }
 
+    public void load(AppsListView.Presenter presenter,
+                     Splittable apps,
+                     String heading,
+                     String appTypeFiler,
+                     String sortField,
+                     String searchRegexPattern,
+                     boolean enableTypeFilter,
+                     String selectedAppId) {
 
+        props.apps = apps;
+        props.presenter = presenter;
+        props.heading = heading;
+        props.appTypeFilter = appTypeFiler;
+        props.sortField = sortField;
+        props.searchRegexPattern = searchRegexPattern;
+        props.enableTypeFilter = enableTypeFilter;
+        props.selectedAppId = selectedAppId;
+        CyVerseReactComponents.render(ReactAppListing.AppTileListing, props, panel.getElement());
+    }
 
-    public Store.StoreSortInfo<App> getSortInfo() {
-        SortChoice sortField = sortBox.getCurrentValue();
+ /*     public Store.StoreSortInfo<App> getSortInfo() {
+      SortChoice sortField = sortBox.getCurrentValue();
 
         switch(sortField) {
             case Name:
@@ -102,7 +88,7 @@ public class AppsTileViewImpl implements AppsListView {
             default:
                 return null;
         }
-    }
+    }*/
 
  /*   @Override
     public HandlerRegistration addAppNameSelectedEventHandler(AppNameSelectedEvent.AppNameSelectedEventHandler handler) {

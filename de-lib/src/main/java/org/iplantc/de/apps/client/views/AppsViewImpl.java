@@ -23,7 +23,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import java.util.List;
@@ -45,7 +45,8 @@ public class AppsViewImpl extends Composite implements AppsView {
     OntologyHierarchiesView.Presenter hierarchiesPresenter;
     AppsListView.Presenter gridPresenter;
 
-    @UiField CardLayoutContainer cardContainer;
+    @UiField
+    SimpleContainer container;
 
     @UiField
     BorderLayoutContainer.BorderLayoutData westData;
@@ -72,7 +73,7 @@ public class AppsViewImpl extends Composite implements AppsView {
             selectFirstTreeNode(selectedItem);
         });
 
-        gridPresenter.go(cardContainer);
+        gridPresenter.go(container);
     }
 
     void selectFirstTreeNode(Widget selectedItem) {

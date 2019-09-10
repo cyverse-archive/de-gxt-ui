@@ -9,7 +9,6 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -41,6 +40,10 @@ public interface AppServiceFacade {
      * @param filter filter to be used when getting apps.
      * @param callback called when the RPC call is complete.*/
     void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
+
+    void getAppsAsSplittable(HasQualifiedId appCategory,
+                             AppTypeFilter filter,
+                             DECallback<String> callback);
 
     /**
      * Retrieves a paged listing of templates in the given group.

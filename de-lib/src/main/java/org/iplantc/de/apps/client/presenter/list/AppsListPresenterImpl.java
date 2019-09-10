@@ -20,7 +20,6 @@ import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEven
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
-import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
@@ -46,18 +45,16 @@ import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.event.StoreAddEvent;
-import com.sencha.gxt.data.shared.event.StoreClearEvent;
-import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
@@ -77,7 +74,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppInfoSelectedEvent.AppInfoSelectedEventHandler,
                                               AppTypeFilterChangedEvent.AppTypeFilterChangedEventHandler {
 
-    final ListStore<App> listStore;
     private final DEProperties deProperties;
     private final EventBus eventBus;
     @Inject
@@ -98,7 +94,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     OntologyServiceFacade ontologyService;
     OntologyUtil ontologyUtil;
     HandlerManager handlerManager;
-    AppsListView gridView, tileView, activeView;
+    AppsListView tileView, activeView;
     CardLayoutContainer cards;
     AppTypeFilter filter;
     private OntologyHierarchy selectedHierarchy;
@@ -106,18 +102,16 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     private App desiredSelectedApp;
 
     @Inject
-    AppsListPresenterImpl(final AppsListViewFactory viewFactory,
-                          final ListStore<App> listStore,
-                          final EventBus eventBus,
+    AppsListPresenterImpl(final EventBus eventBus,
                           OntologyServiceFacade ontologyService,
-                          final DEProperties deProperties) {
-        this.listStore = listStore;
+                          final DEProperties deProperties,
+                          final AppsTileViewImpl tileView
+                          ) {
         this.eventBus = eventBus;
         this.ontologyService = ontologyService;
         this.ontologyUtil = OntologyUtil.getInstance();
         this.deProperties = deProperties;
-        this.gridView = viewFactory.createGridView(listStore);
-        this.tileView = viewFactory.createTileView(listStore);
+        this.tileView = tileView;
 
 /*        this.gridView.addAppNameSelectedEventHandler(this);
         this.gridView.addAppRatingDeselectedHandler(this);
@@ -142,25 +136,15 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void go(CardLayoutContainer container) {
-        this.cards = container;
-
-        cards.add(tileView);
-        cards.add(gridView);
-    }
-
-    @Override
     public void go(HasOneWidget widget) {
         //by default support only gridView
-        widget.setWidget(gridView);
-        activeView = gridView;
+        widget.setWidget(tileView);
+        activeView = tileView;
     }
 
     @Override
-    public void loadApps(List<App> apps) {
-        listStore.clear();
-        listStore.addAll(apps);
-
+    public void loadApps(Splittable apps) {
+        GWT.log("apps ==> " + apps.get("apps"));
   /*      if (getDesiredSelectedApp() != null) {
 
             activeView.select(getDesiredSelectedApp(), false);
@@ -171,6 +155,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         }
         setDesiredSelectedApp(null);
         activeView.unmask();*/
+        ((AppsTileViewImpl)tileView).load(this, apps.get("apps"), "", "", "", "", true, null);
     }
 
     /**
@@ -180,10 +165,10 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
      */
     @Override
     public String getActiveView() {
-        if (activeView instanceof AppsTileViewImpl) {
+/*        if (activeView instanceof AppsTileViewImpl) {
             return AppsListView.TILE_VIEW;
-        }
-        return AppsListView.GRID_VIEW;
+        }*/
+        return AppsListView.TILE_VIEW;
     }
 
     /**
@@ -193,15 +178,10 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
      */
     @Override
     public void setActiveView(String newView) {
-        if (AppsListView.GRID_VIEW.equals(newView)) {
-            activeView = gridView;
-        } else {
-            activeView = tileView;
-        }
-
+/*        activeView = tileView;
         cards.setActiveWidget(activeView);
 
-        setTypeFilterPreferences();
+        setTypeFilterPreferences();*/
     }
 
     private void setTypeFilterPreferences() {
@@ -214,9 +194,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void setViewDebugId(String baseID) {
         tileView.asWidget().ensureDebugId(baseID);
-        gridView.asWidget().ensureDebugId(baseID);
     }
 
+/*
     @Override
     public HandlerRegistration addStoreAddHandler(StoreAddEvent.StoreAddHandler<App> handler) {
         return listStore.addStoreAddHandler(handler);
@@ -236,6 +216,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public HandlerRegistration addStoreUpdateHandler(StoreUpdateEvent.StoreUpdateHandler<App> handler) {
         return listStore.addStoreUpdateHandler(handler);
     }
+*/
 
     @Override
     public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {
@@ -296,11 +277,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         if (event.getAppCategorySelection().isEmpty()) {
             return;
         }
-        Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);
+        Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);*/
         appCategory = event.getAppCategorySelection().iterator().next();
 
         disableTypeFilterForHPC();
-        getAppsWithSelectedCategory();*/
+        getAppsWithSelectedCategory();
     }
 
     @Override
@@ -349,7 +330,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     protected void getAppsWithSelectedCategory() {
        // activeView.mask(appearance.getAppsLoadingMask());
-        appService.getApps(appCategory, filter, new AppListCallback());
+        appService.getAppsAsSplittable(appCategory, filter, new AppListCallback());
     }
 
     @Override
@@ -440,16 +421,16 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         gridView.onAppSearchResultLoad(event);
 
         activeView.setSearchPattern(event.getSearchPattern());*/
-        listStore.clear();
-        listStore.addAll(event.getResults());
+        //    listStore.clear();
+        //   listStore.addAll(event.getResults());
     }
 
     @Override
     public void onAppUpdated(final AppUpdatedEvent event) {
-        App app = event.getApp();
+    /*    App app = event.getApp();
         if (listStore.findModel(app) != null) {
             listStore.update(app);
-        }
+        }*/
     }
 
     @Override
@@ -463,7 +444,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             @Override
             public void onSuccess(Void result) {
                 for (App app : event.getAppsToBeDeleted()) {
-                    listStore.remove(app);
+                    //listStore.remove(app);
                 }
             }
         });
@@ -486,7 +467,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onSwapViewButtonClicked(SwapViewButtonClickedEvent event) {
-      //  activeView.deselectAll();
+ /*     //  activeView.deselectAll();
         if (activeView == gridView) {
             activeView = tileView;
         } else {
@@ -494,7 +475,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         }
         cards.setActiveWidget(activeView);
         setTypeFilterPreferences();
-    }
+ */   }
 
     HandlerManager createHandlerManager() {
         return new HandlerManager(this);
@@ -527,7 +508,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     }
 
-    private class AppListCallback extends AppsCallback<List<App>> {
+    private class AppListCallback extends AppsCallback<String> {
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
 /*            if (caught instanceof HttpRedirectException) {
@@ -554,8 +535,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         }
 
         @Override
-        public void onSuccess(final List<App> apps) {
-            loadApps(apps);
+        public void onSuccess(final String apps) {
+            loadApps(StringQuoter.split(apps));
         }
     }
 

@@ -14,13 +14,9 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.event.StoreAddEvent;
-import com.sencha.gxt.data.shared.event.StoreClearEvent;
-import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
 import java.util.List;
 
@@ -97,10 +93,6 @@ public interface AppsListView extends IsWidget/*   ,
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                 AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
-                                StoreAddEvent.HasStoreAddHandlers<App>,
-                                StoreRemoveEvent.HasStoreRemoveHandler<App>,
-                                StoreUpdateEvent.HasStoreUpdateHandlers<App>,
-                                StoreClearEvent.HasStoreClearHandler<App>,
                                 DeleteAppsSelected.DeleteAppsSelectedHandler,
                                 RunAppSelected.RunAppSelectedHandler,
                                 BeforeAppSearchEvent.BeforeAppSearchEventHandler,
@@ -115,13 +107,10 @@ public interface AppsListView extends IsWidget/*   ,
         List<DragSource> getAppsDragSources();
 
         @JsIgnore
-        void go(CardLayoutContainer container);
-
-        @JsIgnore
         void setViewDebugId(String baseID);
 
         @JsIgnore
-        void loadApps(List<App> apps);
+        void loadApps(Splittable apps);
 
         @JsIgnore
         String getActiveView();

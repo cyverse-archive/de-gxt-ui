@@ -25,7 +25,6 @@ import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
-import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.client.events.EventBus;

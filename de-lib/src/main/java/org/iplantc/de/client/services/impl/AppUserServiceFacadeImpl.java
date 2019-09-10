@@ -484,4 +484,16 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
             }
         });
     }
+
+    @Override
+    public void getAppsAsSplittable(HasQualifiedId appCategory,
+                                    AppTypeFilter filter,
+                                    DECallback<String> callback) {
+        String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
+            address = address + "?app-type=" + filter.getFilterString();
+        }
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper,callback);
+    }
 }
