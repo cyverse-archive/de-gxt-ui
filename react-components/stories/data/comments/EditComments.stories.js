@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import EditComments from "./../../../src/data/edit/EditComments";
+import EditComments from "./../../../src/data/comments/EditComments";
 
 class EditCommentsTest extends Component {
     render() {
