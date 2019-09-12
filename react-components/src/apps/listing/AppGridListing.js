@@ -11,6 +11,7 @@ import {
     getSorting,
     stableSort,
     withI18N,
+    Rate,
 } from "@cyverse-de/ui-lib";
 
 import ids from "./ids";
@@ -21,6 +22,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import { Rating } from "@material-ui/lab";
 
 /**
  * @author aramsey
@@ -61,7 +63,7 @@ class AppGridListing extends Component {
 
     handleSelectAllClick(event, checked) {
         if (checked) {
-            this.setState({ selected: this.props.data.map((app) => app.id) });
+            this.setState({ selected: this.props.apps.map((app) => app.id) });
             return;
         }
         this.setState({ selected: [] });
@@ -93,7 +95,7 @@ class AppGridListing extends Component {
 
         const {
             parentId,
-            data,
+            apps,
             selectable,
             deletable,
             onRemoveApp,
@@ -104,17 +106,22 @@ class AppGridListing extends Component {
         return (
             <Table>
                 <TableBody>
-                    {(!data || data.length === 0) && (
+                    {(!apps || apps.length === 0) && (
                         <EmptyTable
                             message={getMessage("noApps")}
                             numColumns={columnData.length}
                         />
                     )}
-                    {data &&
-                        data.length > 0 &&
-                        stableSort(data, getSorting(order, orderBy)).map(
+                    {apps &&
+                        apps.length > 0 &&
+                        stableSort(apps, getSorting(order, orderBy)).map(
                             (app) => {
                                 const isSelected = this.isSelected(app);
+                                const {
+                                    average: averageRating,
+                                    user: userRating,
+                                    total: totalRating,
+                                } = app.rating;
                                 return (
                                     <TableRow
                                         role="checkbox"
@@ -145,6 +152,18 @@ class AppGridListing extends Component {
                                         <TableCell>
                                             {app.integrator_name}
                                         </TableCell>
+                                        <TableCell>
+                                            <Rate
+                                                value={
+                                                    userRating || averageRating
+                                                }
+                                                readOnly={
+                                                    app.isExternal ||
+                                                    !app.isPublic
+                                                }
+                                                total={totalRating}
+                                            />
+                                        </TableCell>
                                         <TableCell>{app.system_id}</TableCell>
                                         {deletable && (
                                             <TableCell>
@@ -163,7 +182,7 @@ class AppGridListing extends Component {
                 <EnhancedTableHead
                     selectable={selectable}
                     numSelected={selected.length}
-                    rowCount={data ? data.length : 0}
+                    rowCount={apps ? apps.length : 0}
                     order={order}
                     orderBy={orderBy}
                     baseId={parentId}
@@ -215,7 +234,7 @@ function getTableColumns(deletable) {
 
 AppGridListing.propTypes = {
     parentId: PropTypes.string.isRequired,
-    data: PropTypes.array.isRequired,
+    apps: PropTypes.array.isRequired,
     selectable: PropTypes.bool,
     deletable: PropTypes.bool,
     onRemoveApp: PropTypes.func,
