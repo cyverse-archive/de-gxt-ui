@@ -17,7 +17,7 @@ import jsinterop.annotations.JsType;
 public class ReactAppListing {
 
     @JsProperty
-    public static ComponentConstructorFn<AppListingProps> AppTileListing;
+    public static ComponentConstructorFn<AppListingProps> AppListingView;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class AppListingProps extends BaseProps {
@@ -29,5 +29,7 @@ public class ReactAppListing {
         public String searchRegexPattern;
         public boolean enableTypeFilter;
         public String selectedAppId;
+        public String viewType;
+        public boolean loading;
     }
 }

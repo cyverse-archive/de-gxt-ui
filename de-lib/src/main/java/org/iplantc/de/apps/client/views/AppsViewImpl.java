@@ -72,8 +72,7 @@ public class AppsViewImpl extends Composite implements AppsView {
             deselectOtherTabTrees(selectedItem);
             selectFirstTreeNode(selectedItem);
         });
-
-        gridPresenter.go(container);
+         gridPresenter.go(container);
     }
 
     void selectFirstTreeNode(Widget selectedItem) {

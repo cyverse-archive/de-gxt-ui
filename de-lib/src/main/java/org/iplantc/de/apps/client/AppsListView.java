@@ -134,4 +134,24 @@ public interface AppsListView extends IsWidget/*   ,
     void setAppTypeFilter(AppTypeFilter filter);
 
     void enableAppTypeFilter(boolean enabled);*/
+ void load(AppsListView.Presenter presenter,
+           Splittable apps,
+           String heading,
+           String appTypeFiler,
+           String sortField,
+           String searchRegexPattern,
+           boolean enableTypeFilter,
+           String selectedAppId,
+           String activeView);
+
+    void setHeading(String heading);
+
+    void setLoadingMask(boolean loading);
+
+    void setApps(Splittable apps);
+
+    void render();
+
+    void setViewType(String viewType);
+
 }
