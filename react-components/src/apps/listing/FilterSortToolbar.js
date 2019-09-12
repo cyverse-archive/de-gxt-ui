@@ -1,7 +1,7 @@
 import React from "react";
 import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
 import ids from "./ids";
-import viewType from "../model/viewType";
+import view from "../model/viewType";
 import appType from "../../appType";
 import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
@@ -31,7 +31,7 @@ function FilterSortToolbar(props) {
         classes,
         typeFilter,
         onTypeFilterChange,
-        view,
+        viewType,
         onSortChange,
         sortField,
     } = props;
@@ -39,7 +39,7 @@ function FilterSortToolbar(props) {
     return (
         <div className={classes.toolbar}>
             <form autoComplete="off">
-                {view === viewType.TILE && (
+                {viewType === view.TILE && (
                     <FormControl
                         id={build(baseDebugID, ids.SORT)}
                         className={classes.dropDown}
@@ -88,7 +88,7 @@ function FilterSortToolbar(props) {
                     className={classes.dropDown}
                 >
                     <InputLabel className={classes.dropDownLabel}>
-                        {getMessage("type")}
+                        {getMessage("appType")}
                     </InputLabel>
                     <Select
                         value={typeFilter}

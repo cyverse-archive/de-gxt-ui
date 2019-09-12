@@ -1,11 +1,10 @@
 import React from "react";
 
 import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import { AppTile, palette, withI18N } from "@cyverse-de/ui-lib";
+import { AppTile, palette, withI18N, LoadingMask } from "@cyverse-de/ui-lib";
 import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
 import FilterSortToolbar from "./FilterSortToolbar";
-import viewType from "../model/viewType";
 import VerticalMenuItems from "./VerticalMenuItems";
 
 /**
@@ -16,19 +15,26 @@ import VerticalMenuItems from "./VerticalMenuItems";
  */
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
+    container: {
+        width: "100%",
+        height: "100%",
+        marginTop: 0,
+        overflow: "auto",
     },
     header: {
         height: 25,
-        backgroundColor: palette.lightGray,
+        backgroundColor: palette.gray,
         paddingLeft: 5,
+        position: "sticky",
+        top: 0,
     },
     toolbar: {
-        backgroundColor: palette.lightGray,
-        borderBottom: "solid 2px",
+        backgroundColor: palette.gray,
+        borderBottom: "solid 1px",
         borderColor: palette.gray,
-        height: 50,
+        position: "sticky",
+        top: 25,
+        opacity: 0.9,
     },
     dropDown: {
         height: 40,
@@ -42,7 +48,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppTileListing(props) {
-    const { apps, intl, baseDebugID, heading, typeFilter, presenter } = props;
+    const {
+        apps,
+        intl,
+        baseDebugID,
+        heading,
+        typeFilter,
+        presenter,
+        viewType,
+        loading,
+    } = props;
     const classes = useStyles();
 
     const onTypeFilterChange = () => {};
@@ -52,52 +67,53 @@ function AppTileListing(props) {
     const onFavoriteClick = () => {};
     console.log("apps=> " + apps);
     return (
-        <Paper>
-            <div className={classes.header}>
-                <Typography>{heading}</Typography>
-            </div>
-            <FilterSortToolbar
-                classes={classes}
-                baseDebugId={baseDebugID}
-                typeFilter={typeFilter}
-                onTypeFilterChange={onTypeFilterChange}
-                onSortChange={onSortChange}
-                view={viewType.TABLE}
-            />
-
-            <Grid container className={classes.root}>
-                {apps &&
-                    apps.length > 0 &&
-                    apps.map((app) => {
-                        const external = app.app_type !== "DE";
-                        const menuItems = () => (
-                            <VerticalMenuItems
-                                isExternal={external}
-                                isFavorite={app.is_favorite}
-                                handleAppInfoClick={onAppInfoClick}
-                                handleCommentsClick={onCommentsClick}
-                                handleFavoriteClick={onFavoriteClick}
-                            />
-                        );
-                        return (
-                            <Grid key={app.id} item>
-                                <AppTile
-                                    uuid={app.id}
-                                    name={app.name}
-                                    creator={app.integrator_name}
-                                    rating={app.rating}
-                                    type={app.app_type}
-                                    isPublic={app.is_public}
-                                    isBeta={app.beta}
-                                    isDisabled={app.disabled}
+        <div className={classes.container}>
+            <LoadingMask loading={loading}>
+                <div className={classes.header}>
+                    <Typography>{heading}</Typography>
+                </div>
+                <FilterSortToolbar
+                    classes={classes}
+                    baseDebugId={baseDebugID}
+                    typeFilter={typeFilter}
+                    onTypeFilterChange={onTypeFilterChange}
+                    onSortChange={onSortChange}
+                    viewType={viewType}
+                />
+                <Grid container>
+                    {apps &&
+                        apps.length > 0 &&
+                        apps.map((app) => {
+                            const external = app.app_type !== "DE";
+                            const menuItems = () => (
+                                <VerticalMenuItems
                                     isExternal={external}
-                                    MenuItems={menuItems}
+                                    isFavorite={app.is_favorite}
+                                    handleAppInfoClick={onAppInfoClick}
+                                    handleCommentsClick={onCommentsClick}
+                                    handleFavoriteClick={onFavoriteClick}
                                 />
-                            </Grid>
-                        );
-                    })}
-            </Grid>
-        </Paper>
+                            );
+                            return (
+                                <Grid key={app.id} item>
+                                    <AppTile
+                                        uuid={app.id}
+                                        name={app.name}
+                                        creator={app.integrator_name}
+                                        rating={app.rating}
+                                        type={app.app_type}
+                                        isPublic={app.is_public}
+                                        isBeta={app.beta}
+                                        isDisabled={app.disabled}
+                                        isExternal={external}
+                                        MenuItems={menuItems}
+                                    />
+                                </Grid>
+                            );
+                        })}
+                </Grid>
+            </LoadingMask>
+        </div>
     );
 }
 

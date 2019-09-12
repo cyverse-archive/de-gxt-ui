@@ -603,7 +603,7 @@ class EditCommunity extends Component {
                             )}
                             <AppGridListing
                                 parentId={parentId}
-                                data={apps}
+                                apps={apps}
                                 selectable={false}
                                 deletable={isCommunityAdmin}
                                 onRemoveApp={this.handleRemoveApp}

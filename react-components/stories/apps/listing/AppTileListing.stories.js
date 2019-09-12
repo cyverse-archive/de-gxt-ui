@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import AppTileListing from "../../../src/apps/listing/AppTileListing";
+import AppListingView from "../../../src/apps/listing/AppListingView";
+import viewType from "../../../src/apps/model/viewType";
 
 class AppTileListingTest extends Component {
     render() {
@@ -205,7 +207,7 @@ class AppTileListingTest extends Component {
                 name: "Bowtie-2.2.1--Build-and-Map for workflows",
                 system_id: "de",
                 is_public: true,
-                id: "b1f3cd8e-e424-11e4-9703-ab68be62b493",
+                id: "b1f3cd8e-e424-11e4-9703-ab68be62b93",
                 edited_date: "2015-04-17T09:59:37.000Z",
                 step_count: 1,
                 can_run: true,
@@ -235,7 +237,7 @@ class AppTileListingTest extends Component {
                 name: "Bowtie2Build-2.2.4 indexer",
                 system_id: "de",
                 is_public: true,
-                id: "aa65db9e-9a8b-11e4-b9b7-0f1d2deb5049",
+                id: "aa65db9e-9a8b-11e4-b9b7-0f1d2db5049",
                 edited_date: "2017-01-09T21:18:15.000Z",
                 step_count: 1,
                 can_run: true,
@@ -267,7 +269,245 @@ class AppTileListingTest extends Component {
                 name: "BWA 0.7.4 non-model species",
                 system_id: "de",
                 is_public: true,
-                id: "efc2819c-83c3-47bd-a2b4-9c96a1f56946",
+                id: "efc2819c-83c3-47bd-a2b4-9c96a156946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-83c3-47bd-a2b4-9c6a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-83c3-47bd-ab4-9c96a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-8c3-47bd-a2b4-9c96a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc819c-83c3-47bd-a2b4-9c96a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-83c3-47bd-a24-9c96a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-83c3-47bd-a1b4-9c6a1f56946",
+                edited_date: "2014-03-19T23:13:23.000Z",
+                step_count: 1,
+                can_run: true,
+                integrator_email: "rogerab@email.arizona.edu",
+                app_type: "DE",
+                wiki_url:
+                    "http://pods.iplantcollaborative.org/wiki/display/DEapps/BWA+0.7.4+non-model+species",
+                rating: {
+                    average: 3.5,
+                    total: 2,
+                    user: 4,
+                    comment_id: 0,
+                },
+            },
+            {
+                integration_date: "2014-03-19T23:13:23.000Z",
+                description:
+                    "Index and map short reads to a reference sequence with BWA",
+                deleted: false,
+                pipeline_eligibility: {
+                    is_valid: true,
+                    reason: "",
+                },
+                is_favorite: false,
+                integrator_name: "Roger Barthelson",
+                beta: false,
+                permission: "read",
+                can_favor: true,
+                disabled: false,
+                can_rate: true,
+                name: "BWA 0.7.4 non-model species",
+                system_id: "de",
+                is_public: true,
+                id: "efc2819c-83c3-47bd-a2b4-9c96a1f5694",
                 edited_date: "2014-03-19T23:13:23.000Z",
                 step_count: 1,
                 can_run: true,
@@ -284,10 +524,11 @@ class AppTileListingTest extends Component {
             },
         ];
         return (
-            <AppTileListing
+            <AppListingView
                 apps={apps}
                 baseDebugID=".appTile"
                 heading="Heading"
+                viewType={viewType.TILE}
             />
         );
     }

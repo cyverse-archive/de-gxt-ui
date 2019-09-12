@@ -1,6 +1,6 @@
 const viewType = {
     TILE: "tile",
-    TABLE: "table",
+    TABLE: "grid",
 };
 
 export default viewType;
