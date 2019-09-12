@@ -43,7 +43,7 @@ public interface AppServiceFacade {
 
     void getAppsAsSplittable(HasQualifiedId appCategory,
                              AppTypeFilter filter,
-                             DECallback<String> callback);
+                             DECallback<Splittable> callback);
 
     /**
      * Retrieves a paged listing of templates in the given group.

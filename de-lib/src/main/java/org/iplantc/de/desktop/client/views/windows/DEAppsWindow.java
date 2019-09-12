@@ -50,6 +50,7 @@ public class DEAppsWindow extends WindowBase {
         setMinWidth(appsViewAppearance.appsWindowMinWidth());
         setMinHeight(appsViewAppearance.appsWindowMinHeight());
         setHeading(displayStrings.applications());
+        setBodyStyle("background-color: white;");
     }
 
     @Override

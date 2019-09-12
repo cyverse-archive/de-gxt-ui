@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ public interface OntologyServiceFacade {
 
     void getFilteredHierarchies(String rootIri, Avu avu, DECallback<OntologyHierarchy> callback);
 
-    void getAppsInCategory(String iri, Avu avu, AppTypeFilter filter,DECallback<String> callback);
+    void getAppsInCategory(String iri, Avu avu, AppTypeFilter filter,DECallback<Splittable> callback);
 
     void getUnclassifiedAppsInCategory(String iri, Avu avu, AppTypeFilter filter,
-                                       DECallback<String> callback);
+                                       DECallback<Splittable> callback);
 
     void getAppAVUs(App app, AsyncCallback<List<Avu>> callback);
 }

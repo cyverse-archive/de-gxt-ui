@@ -13,6 +13,7 @@ import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.converters.AvuListCallbackConverter;
 import org.iplantc.de.client.services.converters.OntologyHierarchyCallbackConverter;
 import org.iplantc.de.client.services.converters.OntologyHierarchyListCallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -20,6 +21,7 @@ import org.iplantc.de.shared.services.ServiceCallWrapper;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -55,26 +57,26 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     public void getAppsInCategory(String iri,
                                   Avu avu,
                                   AppTypeFilter filter,
-                                  DECallback<String> callback) {
+                                  DECallback<Splittable> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr=" + URL.encodeQueryString(avu.getAttribute());
         if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
             address = address + "&app-type=" + filter.getFilterString();
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, callback);
+        deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override
     public void getUnclassifiedAppsInCategory(String iri,
                                               Avu avu,
                                               AppTypeFilter filter,
-                                              DECallback<String> callback) {
+                                              DECallback<Splittable> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr=" + URL.encodeQueryString(avu.getAttribute());
         if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
             address = address + "&app-type=" + filter.getFilterString();
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, callback);
+        deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override
