@@ -379,6 +379,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
                 final AppListLoadResult loadResult = loadResultAutoBean.as();
                 loadResult.setData(apps);
+                loadResult.setTotal(apps.size());
                 return loadResult;
             }
         });

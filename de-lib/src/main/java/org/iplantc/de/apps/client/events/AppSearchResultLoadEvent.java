@@ -1,13 +1,11 @@
 package org.iplantc.de.apps.client.events;
 
-import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-
-import java.util.List;
 
 /**
  * A GwtEvent used to notify listeners that App search results have been loaded from the search service.
@@ -29,12 +27,12 @@ public class AppSearchResultLoadEvent extends GwtEvent<AppSearchResultLoadEvent.
 
     public static final GwtEvent.Type<AppSearchResultLoadEventHandler> TYPE = new GwtEvent.Type<>();
     private final String searchPattern;
-    private final List<App> results;
+    private final AppListLoadResult results;
     private final String searchText;
 
     public AppSearchResultLoadEvent(final String searchText,
                                     final String searchPattern,
-                                    final List<App> results) {
+                                    final AppListLoadResult results) {
         Preconditions.checkNotNull(results);
         this.searchText = searchText;
         this.searchPattern = searchPattern;
@@ -46,7 +44,7 @@ public class AppSearchResultLoadEvent extends GwtEvent<AppSearchResultLoadEvent.
         return TYPE;
     }
 
-    public List<App> getResults() {
+    public AppListLoadResult getResults() {
         return results;
     }
 

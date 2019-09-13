@@ -16,7 +16,6 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDeletionRequest;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
@@ -247,7 +246,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
         listStore.clear();
-        listStore.addAll(event.getResults());
+        listStore.addAll(event.getResults().getData());
     }
 
     @Override

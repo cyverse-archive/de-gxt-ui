@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -17,7 +18,6 @@ public class AppListViewImpl implements AppsListView {
     @Inject
     public AppListViewImpl() {
         panel = new HTMLPanel("<div></div>");
-        props = new ReactAppListing.AppListingProps();
     }
 
     @Override
@@ -27,31 +27,46 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void load(AppsListView.Presenter presenter,
-                     Splittable apps,
-                     String heading,
-                     String appTypeFiler,
-                     String sortField,
-                     String searchRegexPattern,
-                     boolean enableTypeFilter,
-                     String selectedAppId,
                      String activeView) {
 
-        props.apps = apps;
-        props.presenter = presenter;
-        props.heading = heading;
-        props.appTypeFilter = appTypeFiler;
-        props.sortField = sortField;
-        props.searchRegexPattern = searchRegexPattern;
-        props.enableTypeFilter = enableTypeFilter;
-        props.selectedAppId = selectedAppId;
+        props = new ReactAppListing.AppListingProps();
+        props.apps = null;
+        props.heading = "";
+        props.appTypeFilter = AppTypeFilter.ALL.getFilterString();
+        props.sortField = "name";
+        props.searchRegexPattern = "searchRegexPattern";
+        props.enableTypeFilter = true;
+        props.selectedAppId = null;
         props.viewType = activeView;
-        props.loading = false;
+        props.loading = true;
+        render();
+    }
+
+    @Override
+    public void setEnableTypeFilter(boolean enable) {
+        props.enableTypeFilter = enable;
+        render();
+    }
+
+    @Override
+    public void setSearchRegexPattern(String pattern) {
+        props.searchRegexPattern = pattern;
         render();
     }
 
     @Override
     public void setViewType(String viewType) {
         props.viewType = viewType;
+        render();
+    }
+
+    @Override
+    public void loadSearchResults(Splittable apps,
+                                  String heading,
+                                  boolean loading) {
+        props.apps = apps;
+        props.heading = heading;
+        props.loading = false;
         render();
     }
 
@@ -69,8 +84,9 @@ public class AppListViewImpl implements AppsListView {
     }
 
     @Override
-    public void setApps(Splittable apps) {
+    public void setApps(Splittable apps, boolean loading) {
         props.apps = apps;
+        props.loading = loading;
         render();
     }
 

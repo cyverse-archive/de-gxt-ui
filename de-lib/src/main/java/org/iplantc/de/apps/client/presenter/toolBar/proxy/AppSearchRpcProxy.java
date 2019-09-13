@@ -75,7 +75,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
                 if(hasHandlers != null){
                     // The search service accepts * and ? wildcards, so convert them for the pattern group.
                     String pattern = "(" + searchText.replace("*", ".*").replace('?', '.') + ")";
-                    hasHandlers.fireEvent(new AppSearchResultLoadEvent(searchText, pattern, apps));
+                    hasHandlers.fireEvent(new AppSearchResultLoadEvent(searchText, pattern, loadResult));
                 }
 
                 // Pass the App list to this proxy's load callback.
@@ -89,7 +89,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
                 if(hasHandlers != null){
                     // The search service accepts * and ? wildcards, so convert them for the pattern group.
                     String pattern = "(" + searchText.replace("*", ".*").replace('?', '.') + ")";
-                    hasHandlers.fireEvent(new AppSearchResultLoadEvent(searchText, pattern, Collections.<App>emptyList()));
+                    hasHandlers.fireEvent(new AppSearchResultLoadEvent(searchText, pattern, null));
                 }
                 callback.onFailure(caught);
             }

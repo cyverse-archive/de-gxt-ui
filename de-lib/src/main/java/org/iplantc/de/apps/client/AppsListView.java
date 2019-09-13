@@ -110,13 +110,13 @@ public interface AppsListView extends IsWidget/*   ,
         void setViewDebugId(String baseID);
 
         @JsIgnore
-        void loadApps(Splittable apps);
-
-        @JsIgnore
         String getActiveView();
 
         @JsIgnore
         void setActiveView(String activeView);
+
+        @JsIgnore
+        void loadApps(Splittable apps);
     }
 
  /*   List<DragSource> getAppsDragSources();
@@ -134,24 +134,26 @@ public interface AppsListView extends IsWidget/*   ,
     void setAppTypeFilter(AppTypeFilter filter);
 
     void enableAppTypeFilter(boolean enabled);*/
- void load(AppsListView.Presenter presenter,
-           Splittable apps,
-           String heading,
-           String appTypeFiler,
-           String sortField,
-           String searchRegexPattern,
-           boolean enableTypeFilter,
-           String selectedAppId,
-           String activeView);
+
+    void load(AppsListView.Presenter presenter,
+              String activeView);
+
+    void setEnableTypeFilter(boolean enable);
+
+    void setSearchRegexPattern(String pattern);
 
     void setHeading(String heading);
 
     void setLoadingMask(boolean loading);
 
-    void setApps(Splittable apps);
+    void setApps(Splittable apps, boolean loading);
 
     void render();
 
     void setViewType(String viewType);
+
+    void loadSearchResults(Splittable apps,
+                           String heading,
+                           boolean loading);
 
 }
