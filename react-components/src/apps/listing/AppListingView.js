@@ -1,7 +1,7 @@
 import React from "react";
 import AppTileListing from "./AppTileListing";
-import AppGridListing from "./AppGridListing";
 import view from "../model/viewType";
+import WithToolbarAppGridListing from "./WithToolbarAppGridListing";
 
 /**
  *
@@ -16,7 +16,7 @@ export default function AppListingView(props) {
     if (viewType === view.TILE) {
         return <AppTileListing {...props} />;
     } else if (viewType === view.TABLE) {
-        return <AppGridListing {...props} />;
+        return <WithToolbarAppGridListing {...props} />;
     } else {
         return "UnSupported View!";
     }

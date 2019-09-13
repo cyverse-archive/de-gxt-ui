@@ -6,6 +6,7 @@ import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
 import FilterSortToolbar from "./FilterSortToolbar";
 import VerticalMenuItems from "./VerticalMenuItems";
+import AppListingHeader from "./AppListingHeader";
 
 /**
  *
@@ -20,30 +21,7 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
         marginTop: 0,
         overflow: "auto",
-    },
-    header: {
-        height: 25,
-        backgroundColor: palette.gray,
-        paddingLeft: 5,
-        position: "sticky",
-        top: 0,
-    },
-    toolbar: {
-        backgroundColor: palette.gray,
-        borderBottom: "solid 1px",
-        borderColor: palette.gray,
-        position: "sticky",
-        top: 25,
-        opacity: 0.9,
-    },
-    dropDown: {
-        height: 40,
-        flexDirection: "unset",
-        padding: 5,
-    },
-    dropDownLabel: {
-        padding: 5,
-        fontSize: 10,
+        backgroundColor: palette.white,
     },
 }));
 
@@ -65,15 +43,11 @@ function AppTileListing(props) {
     const onAppInfoClick = () => {};
     const onCommentsClick = () => {};
     const onFavoriteClick = () => {};
-    console.log("apps=> " + apps);
     return (
         <div className={classes.container}>
             <LoadingMask loading={loading}>
-                <div className={classes.header}>
-                    <Typography>{heading}</Typography>
-                </div>
+                <AppListingHeader heading={heading} />
                 <FilterSortToolbar
-                    classes={classes}
                     baseDebugId={baseDebugID}
                     typeFilter={typeFilter}
                     onTypeFilterChange={onTypeFilterChange}

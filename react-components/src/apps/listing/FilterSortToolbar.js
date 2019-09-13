@@ -1,5 +1,5 @@
 import React from "react";
-import { build, getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { build, getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
 import ids from "./ids";
 import view from "../model/viewType";
 import appType from "../../appType";
@@ -8,6 +8,7 @@ import intlData from "../../apps/messages";
 import {
     FormControl,
     InputLabel,
+    makeStyles,
     MenuItem,
     OutlinedInput,
     Select,
@@ -24,18 +25,35 @@ const sort = {
     integrator: "Integrator",
     rating: "Rating",
 };
-
+const useStyles = makeStyles((theme) => ({
+    toolbar: {
+        backgroundColor: palette.lightGray,
+        borderBottom: "solid 1px",
+        borderColor: palette.gray,
+        position: "sticky",
+        top: 25,
+        opacity: 0.9,
+    },
+    dropDown: {
+        height: 40,
+        flexDirection: "unset",
+        padding: 5,
+    },
+    dropDownLabel: {
+        padding: 5,
+        fontSize: 10,
+    },
+}));
 function FilterSortToolbar(props) {
     const {
         baseDebugID,
-        classes,
         typeFilter,
         onTypeFilterChange,
         viewType,
         onSortChange,
         sortField,
     } = props;
-
+    const classes = useStyles();
     return (
         <div className={classes.toolbar}>
             <form autoComplete="off">

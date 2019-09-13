@@ -104,7 +104,7 @@ class AppGridListing extends Component {
         let columnData = getTableColumns(deletable);
 
         return (
-            <Table>
+            <Table stickyHeader={true}>
                 <TableBody>
                     {(!apps || apps.length === 0) && (
                         <EmptyTable
