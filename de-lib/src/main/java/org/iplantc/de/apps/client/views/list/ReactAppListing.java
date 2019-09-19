@@ -24,10 +24,10 @@ public class ReactAppListing {
         public Splittable apps;
         public AppsListView.Presenter presenter;
         public String heading;
-        public String appTypeFilter;
+        public String typeFilter;
         public String sortField;
         public String searchRegexPattern;
-        public boolean enableTypeFilter;
+        public boolean disableTypeFilter;
         public String selectedAppId;
         public String viewType;
         public boolean loading;

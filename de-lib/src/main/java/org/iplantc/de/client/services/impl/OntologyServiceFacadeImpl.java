@@ -56,11 +56,11 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     @Override
     public void getAppsInCategory(String iri,
                                   Avu avu,
-                                  AppTypeFilter filter,
+                                  String filter,
                                   DECallback<Splittable> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr=" + URL.encodeQueryString(avu.getAttribute());
-        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "&app-type=" + filter.getFilterString();
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
@@ -69,11 +69,11 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     @Override
     public void getUnclassifiedAppsInCategory(String iri,
                                               Avu avu,
-                                              AppTypeFilter filter,
+                                              String filter,
                                               DECallback<Splittable> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr=" + URL.encodeQueryString(avu.getAttribute());
-        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "&app-type=" + filter.getFilterString();
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));

@@ -30,12 +30,13 @@ public class AppListViewImpl implements AppsListView {
                      String activeView) {
 
         props = new ReactAppListing.AppListingProps();
+        props.presenter = presenter;
         props.apps = null;
         props.heading = "";
-        props.appTypeFilter = AppTypeFilter.ALL.getFilterString();
-        props.sortField = "name";
-        props.searchRegexPattern = "searchRegexPattern";
-        props.enableTypeFilter = true;
+        props.typeFilter = AppTypeFilter.ALL.getFilterString();
+        props.sortField = "Name";
+        props.searchRegexPattern = "";
+        props.disableTypeFilter = false;
         props.selectedAppId = null;
         props.viewType = activeView;
         props.loading = true;
@@ -43,8 +44,8 @@ public class AppListViewImpl implements AppsListView {
     }
 
     @Override
-    public void setEnableTypeFilter(boolean enable) {
-        props.enableTypeFilter = enable;
+    public void disableTypeFilter(boolean disable) {
+        props.disableTypeFilter = disable;
         render();
     }
 
@@ -67,6 +68,12 @@ public class AppListViewImpl implements AppsListView {
         props.apps = apps;
         props.heading = heading;
         props.loading = false;
+        render();
+    }
+
+    @Override
+    public void setTypeFilter(String filter) {
+        props.typeFilter = filter;
         render();
     }
 

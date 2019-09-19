@@ -292,7 +292,7 @@ public class AppsListPresenterImplTest {
         when(userInfoMock.getEmail()).thenReturn("baz@foo.com");
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.onAppCommentSelectedEvent(eventMock);
+        uut.onAppCommentSelected(eventMock);
 
         verify(commentsProviderMock).get(commentsDlgCaptor.capture());
 

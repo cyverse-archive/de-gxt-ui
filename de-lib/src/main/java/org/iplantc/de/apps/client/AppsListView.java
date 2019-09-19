@@ -117,6 +117,18 @@ public interface AppsListView extends IsWidget/*   ,
 
         @JsIgnore
         void loadApps(Splittable apps);
+
+        void onTypeFilterChanged(String filter);
+
+        void onAppSelectionChanged(Splittable selectedApps);
+
+        void onAppNameSelected(Splittable appSplittable);
+
+        void onAppInfoSelected(Splittable appSplittable);
+
+        void onAppFavoriteSelected(Splittable appSplittable);
+
+        void onAppCommentSelected(Splittable appSplittable);
     }
 
  /*   List<DragSource> getAppsDragSources();
@@ -138,7 +150,7 @@ public interface AppsListView extends IsWidget/*   ,
     void load(AppsListView.Presenter presenter,
               String activeView);
 
-    void setEnableTypeFilter(boolean enable);
+    void disableTypeFilter(boolean disable);
 
     void setSearchRegexPattern(String pattern);
 
@@ -155,5 +167,8 @@ public interface AppsListView extends IsWidget/*   ,
     void loadSearchResults(Splittable apps,
                            String heading,
                            boolean loading);
+
+
+    void setTypeFilter(String filter);
 
 }

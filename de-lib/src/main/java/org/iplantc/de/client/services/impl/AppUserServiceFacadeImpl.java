@@ -119,10 +119,11 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback) {
+    public void getCommunityApps(String communityDisplayName, String filter,
+                                 DECallback<Splittable> callback) {
         String address = APP_COMMUNITIES + "/" + URL.encode(communityDisplayName) + "/apps";
-        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "?app-type=" + filter.getFilterString();
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "?app-type=" + filter;
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -488,11 +489,11 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
     @Override
     public void getAppsAsSplittable(HasQualifiedId appCategory,
-                                    AppTypeFilter filter,
+                                    String filter,
                                     DECallback<Splittable> callback) {
         String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
-        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "?app-type=" + filter.getFilterString();
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "?app-type=" + filter;
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper,new SplittableDECallbackConverter(callback));

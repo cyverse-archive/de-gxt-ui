@@ -112,6 +112,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     @Inject
     UserInfo userInfo;
+
     protected List<App> currentSelection = Lists.newArrayList();
 
     @Inject

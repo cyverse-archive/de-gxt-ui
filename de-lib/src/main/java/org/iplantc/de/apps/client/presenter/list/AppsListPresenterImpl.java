@@ -4,16 +4,12 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
-import org.iplantc.de.apps.client.events.AppTypeFilterChangedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.RunAppEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
@@ -65,21 +61,16 @@ import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author jstroot
  */
 public class AppsListPresenterImpl implements AppsListView.Presenter,
-                                              AppNameSelectedEvent.AppNameSelectedEventHandler,
                                               AppRatingSelected.AppRatingSelectedHandler,
                                               AppRatingDeselected.AppRatingDeselectedHandler,
-                                              AppCommentSelectedEvent.AppCommentSelectedEventHandler,
-                                              AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler,
-                                              AppUpdatedEvent.AppUpdatedEventHandler,
-                                              AppSelectionChangedEvent.AppSelectionChangedEventHandler,
-                                              AppInfoSelectedEvent.AppInfoSelectedEventHandler,
-                                              AppTypeFilterChangedEvent.AppTypeFilterChangedEventHandler {
+                                              AppUpdatedEvent.AppUpdatedEventHandler{
 
     private final DEProperties deProperties;
     private final EventBus eventBus;
@@ -103,7 +94,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     HandlerManager handlerManager;
     AppsListView listView;
     CardLayoutContainer cards;
-    AppTypeFilter filter;
+    String filter;
     private OntologyHierarchy selectedHierarchy;
     private AppCategory appCategory;
     private App desiredSelectedApp;
@@ -140,7 +131,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         activeView = AppsListView.TILE_VIEW;
 
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
-        eventBus.addHandler(AppTypeFilterChangedEvent.TYPE, this);
     }
 
     @Override
@@ -178,16 +168,19 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         setTypeFilterPreferences();*/
         //  activeView = newView;
         //  listView.setViewType(newView);
+        setTypeFilterPreferences();
         activeView = newView;
         listView.setViewType(newView);
 
     }
 
     private void setTypeFilterPreferences() {
-        filter = AppTypeFilter.ALL;
+        filter = AppTypeFilter.ALL.getFilterString();
+        listView.setTypeFilter(filter);
+        disableTypeFilterForHPC();
    /*     activeView.setAppTypeFilter(filter);
         activeView.enableAppTypeFilter(true);*/
-        disableTypeFilterForHPC();
+
     }
 
     @Override
@@ -228,21 +221,36 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppInfoSelected(AppInfoSelectedEvent event) {
+    public void onAppInfoSelected(Splittable app) {
+        AppInfoSelectedEvent event = new AppInfoSelectedEvent(splittableToApp(app));
         fireEvent(event);
     }
 
+    protected App splittableToApp(Splittable app) {
+        return AutoBeanCodex.decode(factory, App.class, app).as();
+    }
+
     @Override
-    public void onAppSelectionChanged(AppSelectionChangedEvent event) {
+    public void onAppSelectionChanged(Splittable selectedApps) {
+        GWT.log("selected apps => " + selectedApps.getPayload() + "array?" + selectedApps.isIndexed()
+                + "size=>" + selectedApps.size());
+        List<App> appList = new ArrayList<>();
+        for (int i = 0; i < selectedApps.size(); i++) {
+            App app = splittableToApp(selectedApps.get(i));
+            appList.add(app);
+        }
+        AppSelectionChangedEvent event = new AppSelectionChangedEvent(appList);
         fireEvent(event);
     }
 
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
-        filter = AppTypeFilter.ALL;
+        filter = AppTypeFilter.ALL.getFilterString();
    /*     activeView.setAppTypeFilter(filter);
         activeView.enableAppTypeFilter(false);
         activeView.mask(appearance.beforeAppSearchLoadingMask());*/
+        listView.setTypeFilter(filter);
+        listView.disableTypeFilter(true);
         listView.setLoadingMask(true);
     }
 
@@ -301,16 +309,17 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     protected void disableTypeFilterForHPC() {
-        /*if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
-            filter = AppTypeFilter.AGAVE;
-            activeView.enableAppTypeFilter(false);
+        if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
+            filter = AppTypeFilter.AGAVE.getFilterString();
+            listView.disableTypeFilter(true);
         } else {
-            activeView.enableAppTypeFilter(true);
-            if (filter != null && filter.equals(AppTypeFilter.AGAVE)) {
-                filter = AppTypeFilter.ALL;
+            listView.disableTypeFilter(false);
+            if (filter != null && filter.equals(AppTypeFilter.AGAVE.getFilterString())) {
+                filter = AppTypeFilter.ALL.getFilterString();
             }
         }
-        activeView.setAppTypeFilter(filter);*/
+        listView.setTypeFilter(filter);
+
     }
 
     void getCommunityApps(Group community) {
@@ -329,22 +338,21 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     protected void getAppsWithSelectedCategory() {
-       // activeView.mask(appearance.getAppsLoadingMask());
         listView.setLoadingMask(true);
         appService.getAppsAsSplittable(appCategory, filter, new AppListCallback());
     }
 
     @Override
     public void onOntologyHierarchySelectionChanged(OntologyHierarchySelectionChangedEvent event) {
+        listView.setLoadingMask(true);
         selectedHierarchy = event.getSelectedHierarchy();
         listView.setHeading(Joiner.on(" >> ").join(event.getPath()));
-    //    activeView.enableAppTypeFilter(true);
+        listView.disableTypeFilter(false);
         getAppsWithSelectedHierarchy();
     }
 
     protected void getAppsWithSelectedHierarchy() {
         if (selectedHierarchy != null) {
-            listView.setLoadingMask(true);
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
             if (ontologyUtil.isUnclassified(selectedHierarchy)) {
@@ -357,8 +365,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppCommentSelectedEvent(AppCommentSelectedEvent event) {
-        final App app = event.getApp();
+    public void onAppCommentSelected(Splittable appSplittable) {
+        final App app = splittableToApp(appSplittable);
         if (App.EXTERNAL_APP.equalsIgnoreCase(app.getAppType())) {
             return;
         }
@@ -377,8 +385,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppFavoriteSelected(AppFavoriteSelectedEvent event) {
-        final App app = event.getApp();
+    public void onAppFavoriteSelected(Splittable appSplittable) {
+        final App app = splittableToApp(appSplittable);
         if (App.EXTERNAL_APP.equalsIgnoreCase(app.getAppType())) {
             return;
         }
@@ -398,8 +406,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppNameSelected(AppNameSelectedEvent event) {
-        doRunApp(event.getSelectedApp());
+    public void onAppNameSelected(Splittable appSplittable) {
+        doRunApp(splittableToApp(appSplittable));
     }
 
     @Override
@@ -474,20 +482,12 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onSwapViewButtonClicked(SwapViewButtonClickedEvent event) {
- /*     //  activeView.deselectAll();
-        if (activeView == gridView) {
-            activeView = tileView;
-        } else {
-            activeView = gridView;
-        }
-        cards.setActiveWidget(activeView);
         setTypeFilterPreferences();
- */
-     if(activeView.equals(AppsListView.GRID_VIEW)) {
-         activeView = AppsListView.TILE_VIEW;
-     } else {
-         activeView = AppsListView.GRID_VIEW;
-     }
+        if (activeView.equals(AppsListView.GRID_VIEW)) {
+            activeView = AppsListView.TILE_VIEW;
+        } else {
+            activeView = AppsListView.GRID_VIEW;
+        }
         listView.setViewType(activeView);
     }
 
@@ -511,8 +511,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onTypeFilterChanged(AppTypeFilterChangedEvent event) {
-        this.filter = event.getFilter();
+    public void onTypeFilterChanged(String filter) {
+        this.filter = filter;
+        listView.setTypeFilter(filter);
         if (selectedHierarchy != null) {
             getAppsWithSelectedHierarchy();
             return;

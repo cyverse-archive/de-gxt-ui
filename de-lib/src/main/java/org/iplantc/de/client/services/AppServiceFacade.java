@@ -42,7 +42,7 @@ public interface AppServiceFacade {
     void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
 
     void getAppsAsSplittable(HasQualifiedId appCategory,
-                             AppTypeFilter filter,
+                             String filter,
                              DECallback<Splittable> callback);
 
     /**
@@ -80,5 +80,5 @@ public interface AppServiceFacade {
      * @param filter
      * @param callback
      */
-    void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback);
+    void getCommunityApps(String communityDisplayName, String filter, DECallback<Splittable> callback);
 }
