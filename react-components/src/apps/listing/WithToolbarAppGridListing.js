@@ -3,7 +3,7 @@ import AppListingHeader from "./AppListingHeader";
 import FilterSortToolbar from "./FilterSortToolbar";
 import { AppGridListing } from "../listing";
 import { makeStyles } from "@material-ui/core";
-import { palette } from "@cyverse-de/ui-lib";
+import { palette, LoadingMask } from "@cyverse-de/ui-lib";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -23,24 +23,28 @@ export default function WithToolbarAppGridListing(props) {
         onTypeFilterChange,
         onSortChange,
         viewType,
-        ...rest
+        disableTypeFilter,
+        loading,
     } = props;
     const classes = useStyles();
     return (
         <div className={classes.container}>
-            <AppListingHeader heading={heading} />
-            <FilterSortToolbar
-                baseDebugId={baseDebugId}
-                typeFilter={typeFilter}
-                onTypeFilterChange={onTypeFilterChange}
-                onSortChange={onSortChange}
-                viewType={viewType}
-            />
-            <AppGridListing
-                baseDebugID={baseDebugId}
-                viewType={viewType}
-                {...rest}
-            />
+            <LoadingMask loading={loading}>
+                <AppListingHeader heading={heading} />
+                <FilterSortToolbar
+                    baseDebugId={baseDebugId}
+                    typeFilter={typeFilter}
+                    onTypeFilterChange={onTypeFilterChange}
+                    onSortChange={onSortChange}
+                    viewType={viewType}
+                    disableTypeFilter={disableTypeFilter}
+                />
+                <AppGridListing
+                    baseDebugID={baseDebugId}
+                    viewType={viewType}
+                    {...props}
+                />
+            </LoadingMask>
         </div>
     );
 }
