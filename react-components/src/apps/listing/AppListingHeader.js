@@ -12,10 +12,8 @@ import { LoadingMask, palette } from "@cyverse-de/ui-lib";
 const useStyles = makeStyles((theme) => ({
     header: {
         height: 25,
-        backgroundColor: palette.gray,
+        backgroundColor: palette.lightGray,
         paddingLeft: 5,
-        position: "sticky",
-        top: 0,
     },
 }));
 
@@ -24,7 +22,7 @@ export default function AppListingHeader(props) {
     const classes = useStyles();
     return (
         <div className={classes.header}>
-            <Typography>{heading}</Typography>
+            <Typography variant="subtitle2">{heading}</Typography>
         </div>
     );
 }
