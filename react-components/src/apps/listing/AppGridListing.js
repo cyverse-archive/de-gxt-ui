@@ -4,14 +4,15 @@ import PropTypes from "prop-types";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 
 import {
+    AppName,
     AppStatusIcon,
-    EnhancedTableHead,
     EmptyTable,
+    EnhancedTableHead,
     getMessage,
     getSorting,
+    Rate,
     stableSort,
     withI18N,
-    Rate,
 } from "@cyverse-de/ui-lib";
 
 import ids from "./ids";
@@ -34,17 +35,13 @@ class AppGridListing extends Component {
         super(props);
 
         this.state = {
-            selected: [],
             order: "asc",
             orderBy: "Name",
         };
 
-        [
-            "isSelected",
-            "handleRowClick",
-            "handleSelectAllClick",
-            "onRequestSort",
-        ].forEach((fn) => (this[fn] = this[fn].bind(this)));
+        ["handleSelectAllClick", "onRequestSort"].forEach(
+            (fn) => (this[fn] = this[fn].bind(this))
+        );
     }
 
     onRequestSort(event, property) {
@@ -57,37 +54,13 @@ class AppGridListing extends Component {
         this.setState({ order, orderBy });
     }
 
-    isSelected(app) {
-        return this.state.selected.indexOf(app.id) !== -1;
-    }
-
     handleSelectAllClick(event, checked) {
+        const { apps, handleAppSelection, resetAppSelection } = this.props;
         if (checked) {
-            this.setState({ selected: this.props.apps.map((app) => app.id) });
+            apps.forEach((app) => handleAppSelection(app.id));
             return;
         }
-        this.setState({ selected: [] });
-    }
-
-    handleRowClick(id) {
-        const { selected } = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-
-        this.setState({ selected: newSelected });
+        resetAppSelection();
     }
 
     render() {
@@ -99,6 +72,10 @@ class AppGridListing extends Component {
             selectable,
             deletable,
             onRemoveApp,
+            selectedApps,
+            handleAppSelection,
+            isSelected,
+            onAppNameClick,
         } = this.props;
 
         let columnData = getTableColumns(deletable);
@@ -116,7 +93,6 @@ class AppGridListing extends Component {
                         apps.length > 0 &&
                         stableSort(apps, getSorting(order, orderBy)).map(
                             (app) => {
-                                const isSelected = this.isSelected(app);
                                 const {
                                     average: averageRating,
                                     user: userRating,
@@ -127,11 +103,9 @@ class AppGridListing extends Component {
                                         role="checkbox"
                                         tabIndex={-1}
                                         hover
-                                        selected={isSelected}
+                                        selected={isSelected(app.id)}
                                         aria-checked={isSelected}
-                                        onClick={() =>
-                                            this.handleRowClick(app.id)
-                                        }
+                                        onClick={() => handleAppSelection(app)}
                                         key={app.id}
                                     >
                                         {selectable && (
@@ -148,7 +122,15 @@ class AppGridListing extends Component {
                                                 isDisabled={app.disabled}
                                             />
                                         </TableCell>
-                                        <TableCell>{app.name}</TableCell>
+                                        <TableCell>
+                                            <AppName
+                                                isDisabled={app.disabled}
+                                                name={app.name}
+                                                onAppNameClicked={() =>
+                                                    onAppNameClick(app)
+                                                }
+                                            />
+                                        </TableCell>
                                         <TableCell>
                                             {app.integrator_name}
                                         </TableCell>
@@ -158,8 +140,8 @@ class AppGridListing extends Component {
                                                     userRating || averageRating
                                                 }
                                                 readOnly={
-                                                    app.isExternal ||
-                                                    !app.isPublic
+                                                    app.app_type !== "DE" ||
+                                                    !app.is_public
                                                 }
                                                 total={totalRating}
                                             />
@@ -181,7 +163,7 @@ class AppGridListing extends Component {
                 </TableBody>
                 <EnhancedTableHead
                     selectable={selectable}
-                    numSelected={selected.length}
+                    numSelected={selectedApps ? selectedApps.length : 0}
                     rowCount={apps ? apps.length : 0}
                     order={order}
                     orderBy={orderBy}
@@ -238,6 +220,9 @@ AppGridListing.propTypes = {
     selectable: PropTypes.bool,
     deletable: PropTypes.bool,
     onRemoveApp: PropTypes.func,
+    selectedApps: PropTypes.array.isRequired,
+    handleAppSelection: PropTypes.func.isRequired,
+    resetAppSelection: PropTypes.func.isRequired,
 };
 
 export default withI18N(AppGridListing, messages);

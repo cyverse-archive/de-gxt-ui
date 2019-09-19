@@ -47,6 +47,7 @@ class EditCommunity extends Component {
             deleteCommunity: false,
             leaveCommunity: false,
             joinCommunity: false,
+            selectedApps: [],
         };
 
         [
@@ -68,6 +69,8 @@ class EditCommunity extends Component {
             "handleDialogConfirmed",
             "onDialogBtnClicked",
             "closeDialog",
+            "handleAppSelection",
+            "resetAppSelection",
         ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
@@ -278,6 +281,31 @@ class EditCommunity extends Component {
         }
     }
 
+    handleAppSelection(id) {
+        const { selectedApps } = this.state;
+        const selectedIndex = selectedApps.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedApps, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedApps.slice(1));
+        } else if (selectedIndex === selectedApps.length - 1) {
+            newSelected = newSelected.concat(selectedApps.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedApps.slice(0, selectedIndex),
+                selectedApps.slice(selectedIndex + 1)
+            );
+        }
+
+        this.setState({ selectedApps: newSelected });
+    }
+
+    resetAppSelection() {
+        this.setState({ selectedApps: [] });
+    }
+
     removeAdmin(subject) {
         const { admins } = this.state;
         this.setState({
@@ -394,7 +422,14 @@ class EditCommunity extends Component {
     }
 
     render() {
-        const { admins, apps, name, errors, loading } = this.state;
+        const {
+            admins,
+            apps,
+            name,
+            errors,
+            loading,
+            selectedApps,
+        } = this.state;
 
         const {
             isCommunityAdmin,
@@ -607,6 +642,9 @@ class EditCommunity extends Component {
                                 selectable={false}
                                 deletable={isCommunityAdmin}
                                 onRemoveApp={this.handleRemoveApp}
+                                handleAppSelection={this.handleAppSelection}
+                                resetAppSelection={this.resetAppSelection}
+                                selectedApps={selectedApps}
                             />
                         </fieldset>
                     </form>
