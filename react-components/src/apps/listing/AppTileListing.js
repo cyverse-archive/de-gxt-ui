@@ -35,14 +35,19 @@ function AppTileListing(props) {
         presenter,
         viewType,
         loading,
+        sortField,
+        onTypeFilterChange,
+        onSortChange,
+        onAppInfoClick,
+        onCommentsClick,
+        onFavoriteClick,
+        disableTypeFilter,
+        handleAppSelection,
+        isSelected,
+        onAppNameClick,
     } = props;
     const classes = useStyles();
 
-    const onTypeFilterChange = () => {};
-    const onSortChange = () => {};
-    const onAppInfoClick = () => {};
-    const onCommentsClick = () => {};
-    const onFavoriteClick = () => {};
     return (
         <div className={classes.container}>
             <LoadingMask loading={loading}>
@@ -53,6 +58,8 @@ function AppTileListing(props) {
                     onTypeFilterChange={onTypeFilterChange}
                     onSortChange={onSortChange}
                     viewType={viewType}
+                    sortField={sortField}
+                    disableTypeFilter={disableTypeFilter}
                 />
                 <Grid container>
                     {apps &&
@@ -63,9 +70,15 @@ function AppTileListing(props) {
                                 <VerticalMenuItems
                                     isExternal={external}
                                     isFavorite={app.is_favorite}
-                                    handleAppInfoClick={onAppInfoClick}
-                                    handleCommentsClick={onCommentsClick}
-                                    handleFavoriteClick={onFavoriteClick}
+                                    handleAppInfoClick={() =>
+                                        onAppInfoClick(app)
+                                    }
+                                    handleCommentsClick={() =>
+                                        onCommentsClick(app)
+                                    }
+                                    handleFavoriteClick={() =>
+                                        onFavoriteClick(app)
+                                    }
                                 />
                             );
                             return (
@@ -81,6 +94,13 @@ function AppTileListing(props) {
                                         isDisabled={app.disabled}
                                         isExternal={external}
                                         MenuItems={menuItems}
+                                        selected={isSelected(app.id)}
+                                        onAppSelected={() =>
+                                            handleAppSelection(app)
+                                        }
+                                        onAppNameClicked={() =>
+                                            onAppNameClick(app)
+                                        }
                                     />
                                 </Grid>
                             );

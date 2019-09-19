@@ -19,7 +19,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function VerticalMenuItems(props) {
-    const { isExternal, isFavorite } = props;
+    const {
+        isExternal,
+        isFavorite,
+        handleAppInfoClick,
+        handleFavoriteClick,
+        handleCommentsClick,
+    } = props;
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -27,6 +33,7 @@ function VerticalMenuItems(props) {
                 disabled={false}
                 className={classes.menuItem}
                 data-disabled={false}
+                onClick={handleAppInfoClick}
             >
                 {getMessage("appInfo")}
             </MenuItem>
@@ -35,6 +42,7 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
+                    onClick={handleFavoriteClick}
                 >
                     {getMessage("addToFavorites")}
                 </MenuItem>
@@ -44,6 +52,7 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
+                    onClick={handleFavoriteClick}
                 >
                     {getMessage("removeFromFavorites")}
                 </MenuItem>
@@ -53,6 +62,7 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
+                    onClick={handleCommentsClick}
                 >
                     {getMessage("comments")}
                 </MenuItem>

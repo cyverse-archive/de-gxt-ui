@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: palette.lightGray,
         borderBottom: "solid 1px",
         borderColor: palette.gray,
-        position: "sticky",
-        top: 25,
-        opacity: 0.9,
     },
     dropDown: {
         height: 40,
@@ -52,6 +49,7 @@ function FilterSortToolbar(props) {
         viewType,
         onSortChange,
         sortField,
+        disableTypeFilter,
     } = props;
     const classes = useStyles();
     return (
@@ -113,6 +111,7 @@ function FilterSortToolbar(props) {
                         onChange={(e) => onTypeFilterChange(e.target.value)}
                         input={<OutlinedInput labelWidth={0} name="type" />}
                         style={{ minWidth: 120 }}
+                        disabled={disableTypeFilter}
                     >
                         <MenuItem
                             id={build(baseDebugID, ids.LISTING.TYPE + ids.ALL)}
