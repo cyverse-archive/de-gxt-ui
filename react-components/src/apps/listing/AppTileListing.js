@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { AppTile, palette, withI18N, LoadingMask } from "@cyverse-de/ui-lib";
@@ -48,6 +48,12 @@ function AppTileListing(props) {
     } = props;
     const classes = useStyles();
 
+    const [anchorEl, setAnchorEl] = useState("");
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div className={classes.container}>
             <LoadingMask loading={loading}>
@@ -79,6 +85,7 @@ function AppTileListing(props) {
                                     handleFavoriteClick={() =>
                                         onFavoriteClick(app)
                                     }
+                                    handleMenuClose={handleMenuClose}
                                 />
                             );
                             return (
@@ -101,6 +108,13 @@ function AppTileListing(props) {
                                         onAppNameClicked={() =>
                                             onAppNameClick(app)
                                         }
+                                        handleMenuClose={() => {
+                                            setAnchorEl(null);
+                                        }}
+                                        handleMenuClick={(event) => {
+                                            setAnchorEl(event.currentTarget);
+                                        }}
+                                        anchorEl={anchorEl}
                                     />
                                 </Grid>
                             );

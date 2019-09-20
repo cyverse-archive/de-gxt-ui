@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
-import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { getMessage, palette, withI18N } from "@cyverse-de/ui-lib";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import UnFavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import CommentsIcon from "@material-ui/icons/CommentOutlined";
 
 /**
  *
@@ -16,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     menuItem: {
         padding: 5,
     },
+    toolbarItemColor: {
+        color: palette.darkBlue,
+    },
 }));
 
 function VerticalMenuItems(props) {
@@ -25,7 +32,9 @@ function VerticalMenuItems(props) {
         handleAppInfoClick,
         handleFavoriteClick,
         handleCommentsClick,
+        handleMenuClose,
     } = props;
+    const [open, setOpen] = useState(false);
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -33,8 +42,11 @@ function VerticalMenuItems(props) {
                 disabled={false}
                 className={classes.menuItem}
                 data-disabled={false}
-                onClick={handleAppInfoClick}
+                onClick={() => {
+                    handleAppInfoClick();
+                }}
             >
+                <InfoIcon className={classes.toolbarItemColor} />
                 {getMessage("appInfo")}
             </MenuItem>
             {!isFavorite && !isExternal && (
@@ -42,8 +54,11 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
-                    onClick={handleFavoriteClick}
+                    onClick={() => {
+                        handleFavoriteClick();
+                    }}
                 >
+                    <FavoriteIcon className={classes.toolbarItemColor} />
                     {getMessage("addToFavorites")}
                 </MenuItem>
             )}
@@ -52,8 +67,12 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
-                    onClick={handleFavoriteClick}
+                    onClick={() => {
+                        handleFavoriteClick();
+                        handleMenuClose();
+                    }}
                 >
+                    <UnFavoriteIcon className={classes.toolbarItemColor} />
                     {getMessage("removeFromFavorites")}
                 </MenuItem>
             )}
@@ -62,8 +81,12 @@ function VerticalMenuItems(props) {
                     disabled={false}
                     className={classes.menuItem}
                     data-disabled={false}
-                    onClick={handleCommentsClick}
+                    onClick={() => {
+                        handleCommentsClick();
+                        handleMenuClose();
+                    }}
                 >
+                    <CommentsIcon className={classes.toolbarItemColor} />
                     {getMessage("comments")}
                 </MenuItem>
             )}
