@@ -44,6 +44,7 @@ function VerticalMenuItems(props) {
                 data-disabled={false}
                 onClick={() => {
                     handleAppInfoClick();
+                    handleMenuClose();
                 }}
             >
                 <InfoIcon className={classes.toolbarItemColor} />
@@ -56,6 +57,7 @@ function VerticalMenuItems(props) {
                     data-disabled={false}
                     onClick={() => {
                         handleFavoriteClick();
+                        handleMenuClose();
                     }}
                 >
                     <FavoriteIcon className={classes.toolbarItemColor} />
@@ -96,6 +98,7 @@ function VerticalMenuItems(props) {
                         disabled={false}
                         className={classes.menuItem}
                         data-disabled={false}
+                        onClick={handleMenuClose}
                     >
                         {getMessage("favoriteNotSupported")}
                     </MenuItem>
@@ -103,6 +106,7 @@ function VerticalMenuItems(props) {
                         disabled={false}
                         className={classes.menuItem}
                         data-disabled={false}
+                        onClick={handleMenuClose}
                     >
                         {getMessage("commentsNotSupported")}
                     </MenuItem>
