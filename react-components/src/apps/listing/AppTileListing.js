@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 
-import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import { AppTile, palette, withI18N, LoadingMask } from "@cyverse-de/ui-lib";
+import { Grid, makeStyles } from "@material-ui/core";
+import {
+    AppTile,
+    getSorting,
+    LoadingMask,
+    palette,
+    stableSort,
+    withI18N,
+} from "@cyverse-de/ui-lib";
 import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
 import FilterSortToolbar from "./FilterSortToolbar";
@@ -45,6 +52,7 @@ function AppTileListing(props) {
         handleAppSelection,
         isSelected,
         onAppNameClick,
+        getAppsSorting,
     } = props;
     const classes = useStyles();
 
@@ -70,55 +78,59 @@ function AppTileListing(props) {
                 <Grid container>
                     {apps &&
                         apps.length > 0 &&
-                        apps.map((app) => {
-                            const external = app.app_type !== "DE";
-                            const menuItems = () => (
-                                <VerticalMenuItems
-                                    isExternal={external}
-                                    isFavorite={app.is_favorite}
-                                    handleAppInfoClick={() =>
-                                        onAppInfoClick(app)
-                                    }
-                                    handleCommentsClick={() =>
-                                        onCommentsClick(app)
-                                    }
-                                    handleFavoriteClick={() =>
-                                        onFavoriteClick(app)
-                                    }
-                                    handleMenuClose={handleMenuClose}
-                                />
-                            );
-                            return (
-                                <Grid key={app.id} item>
-                                    <AppTile
-                                        uuid={app.id}
-                                        name={app.name}
-                                        creator={app.integrator_name}
-                                        rating={app.rating}
-                                        type={app.app_type}
-                                        isPublic={app.is_public}
-                                        isBeta={app.beta}
-                                        isDisabled={app.disabled}
+                        stableSort(apps, getAppsSorting("asc", sortField)).map(
+                            (app) => {
+                                const external = app.app_type !== "DE";
+                                const menuItems = () => (
+                                    <VerticalMenuItems
                                         isExternal={external}
-                                        MenuItems={menuItems}
-                                        selected={isSelected(app.id)}
-                                        onAppSelected={() =>
-                                            handleAppSelection(app)
+                                        isFavorite={app.is_favorite}
+                                        handleAppInfoClick={() =>
+                                            onAppInfoClick(app)
                                         }
-                                        onAppNameClicked={() =>
-                                            onAppNameClick(app)
+                                        handleCommentsClick={() =>
+                                            onCommentsClick(app)
                                         }
-                                        handleMenuClose={() => {
-                                            setAnchorEl(null);
-                                        }}
-                                        handleMenuClick={(event) => {
-                                            setAnchorEl(event.currentTarget);
-                                        }}
-                                        anchorEl={anchorEl}
+                                        handleFavoriteClick={() =>
+                                            onFavoriteClick(app)
+                                        }
+                                        handleMenuClose={handleMenuClose}
                                     />
-                                </Grid>
-                            );
-                        })}
+                                );
+                                return (
+                                    <Grid key={app.id} item>
+                                        <AppTile
+                                            uuid={app.id}
+                                            name={app.name}
+                                            creator={app.integrator_name}
+                                            rating={app.rating}
+                                            type={app.app_type}
+                                            isPublic={app.is_public}
+                                            isBeta={app.beta}
+                                            isDisabled={app.disabled}
+                                            isExternal={external}
+                                            MenuItems={menuItems}
+                                            selected={isSelected(app.id)}
+                                            onAppSelected={() =>
+                                                handleAppSelection(app)
+                                            }
+                                            onAppNameClicked={() =>
+                                                onAppNameClick(app)
+                                            }
+                                            handleMenuClose={() => {
+                                                setAnchorEl(null);
+                                            }}
+                                            handleMenuClick={(event) => {
+                                                setAnchorEl(
+                                                    event.currentTarget
+                                                );
+                                            }}
+                                            anchorEl={anchorEl}
+                                        />
+                                    </Grid>
+                                );
+                            }
+                        )}
                 </Grid>
             </LoadingMask>
         </div>

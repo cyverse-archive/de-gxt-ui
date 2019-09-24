@@ -42,6 +42,7 @@ export default function WithToolbarAppGridListing(props) {
                 <AppGridListing
                     baseDebugID={baseDebugId}
                     viewType={viewType}
+                    enableMenu={true}
                     {...props}
                 />
             </LoadingMask>

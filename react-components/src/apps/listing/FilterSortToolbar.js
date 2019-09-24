@@ -13,6 +13,7 @@ import {
     OutlinedInput,
     Select,
 } from "@material-ui/core";
+import AppFields from "./AppFields";
 
 /**
  * @author sriram
@@ -20,11 +21,6 @@ import {
  * A toolbar for sorting and filter apps
  */
 
-const sort = {
-    name: "Name",
-    integrator: "Integrator",
-    rating: "Rating",
-};
 const useStyles = makeStyles((theme) => ({
     toolbar: {
         backgroundColor: palette.lightGray,
@@ -74,27 +70,27 @@ function FilterSortToolbar(props) {
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.NAME
                                 )}
-                                value={sort.name}
+                                value={AppFields.NAME.fieldName}
                             >
-                                {sort.name}
+                                {AppFields.NAME.fieldName}
                             </MenuItem>
                             <MenuItem
                                 id={build(
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.INTEGRATOR
                                 )}
-                                value={sort.integrator}
+                                value={AppFields.INTEGRATOR.fieldName}
                             >
-                                {sort.integrator}
+                                {AppFields.INTEGRATOR.fieldName}
                             </MenuItem>
                             <MenuItem
                                 id={build(
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.RATING
                                 )}
-                                value={sort.rating}
+                                value={AppFields.RATING.fieldName}
                             >
-                                {sort.rating}
+                                {AppFields.RATING.fieldName}
                             </MenuItem>
                         </Select>
                     </FormControl>

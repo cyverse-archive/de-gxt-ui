@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import PropTypes from "prop-types";
 
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
@@ -24,6 +24,54 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import { Rating } from "@material-ui/lab";
+import VerticalMenuItems from "./VerticalMenuItems";
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Menu from "@material-ui/core/Menu";
+import AppFields from "./AppFields";
+
+function AppMenu(props) {
+    const {
+        app,
+        onAppInfoClick,
+        onCommentsClick,
+        onFavoriteClick,
+        baseDebugId,
+    } = props;
+    const external = app.app_type !== "DE";
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClose = () => setAnchorEl(null);
+    return (
+        <div>
+            <IconButton
+                id={baseDebugId}
+                aria-label="More"
+                aria-owns={open ? "long-menu" : null}
+                aria-haspopup="true"
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+            >
+                <MoreVertIcon />
+            </IconButton>
+            <Menu
+                id={baseDebugId + ".menu"}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+            >
+                <VerticalMenuItems
+                    isExternal={external}
+                    isFavorite={app.is_favorite}
+                    handleAppInfoClick={() => onAppInfoClick(app)}
+                    handleCommentsClick={() => onCommentsClick(app)}
+                    handleFavoriteClick={() => onFavoriteClick(app)}
+                    handleMenuClose={handleClose}
+                />
+                />
+            </Menu>
+        </div>
+    );
+}
 
 /**
  * @author aramsey
@@ -76,9 +124,14 @@ class AppGridListing extends Component {
             handleAppSelection,
             isSelected,
             onAppNameClick,
+            onAppInfoClick,
+            onCommentsClick,
+            onFavoriteClick,
+            enableMenu,
+            getAppsSorting,
         } = this.props;
 
-        let columnData = getTableColumns(deletable);
+        let columnData = getTableColumns(deletable, enableMenu);
 
         return (
             <Table stickyHeader={true}>
@@ -91,28 +144,27 @@ class AppGridListing extends Component {
                     )}
                     {apps &&
                         apps.length > 0 &&
-                        stableSort(apps, getSorting(order, orderBy)).map(
+                        stableSort(apps, getAppsSorting(order, orderBy)).map(
                             (app) => {
                                 const {
                                     average: averageRating,
                                     user: userRating,
                                     total: totalRating,
                                 } = app.rating;
+                                const selected = isSelected(app.id);
                                 return (
                                     <TableRow
                                         role="checkbox"
                                         tabIndex={-1}
                                         hover
-                                        selected={isSelected(app.id)}
-                                        aria-checked={isSelected}
+                                        selected={selected}
+                                        aria-checked={selected}
                                         onClick={() => handleAppSelection(app)}
                                         key={app.id}
                                     >
                                         {selectable && (
                                             <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    checked={isSelected}
-                                                />
+                                                <Checkbox checked={selected} />
                                             </TableCell>
                                         )}
                                         <TableCell>
@@ -156,6 +208,22 @@ class AppGridListing extends Component {
                                                 />
                                             </TableCell>
                                         )}
+                                        {enableMenu && (
+                                            <TableCell>
+                                                <AppMenu
+                                                    app={app}
+                                                    onAppInfoClick={
+                                                        onAppInfoClick
+                                                    }
+                                                    onCommentsClick={
+                                                        onCommentsClick
+                                                    }
+                                                    onFavoriteClick={
+                                                        onFavoriteClick
+                                                    }
+                                                />
+                                            </TableCell>
+                                        )}
                                     </TableRow>
                                 );
                             }
@@ -178,27 +246,32 @@ class AppGridListing extends Component {
     }
 }
 
-function getTableColumns(deletable) {
+function getTableColumns(deletable, enableMenu) {
     let tableColumns = [
         { name: "", numeric: false, enableSorting: false, key: "status" },
-        { name: "Name", numeric: false, enableSorting: true },
+        {
+            name: AppFields.NAME.fieldName,
+            numeric: false,
+            enableSorting: true,
+            key: AppFields.NAME.key,
+        },
         {
             name: "Integrated By",
             numeric: false,
             enableSorting: true,
-            key: "integrator_name",
+            key: AppFields.INTEGRATOR.key,
         },
         {
-            name: "Rating",
+            name: AppFields.RATING.fieldName,
             numeric: false,
             enableSorting: true,
-            key: "rating",
+            key: AppFields.RATING.key,
         },
         {
-            name: "System",
+            name: AppFields.SYSTEM.fieldName,
             numeric: false,
             enableSorting: true,
-            key: "system_id",
+            key: AppFields.SYSTEM.key,
         },
     ];
 
@@ -211,8 +284,22 @@ function getTableColumns(deletable) {
         });
     }
 
+    if (enableMenu) {
+        tableColumns.push({
+            name: "",
+            enableSorting: false,
+            key: "menu",
+        });
+    }
+
     return tableColumns;
 }
+
+AppGridListing.defaultProps = {
+    deletable: false,
+    selectable: true,
+    enableMenu: false,
+};
 
 AppGridListing.propTypes = {
     parentId: PropTypes.string.isRequired,
@@ -223,6 +310,7 @@ AppGridListing.propTypes = {
     selectedApps: PropTypes.array.isRequired,
     handleAppSelection: PropTypes.func.isRequired,
     resetAppSelection: PropTypes.func.isRequired,
+    enableMenu: PropTypes.bool,
 };
 
 export default withI18N(AppGridListing, messages);

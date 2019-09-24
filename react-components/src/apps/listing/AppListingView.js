@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AppTileListing from "./AppTileListing";
 import view from "../model/viewType";
 import WithToolbarAppGridListing from "./WithToolbarAppGridListing";
+import AppFields from "./AppFields";
 
 /**
  *
@@ -43,14 +44,15 @@ export default function AppListingView(props) {
     };
 
     const isSelected = (id) => {
-        console.log("isSelected=>" + id);
         if (selectedApps && selectedApps.length > 0) {
             return selectedApps.filter((app) => app.id === id).length > 0;
         }
         return false;
     };
 
-    const onSortChange = () => {};
+    const onSortChange = (sortField) => {
+        presenter.onRequestSort(sortField);
+    };
     const onAppInfoClick = (app) => {
         presenter.onAppInfoSelected(app);
     };
@@ -63,6 +65,43 @@ export default function AppListingView(props) {
 
     const onAppNameClick = (app) => {
         presenter.onAppNameSelected(app);
+    };
+
+    const desc = (a, b, orderBy) => {
+        switch (orderBy) {
+            case AppFields.NAME.fieldName:
+            case AppFields.INTEGRATOR.fieldName:
+            case AppFields.SYSTEM.fieldName:
+                if (
+                    b[`AppFields.${orderBy}.key`] <
+                    a[`AppFields.${orderBy}.key`]
+                ) {
+                    return -1;
+                }
+                if (
+                    b[`AppFields.${orderBy}.key`] >
+                    a[`AppFields.${orderBy}.key`]
+                ) {
+                    return 1;
+                }
+                return 0;
+                break;
+            case AppFields.RATING.fieldName:
+                if (b.rating.average < a.rating.average) {
+                    return -1;
+                }
+                if (b.rating.average > a.rating.average) {
+                    return 1;
+                }
+                return 0;
+                break;
+        }
+    };
+
+    const getAppsSorting = (order, orderBy) => {
+        return order === "desc"
+            ? (a, b) => desc(a, b, orderBy)
+            : (a, b) => -desc(a, b, orderBy);
     };
 
     if (viewType === view.TILE) {
@@ -79,6 +118,7 @@ export default function AppListingView(props) {
                 resetAppSelection={resetAppSelection}
                 isSelected={isSelected}
                 onAppNameClick={onAppNameClick}
+                getAppsSorting={getAppsSorting}
             />
         );
     } else if (viewType === view.TABLE) {
@@ -91,6 +131,7 @@ export default function AppListingView(props) {
                 isSelected={isSelected}
                 onAppNameClick={onAppNameClick}
                 onAppInfoClick={onAppInfoClick}
+                getAppsSorting={getAppsSorting}
                 {...props}
             />
         );
