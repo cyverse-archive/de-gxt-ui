@@ -256,7 +256,7 @@ function getTableColumns(deletable, enableMenu) {
             key: AppFields.NAME.key,
         },
         {
-            name: "Integrated By",
+            name: AppFields.INTEGRATOR.fieldName,
             numeric: false,
             enableSorting: true,
             key: AppFields.INTEGRATOR.key,

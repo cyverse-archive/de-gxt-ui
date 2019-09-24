@@ -34,7 +34,7 @@ public class AppListViewImpl implements AppsListView {
         props.apps = null;
         props.heading = "";
         props.typeFilter = AppTypeFilter.ALL.getFilterString();
-        props.sortField = "Name";
+        props.sortField = "name";
         props.searchRegexPattern = "";
         props.disableTypeFilter = false;
         props.selectedAppId = null;

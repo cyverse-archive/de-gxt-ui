@@ -68,33 +68,27 @@ export default function AppListingView(props) {
     };
 
     const desc = (a, b, orderBy) => {
-        switch (orderBy) {
-            case AppFields.NAME.fieldName:
-            case AppFields.INTEGRATOR.fieldName:
-            case AppFields.SYSTEM.fieldName:
-                if (
-                    b[`AppFields.${orderBy}.key`] <
-                    a[`AppFields.${orderBy}.key`]
-                ) {
-                    return -1;
-                }
-                if (
-                    b[`AppFields.${orderBy}.key`] >
-                    a[`AppFields.${orderBy}.key`]
-                ) {
-                    return 1;
-                }
-                return 0;
-                break;
-            case AppFields.RATING.fieldName:
-                if (b.rating.average < a.rating.average) {
-                    return -1;
-                }
-                if (b.rating.average > a.rating.average) {
-                    return 1;
-                }
-                return 0;
-                break;
+        if (
+            orderBy === AppFields.NAME.key ||
+            orderBy === AppFields.INTEGRATOR.key ||
+            orderBy === AppFields.SYSTEM.key
+        ) {
+            if (b[`${orderBy}`] < a[`${orderBy}`]) {
+                return -1;
+            }
+            if (b[`${orderBy}`] > a[`${orderBy}`]) {
+                return 1;
+            }
+            return 0;
+        }
+        if (orderBy === AppFields.RATING.key) {
+            if (b.rating.average < a.rating.average) {
+                return -1;
+            }
+            if (b.rating.average > a.rating.average) {
+                return 1;
+            }
+            return 0;
         }
     };
 

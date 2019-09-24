@@ -70,7 +70,7 @@ function FilterSortToolbar(props) {
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.NAME
                                 )}
-                                value={AppFields.NAME.fieldName}
+                                value={AppFields.NAME.key}
                             >
                                 {AppFields.NAME.fieldName}
                             </MenuItem>
@@ -79,7 +79,7 @@ function FilterSortToolbar(props) {
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.INTEGRATOR
                                 )}
-                                value={AppFields.INTEGRATOR.fieldName}
+                                value={AppFields.INTEGRATOR.key}
                             >
                                 {AppFields.INTEGRATOR.fieldName}
                             </MenuItem>
@@ -88,7 +88,7 @@ function FilterSortToolbar(props) {
                                     baseDebugID,
                                     ids.SORT + ids.FIELD.RATING
                                 )}
-                                value={AppFields.RATING.fieldName}
+                                value={AppFields.RATING.key}
                             >
                                 {AppFields.RATING.fieldName}
                             </MenuItem>
