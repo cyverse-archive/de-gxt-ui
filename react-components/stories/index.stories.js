@@ -17,6 +17,8 @@ import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import CreateQuickLaunchDialogTest from "./apps/quickLaunch/CreateQuickLaunchDialog.stories";
 import QuickLaunchListingTest from "./apps/quickLaunch/QuickLaunchListing.stories";
+import AppTileListingTest from "./apps/listing/AppTileListing.stories";
+import AppGridListingTest from "./apps/listing/AppGridListing.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
@@ -61,7 +63,6 @@ import NotificationViewTest from "./notifications/view/NotificationView.stories"
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
-import AppTileListingTest from "./apps/listing/AppTileListing.stories";
 
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
@@ -105,6 +106,7 @@ storiesOf("apps/qlaunch", module).add("QuickLaunchListing", () => (
 ));
 
 storiesOf("apps/listing", module).add("AppTile", () => <AppTileListingTest />);
+storiesOf("apps/listing", module).add("AppGrid", () => <AppGridListingTest />);
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />

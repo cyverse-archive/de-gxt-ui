@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AppListingView from "../../../src/apps/listing/AppListingView";
 import viewType from "../../../src/apps/model/viewType";
 
-class AppTileListingTest extends Component {
+class AppGridListingTest extends Component {
     render() {
         const apps = [
             {
@@ -536,18 +536,21 @@ class AppTileListingTest extends Component {
                 console.log("Apps name clicked for ->" + app.name);
             },
             onAppSelectionChanged: (apps) => {
-                console.log("App selection changed ->" + apps);
+                console.log(
+                    "App selection changed ->" + apps ? apps.length : 0
+                );
             },
         };
         return (
             <AppListingView
                 apps={apps}
-                baseDebugID=".appTile"
+                baseDebugID=".appGrid"
                 heading="Heading"
-                viewType={viewType.TILE}
+                viewType={viewType.TABLE}
                 presenter={presenter}
             />
         );
     }
 }
-export default AppTileListingTest;
+
+export default AppGridListingTest;
