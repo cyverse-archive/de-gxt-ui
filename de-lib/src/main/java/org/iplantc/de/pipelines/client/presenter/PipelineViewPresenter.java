@@ -15,9 +15,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.presenter.Presenter;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
-import org.iplantc.de.pipelines.client.dnd.AppsGridDragHandler;
 import org.iplantc.de.pipelines.client.dnd.PipelineBuilderDNDHandler;
-import org.iplantc.de.pipelines.client.dnd.PipelineBuilderDropHandler;
 import org.iplantc.de.pipelines.client.util.PipelineAutoBeanUtil;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
 import org.iplantc.de.pipelines.client.views.PipelineAppMappingView;
@@ -41,13 +39,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.dnd.core.client.DND.Operation;
-import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.Container;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
 
@@ -160,14 +154,14 @@ public class PipelineViewPresenter implements Presenter,
         appSelectView = new AppSelectionDialog();
         appSelectView.setPresenter(this);
 
-        initAppsDragHandlers(appsPresenter.getAppsDragSources());
-        initPipelineBuilderDropHandler(view.getBuilderDropContainer());
+       // initAppsDragHandlers(appsPresenter.getAppsDragSources());
+      //  initPipelineBuilderDropHandler(view.getBuilderDropContainer());
 
         // TODO Possibly inject with annotation to replace with a different toolbar impl
         appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null, null, false);
     }
 
-    private void initAppsDragHandlers(List<DragSource> sources) {
+/*    private void initAppsDragHandlers(List<DragSource> sources) {
         AppsGridDragHandler handler = new AppsGridDragHandler();
         handler.setPresenter(this);
 
@@ -187,7 +181,7 @@ public class PipelineViewPresenter implements Presenter,
         target.addDragLeaveHandler(handler);
         target.addDragCancelHandler(handler);
         target.addDropHandler(handler);
-    }
+    }*/
 
     @Override
     public void setPipeline(Pipeline pipeline) {

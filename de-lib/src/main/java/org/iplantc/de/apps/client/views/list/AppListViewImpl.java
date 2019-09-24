@@ -101,4 +101,10 @@ public class AppListViewImpl implements AppsListView {
     public void render() {
         CyVerseReactComponents.render(ReactAppListing.AppListingView, props, panel.getElement());
     }
+
+    @Override
+    public void setSortField(String sortField) {
+        props.sortField = sortField;
+        render();
+    }
 }

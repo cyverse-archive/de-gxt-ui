@@ -19,10 +19,10 @@
             text="{strings.save}"
             icon="{icons.save}" />
         <toolbar:FillToolItem />
-        <button:TextButton
+       <!-- <button:TextButton
             ui:field="swapViewBtn"
             debugId="idBtnSwitchView"
             text="{strings.swapView}"
-            icon="{icons.copy}" />
+            icon="{icons.copy}" />-->
     </toolbar:ToolBar>
 </ui:UiBinder>

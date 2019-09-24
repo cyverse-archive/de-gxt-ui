@@ -16,10 +16,6 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.dnd.core.client.DragSource;
-
-import java.util.List;
-
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
@@ -104,9 +100,6 @@ public interface AppsListView extends IsWidget/*   ,
         App getSelectedApp();
 
         @JsIgnore
-        List<DragSource> getAppsDragSources();
-
-        @JsIgnore
         void setViewDebugId(String baseID);
 
         @JsIgnore
@@ -129,6 +122,8 @@ public interface AppsListView extends IsWidget/*   ,
         void onAppFavoriteSelected(Splittable appSplittable);
 
         void onAppCommentSelected(Splittable appSplittable);
+
+        void onRequestSort(String sortField);
     }
 
  /*   List<DragSource> getAppsDragSources();
@@ -170,5 +165,7 @@ public interface AppsListView extends IsWidget/*   ,
 
 
     void setTypeFilter(String filter);
+
+    void setSortField(String sortField);
 
 }

@@ -46,7 +46,6 @@ import org.iplantc.de.shared.exceptions.HttpRedirectException;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -57,9 +56,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,12 +90,12 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     OntologyUtil ontologyUtil;
     HandlerManager handlerManager;
     AppsListView listView;
-    CardLayoutContainer cards;
     String filter;
     private OntologyHierarchy selectedHierarchy;
     private AppCategory appCategory;
     private App desiredSelectedApp;
     private String activeView;
+    private List<App> selectedApps = new ArrayList<App>();
 
     @Inject
     AppsListPresenterImpl(final EventBus eventBus,
@@ -162,12 +159,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
      */
     @Override
     public void setActiveView(String newView) {
-/*        activeView = tileView;
-        cards.setActiveWidget(activeView);
-
-        setTypeFilterPreferences();*/
-        //  activeView = newView;
-        //  listView.setViewType(newView);
         setTypeFilterPreferences();
         activeView = newView;
         listView.setViewType(newView);
@@ -178,9 +169,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         filter = AppTypeFilter.ALL.getFilterString();
         listView.setTypeFilter(filter);
         disableTypeFilterForHPC();
-   /*     activeView.setAppTypeFilter(filter);
-        activeView.enableAppTypeFilter(true);*/
-
     }
 
     @Override
@@ -231,24 +219,19 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppSelectionChanged(Splittable selectedApps) {
-        GWT.log("selected apps => " + selectedApps.getPayload() + "array?" + selectedApps.isIndexed()
-                + "size=>" + selectedApps.size());
-        List<App> appList = new ArrayList<>();
-        for (int i = 0; i < selectedApps.size(); i++) {
-            App app = splittableToApp(selectedApps.get(i));
-            appList.add(app);
+    public void onAppSelectionChanged(Splittable splittableSelectedApps) {
+        selectedApps.clear();
+        for (int i = 0; i < splittableSelectedApps.size(); i++) {
+            App app = splittableToApp(splittableSelectedApps.get(i));
+            selectedApps.add(app);
         }
-        AppSelectionChangedEvent event = new AppSelectionChangedEvent(appList);
+        AppSelectionChangedEvent event = new AppSelectionChangedEvent(selectedApps);
         fireEvent(event);
     }
 
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
         filter = AppTypeFilter.ALL.getFilterString();
-   /*     activeView.setAppTypeFilter(filter);
-        activeView.enableAppTypeFilter(false);
-        activeView.mask(appearance.beforeAppSearchLoadingMask());*/
         listView.setTypeFilter(filter);
         listView.disableTypeFilter(true);
         listView.setLoadingMask(true);
@@ -264,16 +247,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public App getSelectedApp() {
-        return null;
-    }
-
-    @Override
-    public List<DragSource> getAppsDragSources() {
-/*        List<DragSource> sources = Lists.newArrayList();
-        sources.addAll(gridView.getAppsDragSources());
-        sources.addAll(tileView.getAppsDragSources());
-        return sources;*/
-        return null;
+        return selectedApps.size() > 0 ? selectedApps.get(0) : null ;
     }
 
     @Override
@@ -430,7 +404,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         AppListLoadResult results = event.getResults();
         if(results != null) {
             apps = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(results));
-            GWT.log("search results -> " + apps.getPayload());
             int total = event.getResults().getTotal();
             heading = appearance.searchAppResultsHeader(event.getSearchText(), total);
         } else {
@@ -442,10 +415,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onAppUpdated(final AppUpdatedEvent event) {
-    /*    App app = event.getApp();
-        if (listStore.findModel(app) != null) {
-            listStore.update(app);
-        }*/
+        refreshAppListing();
     }
 
     @Override
@@ -458,9 +428,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
             @Override
             public void onSuccess(Void result) {
-                for (App app : event.getAppsToBeDeleted()) {
-                    //listStore.remove(app);
-                }
+                refreshAppListing();
             }
         });
     }
@@ -491,6 +459,21 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         listView.setViewType(activeView);
     }
 
+    @Override
+    public void onRequestSort(String sortField) {
+        listView.setSortField(sortField);
+    }
+
+    private void refreshAppListing() {
+        if (selectedHierarchy != null) {
+            getAppsWithSelectedHierarchy();
+            return;
+        }
+        if (appCategory != null) {
+            getAppsWithSelectedCategory();
+        }
+    }
+
 
     HandlerManager createHandlerManager() {
         return new HandlerManager(this);
@@ -514,14 +497,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public void onTypeFilterChanged(String filter) {
         this.filter = filter;
         listView.setTypeFilter(filter);
-        if (selectedHierarchy != null) {
-            getAppsWithSelectedHierarchy();
-            return;
-        }
-        if (appCategory != null) {
-            getAppsWithSelectedCategory();
-        }
-
+        refreshAppListing();
     }
 
     private class AppListCallback extends AppsCallback<Splittable> {
