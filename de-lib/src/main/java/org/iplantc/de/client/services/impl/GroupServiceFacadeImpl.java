@@ -79,7 +79,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void getTeams(AsyncCallback<Splittable> callback) {
-        String address = TEAMS;
+        String address = TEAMS + "?details=true";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
@@ -92,7 +92,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void getMyTeams(AsyncCallback<Splittable> callback) {
-        String address = TEAMS + "?member=" + userInfo.getUsername();
+        String address = TEAMS + "?member=" + userInfo.getUsername() + "&details=true";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
@@ -422,7 +422,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void searchTeams(String searchTerm, AsyncCallback<Splittable> callback) {
-        String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm);
+        String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm) + "&details=true";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
