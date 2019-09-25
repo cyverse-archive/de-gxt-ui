@@ -294,7 +294,9 @@ function TeamsListing(props) {
                                                 )}
                                             />
                                         </TableCell>
-                                        <TableCell>{team.creator}</TableCell>
+                                        <TableCell>
+                                            {team.detail.created_by_detail.name}
+                                        </TableCell>
                                         <TableCell>
                                             {team.description}
                                         </TableCell>

@@ -52,6 +52,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public void setTeamList(Splittable teamListSpl) {
         props.teamListing = teamListSpl;
+        props.loading = false;
         render();
     }
 

@@ -1,13 +1,9 @@
 package org.iplantc.de.teams.client.presenter;
 
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
-import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
-import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -21,20 +17,14 @@ import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.shared.Teams;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import com.sencha.gxt.core.shared.FastMap;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The presenter to handle all the logic for the Teams view
@@ -46,7 +36,6 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
-    private CollaboratorsServiceFacade collaboratorsFacade;
     private GroupAutoBeanFactory factory;
     private CollaboratorsUtil collaboratorsUtil;
     private List<Group> selectedTeams;
@@ -58,13 +47,11 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
     @Inject
     public TeamsPresenterImpl(TeamsView.TeamsViewAppearance appearance,
                               GroupServiceFacade serviceFacade,
-                              CollaboratorsServiceFacade collaboratorsFacade,
                               TeamsViewFactory viewFactory,
                               GroupAutoBeanFactory factory,
                               CollaboratorsUtil collaboratorsUtil) {
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
-        this.collaboratorsFacade = collaboratorsFacade;
         this.factory = factory;
         this.collaboratorsUtil = collaboratorsUtil;
         this.view = viewFactory.create(getBaseTeamProps());
@@ -141,8 +128,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
             @Override
             public void onSuccess(Splittable result) {
-                view.setTeamList(result);
-//                getTeamCreatorNames(result);
+                updateViewTeamList(result);
             }
         });
     }
@@ -161,8 +147,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
             @Override
             public void onSuccess(Splittable result) {
-                view.setTeamList(result);
-//                getTeamCreatorNames(result);
+                updateViewTeamList(result);
             }
         });
     }
@@ -179,36 +164,17 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
             @Override
             public void onSuccess(Splittable result) {
-                view.setTeamList(result);
-//                getTeamCreatorNames(result);
+                updateViewTeamList(result);
             }
         });
     }
 
-    @Override
-    public void getTeamCreatorNames(String[] subjectIds, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
-        if (subjectIds != null) {
-            collaboratorsFacade.getUserInfo(subjectIds, new AsyncCallback<Splittable>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    announcer.schedule(new ErrorAnnouncementConfig(appearance.getCreatorNamesFailed()));
-                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, throwable.getMessage());
-                }
-
-                @Override
-                public void onSuccess(Splittable creators) {
-                    callback.onSuccess(creators);
-                }
-            });
-        } else {
-            callback.onSuccess(null);
+    void updateViewTeamList(Splittable result) {
+        Splittable groups = StringQuoter.createSplittable();
+        if (result != null) {
+            groups = result.get("groups");
         }
-    }
-
-    void addTeamsToView(List<Group> teams) {
-        Splittable teamListSpl = convertGroupListToSplittable(teams);
-        view.setTeamList(teamListSpl);
-        view.unmask();
+        view.setTeamList(groups);
     }
 
     @Override
@@ -239,35 +205,6 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
         this.selectedTeams = convertSplittableToGroupList(teamList);
     }
 
-    void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
-        teams.forEach(group -> {
-            String creatorId = getCreatorId(group);
-            if (!Strings.isNullOrEmpty(creatorId)) {
-                group.setCreator(creatorFastMap.get(creatorId).getSubjectDisplayName());
-            }
-        });
-    }
-
-    List<String> getCreatorIds(List<Group> teams) {
-        return teams.stream().map(this::getCreatorId).distinct().collect(Collectors.toList());
-    }
-
-    /**
-     * A team name is always in the format of {creator_id}:{team_name}
-     *
-     * @param team
-     * @return
-     */
-    String getCreatorId(Group team) {
-        String teamName = team.getName();
-
-        int lastIndex = teamName.lastIndexOf(Subject.GROUP_NAME_DELIMITER);
-        if (lastIndex > 0) {
-            return teamName.substring(0, lastIndex);
-        }
-        return null;
-    }
-
     ReactTeamViews.TeamProps getBaseTeamProps(){
         ReactTeamViews.TeamProps props = new ReactTeamViews.TeamProps();
         props.presenter = this;
@@ -288,22 +225,9 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
     List<Group> convertSplittableToGroupList(Splittable groupSpl) {
         return groupSpl != null ?
-               AutoBeanCodex.decode(factory, GroupList.class, groupSpl.getPayload()).as().getGroups() :
+               AutoBeanCodex.decode(factory,
+                                    GroupList.class,
+                                    "{\"groups\": " + groupSpl.getPayload() + "}").as().getGroups() :
                Lists.newArrayList();
-    }
-
-    Splittable convertGroupToSplittable(Group group) {
-        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
-    }
-
-    Splittable convertGroupListToSplittable(List<Group> teams) {
-        Splittable list = StringQuoter.createIndexed();
-        if (teams != null && teams.size() > 0) {
-            teams.forEach(team -> {
-                Splittable teamSpl = convertGroupToSplittable(team);
-                teamSpl.assign(list, list.size());
-            });
-        }
-        return list;
     }
 }
