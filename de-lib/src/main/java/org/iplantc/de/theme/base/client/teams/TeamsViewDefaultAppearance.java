@@ -36,21 +36,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String teamsMenu() {
-        return displayStrings.teamsMenu();
-    }
-
-    @Override
-    public String createNewTeam() {
-        return displayStrings.createNewTeam();
-    }
-
-    @Override
-    public String manageTeam() {
-        return displayStrings.manageTeam();
-    }
-
-    @Override
     public String leaveTeam() {
         return displayStrings.leaveTeam();
     }
@@ -66,21 +51,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public int descColumnWidth() {
-        return 500;
-    }
-
-    @Override
-    public String descColumnLabel() {
-        return iplantDisplayStrings.description();
-    }
-
-    @Override
-    public int infoColWidth() {
-        return 20;
-    }
-
-    @Override
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
     }
@@ -93,21 +63,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String teamDescLabel() {
         return displayStrings.teamDescLabel();
-    }
-
-    @Override
-    public int teamDetailsWidth() {
-        return 500;
-    }
-
-    @Override
-    public int teamDetailsHeight() {
-        return 350;
-    }
-
-    @Override
-    public String detailsHeading(Group group) {
-        return displayStrings.detailsHeading(group.getExtension());
     }
 
     @Override
@@ -140,11 +95,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
         }
 
         return displayStrings.detailsHeading(group.getSubjectDisplayName());
-    }
-
-    @Override
-    public ImageResource plusImage() {
-        return iplantResources.add();
     }
 
     @Override
@@ -238,16 +188,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public ImageResource editIcon() {
-        return iplantResources.edit();
-    }
-
-    @Override
-    public String searchFieldEmptyText() {
-        return displayStrings.searchFieldEmptyText();
-    }
-
-    @Override
     public String teamSearchFailed() {
         return displayStrings.teamSearchFailed();
     }
@@ -288,11 +228,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String joinTeam() {
-        return displayStrings.joinTeam();
-    }
-
-    @Override
     public String requestToJoinTeam() {
         return displayStrings.requestToJoinTeam();
     }
@@ -330,11 +265,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String joinTeamSuccess(Group team) {
         return displayStrings.joinTeamSuccess(team.getSubjectDisplayName());
-    }
-
-    @Override
-    public String joinTeamFail(Group team) {
-        return displayStrings.joinTeamFail(team.getSubjectDisplayName());
     }
 
     @Override
@@ -380,16 +310,6 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String getCreatorNamesFailed() {
         return displayStrings.getCreatorNamesFailed();
-    }
-
-    @Override
-    public int creatorColumnWidth() {
-        return 200;
-    }
-
-    @Override
-    public String creatorColumnLabel() {
-        return displayStrings.creatorColumnLabel();
     }
 
     @Override

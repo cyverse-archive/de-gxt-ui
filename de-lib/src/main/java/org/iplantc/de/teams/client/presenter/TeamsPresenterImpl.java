@@ -2,18 +2,20 @@ package org.iplantc.de.teams.client.presenter;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.teams.client.ReactTeamViews;
 import org.iplantc.de.teams.client.TeamsView;
-import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
-import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
@@ -21,13 +23,15 @@ import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.shared.FastMap;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,17 +41,16 @@ import java.util.stream.Collectors;
  *
  * @author aramsey
  */
-public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected.TeamNameSelectedHandler,
-                                           TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
-                                           CreateTeamSelected.CreateTeamSelectedHandler,
-                                           TeamSearchResultLoad.TeamSearchResultLoadHandler {
+public class TeamsPresenterImpl implements TeamsView.Presenter {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
     private CollaboratorsServiceFacade collaboratorsFacade;
-    private TeamSearchRpcProxy searchProxy;
-    
+    private GroupAutoBeanFactory factory;
+    private CollaboratorsUtil collaboratorsUtil;
+    private List<Group> selectedTeams;
+
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
     @Inject IplantAnnouncer announcer;
     TeamsFilter currentFilter;
@@ -57,24 +60,14 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                               GroupServiceFacade serviceFacade,
                               CollaboratorsServiceFacade collaboratorsFacade,
                               TeamsViewFactory viewFactory,
-                              TeamSearchRpcProxy searchProxy) {
+                              GroupAutoBeanFactory factory,
+                              CollaboratorsUtil collaboratorsUtil) {
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
         this.collaboratorsFacade = collaboratorsFacade;
-        this.searchProxy = searchProxy;
-        this.view = viewFactory.create(getPagingLoader());
-
-        view.addTeamNameSelectedHandler(this);
-        view.addTeamFilterSelectionChangedHandler(this);
-        view.addCreateTeamSelectedHandler(this);
-        searchProxy.addTeamSearchResultLoadHandler(this);
-        searchProxy.addTeamSearchResultLoadHandler(view);
-    }
-
-    @Override
-    public void go() {
-        currentFilter = view.getCurrentFilter();
-        getFilteredTeams();
+        this.factory = factory;
+        this.collaboratorsUtil = collaboratorsUtil;
+        this.view = viewFactory.create(getBaseTeamProps());
     }
 
     @Override
@@ -89,17 +82,18 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
     @Override
     public List<Group> getSelectedTeams() {
-        return view.getSelectedTeams();
+        return selectedTeams;
     }
 
     @Override
     public void setViewDebugId(String baseID) {
-        view.asWidget().ensureDebugId(baseID + Teams.Ids.VIEW);
+        view.setBaseId(baseID + Teams.Ids.VIEW);
     }
 
     @Override
-    public void onTeamNameSelected(TeamNameSelected event) {
-        Group group = event.getTeam();
+    @SuppressWarnings("unusable-by-js")
+    public void onTeamNameSelected(Splittable teamSpl) {
+        Group group = convertSplittableToGroup(teamSpl);
         editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -110,41 +104,22 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
             public void onSuccess(EditTeamDialog dialog) {
                 dialog.show(group);
                 dialog.addTeamSavedHandler(event1 -> {
-                    Group team = event1.getGroup();
-                    view.updateTeam(team);
+                    refreshTeamListing();
                 });
                 dialog.addLeaveTeamCompletedHandler(event -> {
-                    Group team = event.getTeam();
-                    view.removeTeam(team);
+                    refreshTeamListing();
                 });
                 dialog.addDeleteTeamCompletedHandler(event -> {
-                    Group team  = event.getTeam();
-                    view.removeTeam(team);
+                    refreshTeamListing();
                 });
                 dialog.addJoinTeamCompletedHandler(event -> {
-                    if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
-                        Group team = event.getTeam();
-                        view.addTeams(Lists.newArrayList(team));
-                    }
+                    refreshTeamListing();
                 });
             }
         });
     }
 
-    @Override
-    public void onTeamFilterSelectionChanged(TeamFilterSelectionChanged event) {
-        TeamsFilter filter = event.getFilter();
-
-        if (filter == null || filter.equals(currentFilter)) {
-            return;
-        }
-
-        currentFilter = filter;
-
-        getFilteredTeams();
-    }
-
-    void getFilteredTeams() {
+    void refreshTeamListing() {
         if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
             getMyTeams();
         } else {
@@ -152,70 +127,92 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
         }
     }
 
-    void getMyTeams() {
-        view.mask(appearance.loadingMask());
-        serviceFacade.getMyTeams(new AsyncCallback<List<Group>>() {
+    @Override
+    public void getMyTeams() {
+        currentFilter = TeamsFilter.MY_TEAMS;
+        view.mask();
+
+        serviceFacade.getMyTeams(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                ErrorHandler.postReact(caught);
                 view.unmask();
             }
 
             @Override
-            public void onSuccess(List<Group> result) {
-                getTeamCreatorNames(result);
+            public void onSuccess(Splittable result) {
+                view.setTeamList(result);
+//                getTeamCreatorNames(result);
             }
         });
     }
 
-    void getAllTeams() {
-        view.mask(appearance.loadingMask());
-        serviceFacade.getTeams(new AsyncCallback<List<Group>>() {
+    @Override
+    public void getAllTeams() {
+        currentFilter = TeamsFilter.ALL;
+        view.mask();
+
+        serviceFacade.getTeams(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                ErrorHandler.postReact(caught);
                 view.unmask();
             }
 
             @Override
-            public void onSuccess(List<Group> result) {
-                getTeamCreatorNames(result);
+            public void onSuccess(Splittable result) {
+                view.setTeamList(result);
+//                getTeamCreatorNames(result);
             }
         });
     }
 
-    void getTeamCreatorNames(List<Group> teams) {
-        if (teams != null && !teams.isEmpty()) {
+    @Override
+    public void searchTeams(String searchTerm) {
+        view.mask();
+        serviceFacade.searchTeams(searchTerm, new AsyncCallback<Splittable>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.postReact(caught);
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.teamSearchFailed()));
+            }
 
-            List<String> subjectIds = getCreatorIds(teams);
-            collaboratorsFacade.getUserInfo(subjectIds, new AsyncCallback<FastMap<Subject>>() {
+            @Override
+            public void onSuccess(Splittable result) {
+                view.setTeamList(result);
+//                getTeamCreatorNames(result);
+            }
+        });
+    }
+
+    @Override
+    public void getTeamCreatorNames(String[] subjectIds, ReactSuccessCallback callback, ReactErrorCallback errorCallback) {
+        if (subjectIds != null) {
+            collaboratorsFacade.getUserInfo(subjectIds, new AsyncCallback<Splittable>() {
                 @Override
                 public void onFailure(Throwable throwable) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.getCreatorNamesFailed()));
-                    addTeamsToView(teams);
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, throwable.getMessage());
                 }
 
                 @Override
-                public void onSuccess(FastMap<Subject> creatorFastMap) {
-                    addCreatorToTeams(teams, creatorFastMap);
-                    addTeamsToView(teams);
+                public void onSuccess(Splittable creators) {
+                    callback.onSuccess(creators);
                 }
             });
         } else {
-            addTeamsToView(null);
+            callback.onSuccess(null);
         }
     }
 
     void addTeamsToView(List<Group> teams) {
-        view.clearTeams();
-        if (teams != null && !teams.isEmpty()) {
-            view.addTeams(teams);
-        }
+        Splittable teamListSpl = convertGroupListToSplittable(teams);
+        view.setTeamList(teamListSpl);
         view.unmask();
     }
 
     @Override
-    public void onCreateTeamSelected(CreateTeamSelected event) {
+    public void onCreateTeamSelected() {
         editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -228,24 +225,18 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                 dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
                     @Override
                     public void onTeamSaved(TeamSaved event) {
-                        Group team = event.getGroup();
-                        view.addTeams(Lists.newArrayList(team));
+                        refreshTeamListing();
                     }
                 });
             }
         });
     }
 
-    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> getPagingLoader() {
-        return new PagingLoader<>(searchProxy);
-    }
-
     @Override
-    public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
-        List<Group> teams = event.getSearchResults();
-        currentFilter = null;
-        view.clearTeams();
-        view.addTeams(teams);
+    @SuppressWarnings("unusable-by-js")
+    public void onTeamSelectionChanged(Splittable teamList) {
+        view.setSelectedTeams(teamList);
+        this.selectedTeams = convertSplittableToGroupList(teamList);
     }
 
     void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
@@ -275,5 +266,44 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
             return teamName.substring(0, lastIndex);
         }
         return null;
+    }
+
+    ReactTeamViews.TeamProps getBaseTeamProps(){
+        ReactTeamViews.TeamProps props = new ReactTeamViews.TeamProps();
+        props.presenter = this;
+        props.loading = true;
+        props.teamListing = StringQuoter.createIndexed();
+        props.collaboratorsUtil = collaboratorsUtil;
+        props.isSelectable = false;
+        props.selectedTeams = StringQuoter.createIndexed();
+
+        return props;
+    }
+
+    Group convertSplittableToGroup(Splittable teamSpl) {
+        return teamSpl != null ?
+               AutoBeanCodex.decode(factory, Group.class, teamSpl.getPayload()).as() :
+               null;
+    }
+
+    List<Group> convertSplittableToGroupList(Splittable groupSpl) {
+        return groupSpl != null ?
+               AutoBeanCodex.decode(factory, GroupList.class, groupSpl.getPayload()).as().getGroups() :
+               Lists.newArrayList();
+    }
+
+    Splittable convertGroupToSplittable(Group group) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
+    }
+
+    Splittable convertGroupListToSplittable(List<Group> teams) {
+        Splittable list = StringQuoter.createIndexed();
+        if (teams != null && teams.size() > 0) {
+            teams.forEach(team -> {
+                Splittable teamSpl = convertGroupToSplittable(team);
+                teamSpl.assign(list, list.size());
+            });
+        }
+        return list;
     }
 }

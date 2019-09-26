@@ -32,6 +32,7 @@ public class TeamsWindow extends WindowBase {
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setHeading(appearance.windowHeading());
+        setBodyStyle("background-color: white;");
 
         ContextualHelpToolButton contextualHelpToolButton = new ContextualHelpToolButton();
         contextualHelpToolButton.setHelp(new HTML(appearance.teamsHelp()));
@@ -44,7 +45,6 @@ public class TeamsWindow extends WindowBase {
                                               final String tag,
                                               final boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
-        presenter.go();
         add(presenter.getView());
 
         ensureDebugId(DeModule.WindowIds.TEAMS_WINDOW);

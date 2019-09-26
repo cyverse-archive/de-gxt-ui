@@ -1,38 +1,26 @@
 package org.iplantc.de.teams.client;
 
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamNameSelected;
-import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
-import org.iplantc.de.teams.client.models.TeamsFilter;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * An interface for the UI's Team view in the Collaboration window
  */
-public interface TeamsView extends IsWidget,
-                                   IsMaskable, TeamNameSelected.HasTeamNameSelectedHandlers,
-                                   TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
-                                   CreateTeamSelected.HasCreateTeamSelectedHandlers,
-                                   TeamSearchResultLoad.TeamSearchResultLoadHandler {
+public interface TeamsView extends IsWidget {
 
     /**
      * An appearance class for all string related items in the Teams view
      */
     interface TeamsViewAppearance {
-
-        String teamsMenu();
-
-        String createNewTeam();
-
-        String manageTeam();
 
         String leaveTeam();
 
@@ -40,23 +28,11 @@ public interface TeamsView extends IsWidget,
 
         String nameColumnLabel();
 
-        int descColumnWidth();
-
-        String descColumnLabel();
-
-        int infoColWidth();
-
         String loadingMask();
 
         String teamNameLabel();
 
         String teamDescLabel();
-
-        int teamDetailsWidth();
-
-        int teamDetailsHeight();
-
-        String detailsHeading(Group group);
 
         String membersLabel();
 
@@ -67,8 +43,6 @@ public interface TeamsView extends IsWidget,
         int editTeamHeight();
 
         String editTeamHeading(Group group, boolean isAdmin);
-
-        ImageResource plusImage();
 
         String nonMembersSectionHeader();
 
@@ -106,10 +80,6 @@ public interface TeamsView extends IsWidget,
 
         String miscTeamUpdates();
 
-        ImageResource editIcon();
-
-        String searchFieldEmptyText();
-
         String teamSearchFailed();
 
         String leaveTeamSuccess(Group team);
@@ -126,8 +96,6 @@ public interface TeamsView extends IsWidget,
 
         String deleteTeam();
 
-        String joinTeam();
-
         String requestToJoinTeam();
 
         int editTeamAdjustedHeight(boolean isAdmin, boolean isMember);
@@ -141,8 +109,6 @@ public interface TeamsView extends IsWidget,
         String deleteTeamSuccess(Group team);
 
         String joinTeamSuccess(Group team);
-
-        String joinTeamFail(Group team);
 
         String requestMessageLabel();
 
@@ -162,10 +128,6 @@ public interface TeamsView extends IsWidget,
 
         String getCreatorNamesFailed();
 
-        int creatorColumnWidth();
-
-        String creatorColumnLabel();
-
         SafeHtml editTeamHelpText();
 
         String teamsHelp();
@@ -184,17 +146,14 @@ public interface TeamsView extends IsWidget,
     /**
      * This presenter is responsible for managing all the events from the TeamsView
      */
+    @JsType
     interface Presenter {
-
-        /**
-         * Initialize the Team presenter to begin fetching teams
-         */
-        void go();
 
         /**
          * Returns the view
          * @return
          */
+        @JsIgnore
         TeamsView getView();
 
         /**
@@ -207,6 +166,7 @@ public interface TeamsView extends IsWidget,
          * Return the list of selected teams from the view
          * @return
          */
+        @JsIgnore
         List<Group> getSelectedTeams();
 
         /**
@@ -214,46 +174,52 @@ public interface TeamsView extends IsWidget,
          * @param baseID
          */
         void setViewDebugId(String baseID);
+
+        /**
+         * Gets called when a team name is selected in TeamView
+         * @param teamSpl
+         */
+        @SuppressWarnings("unusable-by-js")
+        void onTeamNameSelected(Splittable teamSpl);
+
+        /**
+         * Fetches the list of teams the user belongs to
+         */
+        void getMyTeams();
+
+        /**
+         * Fetches the list of teams the user has permission to view
+         */
+        void getAllTeams();
+
+        /**
+         * Fetches the list of teams which match the given search term
+         * @param searchTerm
+         */
+        void searchTeams(String searchTerm);
+
+        /**
+         * Fires when the user clicks the button to create a new team
+         */
+        void onCreateTeamSelected();
+
+        /**
+         * Fires when the user changes which teams are currently selected
+         * @param teamList
+         */
+        @SuppressWarnings("unusable-by-js")
+        void onTeamSelectionChanged(Splittable teamList);
     }
 
-    /**
-     * Add the specified groups to the Teams view
-     * @param result
-     */
-    void addTeams(List<Group> result);
+    void setBaseId(String baseId);
 
-    /**
-     * Remove any teams from the ListStore
-     */
-    void clearTeams();
+    void mask();
 
-    /**
-     * Return the filter currently set in the Team view
-     * @return
-     */
-    TeamsFilter getCurrentFilter();
+    void unmask();
 
-    /**
-     * Update the details of a team in the grid
-     * @param team
-     */
-    void updateTeam(Group team);
-
-    /**
-     * Remove the specified team from the grid
-     * @param team
-     */
-    void removeTeam(Group team);
-
-    /**
-     * Show the check box column in the grid, so that users can select multiple
-     * teams at once
-     */
     void showCheckBoxes();
 
-    /**
-     * Return the list of selected teams
-     * @return
-     */
-    List<Group> getSelectedTeams();
+    void setTeamList(Splittable teamListSpl);
+
+    void setSelectedTeams(Splittable teamList);
 }

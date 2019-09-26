@@ -4,8 +4,4 @@
         <when-type-is class="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.teams.cells.TeamNameCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.teams.client.views.cells.TeamNameCell.TeamNameCellAppearance"/>
-    </replace-with>
-
 </module>

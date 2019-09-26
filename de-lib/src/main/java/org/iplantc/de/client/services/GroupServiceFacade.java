@@ -28,13 +28,13 @@ public interface GroupServiceFacade {
      * Get the list of all Teams for which the user has View permissions
      * @param teamListCallback
      */
-    void getTeams(AsyncCallback<List<Group>> teamListCallback);
+    void getTeams(AsyncCallback<Splittable> teamListCallback);
 
     /**
      * Get the the list of all Teams that a user belongs to
      * @param teamListCallback
      */
-    void getMyTeams(AsyncCallback<List<Group>> teamListCallback);
+    void getMyTeams(AsyncCallback<Splittable> teamListCallback);
 
     /**
      * Get the list of all Communities for which the user has View permissions
@@ -245,7 +245,7 @@ public interface GroupServiceFacade {
      * @param searchTerm
      * @param teamListCallback
      */
-    void searchTeams(String searchTerm, AsyncCallback<List<Group>> teamListCallback);
+    void searchTeams(String searchTerm, AsyncCallback<Splittable> teamListCallback);
 
     /**
      * Leave the selected Team
