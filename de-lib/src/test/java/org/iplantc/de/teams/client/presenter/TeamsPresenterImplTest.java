@@ -5,29 +5,29 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.teams.client.ReactTeamViews;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
-import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
-import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -60,15 +60,20 @@ public class TeamsPresenterImplTest {
     @Mock EditTeamDialog editTeamDialogMock;
     @Mock AsyncProviderWrapper<EditTeamDialog> editDlgProviderMock;
     @Mock TeamsViewFactory viewFactoryMock;
-    @Mock TeamSearchRpcProxy searchProxyMock;
     @Mock PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loaderMock;
     @Mock IplantAnnouncer announcerMock;
     @Mock List<String> creatorIdsMock;
     @Mock FastMap<Subject> fastMapSubjectMock;
+    @Mock GroupAutoBeanFactory groupAutoBeanFactoryMock;
+    @Mock CollaboratorsUtil collaboratorsUtilMock;
+    @Mock Splittable teamSplittableMock;
+    @Mock Splittable groupSplittableMock;
+    @Mock Splittable groupListSplittableMock;
+    @Mock ReactTeamViews.TeamProps teamPropsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<EditTeamDialog>> editDlgProviderCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<Splittable>> groupListSplCaptor;
     @Captor ArgumentCaptor<TeamSaved.TeamSavedHandler> teamSaveCaptor;
     @Captor ArgumentCaptor<LeaveTeamCompleted.LeaveTeamCompletedHandler> leaveTeamCaptor;
     @Captor ArgumentCaptor<AsyncCallback<FastMap<Subject>>> fastMapSubjectCaptor;
@@ -82,21 +87,18 @@ public class TeamsPresenterImplTest {
 
         uut = new TeamsPresenterImpl(appearanceMock,
                                      serviceFacadeMock,
-                                     collaboratorsFacadeMock,
                                      viewFactoryMock,
-                                     searchProxyMock){
+                                     groupAutoBeanFactoryMock,
+                                     collaboratorsUtilMock){
+
             @Override
-            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> getPagingLoader() {
-                return loaderMock;
+            Group convertSplittableToGroup(Splittable teamSpl) {
+                return groupMock;
             }
 
             @Override
-            List<String> getCreatorIds(List<Group> teams) {
-                return creatorIdsMock;
-            }
-
-            @Override
-            void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
+            ReactTeamViews.TeamProps getBaseTeamProps() {
+                return teamPropsMock;
             }
         };
         uut.currentFilter = currentFilterMock;
@@ -107,71 +109,28 @@ public class TeamsPresenterImplTest {
     }
 
     public void verifyConstructor() {
-        verify(viewFactoryMock).create(eq(loaderMock));
-        verify(viewMock).addTeamNameSelectedHandler(eq(uut));
-        verify(viewMock).addTeamFilterSelectionChangedHandler(eq(uut));
-        verify(viewMock).addCreateTeamSelectedHandler(eq(uut));
-        verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(uut));
-        verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(viewMock));
-    }
-
-    @Test
-    public void go() {
-        TeamsPresenterImpl spy = spy(uut);
-        when(viewMock.getCurrentFilter()).thenReturn(currentFilterMock);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.go();
-        verify(spy).getFilteredTeams();
+        verify(viewFactoryMock).create(eq(teamPropsMock));
     }
 
     @Test
     public void onTeamNameSelected() {
-        TeamNameSelected eventMock = mock(TeamNameSelected.class);
+        TeamsPresenterImpl spy = spy(uut);
         TeamSaved saveEventMock = mock(TeamSaved.class);
         LeaveTeamCompleted leaveEventMock = mock(LeaveTeamCompleted.class);
         when(leaveEventMock.getTeam()).thenReturn(groupMock);
         when(saveEventMock.getGroup()).thenReturn(groupMock);
-        when(eventMock.getTeam()).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onTeamNameSelected(eventMock);
+        spy.onTeamNameSelected(teamSplittableMock);
 
         verify(editDlgProviderMock).get(editDlgProviderCaptor.capture());
 
         editDlgProviderCaptor.getValue().onSuccess(editTeamDialogMock);
         verify(editTeamDialogMock).show(eq(groupMock));
 
-        verify(editTeamDialogMock).addTeamSavedHandler(teamSaveCaptor.capture());
-        teamSaveCaptor.getValue().onTeamSaved(saveEventMock);
-        verify(viewMock).updateTeam(eq(groupMock));
-
         verify(editTeamDialogMock).addLeaveTeamCompletedHandler(leaveTeamCaptor.capture());
         leaveTeamCaptor.getValue().onLeaveTeamCompleted(leaveEventMock);
-        verify(viewMock).removeTeam(eq(groupMock));
-    }
-
-    @Test
-    public void onTeamFilterSelectionChanged_currentFilter() {
-        TeamsPresenterImpl spy = spy(uut);
-        TeamFilterSelectionChanged eventMock = mock(TeamFilterSelectionChanged.class);
-        when(eventMock.getFilter()).thenReturn(currentFilterMock);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.onTeamFilterSelectionChanged(eventMock);
-        verify(spy, times(0)).getFilteredTeams();
-    }
-
-    @Test
-    public void onTeamFilterSelectionChanged_newFilter() {
-        TeamsPresenterImpl spy = spy(uut);
-        TeamFilterSelectionChanged eventMock = mock(TeamFilterSelectionChanged.class);
-        TeamsFilter filterMock = TeamsFilter.MY_TEAMS;
-        when(eventMock.getFilter()).thenReturn(filterMock);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.onTeamFilterSelectionChanged(eventMock);
-        verify(spy).getFilteredTeams();
+        verify(spy).refreshTeamListing();
     }
 
     @Test
@@ -180,7 +139,7 @@ public class TeamsPresenterImplTest {
         spy.currentFilter = TeamsFilter.ALL;
 
         /** CALL METHOD UNDER TEST **/
-        spy.getFilteredTeams();
+        spy.refreshTeamListing();
         verify(spy).getAllTeams();
     }
 
@@ -190,7 +149,7 @@ public class TeamsPresenterImplTest {
         spy.currentFilter = TeamsFilter.MY_TEAMS;
 
         /** CALL METHOD UNDER TEST **/
-        spy.getFilteredTeams();
+        spy.refreshTeamListing();
         verify(spy).getMyTeams();
     }
 
@@ -201,11 +160,11 @@ public class TeamsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         spy.getMyTeams();
 
-        verify(viewMock).mask(eq("loading"));
-        verify(serviceFacadeMock).getMyTeams(groupListCaptor.capture());
+        verify(viewMock).mask();
+        verify(serviceFacadeMock).getMyTeams(groupListSplCaptor.capture());
 
-        groupListCaptor.getValue().onSuccess(groupListMock);
-        verify(spy).getTeamCreatorNames(eq(groupListMock));
+        groupListSplCaptor.getValue().onSuccess(groupListSplittableMock);
+        verify(spy).updateViewTeamList(eq(groupListSplittableMock));
     }
 
     @Test
@@ -215,63 +174,10 @@ public class TeamsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         spy.getAllTeams();
 
-        verify(viewMock).mask(eq("loading"));
-        verify(serviceFacadeMock).getTeams(groupListCaptor.capture());
+        verify(viewMock).mask();
+        verify(serviceFacadeMock).getTeams(groupListSplCaptor.capture());
 
-        groupListCaptor.getValue().onSuccess(groupListMock);
-        verify(spy).getTeamCreatorNames(eq(groupListMock));
-    }
-
-    @Test
-    public void addTeamsToView() {
-        when(groupListMock.isEmpty()).thenReturn(false);
-
-        /** CALL METHOD UNDER TEST **/
-        uut.addTeamsToView(groupListMock);
-        verify(viewMock).clearTeams();
-        verify(viewMock).addTeams(eq(groupListMock));
-        verify(viewMock).unmask();
-    }
-
-    @Test
-    public void onTeamSearchResultLoad() {
-        TeamSearchResultLoad eventMock = mock(TeamSearchResultLoad.class);
-        when(eventMock.getSearchResults()).thenReturn(groupListMock);
-        when(groupListMock.isEmpty()).thenReturn(false);
-
-        /** CALL METHOD UNDER TEST **/
-        uut.onTeamSearchResultLoad(eventMock);
-
-        verify(viewMock).clearTeams();
-        verify(viewMock).addTeams(eq(groupListMock));
-    }
-
-    @Test
-    public void getTeamCreatorNames_onSuccess() {
-        TeamsPresenterImpl spy = spy(uut);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.getTeamCreatorNames(groupListMock);
-
-        verify(collaboratorsFacadeMock).getUserInfo(eq(creatorIdsMock), fastMapSubjectCaptor.capture());
-
-        fastMapSubjectCaptor.getValue().onSuccess(fastMapSubjectMock);
-        verify(spy).addCreatorToTeams(eq(groupListMock), eq(fastMapSubjectMock));
-        verify(spy).addTeamsToView(eq(groupListMock));
-    }
-
-    @Test
-    public void getTeamCreatorNames_onFailure() {
-        TeamsPresenterImpl spy = spy(uut);
-        when(appearanceMock.getCreatorNamesFailed()).thenReturn("fail");
-
-        /** CALL METHOD UNDER TEST **/
-        spy.getTeamCreatorNames(groupListMock);
-
-        verify(collaboratorsFacadeMock).getUserInfo(eq(creatorIdsMock), fastMapSubjectCaptor.capture());
-
-        fastMapSubjectCaptor.getValue().onFailure(mock(Throwable.class));
-        verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
-        verify(spy).addTeamsToView(eq(groupListMock));
+        groupListSplCaptor.getValue().onSuccess(groupListSplittableMock);
+        verify(spy).updateViewTeamList(eq(groupListSplittableMock));
     }
 }
