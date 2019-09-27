@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 export default function WithToolbarAppGridListing(props) {
     const {
         heading,
-        baseDebugId,
+        parentId,
         typeFilter,
         onTypeFilterChange,
         onSortChange,
@@ -32,7 +32,7 @@ export default function WithToolbarAppGridListing(props) {
             <LoadingMask loading={loading}>
                 <AppListingHeader heading={heading} />
                 <FilterSortToolbar
-                    baseDebugId={baseDebugId}
+                    baseDebugId={parentId}
                     typeFilter={typeFilter}
                     onTypeFilterChange={onTypeFilterChange}
                     onSortChange={onSortChange}
@@ -40,7 +40,6 @@ export default function WithToolbarAppGridListing(props) {
                     disableTypeFilter={disableTypeFilter}
                 />
                 <AppGridListing
-                    baseDebugID={baseDebugId}
                     viewType={viewType}
                     enableMenu={true}
                     {...props}

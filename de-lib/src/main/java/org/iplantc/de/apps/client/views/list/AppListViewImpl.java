@@ -27,10 +27,12 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void load(AppsListView.Presenter presenter,
-                     String activeView) {
+                     String activeView,
+                     String baseId) {
 
         props = new ReactAppListing.AppListingProps();
         props.presenter = presenter;
+        props.baseId = baseId;
         props.apps = null;
         props.heading = "";
         props.typeFilter = AppTypeFilter.ALL.getFilterString();

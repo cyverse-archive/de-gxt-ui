@@ -148,7 +148,8 @@ public interface AppsListView extends IsWidget/*   ,
     void enableAppTypeFilter(boolean enabled);*/
 
     void load(AppsListView.Presenter presenter,
-              String activeView);
+              String activeView,
+              String baseId);
 
     void disableTypeFilter(boolean disable);
 

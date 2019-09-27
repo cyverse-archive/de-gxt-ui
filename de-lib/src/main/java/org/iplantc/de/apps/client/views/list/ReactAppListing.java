@@ -31,5 +31,6 @@ public class ReactAppListing {
         public String selectedAppId;
         public String viewType;
         public boolean loading;
+        public String baseId;
     }
 }

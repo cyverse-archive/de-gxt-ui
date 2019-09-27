@@ -17,6 +17,7 @@ import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionCha
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
@@ -37,6 +38,7 @@ import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
+import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -113,8 +115,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void go(HasOneWidget widget) {
         //by default support only gridView
+        String baseId = DeModule.WindowIds.APPS_WINDOW + AppsModule.Ids.APPS_VIEW;
         widget.setWidget(listView);
-        listView.load(this, activeView);
+        listView.load(this, activeView, baseId);
     }
 
     @Override

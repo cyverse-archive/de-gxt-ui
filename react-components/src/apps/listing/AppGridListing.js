@@ -13,6 +13,7 @@ import {
     Rate,
     stableSort,
     withI18N,
+    build,
 } from "@cyverse-de/ui-lib";
 
 import ids from "./ids";
@@ -89,7 +90,7 @@ class AppGridListing extends Component {
         let columnData = getTableColumns(deletable, enableMenu);
 
         return (
-            <Table stickyHeader={true}>
+            <Table stickyHeader={true} size="small">
                 <TableBody>
                     {(!apps || apps.length === 0) && (
                         <EmptyTable
@@ -108,6 +109,7 @@ class AppGridListing extends Component {
                                 } = app.rating;
                                 const selected = isSelected(app.id);
                                 const external = app.app_type !== appType.de;
+                                const rowId = build(parentId, app.id);
                                 return (
                                     <TableRow
                                         role="checkbox"
@@ -117,6 +119,7 @@ class AppGridListing extends Component {
                                         aria-checked={selected}
                                         onClick={() => handleAppSelection(app)}
                                         key={app.id}
+                                        id={rowId}
                                     >
                                         {selectable && (
                                             <TableCell padding="checkbox">
@@ -132,6 +135,10 @@ class AppGridListing extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <AppName
+                                                baseDebugId={build(
+                                                    rowId,
+                                                    ids.LISTING.APP_NAME
+                                                )}
                                                 isDisabled={app.disabled}
                                                 name={app.name}
                                                 onAppNameClicked={() =>
@@ -182,6 +189,7 @@ class AppGridListing extends Component {
                                         {enableMenu && (
                                             <TableCell>
                                                 <AppMenu
+                                                    baseDebugId={rowId}
                                                     onAppInfoClick={() =>
                                                         onAppInfoClick(app)
                                                     }

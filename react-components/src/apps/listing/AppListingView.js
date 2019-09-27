@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppTileListing from "./AppTileListing";
 import view from "../model/viewType";
 import WithToolbarAppGridListing from "./WithToolbarAppGridListing";
 import AppFields from "./AppFields";
+import { build } from "@cyverse-de/ui-lib";
+import ids from "./ids";
 
 /**
  *
@@ -12,8 +14,13 @@ import AppFields from "./AppFields";
  */
 
 export default function AppListingView(props) {
-    const { viewType, presenter } = props;
+    const { viewType, presenter, apps, baseId } = props;
     const [selectedApps, setSelectedApps] = useState([]);
+
+    //reset selection when categories /  Hierarchy / search results change
+    useEffect(() => {
+        resetAppSelection();
+    }, [apps]);
 
     const handleAppSelection = (app) => {
         const selectedIndex = selectedApps.indexOf(app);
@@ -37,6 +44,7 @@ export default function AppListingView(props) {
 
     const resetAppSelection = () => {
         setSelectedApps([]);
+        presenter.onAppSelectionChanged([]);
     };
 
     const onTypeFilterChange = (filter) => {
@@ -113,6 +121,7 @@ export default function AppListingView(props) {
         return (
             <AppTileListing
                 {...props}
+                parentId={build(baseId, ids.LISTING.TILE_VIEW)}
                 onTypeFilterChange={onTypeFilterChange}
                 onSortChange={onSortChange}
                 onAppInfoClick={onAppInfoClick}
@@ -131,6 +140,7 @@ export default function AppListingView(props) {
     } else if (viewType === view.TABLE) {
         return (
             <WithToolbarAppGridListing
+                parentId={build(baseId, ids.LISTING.GRID_VIEW)}
                 onTypeFilterChange={onTypeFilterChange}
                 handleAppSelection={handleAppSelection}
                 selectedApps={selectedApps}

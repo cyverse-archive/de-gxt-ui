@@ -70,7 +70,7 @@ public class DEAppsWindow extends WindowBase {
 
         }
         presenter.go(this,
-                     appsWindowConfig.getSelectedAppCategory(),
+                    appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
                      activeView,
                      (catPanelCollapsed == null) ? false : Boolean.valueOf(catPanelCollapsed));

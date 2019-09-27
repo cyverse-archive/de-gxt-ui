@@ -12,5 +12,8 @@ export default {
         INTERACTIVE: ".interactive",
         OSG: ".osg",
         SORT: ".sort",
+        GRID_VIEW: "appsGrid",
+        TILE_VIEW: "tile",
+        APP_NAME: "appName",
     },
 };

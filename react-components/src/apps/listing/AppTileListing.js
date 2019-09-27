@@ -8,7 +8,6 @@ import {
     stableSort,
     withI18N,
 } from "@cyverse-de/ui-lib";
-import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
 import FilterSortToolbar from "./FilterSortToolbar";
 import AppListingHeader from "./AppListingHeader";
@@ -35,11 +34,9 @@ function AppTileListing(props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const {
         apps,
-        intl,
-        baseDebugID,
+        parentId,
         heading,
         typeFilter,
-        presenter,
         viewType,
         loading,
         sortField,
@@ -63,7 +60,7 @@ function AppTileListing(props) {
             <LoadingMask loading={loading}>
                 <AppListingHeader heading={heading} />
                 <FilterSortToolbar
-                    baseDebugId={baseDebugID}
+                    baseDebugId={parentId}
                     typeFilter={typeFilter}
                     onTypeFilterChange={onTypeFilterChange}
                     onSortChange={onSortChange}
@@ -80,6 +77,7 @@ function AppTileListing(props) {
                                 return (
                                     <Grid key={app.id} item>
                                         <AppTile
+                                            baseDebugId={parentId}
                                             uuid={app.id}
                                             name={app.name}
                                             creator={app.integrator_name}
@@ -127,4 +125,4 @@ function AppTileListing(props) {
     );
 }
 
-export default withI18N(injectIntl(AppTileListing), intlData);
+export default withI18N(AppTileListing, intlData);
