@@ -53,18 +53,29 @@ export default function AppListingView(props) {
     const onSortChange = (sortField) => {
         presenter.onRequestSort(sortField);
     };
+
     const onAppInfoClick = (app) => {
         presenter.onAppInfoSelected(app);
     };
+
     const onCommentsClick = (app) => {
         presenter.onAppCommentSelected(app);
     };
+
     const onFavoriteClick = (app) => {
         presenter.onAppFavoriteSelected(app);
     };
 
     const onAppNameClick = (app) => {
         presenter.onAppNameSelected(app);
+    };
+
+    const onRatingClick = (event, app, score) => {
+        presenter.onAppRatingSelected(app, score);
+    };
+
+    const onRatingDeleteClick = (app) => {
+        presenter.onAppRatingDeselected(app);
     };
 
     const desc = (a, b, orderBy) => {
@@ -113,6 +124,8 @@ export default function AppListingView(props) {
                 isSelected={isSelected}
                 onAppNameClick={onAppNameClick}
                 getAppsSorting={getAppsSorting}
+                onRatingClick={onRatingClick}
+                onRatingDeleteClick={onRatingDeleteClick}
             />
         );
     } else if (viewType === view.TABLE) {
@@ -126,6 +139,8 @@ export default function AppListingView(props) {
                 onAppNameClick={onAppNameClick}
                 onAppInfoClick={onAppInfoClick}
                 getAppsSorting={getAppsSorting}
+                onRatingClick={onRatingClick}
+                onRatingDeleteClick={onRatingDeleteClick}
                 {...props}
             />
         );

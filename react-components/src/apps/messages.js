@@ -87,13 +87,9 @@ const intlData = {
         appDocumentation: "DE App Documentation",
         documentationTemplate: "View Documentation Template",
         htcondorExtraRequirements: "HTCondor Extra Requirements",
+        appType: "Type",
         addToFavorites: "Add To Favorites",
         removeFromFavorites: "Remove From Favorites",
-        appInfo: "App Info",
-        comments: "Comments",
-        favoriteNotSupported: "Favorites not supported for external apps!",
-        commentsNotSupported: "Comments not supported for external apps!",
-        appType: "Type",
     },
 };
 

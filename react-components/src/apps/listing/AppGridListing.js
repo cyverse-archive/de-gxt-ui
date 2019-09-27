@@ -1,15 +1,15 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 
 import {
+    AppMenu,
     AppName,
     AppStatusIcon,
     EmptyTable,
     EnhancedTableHead,
     getMessage,
-    getSorting,
     Rate,
     stableSort,
     withI18N,
@@ -23,55 +23,8 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import { Rating } from "@material-ui/lab";
-import VerticalMenuItems from "./VerticalMenuItems";
-import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Menu from "@material-ui/core/Menu";
 import AppFields from "./AppFields";
-
-function AppMenu(props) {
-    const {
-        app,
-        onAppInfoClick,
-        onCommentsClick,
-        onFavoriteClick,
-        baseDebugId,
-    } = props;
-    const external = app.app_type !== "DE";
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClose = () => setAnchorEl(null);
-    return (
-        <div>
-            <IconButton
-                id={baseDebugId}
-                aria-label="More"
-                aria-owns={open ? "long-menu" : null}
-                aria-haspopup="true"
-                onClick={(event) => setAnchorEl(event.currentTarget)}
-            >
-                <MoreVertIcon />
-            </IconButton>
-            <Menu
-                id={baseDebugId + ".menu"}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                <VerticalMenuItems
-                    isExternal={external}
-                    isFavorite={app.is_favorite}
-                    handleAppInfoClick={() => onAppInfoClick(app)}
-                    handleCommentsClick={() => onCommentsClick(app)}
-                    handleFavoriteClick={() => onFavoriteClick(app)}
-                    handleMenuClose={handleClose}
-                />
-                />
-            </Menu>
-        </div>
-    );
-}
+import appType from "../../appType";
 
 /**
  * @author aramsey
@@ -129,6 +82,8 @@ class AppGridListing extends Component {
             onFavoriteClick,
             enableMenu,
             getAppsSorting,
+            onRatingDeleteClick,
+            onRatingClick,
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
@@ -152,6 +107,7 @@ class AppGridListing extends Component {
                                     total: totalRating,
                                 } = app.rating;
                                 const selected = isSelected(app.id);
+                                const external = app.app_type !== appType.de;
                                 return (
                                     <TableRow
                                         role="checkbox"
@@ -188,14 +144,29 @@ class AppGridListing extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Rate
+                                                name={app.id}
                                                 value={
                                                     userRating || averageRating
                                                 }
                                                 readOnly={
-                                                    app.app_type !== "DE" ||
-                                                    !app.is_public
+                                                    external || !app.is_public
                                                 }
                                                 total={totalRating}
+                                                onChange={(event, score) => {
+                                                    onRatingClick(
+                                                        event,
+                                                        app,
+                                                        score
+                                                    );
+                                                }}
+                                                onDelete={
+                                                    userRating
+                                                        ? () =>
+                                                              onRatingDeleteClick(
+                                                                  app
+                                                              )
+                                                        : undefined
+                                                }
                                             />
                                         </TableCell>
                                         <TableCell>{app.system_id}</TableCell>
@@ -211,16 +182,17 @@ class AppGridListing extends Component {
                                         {enableMenu && (
                                             <TableCell>
                                                 <AppMenu
-                                                    app={app}
-                                                    onAppInfoClick={
-                                                        onAppInfoClick
+                                                    onAppInfoClick={() =>
+                                                        onAppInfoClick(app)
                                                     }
-                                                    onCommentsClick={
-                                                        onCommentsClick
+                                                    onCommentsClick={() =>
+                                                        onCommentsClick(app)
                                                     }
-                                                    onFavoriteClick={
-                                                        onFavoriteClick
+                                                    onFavoriteClick={() =>
+                                                        onFavoriteClick(app)
                                                     }
+                                                    isExternal={external}
+                                                    isFavorite={app.is_favorite}
                                                 />
                                             </TableCell>
                                         )}

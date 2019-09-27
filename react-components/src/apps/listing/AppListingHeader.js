@@ -6,7 +6,7 @@ import { LoadingMask, palette } from "@cyverse-de/ui-lib";
  *
  * @author sriram
  *
- * A component that will show a App Listing header
+ * A component that will show the App Listing header
  */
 
 const useStyles = makeStyles((theme) => ({

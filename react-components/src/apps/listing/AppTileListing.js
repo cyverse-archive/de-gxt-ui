@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import {
     AppTile,
-    getSorting,
     LoadingMask,
     palette,
     stableSort,
@@ -12,8 +11,8 @@ import {
 import { injectIntl } from "react-intl";
 import intlData from "../../apps/messages";
 import FilterSortToolbar from "./FilterSortToolbar";
-import VerticalMenuItems from "./VerticalMenuItems";
 import AppListingHeader from "./AppListingHeader";
+import appType from "../../appType";
 
 /**
  *
@@ -33,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppTileListing(props) {
+    const [menuOpen, setMenuOpen] = useState(false);
     const {
         apps,
         intl,
@@ -53,14 +53,10 @@ function AppTileListing(props) {
         isSelected,
         onAppNameClick,
         getAppsSorting,
+        onRatingDeleteClick,
+        onRatingClick,
     } = props;
     const classes = useStyles();
-
-    const [anchorEl, setAnchorEl] = useState("");
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
 
     return (
         <div className={classes.container}>
@@ -80,23 +76,7 @@ function AppTileListing(props) {
                         apps.length > 0 &&
                         stableSort(apps, getAppsSorting("asc", sortField)).map(
                             (app) => {
-                                const external = app.app_type !== "DE";
-                                const menuItems = () => (
-                                    <VerticalMenuItems
-                                        isExternal={external}
-                                        isFavorite={app.is_favorite}
-                                        handleAppInfoClick={() =>
-                                            onAppInfoClick(app)
-                                        }
-                                        handleCommentsClick={() =>
-                                            onCommentsClick(app)
-                                        }
-                                        handleFavoriteClick={() =>
-                                            onFavoriteClick(app)
-                                        }
-                                        handleMenuClose={handleMenuClose}
-                                    />
-                                );
+                                const external = app.app_type !== appType.de;
                                 return (
                                     <Grid key={app.id} item>
                                         <AppTile
@@ -109,23 +89,33 @@ function AppTileListing(props) {
                                             isBeta={app.beta}
                                             isDisabled={app.disabled}
                                             isExternal={external}
-                                            MenuItems={menuItems}
                                             selected={isSelected(app.id)}
-                                            onAppSelected={() =>
-                                                handleAppSelection(app)
-                                            }
-                                            onAppNameClicked={() =>
+                                            onAppSelected={() => {
+                                                handleAppSelection(app);
+                                            }}
+                                            onAppNameClick={() =>
                                                 onAppNameClick(app)
                                             }
-                                            handleMenuClose={() => {
-                                                setAnchorEl(null);
-                                            }}
-                                            handleMenuClick={(event) => {
-                                                setAnchorEl(
-                                                    event.currentTarget
+                                            onRatingChange={(event, score) => {
+                                                onRatingClick(
+                                                    event,
+                                                    app,
+                                                    score
                                                 );
                                             }}
-                                            anchorEl={anchorEl}
+                                            onDeleteRatingClick={() =>
+                                                onRatingDeleteClick(app)
+                                            }
+                                            onAppInfoClick={() =>
+                                                onAppInfoClick(app)
+                                            }
+                                            onCommentsClick={() =>
+                                                onCommentsClick(app)
+                                            }
+                                            onFavoriteClick={() =>
+                                                onFavoriteClick(app)
+                                            }
+                                            isFavorite={app.is_favorite}
                                         />
                                     </Grid>
                                 );
