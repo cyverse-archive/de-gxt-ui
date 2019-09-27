@@ -385,15 +385,15 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppRatingDeselected(final AppRatingDeselected event) {
-        final App appToUnRate = event.getApp();
+    public void onAppRatingDeselected(final Splittable appSplittable) {
+        final App appToUnRate = splittableToApp(appSplittable);
         appUserService.deleteRating(appToUnRate, new DeleteRatingCallback(appToUnRate, eventBus));
     }
 
     @Override
-    public void onAppRatingSelected(final AppRatingSelected event) {
-        final App appToRate = event.getApp();
-        appUserService.rateApp(appToRate, event.getScore(), new RateAppCallback(appToRate, eventBus));
+    public void onAppRatingSelected(final Splittable appSplittable, int score) {
+        final App appToRate = splittableToApp(appSplittable);
+        appUserService.rateApp(appToRate, score, new RateAppCallback(appToRate, eventBus));
     }
 
     @Override

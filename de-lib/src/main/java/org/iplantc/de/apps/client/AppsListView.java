@@ -124,6 +124,11 @@ public interface AppsListView extends IsWidget/*   ,
         void onAppCommentSelected(Splittable appSplittable);
 
         void onRequestSort(String sortField);
+
+        void onAppRatingDeselected(final Splittable appSplittable);
+
+        void onAppRatingSelected(final Splittable appSplittable,
+                                 int score);
     }
 
  /*   List<DragSource> getAppsDragSources();
