@@ -10,8 +10,6 @@ import org.iplantc.de.apps.client.events.RunAppEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
@@ -65,8 +63,6 @@ import java.util.List;
  * @author jstroot
  */
 public class AppsListPresenterImpl implements AppsListView.Presenter,
-                                              AppRatingSelected.AppRatingSelectedHandler,
-                                              AppRatingDeselected.AppRatingDeselectedHandler,
                                               AppUpdatedEvent.AppUpdatedEventHandler{
 
     private final DEProperties deProperties;
@@ -108,22 +104,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         this.ontologyUtil = OntologyUtil.getInstance();
         this.deProperties = deProperties;
         this.listView = listView;
-
-/*        this.gridView.addAppNameSelectedEventHandler(this);
-        this.gridView.addAppRatingDeselectedHandler(this);
-        this.gridView.addAppRatingSelectedHandler(this);
-        this.gridView.addAppCommentSelectedEventHandlers(this);
-        this.gridView.addAppFavoriteSelectedEventHandlers(this);
-        this.gridView.addAppSelectionChangedEventHandler(this);
-        this.gridView.addAppInfoSelectedEventHandler(this);
-
-        this.tileView.addAppNameSelectedEventHandler(this);
-        this.tileView.addAppRatingDeselectedHandler(this);
-        this.tileView.addAppRatingSelectedHandler(this);
-        this.tileView.addAppCommentSelectedEventHandlers(this);
-        this.tileView.addAppFavoriteSelectedEventHandlers(this);
-        this.tileView.addAppSelectionChangedEventHandler(this);
-        this.tileView.addAppInfoSelectedEventHandler(this);*/
 
         activeView = AppsListView.TILE_VIEW;
 
@@ -175,28 +155,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public void setViewDebugId(String baseID) {
         //listView.asWidget().ensureDebugId(baseID);
     }
-
-/*
-    @Override
-    public HandlerRegistration addStoreAddHandler(StoreAddEvent.StoreAddHandler<App> handler) {
-        return listStore.addStoreAddHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addStoreClearHandler(StoreClearEvent.StoreClearHandler<App> handler) {
-        return listStore.addStoreClearHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addStoreRemoveHandler(StoreRemoveEvent.StoreRemoveHandler<App> handler) {
-        return listStore.addStoreRemoveHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addStoreUpdateHandler(StoreUpdateEvent.StoreUpdateHandler<App> handler) {
-        return listStore.addStoreUpdateHandler(handler);
-    }
-*/
 
     @Override
     public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {
@@ -326,6 +284,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     protected void getAppsWithSelectedHierarchy() {
+        listView.setLoadingMask(true);
         if (selectedHierarchy != null) {
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
