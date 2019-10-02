@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import getAppsSorting from "../../apps/listing/appSorting";
 import AppGridListing from "../../apps/listing/AppGridListing";
 import CollaboratorListing from "../../collaborators/CollaboratorListing";
 import ids from "../ids";
@@ -71,6 +72,7 @@ class EditCommunity extends Component {
             "closeDialog",
             "handleAppSelection",
             "resetAppSelection",
+            "isSelected",
         ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
@@ -132,6 +134,14 @@ class EditCommunity extends Component {
                 admins: [currentUser],
             });
         }
+    }
+
+    isSelected(id) {
+        const { selectedApps } = this.state;
+        if (selectedApps && selectedApps.length > 0) {
+            return selectedApps.filter((app) => app.id === id).length > 0;
+        }
+        return false;
     }
 
     validate(name) {
@@ -645,6 +655,8 @@ class EditCommunity extends Component {
                                 handleAppSelection={this.handleAppSelection}
                                 resetAppSelection={this.resetAppSelection}
                                 selectedApps={selectedApps}
+                                getAppsSorting={getAppsSorting}
+                                isSelected={this.isSelected}
                             />
                         </fieldset>
                     </form>

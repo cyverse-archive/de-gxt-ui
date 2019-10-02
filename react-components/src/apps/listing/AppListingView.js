@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppTileListing from "./AppTileListing";
 import view from "../model/viewType";
 import WithToolbarAppGridListing from "./WithToolbarAppGridListing";
-import AppFields from "./AppFields";
 import { build } from "@cyverse-de/ui-lib";
 import ids from "./ids";
+import getAppsSorting from "./appSorting";
 
 /**
  *
@@ -40,6 +40,10 @@ export default function AppListingView(props) {
         }
         setSelectedApps(newSelected);
         presenter.onAppSelectionChanged(newSelected);
+    };
+
+    const handleSelectAll = (checked) => {
+        checked ? setSelectedApps(apps) : resetAppSelection();
     };
 
     const resetAppSelection = () => {
@@ -86,37 +90,6 @@ export default function AppListingView(props) {
         presenter.onAppRatingDeselected(app);
     };
 
-    const desc = (a, b, orderBy) => {
-        if (
-            orderBy === AppFields.NAME.key ||
-            orderBy === AppFields.INTEGRATOR.key ||
-            orderBy === AppFields.SYSTEM.key
-        ) {
-            if (b[`${orderBy}`] < a[`${orderBy}`]) {
-                return -1;
-            }
-            if (b[`${orderBy}`] > a[`${orderBy}`]) {
-                return 1;
-            }
-            return 0;
-        }
-        if (orderBy === AppFields.RATING.key) {
-            if (b.rating.average < a.rating.average) {
-                return -1;
-            }
-            if (b.rating.average > a.rating.average) {
-                return 1;
-            }
-            return 0;
-        }
-    };
-
-    const getAppsSorting = (order, orderBy) => {
-        return order === "desc"
-            ? (a, b) => desc(a, b, orderBy)
-            : (a, b) => -desc(a, b, orderBy);
-    };
-
     if (viewType === view.TILE) {
         return (
             <AppTileListing
@@ -151,6 +124,7 @@ export default function AppListingView(props) {
                 getAppsSorting={getAppsSorting}
                 onRatingClick={onRatingClick}
                 onRatingDeleteClick={onRatingDeleteClick}
+                handleSelectAll={handleSelectAll}
                 {...props}
             />
         );
