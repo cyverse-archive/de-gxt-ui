@@ -189,14 +189,12 @@ function ManageTools(props) {
                             onToolSelection={onToolSelection}
                         />
                         <EnhancedTableHead
-                            selectable={true}
                             numSelected={numToolsSelected}
                             rowCount={toolList ? toolList.tools.length : 0}
                             baseId={parentId}
                             columnData={TABLE_COLUMNS}
                             order={order}
                             orderBy={orderBy}
-                            onSelectAllClick={() => onToolSelection(null)}
                             onRequestSort={onRequestSort}
                         />
                     </Table>
@@ -459,16 +457,6 @@ function ToolListing(props) {
                             selected={isSelected(tool)}
                             onClick={() => onToolSelection(tool)}
                         >
-                            <TableCell padding="checkbox">
-                                <Checkbox
-                                    id={build(
-                                        parentId,
-                                        tool.id,
-                                        ids.MANAGE_TOOLS.TOOL_CHECKBOX
-                                    )}
-                                    checked={isSelected(tool)}
-                                />
-                            </TableCell>
                             <TableCell padding="none">
                                 <IconButton
                                     onClick={() =>
