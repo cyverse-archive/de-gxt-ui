@@ -163,12 +163,10 @@ function ManageTools(props) {
         presenter.onToolSelectionChanged(tool);
     };
 
-    const baseId = build(parentId, ids.MANAGE_TOOLS.VIEW);
-
     return (
         <Fragment>
             <StyledToolbar
-                parentId={baseId}
+                parentId={parentId}
                 presenter={presenter}
                 intl={intl}
                 searchTerm={searchTerm}
@@ -182,7 +180,7 @@ function ManageTools(props) {
                 <LoadingMask loading={loading}>
                     <Table size="small">
                         <ToolListing
-                            parentId={baseId}
+                            parentId={parentId}
                             toolList={toolList}
                             presenter={presenter}
                             selectedTool={selectedTool}

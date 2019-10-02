@@ -46,7 +46,7 @@ class ManageToolsTest extends Component {
             searchTools: (searchTerm) => logger("Search for tools", searchTerm),
         };
 
-        const parentId = "gwt-debug-manageToolsWindow";
+        const parentId = "gwt-debug-manageToolsWindow.toolsView";
 
         const toolList = {
             total: 50,
