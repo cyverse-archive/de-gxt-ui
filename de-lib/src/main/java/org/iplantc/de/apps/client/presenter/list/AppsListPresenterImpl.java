@@ -114,7 +114,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void go(HasOneWidget widget) {
-        //by default support only gridView
         String baseId = DeModule.WindowIds.APPS_WINDOW + AppsModule.Ids.APPS_VIEW;
         widget.setWidget(listView);
         listView.load(this, activeView, baseId);
@@ -154,10 +153,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         disableTypeFilterForHPC();
     }
 
-    @Override
-    public void setViewDebugId(String baseID) {
-        //listView.asWidget().ensureDebugId(baseID);
-    }
 
     @Override
     public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {

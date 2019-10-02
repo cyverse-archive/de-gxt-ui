@@ -20,24 +20,10 @@ import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
 /**
- * @author aramsey
+ * @author aramsey, sriram
  */
 @JsType
-public interface AppsListView extends IsWidget/*   ,
-                                      IsMaskable,
-                                      AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
-                                      AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
-                                      AppNameSelectedEvent.HasAppNameSelectedEventHandlers,
-                                      AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                      AppCommentSelectedEvent.HasAppCommentSelectedEventHandlers,
-                                      AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                      AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                      AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
-                                      AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
-                                      AppFavoritedEvent.HasAppFavoritedEventHandlers,
-                                      BeforeAppSearchEvent.BeforeAppSearchEventHandler,
-                                      OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
-                                      CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler*/ {
+public interface AppsListView extends IsWidget {
     String GRID_VIEW = "grid";
     String TILE_VIEW = "tile";
 
@@ -98,9 +84,6 @@ public interface AppsListView extends IsWidget/*   ,
                                 AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
                                 CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
         App getSelectedApp();
-
-        @JsIgnore
-        void setViewDebugId(String baseID);
 
         @JsIgnore
         String getActiveView();

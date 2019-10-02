@@ -150,7 +150,6 @@ public class AppsViewImpl extends Composite implements AppsView {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolBar.asWidget().ensureDebugId(baseID + Ids.MENU_BAR);
-        gridPresenter.setViewDebugId(baseID);
         categoriesPresenter.setViewDebugId(baseID);
         hierarchiesPresenter.setViewDebugId(baseID);
         communitiesPresenter.setViewDebugId(baseID);
