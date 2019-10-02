@@ -29,6 +29,9 @@ import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
@@ -305,6 +308,10 @@ public class ManageToolsViewPresenterTest {
         verify(toolInfoDialogProviderMock).get(toolInfoDialogCaptor.capture());
         toolInfoDialogCaptor.getValue().onSuccess(toolInfoDialogMock);
         verify(toolInfoDialogMock).show(eq(toolMock), eq(appList));
+
+        verify(toolInfoDialogMock).show(eq(t1Mock),
+                                        eq(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appList))));
+
     }
 
 }
