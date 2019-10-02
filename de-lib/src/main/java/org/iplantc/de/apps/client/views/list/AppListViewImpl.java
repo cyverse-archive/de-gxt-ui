@@ -70,7 +70,7 @@ public class AppListViewImpl implements AppsListView {
                                   boolean loading) {
         props.apps = apps;
         props.heading = heading;
-        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";;
+        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
         props.loading = false;
         render();
     }

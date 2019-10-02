@@ -15,6 +15,5 @@ public interface AppSearchFacade {
      * @param callback  callback object to call when search is complete
      */
     void searchApp(String term, String startDate, String endDate, DECallback<AppListLoadResult> callback);
-
-
 }
+
