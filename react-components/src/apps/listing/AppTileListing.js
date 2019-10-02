@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import {
     AppTile,
+    getMessage,
     LoadingMask,
     palette,
     stableSort,
@@ -52,6 +53,7 @@ function AppTileListing(props) {
         getAppsSorting,
         onRatingDeleteClick,
         onRatingClick,
+        searchRegexPattern,
     } = props;
     const classes = useStyles();
 
@@ -68,6 +70,14 @@ function AppTileListing(props) {
                     sortField={sortField}
                     disableTypeFilter={disableTypeFilter}
                 />
+                {(!apps || apps.length === 0) && (
+                    <div>
+                        {" "}
+                        <Typography component="p">
+                            {getMessage("noApps")}
+                        </Typography>
+                    </div>
+                )}
                 <Grid container>
                     {apps &&
                         apps.length > 0 &&
@@ -114,6 +124,9 @@ function AppTileListing(props) {
                                                 onFavoriteClick(app)
                                             }
                                             isFavorite={app.is_favorite}
+                                            searchRegexPattern={
+                                                searchRegexPattern
+                                            }
                                         />
                                     </Grid>
                                 );

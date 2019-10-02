@@ -14,6 +14,7 @@ import {
     stableSort,
     withI18N,
     build,
+    Highlighter,
 } from "@cyverse-de/ui-lib";
 
 import ids from "./ids";
@@ -57,16 +58,11 @@ class AppGridListing extends Component {
     }
 
     handleSelectAllClick(event, checked) {
-        const { apps, handleAppSelection, resetAppSelection } = this.props;
-        if (checked) {
-            apps.forEach((app) => handleAppSelection(app.id));
-            return;
-        }
-        resetAppSelection();
+        this.props.handleSelectAll(checked);
     }
 
     render() {
-        const { selected, order, orderBy } = this.state;
+        const { order, orderBy } = this.state;
 
         const {
             parentId,
@@ -85,6 +81,7 @@ class AppGridListing extends Component {
             getAppsSorting,
             onRatingDeleteClick,
             onRatingClick,
+            searchRegexPattern,
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
@@ -126,7 +123,7 @@ class AppGridListing extends Component {
                                                 <Checkbox checked={selected} />
                                             </TableCell>
                                         )}
-                                        <TableCell>
+                                        <TableCell padding="none">
                                             <AppStatusIcon
                                                 isPublic={app.is_public}
                                                 isBeta={app.beta}
@@ -141,13 +138,25 @@ class AppGridListing extends Component {
                                                 )}
                                                 isDisabled={app.disabled}
                                                 name={app.name}
-                                                onAppNameClicked={() =>
-                                                    onAppNameClick(app)
+                                                onAppNameClicked={
+                                                    onAppNameClick
+                                                        ? () =>
+                                                              onAppNameClick(
+                                                                  app
+                                                              )
+                                                        : undefined
+                                                }
+                                                searchRegexPattern={
+                                                    searchRegexPattern
                                                 }
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {app.integrator_name}
+                                            <Highlighter
+                                                search={searchRegexPattern}
+                                            >
+                                                {app.integrator_name}
+                                            </Highlighter>
                                         </TableCell>
                                         <TableCell>
                                             <Rate
@@ -156,7 +165,9 @@ class AppGridListing extends Component {
                                                     userRating || averageRating
                                                 }
                                                 readOnly={
-                                                    external || !app.is_public
+                                                    external ||
+                                                    !app.is_public ||
+                                                    !onRatingClick
                                                 }
                                                 total={totalRating}
                                                 onChange={(event, score) => {
@@ -178,7 +189,7 @@ class AppGridListing extends Component {
                                         </TableCell>
                                         <TableCell>{app.system_id}</TableCell>
                                         {deletable && (
-                                            <TableCell>
+                                            <TableCell align="right">
                                                 <DeleteBtn
                                                     onClick={() =>
                                                         onRemoveApp(app)
@@ -187,7 +198,10 @@ class AppGridListing extends Component {
                                             </TableCell>
                                         )}
                                         {enableMenu && (
-                                            <TableCell>
+                                            <TableCell
+                                                padding="none"
+                                                align="right"
+                                            >
                                                 <AppMenu
                                                     baseDebugId={rowId}
                                                     onAppInfoClick={() =>
@@ -212,7 +226,7 @@ class AppGridListing extends Component {
                 <EnhancedTableHead
                     selectable={selectable}
                     numSelected={selectedApps ? selectedApps.length : 0}
-                    rowCount={apps ? apps.length : 0}
+                    rowsInPage={apps ? apps.length : 0}
                     order={order}
                     orderBy={orderBy}
                     baseId={parentId}
@@ -231,25 +245,21 @@ function getTableColumns(deletable, enableMenu) {
         { name: "", numeric: false, enableSorting: false, key: "status" },
         {
             name: AppFields.NAME.fieldName,
-            numeric: false,
             enableSorting: true,
             key: AppFields.NAME.key,
         },
         {
             name: AppFields.INTEGRATOR.fieldName,
-            numeric: false,
             enableSorting: true,
             key: AppFields.INTEGRATOR.key,
         },
         {
             name: AppFields.RATING.fieldName,
-            numeric: false,
             enableSorting: true,
             key: AppFields.RATING.key,
         },
         {
             name: AppFields.SYSTEM.fieldName,
-            numeric: false,
             enableSorting: true,
             key: AppFields.SYSTEM.key,
         },
@@ -258,7 +268,6 @@ function getTableColumns(deletable, enableMenu) {
     if (deletable) {
         tableColumns.push({
             name: "",
-            numeric: false,
             enableSorting: false,
             key: "remove",
         });
