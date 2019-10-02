@@ -292,12 +292,11 @@ class AppDetails extends Component {
                                         {getMessage("detailsRatingLbl")}
                                     </div>
                                     <Rate
-                                        value={
-                                            userRating
-                                                ? userRating
-                                                : averageRating
+                                        name={details.id}
+                                        value={userRating || averageRating}
+                                        readOnly={
+                                            isExternal || !details.is_public
                                         }
-                                        readOnly={isExternal}
                                         total={totalRating}
                                         onChange={this.onRatingChange}
                                         onDelete={
