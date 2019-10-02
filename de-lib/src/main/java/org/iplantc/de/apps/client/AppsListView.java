@@ -131,22 +131,6 @@ public interface AppsListView extends IsWidget/*   ,
                                  int score);
     }
 
- /*   List<DragSource> getAppsDragSources();
-
-    App getSelectedItem();
-
-    void select(App app, boolean keepExisting);
-
-    void deselectAll();
-
-    void setSearchPattern(String searchPattern);
-
-    void setHeading(String text);
-
-    void setAppTypeFilter(AppTypeFilter filter);
-
-    void enableAppTypeFilter(boolean enabled);*/
-
     void load(AppsListView.Presenter presenter,
               String activeView,
               String baseId);
@@ -166,6 +150,7 @@ public interface AppsListView extends IsWidget/*   ,
     void setViewType(String viewType);
 
     void loadSearchResults(Splittable apps,
+                           String searchRegexPattern,
                            String heading,
                            boolean loading);
 

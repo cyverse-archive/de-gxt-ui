@@ -74,10 +74,6 @@
         <when-type-is class="org.iplantc.de.apps.client.views.list.cells.AppCardCell.AppCardCellAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.apps.cells.AppDotMenuDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell.AppDotMenuAppearance"/>
-    </replace-with>
-
     <!-- Submit -->
     <replace-with class="org.iplantc.de.theme.base.client.apps.submit.SubmitAppViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.client.SubmitAppForPublicUseView.SubmitAppAppearance"/>

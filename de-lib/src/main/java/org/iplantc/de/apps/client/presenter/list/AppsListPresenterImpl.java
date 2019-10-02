@@ -175,7 +175,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         fireEvent(event);
     }
 
-    protected App splittableToApp(Splittable app) {
+    App splittableToApp(Splittable app) {
         return AutoBeanCodex.decode(factory, App.class, app).as();
     }
 
@@ -361,18 +361,16 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
         Splittable apps;
-        String heading;
-
         AppListLoadResult results = event.getResults();
+        String searchText = event.getSearchText();
+        int total = event.getResults() != null ? event.getResults().getTotal() : 0;
+        String heading = appearance.searchAppResultsHeader(searchText, total);
         if(results != null) {
             apps = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(results));
-            int total = event.getResults().getTotal();
-            heading = appearance.searchAppResultsHeader(event.getSearchText(), total);
+            listView.loadSearchResults(apps.get("apps"), event.getSearchPattern(), heading, false);
         } else {
-           apps = null;
-           heading = appearance.searchAppResultsHeader(event.getSearchText(), 0);
+            listView.loadSearchResults(null, event.getSearchPattern(), heading, false);
         }
-        listView.loadSearchResults(apps.get("apps"),heading ,false);
     }
 
     @Override

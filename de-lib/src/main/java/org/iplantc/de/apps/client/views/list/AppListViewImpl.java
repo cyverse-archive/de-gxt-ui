@@ -65,10 +65,12 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void loadSearchResults(Splittable apps,
+                                  String searchRegexPattern,
                                   String heading,
                                   boolean loading) {
         props.apps = apps;
         props.heading = heading;
+        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";;
         props.loading = false;
         render();
     }
@@ -94,6 +96,7 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void setApps(Splittable apps, boolean loading) {
+        props.searchRegexPattern = "";
         props.apps = apps;
         props.loading = loading;
         render();

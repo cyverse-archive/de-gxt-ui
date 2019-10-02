@@ -272,7 +272,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        searchRegexPattern = event.getSearchPattern();
+        searchRegexPattern = event.getSearchText();
         for (Widget widget : viewTabPanel) {
             if (widget instanceof Tree) {
                 ((Tree)widget).getSelectionModel().deselectAll();

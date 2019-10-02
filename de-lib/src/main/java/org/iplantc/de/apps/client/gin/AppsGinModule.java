@@ -37,7 +37,6 @@ import org.iplantc.de.apps.client.views.sharing.AppSharingView;
 import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
@@ -52,7 +51,6 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.TypeLiteral;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.TreeStore;
 
 /**
@@ -64,8 +62,6 @@ public class AppsGinModule extends AbstractGinModule {
     protected void configure() {
         bind(new TypeLiteral<TreeStore<AppCategory>>() {
         }).toProvider(AppCategoryTreeStoreProvider.class);
-        bind(new TypeLiteral<ListStore<App>>() {
-        }).toProvider(AppListStoreProvider.class);
         bind(new TypeLiteral<TreeStore<OntologyHierarchy>>() {
         }).toProvider(OntologyHierarchyTreeStoreProvider.class);
 
