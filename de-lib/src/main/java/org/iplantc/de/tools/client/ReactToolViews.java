@@ -45,4 +45,20 @@ public class ReactToolViews {
     public static class AdminPublishingToolProps extends BaseEditToolProps {
         public ToolRequestView.Presenter presenter;
     }
+
+    @JsProperty public static ComponentConstructorFn<EditToolProps> ManageTools;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class ManageToolsProps extends BaseProps {
+        public boolean loading;
+        public String parentId;
+        public Splittable toolList;
+        public ManageToolsView.Presenter presenter;
+        public Boolean isPublic;
+        public String order;
+        public String orderBy;
+        public int page;
+        public int rowsPerPage;
+        public String searchTerm;
+    }
 }

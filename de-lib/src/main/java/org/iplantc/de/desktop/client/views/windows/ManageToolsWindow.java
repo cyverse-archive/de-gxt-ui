@@ -31,6 +31,7 @@ public class ManageToolsWindow extends WindowBase {
         setMinHeight(appearance.windowMinHeight());
         setMinWidth(appearance.windowMinWidth());
         setHeading(displayStrings.manageTools());
+        setBodyStyle("background-color: white;");
         ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);
     }
 

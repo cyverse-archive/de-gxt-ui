@@ -16,6 +16,7 @@ import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.StringToSplittableDECallbackConverter;
 import org.iplantc.de.client.services.converters.ToolCallbackConverter;
 import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
 import org.iplantc.de.shared.AppsCallback;
@@ -85,7 +86,6 @@ public class ToolServicesImpl implements ToolServices {
             address += "&public=" + isPublic;
         }
 
-
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
@@ -93,19 +93,37 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void addTool(Tool tool, AppsCallback<Tool> callback) {
-        String address = TOOLS;
-        String newTool = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload();
-        ToolCallbackConverter callbackCnvt = new ToolCallbackConverter(callback, factory);
-        ServiceCallWrapper wrapper =
-                new ServiceCallWrapper(BaseServiceCallWrapper.Type.POST, address, newTool);
+    public void searchTools(Boolean isPublic, String searchTerm, String order, String orderBy, int limit, int offset, AppsCallback<Splittable> callback) {
+        String address = TOOLS + "?";
 
-        deServiceFacade.getServiceData(wrapper, callbackCnvt);
+        String search = Strings.isNullOrEmpty(searchTerm) ? "*" : searchTerm;
+        address += "search=" + URL.encodeQueryString(search);
+        address += "&limit=" + limit;
+        address += "&offset=" + offset;
+        if(isPublic != null) {
+            address += "&public=" + isPublic;
+        }
+        address += "&sort-field=" + orderBy.toLowerCase();
+        address += "&sort-dir=" + order.toUpperCase();
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+
+        deServiceFacade.getServiceData(wrapper, new StringToSplittableDECallbackConverter(callback));
     }
 
     @Override
-    public void deleteTool(Tool tool, AppsCallback<Void> callback) {
-        String address = TOOLS + "/" + tool.getId();
+    public void addTool(Tool tool, AppsCallback<Splittable> callback) {
+        String address = TOOLS;
+        String newTool = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload();
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(BaseServiceCallWrapper.Type.POST, address, newTool);
+
+        deServiceFacade.getServiceData(wrapper, new StringToSplittableDECallbackConverter(callback));
+    }
+
+    @Override
+    public void deleteTool(String toolId, AppsCallback<Void> callback) {
+        String address = TOOLS + "/" + toolId;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
 
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {

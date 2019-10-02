@@ -25,15 +25,11 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
-import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -67,20 +63,11 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Inject
     EventBus eventBus;
     @Inject
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
-    @Inject
     AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
     @Inject
     UserInfo userInfo;
     @Inject
-    ManageToolsView toolsView;
-    @Inject
-    ManageToolsView.Presenter toolsPresenter;
-    @Inject
     AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProvider;
-
-    private static ConfigAutoBeanFactory factory = GWT.create(ConfigAutoBeanFactory.class);
-
 
     private final AppUserServiceFacade appService;
     private final AppSearchRpcProxy proxy;

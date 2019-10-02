@@ -93,7 +93,6 @@ public class AppsToolbarPresenterImplTest {
         };
         uut.eventBus = eventBusMock;
         uut.userInfo = userInfoMock;
-        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.submitAppDialogAsyncProvider = submitAppDialogAsyncProviderMock;
         uut.appearance = appearanceMock;
     }

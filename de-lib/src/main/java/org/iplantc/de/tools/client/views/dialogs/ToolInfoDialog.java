@@ -6,7 +6,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.gin.factory.ToolInfoViewFactory;
-import org.iplantc.de.tools.client.views.cells.ToolInfoCell;
+import org.iplantc.de.tools.client.views.manage.ToolInfoView;
 import org.iplantc.de.tools.client.views.manage.ToolInfoViewImpl;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ToolInfoDialog extends IPlantDialog {
 
-    private ToolInfoCell.ToolInfoCellAppearance appearance;
+    private ToolInfoView.ToolInfoAppearance appearance;
 
     AppsListView.Presenter appPresenter;
 
@@ -35,7 +35,7 @@ public class ToolInfoDialog extends IPlantDialog {
     ToolInfoViewFactory factory;
 
     @Inject
-    public ToolInfoDialog(ToolInfoCell.ToolInfoCellAppearance appearance,
+    public ToolInfoDialog(ToolInfoView.ToolInfoAppearance appearance,
                           AppsListView.Presenter appPresenter,
                           OntologyHierarchiesView.Presenter ontPresenter,
                           ToolInfoViewFactory factory) {

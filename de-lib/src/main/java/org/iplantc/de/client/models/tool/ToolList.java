@@ -19,4 +19,6 @@ public interface ToolList {
     @PropertyName("tools")
     void setToolList(List<Tool> tools);
 
+    int getTotal();
+
 }

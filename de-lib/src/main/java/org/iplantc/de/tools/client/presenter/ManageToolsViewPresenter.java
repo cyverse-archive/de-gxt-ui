@@ -1,6 +1,5 @@
 package org.iplantc.de.tools.client.presenter;
 
-import org.iplantc.de.apps.client.models.ToolFilter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.apps.App;
@@ -18,17 +17,10 @@ import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.tools.client.ReactToolViews;
-import org.iplantc.de.tools.client.events.AddNewToolSelected;
-import org.iplantc.de.tools.client.events.DeleteToolSelected;
-import org.iplantc.de.tools.client.events.EditToolSelected;
-import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
-import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
-import org.iplantc.de.tools.client.events.RequestToolSelected;
-import org.iplantc.de.tools.client.events.ShareToolsSelected;
-import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
-import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
+import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
+import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
@@ -38,6 +30,7 @@ import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -48,7 +41,6 @@ import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +51,7 @@ import java.util.List;
  */
 public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
-    @Inject ManageToolsView toolsView;
+    ManageToolsView toolsView;
     EditToolView editToolView;
     ReactToolViews.EditToolProps editToolProps;
     ManageToolsView.ManageToolsViewAppearance appearance;
@@ -72,31 +64,21 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Inject ToolAutoBeanFactory factory;
     @Inject DEProperties deProperties;
     protected List<Tool> currentSelection = Lists.newArrayList();
+    private HandlerManager handlerManager;
 
     @Inject
     public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance,
+                                    ManageToolsViewFactory manageToolsViewFactory,
                                     EditToolViewFactory editToolViewFactory) {
         this.appearance = appearance;
-        this.editToolView = editToolViewFactory.create(getBaseProps());
+        this.toolsView = manageToolsViewFactory.create(getBaseManageToolsProps());
+        this.editToolView = editToolViewFactory.create(getBaseEditToolProps());
     }
 
     @Override
     public void go(HasOneWidget container) {
         container.setWidget(toolsView.asWidget());
-        toolsView.getToolbar().addBeforeToolSearchEventHandler(toolsView);
-        toolsView.getToolbar().addToolSearchResultLoadEventHandler(toolsView);
-        toolsView.getToolbar().addRefreshToolsSelectedEventHandler(this);
-        toolsView.addToolSelectionChangedEventHandler(this);
-        toolsView.getToolbar().addNewToolSelectedHandler(this);
-        toolsView.getToolbar().addShareToolselectedHandler(this);
-        toolsView.getToolbar().addDeleteToolsSelectedHandler(this);
-        toolsView.getToolbar().addToolFilterChangedHandler(this);
-        toolsView.getToolbar().addRequestToolSelectedHandler(this);
-        toolsView.getToolbar().addEditToolSelectedHandler(this);
-        toolsView.getToolbar().addRequestToMakeToolPublicSelectedHandler(this);
-        toolsView.addShowToolInfoEventHandlers(this);
-
-        toolsView.mask(appearance.mask());
+        toolsView.mask();
 
         toolServices.getToolTypes(new AppsCallback<List<ToolType>>() {
             @Override
@@ -114,38 +96,51 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                     }
                 });
                 editToolView.setToolTypes(types.toArray(new String[0]));
-                toolsView.unmask();
-                loadTools(null);
+                loadTools(null, "", "asc", "name", 50, 0);
             }
         });
     }
 
     @Override
     public void setViewDebugId(String baseId) {
-        toolsView.asWidget().ensureDebugId(baseId);
+        toolsView.setBaseId(baseId);
     }
 
     @Override
-    public void onToolSelectionChanged(ToolSelectionChangedEvent event) {
-        currentSelection = event.getToolSelection();
-        toolsView.getToolbar().setSelection(currentSelection);
+    public void loadTools(Boolean isPublic,
+                          String searchTerm,
+                          String order,
+                          String orderBy,
+                          int rowsPerPage,
+                          int page) {
+        toolsView.setListingConfig(isPublic, searchTerm, order, orderBy, rowsPerPage, page);
+        toolServices.searchTools(isPublic,
+                                 searchTerm,
+                                 order,
+                                 orderBy,
+                                 rowsPerPage,
+                                 rowsPerPage * page,
+                                 new AppsCallback<Splittable>() {
+                                     @Override
+                                     public void onFailure(Integer statusCode, Throwable exception) {
+                                         toolsView.unmask();
+                                         ErrorHandler.postReact(exception);
+                                     }
+
+                                     @Override
+                                     public void onSuccess(Splittable toolList) {
+                                         toolsView.loadTools(toolList);
+                                     }
+                                 });
     }
 
-    @Override
-    public void loadTools(Boolean isPublic) {
-        toolsView.mask(appearance.mask());
-        toolServices.searchTools(isPublic, null, new AppsCallback<List<Tool>>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable exception) {
-                ErrorHandler.post(exception);
-            }
-
-            @Override
-            public void onSuccess(List<Tool> tools) {
-                toolsView.unmask();
-                toolsView.loadTools(tools);
-            }
-        });
+    void refreshListing() {
+        loadTools(toolsView.isPublic(),
+                  toolsView.getSearchTerm(),
+                  toolsView.getOrder(),
+                  toolsView.getOrderBy(),
+                  toolsView.getRowsPerPage(),
+                  toolsView.getPage());
     }
 
     @Override
@@ -156,7 +151,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
         editToolView.mask();
 
-        toolServices.addTool(tool, new AppsCallback<Tool>() {
+        toolServices.addTool(tool, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 editToolView.unmask();
@@ -164,14 +159,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             }
 
             @Override
-            public void onSuccess(Tool result) {
+            public void onSuccess(Splittable toolSpl) {
                 editToolView.close();
-                displayInfoMessage(appearance.create(),
-                                   appearance.toolAdded(result.getName()));
-                tool.setId(result.getId());
-                tool.setPermission(result.getPermission());
-                tool.setType(result.getType());
-                toolsView.addTool(tool);
+                refreshListing();
             }
         });
     }
@@ -193,10 +183,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                displayInfoMessage(appearance.edit(),
-                                   appearance.toolUpdated(result.getName()));
+                displayInfoMessage(appearance.edit(), appearance.toolUpdated(result.getName()));
                 editToolView.close();
-                toolsView.updateTool(result);
+                refreshListing();
             }
         });
     }
@@ -221,17 +210,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         tool.getContainer().setNetworkMode(networkMode);
     }
 
-    Tool getSelectedTool() {
-        return currentSelection.get(0);
-    }
-
     @Override
-    public void onRefreshToolsSelected(RefreshToolsSelectedEvent event) {
-        loadTools(null);
-    }
-
-    @Override
-    public void onNewToolSelected(AddNewToolSelected event) {
+    public void onNewToolSelected() {
         editToolView.edit(null);
     }
 
@@ -241,8 +221,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void onDeleteToolsSelected(final DeleteToolSelected event) {
-        Tool tool = currentSelection.get(0);
+    public void onDeleteToolsSelected(String toolId, String toolName) {
         ConfirmMessageBox cmb =
                 new ConfirmMessageBox(appearance.deleteTool(), appearance.confirmDelete());
         cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
@@ -250,7 +229,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             public void onDialogHide(DialogHideEvent event) {
                 switch (event.getHideButton()) {
                     case YES:
-                        doDelete(tool);
+                        doDelete(toolId, toolName);
                         break;
                     case NO:
                         //do nothing
@@ -261,23 +240,44 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         cmb.show();
     }
 
-    void doDelete(final Tool tool) {
-        toolServices.deleteTool(tool, new AppsCallback<Void>() {
+    void doDelete(String toolId, String toolName) {
+        toolsView.mask();
+
+        toolServices.deleteTool(toolId, new AppsCallback<Void>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                ErrorHandler.post(exception);
+                ErrorHandler.postReact(exception);
+                toolsView.unmask();
             }
 
             @Override
             public void onSuccess(Void s) {
-                announcer.schedule(new SuccessAnnouncementConfig(appearance.toolDeleted(tool.getName())));
-                toolsView.removeTool(tool);
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.toolDeleted(toolName)));
+                refreshListing();
             }
         });
     }
 
     @Override
-    public void onShareToolsSelected(final ShareToolsSelected event) {
+    @SuppressWarnings("unusable-by-js")
+    public void onToolSelectionChanged(Splittable toolSpl) {
+        if (toolSpl != null) {
+            Tool tool = convertSplittableToTool(toolSpl);
+            ensureHandlers().fireEvent(new ToolSelectionChangedEvent(tool));
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void useToolInNewApp(Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
+        eventBus.fireEvent(new UseToolInNewAppEvent(tool));
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void onShareToolsSelected(Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
         shareDialogProvider.get(new AsyncCallback<ToolSharingDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -286,30 +286,13 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(ToolSharingDialog tsd) {
-                tsd.show(currentSelection);
+                tsd.show(Lists.newArrayList(tool));
             }
         });
     }
 
     @Override
-    public void onToolFilterChanged(ToolFilterChanged event) {
-        ToolFilter tf = event.getFilter();
-        toolsView.getToolbar().clearSearch();
-        switch (tf) {
-            case ALL:
-                loadTools(null);
-                break;
-            case MY_TOOLS:
-                loadTools(false);
-                break;
-            case PUBLIC:
-                loadTools(true);
-                break;
-        }
-    }
-
-    @Override
-    public void onRequestToolSelected(RequestToolSelected event) {
+    public void onRequestToolSelected() {
         newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -324,10 +307,10 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void onEditToolSelected(EditToolSelected event) {
-        toolsView.mask(appearance.mask());
+    public void onEditToolSelected(String toolId) {
+        toolsView.mask();
 
-        toolServices.getToolInfo(getSelectedTool().getId(), new AppsCallback<Tool>() {
+        toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 toolsView.unmask();
@@ -342,7 +325,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         });
     }
 
-    private ReactToolViews.EditToolProps getBaseProps() {
+    private ReactToolViews.EditToolProps getBaseEditToolProps() {
         ReactToolViews.EditToolProps props = new ReactToolViews.EditToolProps();
         props.presenter = this;
         props.parentId = ToolsModule.EditToolIds.EDIT_DIALOG;
@@ -353,7 +336,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void onRequestToMakeToolPublicSelected(RequestToMakeToolPublicSelected event) {
+    @SuppressWarnings("unusable-by-js")
+    public void onRequestToMakeToolPublicSelected(Splittable toolSpl) {
+        Tool tool = convertSplittableToTool(toolSpl);
         newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -362,31 +347,26 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(NewToolRequestDialog o) {
-                o.setTool(getSelectedTool());
+                o.setTool(tool);
                 o.show(NewToolRequestFormView.Mode.MAKEPUBLIC);
             }
         });
     }
 
     @Override
-    public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler) {
-        return toolsView.addSelectionChangedHandler(handler);
-    }
-
-    @Override
-    public void onShowToolInfo(ShowToolInfoEvent event) {
-        toolServices.getAppsForTool(event.getTool().getId(), new AppsCallback<List<App>>() {
+    public void onShowToolInfo(String toolId) {
+        toolServices.getAppsForTool(toolId, new AppsCallback<List<App>>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
-                getToolInfo(event.getTool().getId(), Arrays.asList());
+                getToolInfo(toolId, Arrays.asList());
 
             }
 
             @Override
             public void onSuccess(final List<App> apps) {
-                getToolInfo(event.getTool().getId(), apps);
+                getToolInfo(toolId, apps);
             }
         });
 
@@ -425,12 +405,40 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         iib.show();
     }
 
+    @Override
+    public HandlerRegistration addToolSelectionChangedEventHandler(ToolSelectionChangedEvent.ToolSelectionChangedEventHandler handler) {
+        return ensureHandlers().addHandler(ToolSelectionChangedEvent.TYPE, handler);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
     Tool convertSplittableToTool(Splittable toolSpl) {
-        return AutoBeanCodex.decode(factory, Tool.class, toolSpl.getPayload()).as();
+        return toolSpl != null ?
+               AutoBeanCodex.decode(factory, Tool.class, toolSpl.getPayload()).as() :
+               null;
     }
 
     Splittable convertToolToSplittable(Tool tool) {
-        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
+        return tool != null ? AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)) : null;
+    }
+
+    ReactToolViews.ManageToolsProps getBaseManageToolsProps() {
+        ReactToolViews.ManageToolsProps props = new ReactToolViews.ManageToolsProps();
+        props.presenter = this;
+        props.loading = false;
+        props.searchTerm = "";
+        props.order = "asc";
+        props.orderBy = "name";
+        props.rowsPerPage = 50;
+        props.page = 0;
+
+        return props;
     }
 }
 
