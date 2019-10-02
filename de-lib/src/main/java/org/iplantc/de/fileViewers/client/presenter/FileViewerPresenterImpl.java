@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.iplantc.de.client.services.FileEditorServiceFacade.COMMA_DELIMITER;
 import static org.iplantc.de.client.services.FileEditorServiceFacade.TAB_DELIMITER;
 
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.IsHideable;
@@ -355,6 +356,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
 
         setViewDirtyState(false, null);
+        EventBus.getInstance().fireEvent(event);
     }
 
     @Override

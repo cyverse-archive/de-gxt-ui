@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
@@ -77,6 +78,7 @@ public interface NavigationView extends IsWidget,
                                 ImportFromUrlSelectedHandler,
                                 SimpleUploadSelectedHandler,
                                 FileUploadedEvent.FileUploadedEventHandler,
+                                FileSavedEvent.FileSavedEventHandler,
                                 DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
                                 RefreshFolderSelected.HasRefreshFolderSelectedHandlers {
 
