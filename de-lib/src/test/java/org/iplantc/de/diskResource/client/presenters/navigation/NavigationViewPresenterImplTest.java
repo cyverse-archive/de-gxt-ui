@@ -99,7 +99,7 @@ public class NavigationViewPresenterImplTest {
         verify(viewMock).addFolderSelectedEventHandler(eq(uut));
         verify(viewMock).getTree();
         verify(treeStoreMock).addStoreDataChangeHandler(any(NavigationPresenterImpl.FolderStoreDataChangeHandler.class));
-        verify(eventBusMock, times(6)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), eq(uut));
+        verify(eventBusMock, times(7)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), eq(uut));
     }
 
     @Test public void onBeforeLoad_folderNotNull_contentsNotInCurrentFolder_loadCancelled() {
@@ -172,7 +172,7 @@ public class NavigationViewPresenterImplTest {
         spy.urlImportDlgProvider = importByUrlDlgProvider;
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
-        verify(eventBusMock, times(12)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
+        verify(eventBusMock, times(14)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         ImportFromUrlSelected eventMock = mock(ImportFromUrlSelected.class);
         when(presenterAppearanceMock.permissionErrorMessage()).thenReturn("errorMessage");
         when(presenterAppearanceMock.permissionErrorTitle()).thenReturn("errorTitle");
@@ -204,7 +204,7 @@ public class NavigationViewPresenterImplTest {
         spy.urlImportDlgProvider = importByUrlDlgProvider;
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
-        verify(eventBusMock, times(12)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
+        verify(eventBusMock, times(14)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         ImportFromUrlSelected eventMock = mock(ImportFromUrlSelected.class);
         when(eventMock.getSelectedFolder()).thenReturn(uploadFolderMock);
         when(diskResourceUtilMock.canUploadTo(uploadFolderMock)).thenReturn(true);
@@ -235,7 +235,7 @@ public class NavigationViewPresenterImplTest {
         });
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
-        verify(eventBusMock, times(12)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
+        verify(eventBusMock, times(14)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         SimpleUploadSelected eventMock = mock(SimpleUploadSelected.class);
 
         /** CALL METHOD UNDER TEST **/
@@ -265,7 +265,7 @@ public class NavigationViewPresenterImplTest {
         });
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
-        verify(eventBusMock, times(12)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
+        verify(eventBusMock, times(14)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         SimpleUploadSelected eventMock = mock(SimpleUploadSelected.class);
         when(eventMock.getSelectedFolder()).thenReturn(uploadFolderMock);
 
@@ -293,7 +293,7 @@ public class NavigationViewPresenterImplTest {
         });
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
-        verify(eventBusMock, times(12)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
+        verify(eventBusMock, times(14)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         FolderRefreshedEvent eventMock = mock(FolderRefreshedEvent.class);
         Folder folderMock = mock(Folder.class);
         when(eventMock.getFolder()).thenReturn(folderMock);
