@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import Typography from "@material-ui/core/Typography";
-import ListItem from "@material-ui/core/ListItem";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Fab from "@material-ui/core/Fab";
-import Divider from "@material-ui/core/Divider";
-import metaStyles from "../../metadata/style.js";
-const RETRACTED = "Retracted";
+import { Typography, ListItem, Divider, IconButton } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import messages from "./messages";
 
 class Comment extends Component {
     constructor(props) {
@@ -29,21 +26,23 @@ class Comment extends Component {
                         On <b>{date}</b> {owner} wrote:
                         <br />
                         {retracted ? (
-                            <Typography color="error">{RETRACTED}</Typography>
+                            <Typography color="error">
+                                {getMessage("commentRetracted")}
+                            </Typography>
                         ) : (
                             <Typography>{message}</Typography>
                         )}
                     </Typography>
-                    <Fab
+                    <IconButton
                         variant="contained"
                         size="small"
                         className={classes.deleteIcon}
                         onClick={() => {
-                            retractComment(this.props.id);
+                            retractComment(id);
                         }}
                     >
-                        <DeleteIcon />
-                    </Fab>
+                        <Delete />
+                    </IconButton>
                 </ListItem>
                 <Divider />
             </>
@@ -51,4 +50,4 @@ class Comment extends Component {
     }
 }
 
-export default Comment;
+export default withI18N(Comment, messages);
