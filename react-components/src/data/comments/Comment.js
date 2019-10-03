@@ -23,7 +23,8 @@ class Comment extends Component {
             <>
                 <ListItem id={id}>
                     <Typography className={classes.commentText}>
-                        On <b>{date}</b> {owner} wrote:
+                        {getMessage("commentOn")} <b>{date}</b> {owner}{" "}
+                        {getMessage("commentWrote")}:
                         <br />
                         {retracted ? (
                             <Typography color="error">

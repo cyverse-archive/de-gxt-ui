@@ -10,5 +10,7 @@ export default {
         commentRetracted: "Retracted",
         addFab: "Add",
         moreDD: "More",
+        commentOn: "On",
+        commentWrote: "wrote",
     },
 };
