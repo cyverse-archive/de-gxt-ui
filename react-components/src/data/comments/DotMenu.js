@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-
-import Menu from "@material-ui/core/Menu";
-
-import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { MoreVert } from "@material-ui/icons";
 import EditCommentsMenuItems from "./EditCommentsMenuItems.js";
-
+import { injectIntl } from "react-intl";
+import messages from "./messages";
+import { Menu, IconButton } from "@material-ui/core";
+import { formatMessage, withI18N } from "@cyverse-de/ui-lib";
 const ITEM_HEIGHT = 48;
 
 class DotMenu extends Component {
@@ -27,17 +26,17 @@ class DotMenu extends Component {
     render() {
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
+        const { intl } = this.props;
         return (
             <div>
                 <IconButton
-                    aria-Label="More"
+                    aria-Label={formatMessage(intl, "moreDD")}
                     aria-owns={open ? "long-menu" : null}
                     aria-haspopup="true"
                     onClick={this.handleDotMenuClick}
                     classes={{ root: this.props.className }}
                 >
-                    <MoreVertIcon />
+                    <MoreVert />
                 </IconButton>
                 <Menu
                     anchorEl={anchorEl}
@@ -60,4 +59,4 @@ class DotMenu extends Component {
     }
 }
 
-export default DotMenu;
+export default withI18N(injectIntl(DotMenu), messages);
