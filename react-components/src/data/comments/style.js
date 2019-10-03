@@ -22,23 +22,16 @@ export default {
 
     addCommentButton: {
         float: "right",
-        width: 40,
-        marginBottom: 8,
-        marginLeft: 323,
-        color: palette.blue,
     },
 
     addCommentTextField: {
-        position: "relative",
-        width: "93%",
-        marginLeft: 11,
+        width: 320,
+        marginLeft: 20,
     },
 
     dContent: {
         width: 320,
     },
-
-    comment: {},
 
     commentText: {
         width: 250,
@@ -51,5 +44,9 @@ export default {
         "&:hover": {
             backgroundColor: "#d1cbcb",
         },
+    },
+
+    addCommentDContent: {
+        height: 300,
     },
 };
