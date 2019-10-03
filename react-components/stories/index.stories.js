@@ -149,7 +149,7 @@ storiesOf("data/Tag", module).add("with test diskresource details", () => (
 storiesOf("data/TagPanel", module).add("with test diskresource details", () => (
     <TagPanelTest logger={action("tagpanel")} />
 ));
-storiesOf("data/edit", module).add("Edit Comments Dialogue", () => (
+storiesOf("data/comment", module).add("Edit Comments Dialogue", () => (
     <EditCommentsTest />
 ));
 
