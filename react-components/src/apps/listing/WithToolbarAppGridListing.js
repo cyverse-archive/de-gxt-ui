@@ -4,6 +4,7 @@ import FilterSortToolbar from "./FilterSortToolbar";
 import { AppGridListing } from "../listing";
 import { makeStyles } from "@material-ui/core";
 import { palette, LoadingMask } from "@cyverse-de/ui-lib";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -48,3 +49,24 @@ export default function WithToolbarAppGridListing(props) {
         </div>
     );
 }
+
+WithToolbarAppGridListing.propTypes = {
+    parentId: PropTypes.string.isRequired,
+    apps: PropTypes.array.isRequired,
+    selectedApps: PropTypes.array.isRequired,
+    handleAppSelection: PropTypes.func.isRequired,
+    onAppNameClick: PropTypes.func,
+    onAppInfoClick: PropTypes.func,
+    onCommentsClick: PropTypes.func,
+    onFavoriteClick: PropTypes.func,
+    getAppsSorting: PropTypes.func,
+    onRatingDeleteClick: PropTypes.func,
+    onRatingClick: PropTypes.func,
+    searchRegexPattern: PropTypes.func,
+    heading: PropTypes.string.isRequired,
+    typeFilter: PropTypes.string,
+    viewType: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    sortField: PropTypes.string.isRequired,
+    onTypeFilterChange: PropTypes.func.isRequired,
+};

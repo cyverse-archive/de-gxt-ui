@@ -300,6 +300,14 @@ AppGridListing.propTypes = {
     handleAppSelection: PropTypes.func.isRequired,
     resetAppSelection: PropTypes.func.isRequired,
     enableMenu: PropTypes.bool,
+    onAppNameClick: PropTypes.func,
+    onAppInfoClick: PropTypes.func,
+    onCommentsClick: PropTypes.func,
+    onFavoriteClick: PropTypes.func,
+    getAppsSorting: PropTypes.func,
+    onRatingDeleteClick: PropTypes.func,
+    onRatingClick: PropTypes.func,
+    searchRegexPattern: PropTypes.func,
 };
 
 export default withI18N(AppGridListing, messages);

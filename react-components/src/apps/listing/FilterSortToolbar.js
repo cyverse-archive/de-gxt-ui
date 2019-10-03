@@ -14,6 +14,7 @@ import {
     Select,
 } from "@material-ui/core";
 import AppFields from "./AppFields";
+import PropTypes from "prop-types";
 
 /**
  * @author sriram
@@ -151,5 +152,15 @@ function FilterSortToolbar(props) {
         </div>
     );
 }
+
+FilterSortToolbar.propTypes = {
+    baseDebugID: PropTypes.string.isRequired,
+    typeFilter: PropTypes.string,
+    onTypeFilterChange: PropTypes.func.isRequired,
+    viewType: PropTypes.string.isRequired,
+    onSortChange: PropTypes.func.isRequired,
+    sortField: PropTypes.string.isRequired,
+    disableTypeFilter: PropTypes.bool,
+};
 
 export default withI18N(injectIntl(FilterSortToolbar), intlData);
