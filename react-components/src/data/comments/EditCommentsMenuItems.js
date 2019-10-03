@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-
-import MenuItem from "@material-ui/core/MenuItem";
-import MostRecentIcon from "@material-ui/icons/Update";
-import LeastRecentIcon from "@material-ui/icons/Restore";
-import OwnerIcon from "@material-ui/icons/SupervisedUserCircleRounded";
 import exStyles from "./style.js";
-import { withStyles } from "@material-ui/core/styles";
-
-const MOST_RECENT = "Most Recent";
-const LEAST_RECENT = "Least Recent";
-const BY_OWNER = "By Owner";
+import messages from "./messages";
+import { withStyles, MenuItem } from "@material-ui/core";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import {
+    Update,
+    Restore,
+    SupervisedUserCircleRounded,
+} from "@material-ui/icons";
 
 class EditCommentsMenuItems extends Component {
     render() {
@@ -30,8 +28,8 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <MostRecentIcon />
-                    {MOST_RECENT}
+                    <Update />
+                    {getMessage("ddMostRecent")}
                 </MenuItem>
 
                 <MenuItem
@@ -41,8 +39,8 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <LeastRecentIcon />
-                    {LEAST_RECENT}
+                    <Restore />
+                    {getMessage("ddLeastRecent")}
                 </MenuItem>
 
                 <MenuItem
@@ -52,12 +50,12 @@ class EditCommentsMenuItems extends Component {
                     }}
                     className={classes.MenuItem}
                 >
-                    <OwnerIcon />
-                    {BY_OWNER}
+                    <SupervisedUserCircleRounded />
+                    {getMessage("ddByUser")}
                 </MenuItem>
             </React.Fragment>
         );
     }
 }
 
-export default withStyles(exStyles)(EditCommentsMenuItems);
+export default withI18N(withStyles(exStyles)(EditCommentsMenuItems), messages);
