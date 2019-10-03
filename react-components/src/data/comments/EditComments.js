@@ -1,20 +1,33 @@
 import React, { Component } from "react";
-import { DEDialogHeader, palette, formatDate } from "@cyverse-de/ui-lib";
-import Dialog from "@material-ui/core/Dialog";
-import { withStyles } from "@material-ui/core/styles";
-import DialogContent from "@material-ui/core/DialogContent";
+import { injectIntl } from "react-intl";
 import exStyles from "./style.js";
 import DotMenu from "./DotMenu.js";
 import Comment from "./Comment.js";
-import TextField from "@material-ui/core/TextField";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
-import List from "@material-ui/core/List";
 import constants from "../../constants";
-import { stableSort, getSorting } from "@cyverse-de/ui-lib";
-
-let COMMENTS = "Comments";
-const ADD_A_COMMENT = "Add a Comment";
+import messages from "./messages";
+import { Add } from "@material-ui/icons";
+import {
+    Dialog,
+    DialogContent,
+    TextField,
+    Fab,
+    List,
+    withStyles,
+    Divider,
+    DialogActions,
+    FormControl,
+} from "@material-ui/core";
+import {
+    DEDialogHeader,
+    palette,
+    formatDate,
+    stableSort,
+    getSorting,
+    getMessage,
+    withI18N,
+    LoadingMask,
+    formatMessage,
+} from "@cyverse-de/ui-lib";
 
 class EditComments extends Component {
     constructor(props) {
@@ -23,11 +36,9 @@ class EditComments extends Component {
             open: true,
             commentList: null,
             loading: false,
-            multiline: false,
             commentText: null,
         };
 
-        COMMENTS = "Edit " + this.props.fileName + " Comments";
         this.handleClose = this.handleClose.bind(this);
         this.handleSortMostRecent = this.handleSortMostRecent.bind(this);
         this.handleSortLeastRecent = this.handleSortLeastRecent.bind(this);
@@ -41,12 +52,14 @@ class EditComments extends Component {
     componentDidMount() {
         this.getComments(this.props.fileName);
     }
-    getComments(input, callback) {
+    getComments(input) {
+        this.setState({ loading: true });
         new Promise((resolve, reject) => {
             this.props.presenter.getComments(input, resolve, reject);
         })
             .then((commentList) => {
                 this.setState({ commentList: commentList });
+                this.setState({ loading: false });
             })
             .catch((error) => {
                 console.log(error);
@@ -54,12 +67,14 @@ class EditComments extends Component {
             });
     }
 
-    retractComment(commentId, callback) {
+    retractComment(commentId) {
+        this.setState({ loading: true });
         new Promise((resolve, reject) => {
             this.props.presenter.retractComment(commentId, resolve, reject);
         })
             .then((commentList) => {
                 this.setState({ commentList: commentList });
+                this.setState({ loading: false });
             })
             .catch((error) => {
                 console.log(error);
@@ -67,12 +82,14 @@ class EditComments extends Component {
             });
     }
 
-    createComment(commentText, callback) {
-        new Promise((resolve, reject) => {
+    createComment(commentText) {
+        this.setState({ loading: true });
+        new Promise(() => {
             this.props.presenter.createComment(commentText);
         })
             .then((commentList) => {
                 this.setState({ commentList: commentList });
+                this.setState({ loading: false });
             })
             .catch((error) => {
                 console.log(error);
@@ -117,7 +134,8 @@ class EditComments extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, intl } = this.props;
+
         let commentItems = this.state.commentList
             ? this.state.commentList.map((comment, index) => (
                   <Comment
@@ -129,7 +147,7 @@ class EditComments extends Component {
                           constants.DATE_FORMAT
                       )}
                       owner={comment.commenter}
-                      classes={this.props.classes}
+                      classes={classes}
                       retractComment={this.retractComment}
                   />
               ))
@@ -144,50 +162,61 @@ class EditComments extends Component {
                 >
                     <DEDialogHeader
                         id={"edit-comments-dialog-title"}
-                        heading={COMMENTS}
+                        heading={formatMessage(intl, "editCommentsTitle", {
+                            fileName: this.props.fileName,
+                        })}
                         onClose={this.handleClose}
                     />
-                    <hr />
+                    <Divider />
 
                     <DotMenu
                         handleSortMostRecent={this.handleSortMostRecent}
                         handleSortLeastRecent={this.handleSortLeastRecent}
                         handleSortOwner={this.handleSortOwner}
-                        className={this.props.classes.dropDownDots}
+                        className={classes.dropDownDots}
                     />
 
                     <DialogContent
                         id="editCommentsCommentList"
                         className={classes.dContent}
                     >
-                        <List component="nav">{commentItems}</List>
+                        <LoadingMask loading={this.state.loading}>
+                            <List component="nav">{commentItems}</List>
+                        </LoadingMask>
                     </DialogContent>
+
                     <TextField
                         value={this.state.commentText}
                         onChange={this.handleChange}
                         className={classes.addCommentTextField}
-                        label={ADD_A_COMMENT}
+                        label={getMessage("addCommentTextField")}
                         margin="dense"
                         multiline
                         variant="filled"
                         rows="5"
                         id="addCommentTextField"
                     />
-                    <Fab
-                        size="medium"
-                        color={palette.blue}
-                        aria-label="Add"
-                        onClick={() => {
-                            this.createComment(this.state.commentText);
-                        }}
-                        className={classes.addCommentButton}
-                    >
-                        <AddIcon />
-                    </Fab>
+
+                    <DialogActions>
+                        <Fab
+                            size="medium"
+                            color="primary"
+                            aria-label={formatMessage(intl, "addFab")}
+                            onClick={() => {
+                                this.createComment(this.state.commentText);
+                            }}
+                            className={classes.addCommentButton}
+                        >
+                            <Add />
+                        </Fab>
+                    </DialogActions>
                 </Dialog>
             </div>
         );
     }
 }
 
-export default withStyles(exStyles)(EditComments);
+export default withI18N(
+    injectIntl(withStyles(exStyles)(EditComments)),
+    messages
+);
