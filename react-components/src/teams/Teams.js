@@ -23,6 +23,7 @@ import {
 } from "@cyverse-de/ui-lib";
 import {
     Button,
+    makeStyles,
     MenuItem,
     Select,
     Table,
@@ -30,12 +31,13 @@ import {
     TableCell,
     TableRow,
     Toolbar,
-    withStyles,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import Checkbox from "@material-ui/core/Checkbox";
+
+const useStyles = makeStyles(styles);
 
 const TEAM_FILTER = {
     MY_TEAMS: "MY_TEAMS",
@@ -123,7 +125,7 @@ function Teams(props) {
 
     return (
         <Fragment>
-            <StyledToolbar
+            <TeamsToolbar
                 parentId={build(parentId, ids.TEAMS.TOOLBAR)}
                 presenter={presenter}
                 teamFilter={teamFilter}
@@ -132,7 +134,7 @@ function Teams(props) {
                 setSearchTerm={setSearchTerm}
                 intl={intl}
             />
-            <StyledTeamListing
+            <TeamsListing
                 parentId={parentId}
                 loading={loading}
                 presenter={presenter}
@@ -149,8 +151,6 @@ function Teams(props) {
     );
 }
 
-const StyledToolbar = withStyles(styles)(TeamsToolbar);
-
 function TeamsToolbar(props) {
     const {
         parentId,
@@ -160,8 +160,8 @@ function TeamsToolbar(props) {
         searchTerm,
         setSearchTerm,
         intl,
-        classes,
     } = props;
+    const classes = useStyles();
 
     let teamFilterId = build(parentId, ids.TEAMS.TEAM_FILTER);
 
@@ -221,8 +221,6 @@ const TABLE_COLUMNS = [
     { name: "Description", align: "left", enableSorting: false },
 ];
 
-const StyledTeamListing = withStyles(styles)(TeamsListing);
-
 function TeamsListing(props) {
     const {
         parentId,
@@ -236,8 +234,8 @@ function TeamsListing(props) {
         selectedTeams,
         handleTeamSelectionChange,
         onSelectAllClick,
-        classes,
     } = props;
+    const classes = useStyles();
 
     return (
         <div className={classes.table}>
