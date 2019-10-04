@@ -9,5 +9,6 @@ import org.iplantc.de.client.models.apps.App;
  */
 public interface AppDetailsViewFactory {
     AppDetailsView create(App app,
-                          String searchRegex);
+                          boolean showQuickLaunchFirst,
+                          String searchText);
 }

@@ -77,6 +77,7 @@ class AppGridListing extends Component {
             sortField,
             sortDir,
             classes,
+            onQuickLaunchClick,
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
@@ -202,6 +203,9 @@ class AppGridListing extends Component {
                                                 }
                                                 isExternal={external}
                                                 isFavorite={app.is_favorite}
+                                                onQuickLaunchClick={() =>
+                                                    onQuickLaunchClick(app)
+                                                }
                                             />
                                         </TableCell>
                                     )}
@@ -301,6 +305,7 @@ AppGridListing.propTypes = {
     sortField: PropTypes.string.isRequired,
     sortDir: PropTypes.string.isRequired,
     onSortChange: PropTypes.func.isRequired,
+    onQuickLaunchClick: PropTypes.func,
 };
 
 export default withStyles(exStyles)(withI18N(AppGridListing, messages));

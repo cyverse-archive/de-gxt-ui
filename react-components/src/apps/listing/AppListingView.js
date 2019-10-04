@@ -66,7 +66,7 @@ export default function AppListingView(props) {
     };
 
     const onAppInfoClick = (app) => {
-        presenter.onAppInfoSelected(app);
+        presenter.onAppInfoSelected(app, false);
     };
 
     const onCommentsClick = (app) => {
@@ -89,6 +89,10 @@ export default function AppListingView(props) {
         presenter.onAppRatingDeselected(app);
     };
 
+    const onQuickLaunchClick = (app) => {
+        presenter.onAppInfoSelected(app, true);
+    };
+
     if (viewType === view.TILE) {
         return (
             <AppTileListing
@@ -106,6 +110,7 @@ export default function AppListingView(props) {
                 onAppNameClick={onAppNameClick}
                 onRatingClick={onRatingClick}
                 onRatingDeleteClick={onRatingDeleteClick}
+                onQuickLaunchClick={onQuickLaunchClick}
             />
         );
     } else if (viewType === view.TABLE) {
@@ -124,6 +129,7 @@ export default function AppListingView(props) {
                 onRatingDeleteClick={onRatingDeleteClick}
                 handleSelectAll={handleSelectAll}
                 onFavoriteClick={onFavoriteClick}
+                onQuickLaunchClick={onQuickLaunchClick}
                 {...props}
             />
         );

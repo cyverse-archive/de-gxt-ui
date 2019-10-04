@@ -105,7 +105,9 @@ public interface AppsListView extends IsWidget {
         void onAppNameSelected(Splittable appSplittable);
 
         @SuppressWarnings("unusable-by-js")
-        void onAppInfoSelected(Splittable appSplittable);
+        void onAppInfoSelected(Splittable appSplittable,
+                               boolean showQuickLaunchFirst);
+
 
         @SuppressWarnings("unusable-by-js")
         void onAppFavoriteSelected(Splittable appSplittable);

@@ -54,6 +54,7 @@ function AppTileListing(props) {
         onRatingDeleteClick,
         onRatingClick,
         searchText,
+        onQuickLaunchClick,
     } = props;
     const classes = useStyles();
     const searchRegex = getAppsSearchRegex(searchText);
@@ -120,6 +121,9 @@ function AppTileListing(props) {
                                         }
                                         isFavorite={app.is_favorite}
                                         searchText={searchRegex}
+                                        onQuickLaunchClick={() =>
+                                            onQuickLaunchClick(app)
+                                        }
                                     />
                                 </Grid>
                             );

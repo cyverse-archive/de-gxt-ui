@@ -33,6 +33,13 @@ import Tab from "@material-ui/core/Tab";
 export const EDIT_MODE = "edit";
 export const VIEW_MODE = "view";
 
+const TAB_INDEX = {
+    APP_DETAIL_TAB: 0,
+    QUICK_LAUNCH_TAB: 1,
+    TOOL_DETAILS_TAB: 2,
+    APP_DOC: 3,
+};
+
 function AppInfoDialog(props) {
     const {
         dialogOpen,
@@ -43,6 +50,7 @@ function AppInfoDialog(props) {
         userName,
         baseDebugId,
         intl,
+        showQuickLaunchFirst,
     } = props;
     const appInfoLabel = formatMessage(intl, "appInformationLbl");
     const quickLaunchLabel = formatMessage(intl, "quickLaunchLabel");
@@ -50,7 +58,11 @@ function AppInfoDialog(props) {
     const appDocLabel = formatMessage(intl, "appDocLabel");
     const searchRegex = getAppsSearchRegex(searchText);
 
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState(
+        showQuickLaunchFirst
+            ? TAB_INDEX.QUICK_LAUNCH_TAB
+            : TAB_INDEX.APP_DETAIL_TAB
+    );
     const [dirty, setDirty] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -218,7 +230,7 @@ function AppInfoDialog(props) {
                             )}
                         />
                     </Tabs>
-                    {tabIndex === 0 && (
+                    {tabIndex === TAB_INDEX.APP_DETAIL_TAB && (
                         <AppDetails
                             baseDebugId={build(
                                 baseDebugId,
@@ -229,7 +241,7 @@ function AppInfoDialog(props) {
                             presenter={presenter}
                         />
                     )}
-                    {tabIndex === 1 && (
+                    {tabIndex === TAB_INDEX.QUICK_LAUNCH_TAB && (
                         <QuickLaunchListing
                             baseDebugId={build(
                                 baseDebugId,
@@ -249,7 +261,7 @@ function AppInfoDialog(props) {
                             selected={selectedQuickLaunch}
                         />
                     )}
-                    {tabIndex === 2 && (
+                    {tabIndex === TAB_INDEX.TOOL_DETAILS_TAB && (
                         <ToolDetails
                             baseDebugId={build(
                                 baseDebugId,
@@ -259,7 +271,7 @@ function AppInfoDialog(props) {
                             details={app.tools}
                         />
                     )}
-                    {tabIndex === 3 && (
+                    {tabIndex === TAB_INDEX.APP_DOC && (
                         <AppDoc
                             baseDebugId={build(
                                 baseDebugId,
