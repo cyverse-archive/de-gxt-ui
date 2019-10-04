@@ -211,14 +211,14 @@ function TeamsToolbar(props) {
 }
 
 const TABLE_COLUMNS = [
-    { name: "Name", numeric: false, enableSorting: true },
+    { name: "Name", align: "left", enableSorting: true },
     {
         name: "Creator Name",
-        numeric: false,
+        align: "left",
         enableSorting: false,
         key: "creator",
     },
-    { name: "Description", numeric: false, enableSorting: false },
+    { name: "Description", align: "left", enableSorting: false },
 ];
 
 const StyledTeamListing = withStyles(styles)(TeamsListing);
