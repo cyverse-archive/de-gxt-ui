@@ -134,48 +134,16 @@ public class TeamsPresenterImplTest {
     }
 
     @Test
-    public void getSelectedTeams_newFilterAll() {
+    public void getTeams() {
         TeamsPresenterImpl spy = spy(uut);
-        spy.currentFilter = TeamsFilter.ALL;
+        String filter = "MY_TEAMS";
+        String searchTerm = "";
 
         /** CALL METHOD UNDER TEST **/
-        spy.refreshTeamListing();
-        verify(spy).getAllTeams();
-    }
-
-    @Test
-    public void getSelectedTeams_newFilterMine() {
-        TeamsPresenterImpl spy = spy(uut);
-        spy.currentFilter = TeamsFilter.MY_TEAMS;
-
-        /** CALL METHOD UNDER TEST **/
-        spy.refreshTeamListing();
-        verify(spy).getMyTeams();
-    }
-
-    @Test
-    public void getMyTeams() {
-        TeamsPresenterImpl spy = spy(uut);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.getMyTeams();
+        spy.getTeams(filter, searchTerm);
 
         verify(viewMock).mask();
-        verify(serviceFacadeMock).getMyTeams(groupListSplCaptor.capture());
-
-        groupListSplCaptor.getValue().onSuccess(groupListSplittableMock);
-        verify(spy).updateViewTeamList(eq(groupListSplittableMock));
-    }
-
-    @Test
-    public void getAllTeams() {
-        TeamsPresenterImpl spy = spy(uut);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.getAllTeams();
-
-        verify(viewMock).mask();
-        verify(serviceFacadeMock).getTeams(groupListSplCaptor.capture());
+        verify(serviceFacadeMock).getTeams(eq(true), eq(searchTerm), groupListSplCaptor.capture());
 
         groupListSplCaptor.getValue().onSuccess(groupListSplittableMock);
         verify(spy).updateViewTeamList(eq(groupListSplittableMock));

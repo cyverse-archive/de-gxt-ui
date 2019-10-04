@@ -78,21 +78,14 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getTeams(AsyncCallback<Splittable> callback) {
-        String address = TEAMS + "?details=true";
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
-            @Override
-            protected Splittable convertFrom(String object) {
-                return StringQuoter.split(object);
-            }
-        });
-    }
-
-    @Override
-    public void getMyTeams(AsyncCallback<Splittable> callback) {
-        String address = TEAMS + "?member=" + userInfo.getUsername() + "&details=true";
+    public void getTeams(boolean myTeams, String searchTerm, AsyncCallback<Splittable> callback) {
+        String address = TEAMS;
+        if (searchTerm != null) {
+            address += "?search=" + URL.encodeQueryString(searchTerm) + "&";
+        } else {
+            address += myTeams ? "?member=" + userInfo.getUsername() + "&" : "?";
+        }
+        address += "details=true";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
@@ -418,19 +411,6 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(voidCallback));
-    }
-
-    @Override
-    public void searchTeams(String searchTerm, AsyncCallback<Splittable> callback) {
-        String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm) + "&details=true";
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
-            @Override
-            protected Splittable convertFrom(String object) {
-                return StringQuoter.split(object);
-            }
-        });
     }
 
     @Override

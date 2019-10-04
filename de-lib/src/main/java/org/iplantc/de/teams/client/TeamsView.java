@@ -183,20 +183,10 @@ public interface TeamsView extends IsWidget {
         void onTeamNameSelected(Splittable teamSpl);
 
         /**
-         * Fetches the list of teams the user belongs to
+         * Fetches the list of teams the user belongs to with the given filter
+         * or search term
          */
-        void getMyTeams();
-
-        /**
-         * Fetches the list of teams the user has permission to view
-         */
-        void getAllTeams();
-
-        /**
-         * Fetches the list of teams which match the given search term
-         * @param searchTerm
-         */
-        void searchTeams(String searchTerm);
+        void getTeams(String filter, String searchTerm);
 
         /**
          * Fires when the user clicks the button to create a new team

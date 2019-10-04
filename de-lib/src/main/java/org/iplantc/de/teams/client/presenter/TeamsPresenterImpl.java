@@ -108,58 +108,30 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
     void refreshTeamListing() {
         if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
-            getMyTeams();
+            getTeams(TeamsFilter.MY_TEAMS.toString(), null);
         } else {
-            getAllTeams();
+            getTeams(TeamsFilter.ALL.toString(), null);
         }
     }
 
     @Override
-    public void getMyTeams() {
-        currentFilter = TeamsFilter.MY_TEAMS;
+    public void getTeams(String filter, String searchTerm) {
+        boolean myTeams;
+        if (TeamsFilter.MY_TEAMS.toString().equals(filter)) {
+            currentFilter = TeamsFilter.MY_TEAMS;
+            myTeams = true;
+        } else {
+            currentFilter = TeamsFilter.ALL;
+            myTeams = false;
+        }
+
         view.mask();
 
-        serviceFacade.getMyTeams(new AsyncCallback<Splittable>() {
+        serviceFacade.getTeams(myTeams, searchTerm, new AsyncCallback<Splittable>(){
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.postReact(caught);
                 view.unmask();
-            }
-
-            @Override
-            public void onSuccess(Splittable result) {
-                updateViewTeamList(result);
-            }
-        });
-    }
-
-    @Override
-    public void getAllTeams() {
-        currentFilter = TeamsFilter.ALL;
-        view.mask();
-
-        serviceFacade.getTeams(new AsyncCallback<Splittable>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.postReact(caught);
-                view.unmask();
-            }
-
-            @Override
-            public void onSuccess(Splittable result) {
-                updateViewTeamList(result);
-            }
-        });
-    }
-
-    @Override
-    public void searchTeams(String searchTerm) {
-        view.mask();
-        serviceFacade.searchTeams(searchTerm, new AsyncCallback<Splittable>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.postReact(caught);
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.teamSearchFailed()));
             }
 
             @Override

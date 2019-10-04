@@ -62,24 +62,16 @@ function Teams(props) {
     });
 
     useEffect(() => {
-        presenter.getMyTeams();
+        presenter.getTeams(TEAM_FILTER.MY_TEAMS, null);
     }, []);
 
-    const handleTeamFilterChange = (value) => {
-        setSearchTerm("");
-        setTeamFilter(value);
-        if (value === TEAM_FILTER.MY_TEAMS) {
-            presenter.getMyTeams();
+    useEffect(() => {
+        if (searchTerm) {
+            presenter.getTeams(null, searchTerm);
         } else {
-            presenter.getAllTeams();
+            presenter.getTeams(teamFilter, null);
         }
-    };
-
-    const handleSearch = (searchTerm) => {
-        setTeamFilter("");
-        setSearchTerm(searchTerm);
-        presenter.searchTeams(searchTerm);
-    };
+    }, [teamFilter, searchTerm]);
 
     const onRequestSort = (event, property) => {
         const orderBy = property;
@@ -135,9 +127,9 @@ function Teams(props) {
                 parentId={build(parentId, ids.TEAMS.TOOLBAR)}
                 presenter={presenter}
                 teamFilter={teamFilter}
-                handleTeamFilterChange={handleTeamFilterChange}
+                setTeamFilter={setTeamFilter}
                 searchTerm={searchTerm}
-                handleSearch={handleSearch}
+                setSearchTerm={setSearchTerm}
                 intl={intl}
             />
             <StyledTeamListing
@@ -164,9 +156,9 @@ function TeamsToolbar(props) {
         parentId,
         presenter,
         teamFilter,
-        handleTeamFilterChange,
+        setTeamFilter,
         searchTerm,
-        handleSearch,
+        setSearchTerm,
         intl,
         classes,
     } = props;
@@ -186,7 +178,8 @@ function TeamsToolbar(props) {
             <Select
                 value={teamFilter}
                 onChange={(event) => {
-                    handleTeamFilterChange(event.target.value);
+                    setTeamFilter(event.target.value);
+                    setSearchTerm("");
                 }}
                 id={teamFilterId}
                 className={classes.teamFilter}
@@ -205,7 +198,10 @@ function TeamsToolbar(props) {
                 </MenuItem>
             </Select>
             <SearchField
-                handleSearch={handleSearch}
+                handleSearch={(value) => {
+                    setSearchTerm(value);
+                    setTeamFilter("");
+                }}
                 value={searchTerm}
                 id={build(parentId, ids.TEAMS.SEARCH)}
                 placeholder={formatMessage(intl, "searchTeams")}
@@ -326,10 +322,8 @@ function TeamsListing(props) {
 Teams.propTypes = {
     parentId: PropTypes.string.isRequired,
     presenter: PropTypes.shape({
-        getMyTeams: PropTypes.func.isRequired,
-        getAllTeams: PropTypes.func.isRequired,
+        getTeams: PropTypes.func.isRequired,
         onCreateTeamSelected: PropTypes.func.isRequired,
-        searchTeams: PropTypes.func.isRequired,
         onTeamNameSelected: PropTypes.func.isRequired,
         onTeamSelectionChanged: PropTypes.func.isRequired,
     }),

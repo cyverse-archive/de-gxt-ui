@@ -5,7 +5,7 @@ package org.iplantc.de.teams.client.models;
  * @author aramsey
  */
 public enum TeamsFilter {
-    ALL("All Teams"), MY_TEAMS("My Teams");
+    ALL("All"), MY_TEAMS("MY_TEAMS");
 
     private String filter;
 

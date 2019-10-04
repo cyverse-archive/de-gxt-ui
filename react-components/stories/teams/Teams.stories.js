@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import Teams from "../../src/teams/Teams";
 import { boolean } from "@storybook/addon-knobs";
+import { search } from "../../src/data";
 
 class TeamsTest extends Component {
     render() {
@@ -12,10 +13,9 @@ class TeamsTest extends Component {
             });
 
         const presenter = {
-            getMyTeams: () => logger("Get My Teams"),
-            getAllTeams: () => logger("Get All Teams"),
+            getTeams: (filter, searchTerm) =>
+                logger("Get Teams " + filter + " " + searchTerm),
             onCreateTeamSelected: () => logger("Create Team selected"),
-            searchTeams: (searchTerm) => logger("Search teams", searchTerm),
             onTeamNameSelected: (team) => logger("Team name selected", team),
             onTeamSelectionChanged: (teamList) => {
                 selectedTeams = teamList;
