@@ -31,6 +31,8 @@ import QueryBuilderTest from "./data/search/QueryBuilder.stories";
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
 
+import EditCommentsTest from "./data/comments/EditComments.stories";
+
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
@@ -147,6 +149,9 @@ storiesOf("data/Tag", module).add("with test diskresource details", () => (
 ));
 storiesOf("data/TagPanel", module).add("with test diskresource details", () => (
     <TagPanelTest logger={action("tagpanel")} />
+));
+storiesOf("data/comment", module).add("Edit Comments Dialogue", () => (
+    <EditCommentsTest />
 ));
 
 storiesOf("desktop/view", module).add("with test desktop view", () => (
