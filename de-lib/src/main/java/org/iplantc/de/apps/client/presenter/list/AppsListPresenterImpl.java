@@ -229,12 +229,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             listView.setApps(null, false);
             listView.setHeading(Joiner.on(" >> ").join(event.getPath()));
             listView.setLoadingMask(true);
-
-            if (!selectedCommunity.getId().equals(CommunitiesView.COMMUNITIES_ROOT)) {
-                getCommunityApps(selectedCommunity);
-            } else {
-                listView.setApps(null, false);
-            }
+            getCommunityApps(selectedCommunity);
         }
     }
 

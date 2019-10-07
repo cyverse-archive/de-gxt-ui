@@ -111,7 +111,7 @@ function FilterSortToolbar(props) {
                         disabled={disableTypeFilter}
                     >
                         <MenuItem
-                            id={build(baseDebugID, ids.LISTING.TYPE + ids.ALL)}
+                            id={build(baseDebugID, ids.LISTING.TYPE, ids.ALL)}
                             value={"All"}
                         >
                             {appType.all}

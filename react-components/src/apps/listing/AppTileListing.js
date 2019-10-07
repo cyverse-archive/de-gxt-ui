@@ -73,7 +73,6 @@ function AppTileListing(props) {
                 />
                 {(!apps || apps.length === 0) && (
                     <div>
-                        {" "}
                         <Typography component="p">
                             {getMessage("noApps")}
                         </Typography>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import exStyles from "../style";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 
 import {
@@ -27,6 +27,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import AppFields from "./AppFields";
 import appType from "../../appType";
+import { withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey
@@ -82,6 +83,7 @@ class AppGridListing extends Component {
             onRatingDeleteClick,
             onRatingClick,
             searchRegexPattern,
+            classes,
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
@@ -152,11 +154,15 @@ class AppGridListing extends Component {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Highlighter
-                                                search={searchRegexPattern}
+                                            <span
+                                                className={classes.listingFont}
                                             >
-                                                {app.integrator_name}
-                                            </Highlighter>
+                                                <Highlighter
+                                                    search={searchRegexPattern}
+                                                >
+                                                    {app.integrator_name}
+                                                </Highlighter>
+                                            </span>
                                         </TableCell>
                                         <TableCell>
                                             <Rate
@@ -187,7 +193,12 @@ class AppGridListing extends Component {
                                                 }
                                             />
                                         </TableCell>
-                                        <TableCell>{app.system_id}</TableCell>
+                                        <TableCell
+                                            align="right"
+                                            className={classes.listingFont}
+                                        >
+                                            {app.system_id}
+                                        </TableCell>
                                         {deletable && (
                                             <TableCell align="right">
                                                 <DeleteBtn
@@ -262,6 +273,7 @@ function getTableColumns(deletable, enableMenu) {
             name: AppFields.SYSTEM.fieldName,
             enableSorting: true,
             key: AppFields.SYSTEM.key,
+            align: "right",
         },
     ];
 
@@ -278,6 +290,7 @@ function getTableColumns(deletable, enableMenu) {
             name: "",
             enableSorting: false,
             key: "menu",
+            align: "right",
         });
     }
 
@@ -310,4 +323,4 @@ AppGridListing.propTypes = {
     searchRegexPattern: PropTypes.func,
 };
 
-export default withI18N(AppGridListing, messages);
+export default withStyles(exStyles)(withI18N(AppGridListing, messages));

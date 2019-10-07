@@ -2,7 +2,6 @@ import fav from "../resources/images/fav.png";
 import favAdd from "../resources/images/fav_add.png";
 import favRemove from "../resources/images/fav_remove.png";
 import notFav from "../resources/images/not_fav.png";
-import { palette } from "@cyverse-de/ui-lib";
 
 export default (theme) => ({
     statFilterButton: {
@@ -63,5 +62,8 @@ export default (theme) => ({
     },
     paper: {
         padding: "20px",
+    },
+    listingFont: {
+        fontSize: "12px",
     },
 });
