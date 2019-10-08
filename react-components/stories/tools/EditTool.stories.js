@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import EditToolDialog from "../../src/tools/EditTool";
+import EditToolDialog from "../../src/tools/edit/EditTool";
 import { boolean, object } from "@storybook/addon-knobs";
 
 class EditToolTest extends Component {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import ManageTools from "../../src/tools/ManageTools";
+import ManageTools from "../../src/tools/manage/ManageTools";
 
 class ManageToolsTest extends Component {
     render() {

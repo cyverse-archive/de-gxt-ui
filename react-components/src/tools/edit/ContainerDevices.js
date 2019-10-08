@@ -1,8 +1,8 @@
 import React from "react";
 
-import { StyledAddBtn, DeleteBtn } from "./Buttons";
-import ids from "./ids";
-import SimpleExpansionPanel from "./SimpleExpansionPanel";
+import { StyledAddBtn, DeleteBtn } from "../Buttons";
+import ids from "../ids";
+import SimpleExpansionPanel from "../SimpleExpansionPanel";
 import { nonEmptyField } from "./Validations";
 
 import {

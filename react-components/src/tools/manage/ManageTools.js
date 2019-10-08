@@ -3,10 +3,10 @@
  */
 import React, { Fragment, useState } from "react";
 
-import ids from "./ids";
-import messages from "./messages";
-import PERMISSION from "../models/Permission";
-import styles from "./styles";
+import ids from "../ids";
+import messages from "../messages";
+import PERMISSION from "../../models/Permission";
+import styles from "../styles";
 
 import {
     build,
