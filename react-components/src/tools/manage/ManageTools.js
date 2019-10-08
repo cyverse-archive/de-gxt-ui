@@ -231,19 +231,12 @@ function ToolsToolbar(props) {
     } = props;
 
     const [toolMenuEl, setToolMenuEl] = useState(null);
-    const [shareMenuEl, setShareMenuEl] = useState(null);
 
     const openToolMenu = (event) => {
         setToolMenuEl(event.currentTarget);
     };
     const closeToolMenu = () => {
         setToolMenuEl(null);
-    };
-    const openShareMenu = (event) => {
-        setShareMenuEl(event.currentTarget);
-    };
-    const closeShareMenu = () => {
-        setShareMenuEl(null);
     };
     const onNewToolSelected = () => {
         closeToolMenu();
@@ -266,12 +259,7 @@ function ToolsToolbar(props) {
         presenter.useToolInNewApp(tool);
     };
     const onShareToolsSelected = (tool) => {
-        closeShareMenu();
         presenter.onShareToolsSelected(tool);
-    };
-    const onMakeToolPublicSelected = (tool) => {
-        closeShareMenu();
-        presenter.onRequestToMakeToolPublicSelected(tool);
     };
 
     const hasWritePermission =
@@ -340,33 +328,13 @@ function ToolsToolbar(props) {
             </Menu>
             <Button
                 disabled={!isOwner}
-                onClick={openShareMenu}
-                id={build(parentId, ids.MANAGE_TOOLS.SHARE_MENU)}
+                onClick={() => onShareToolsSelected(selectedTool)}
+                id={build(parentId, ids.MANAGE_TOOLS.SHARE)}
                 variant="contained"
             >
                 <Share />
-                {getMessage("share")}
+                {getMessage("shareWithCollaborators")}
             </Button>
-            <Menu
-                anchorEl={shareMenuEl}
-                open={Boolean(shareMenuEl)}
-                onClose={closeShareMenu}
-            >
-                <MenuItem
-                    disabled={!isOwner}
-                    onClick={() => onShareToolsSelected(selectedTool)}
-                    id={build(parentId, ids.MANAGE_TOOLS.SHARE_MI)}
-                >
-                    {getMessage("shareWithCollaborators")}
-                </MenuItem>
-                <MenuItem
-                    disabled={!isOwner}
-                    onClick={() => onMakeToolPublicSelected(selectedTool)}
-                    id={build(parentId, ids.MANAGE_TOOLS.MAKE_PUBLIC_MI)}
-                >
-                    {getMessage("makePublic")}
-                </MenuItem>
-            </Menu>
             <Button
                 onClick={onRefreshClicked}
                 id={build(parentId, ids.MANAGE_TOOLS.REFRESH)}
