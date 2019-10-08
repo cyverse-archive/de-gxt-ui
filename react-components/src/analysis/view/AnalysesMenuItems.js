@@ -159,7 +159,7 @@ class AnalysesMenuItems extends Component {
                 </MenuItem>
                 <MenuItem
                     id={build(baseDebugId, ids.MENUITEM_DELETE)}
-                    disabled={noSelection || !owner}
+                    disabled={noSelection || !owner || !disableCancel}
                     onClick={() => {
                         handleClose();
                         handleDeleteClick();
