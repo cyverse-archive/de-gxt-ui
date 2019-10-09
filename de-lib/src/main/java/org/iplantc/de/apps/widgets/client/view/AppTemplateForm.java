@@ -10,6 +10,7 @@ import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.Ar
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.HasArgumentRequiredChangedHandlers;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.ArgumentSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.HasArgumentSelectedEventHandlers;
+import org.iplantc.de.apps.widgets.client.view.editors.AppStepResourcesView;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
@@ -159,6 +160,8 @@ public interface AppTemplateForm extends Editor<AppTemplate>,
     AccordionLayoutContainer getDndContainer();
 
     void insertFirstInAccordion(LaunchAnalysisView law);
+
+    void appendResourceRequirements(AppStepResourcesView resourcesView);
 
     void setAdjustForScroll(boolean adjustForScroll);
 

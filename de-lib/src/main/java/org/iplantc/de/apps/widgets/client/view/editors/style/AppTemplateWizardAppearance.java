@@ -156,4 +156,14 @@ public interface AppTemplateWizardAppearance {
     String retainInputs();
 
     String launchAnalysisDetailsHeadingPrefix();
+
+    String resourceRequirements();
+
+    String resourceRequirementsForStep(int step);
+
+    String minCPUCoresLabel();
+
+    String minMemoryLabel();
+
+    String minDiskSpaceLabel();
 }

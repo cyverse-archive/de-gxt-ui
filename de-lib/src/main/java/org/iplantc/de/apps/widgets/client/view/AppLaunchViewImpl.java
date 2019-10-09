@@ -5,8 +5,13 @@ import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.CreateQuickLaunchEvent.CreateQuickLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
+import org.iplantc.de.apps.widgets.client.gin.factory.AppStepResourcesViewFactory;
+import org.iplantc.de.apps.widgets.client.view.editors.AppStepResourcesView;
+import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
+import org.iplantc.de.client.models.apps.integration.AppTemplateStepLimits;
+import org.iplantc.de.client.models.apps.integration.AppTemplateStepRequirements;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
@@ -48,11 +53,18 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
 
     @UiField(provided = true) @Path("") AppTemplateForm wizard;
     @UiField(provided = true) AppLaunchViewAppearance appearance;
+
+    private final AppTemplateWizardAppearance wizardAppearance;
     private final AppTemplateUtils appTemplateUtils;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     private final LaunchAnalysisView law;
+
+    @Inject
+    AppStepResourcesViewFactory resourcesViewFactory;
+    private List<AppStepResourcesView> resourcesViews;
+
     private CustomMask customMask;
 
     HTMLPanel panel;
@@ -63,12 +75,14 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
                              final AppTemplateForm wizard,
                              final AppTemplateUtils appTemplateUtils,
                              AppLaunchViewAppearance appearance,
+                             AppTemplateWizardAppearance wizardAppearance,
                              CustomMask customMask,
                              DEClientConstants constants) {
         this.law = law;
         this.wizard = wizard;
         this.appTemplateUtils = appTemplateUtils;
         this.appearance = appearance;
+        this.wizardAppearance = wizardAppearance;
         this.customMask = customMask;
         this.constants = constants;
         panel = new HTMLPanel("<div></div>");
@@ -98,6 +112,22 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         law.edit(je, appTemplate.getAppType());
         editorDriver.edit(appTemplate);
         wizard.insertFirstInAccordion(law);
+
+        resourcesViews = Lists.newArrayList();
+        if (appTemplate.getRequirements() != null) {
+            if (appTemplate.getRequirements().size() == 1) {
+                final AppStepResourcesView resourcesView =
+                        appendAppStepResourcesView(appTemplate.getRequirements().get(0));
+                resourcesView.setHeading(wizardAppearance.resourceRequirements());
+            } else {
+                for (AppTemplateStepLimits requirements : appTemplate.getRequirements()) {
+                    final AppStepResourcesView resourcesView = appendAppStepResourcesView(requirements);
+                    resourcesView.setHeading(wizardAppearance.resourceRequirementsForStep(
+                            requirements.getStepNumber() + 1));
+                }
+            }
+        }
+
         if(appTemplate.getSystemId().equals(constants.hpcSystemId())) {
             createQuickLaunchButton.setEnabled(false);
         }
@@ -106,6 +136,14 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
             launchButton.setEnabled(false);
             createQuickLaunchButton.setEnabled(false);
         }
+    }
+
+    private AppStepResourcesView appendAppStepResourcesView(AppTemplateStepLimits requirements) {
+        final AppStepResourcesView resourcesView = resourcesViewFactory.create(requirements);
+        resourcesViews.add(resourcesView);
+        wizard.appendResourceRequirements(resourcesView);
+
+        return resourcesView;
     }
 
     @UiHandler("launchButton")
@@ -122,6 +160,12 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
                 GWT.log("\t-- " + ": " + error.getMessage());
             }
         } else {
+            List<AppTemplateStepRequirements> requirements = Lists.newArrayList();
+            for (AppStepResourcesView resourcesView : resourcesViews) {
+                requirements.add(resourcesView.getRequirements());
+            }
+            je.setRequirements(requirements);
+
             launch(cleaned, je);
         }
     }
@@ -155,6 +199,20 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         createQuickLaunchButton.ensureDebugId(baseID+ AppsModule.Ids.QUICK_LAUNCH_BTN);
         wizard.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM);
         law.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM + AppsModule.Ids.LAUNCH_ANALYSIS_GROUP);
+
+        if (resourcesViews != null) {
+            for (AppStepResourcesView resourcesView : resourcesViews) {
+                String resourcesViewDebugId =
+                        baseID + AppsModule.Ids.TEMPLATE_FORM + AppsModule.Ids.APP_LAUNCH_RESOURCE_REQUESTS;
+
+                final AppTemplateStepRequirements requirements = resourcesView.getRequirements();
+                if (requirements != null) {
+                    resourcesViewDebugId += requirements.getStepNumber();
+                }
+
+                resourcesView.asWidget().ensureDebugId(resourcesViewDebugId);
+            }
+        }
     }
 
     @Override

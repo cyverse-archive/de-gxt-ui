@@ -71,4 +71,14 @@ public interface AppsWidgetsPropertyPanelLabels extends Messages, ArgumentGroupL
     String fileInputDefaultLabel();
 
     String folderInputDefaultLabel();
+
+    String resourceRequirements();
+
+    String resourceRequirementsForStep(int step);
+
+    String minCPUCoresLabel();
+
+    String minMemoryLabel();
+
+    String minDiskSpaceLabel();
 }

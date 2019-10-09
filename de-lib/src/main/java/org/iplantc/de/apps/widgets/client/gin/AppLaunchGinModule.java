@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.gin;
 
+import org.iplantc.de.apps.widgets.client.gin.factory.AppStepResourcesViewFactory;
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.presenter.AppLaunchPresenterImpl;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchPreviewView;
@@ -8,6 +9,8 @@ import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchViewImpl;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.LaunchAnalysisView;
+import org.iplantc.de.apps.widgets.client.view.editors.AppStepResourcesView;
+import org.iplantc.de.apps.widgets.client.view.editors.AppStepResourcesViewImpl;
 import org.iplantc.de.apps.widgets.client.view.editors.AppTemplateFormImpl;
 import org.iplantc.de.apps.widgets.client.view.editors.ArgumentEditorFactoryImpl;
 import org.iplantc.de.apps.widgets.client.view.editors.ArgumentGroupEditorImpl;
@@ -40,5 +43,7 @@ public class AppLaunchGinModule extends AbstractGinModule {
         bind(AppTemplateForm.ArgumentEditorFactory.class).to(ArgumentEditorFactoryImpl.class);
         install(new GinFactoryModuleBuilder()
                     .build(ArgumentEditorGinFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppStepResourcesView.class, AppStepResourcesViewImpl.class)
+                    .build(AppStepResourcesViewFactory.class));
     }
 }

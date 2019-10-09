@@ -46,6 +46,8 @@ public interface AppTemplateAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<AnalysisSubmissionResponse> analysisSubmissionResponse();
 
+    AutoBean<AppTemplateStepRequirements> appTemplateStepRequirements();
+
     /**
      * A method that builds an AppTemplate with default values.
      * @return  AutoBean<AppTemplate>

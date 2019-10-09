@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 
-public interface ToolContainer extends HasName, ToolResourceRequirements {
+public interface ToolContainer extends HasName, ToolResourceLimits {
 
     enum NetworkMode {
         none, bridge;
