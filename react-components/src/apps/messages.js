@@ -90,6 +90,8 @@ const intlData = {
         appType: "Type",
         addToFavorites: "Add To Favorites",
         removeFromFavorites: "Remove From Favorites",
+        viewTools: "View Tools",
+        publish: "Publish",
     },
 };
 
