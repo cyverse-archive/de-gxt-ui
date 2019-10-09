@@ -1,5 +1,7 @@
 package org.iplantc.de.admin.apps.client;
 
+import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
+
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import gwt.react.client.components.ComponentConstructorFn;
@@ -38,4 +40,13 @@ public class ReactAppsAdmin {
         public boolean open;
     }
 
+    @JsProperty
+    public static  ComponentConstructorFn<AppPublicationRequestProps> AppPublicationRequests;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class AppPublicationRequestProps extends BaseProps {
+       public AppPublicationRequestView.Presenter presenter;
+       public String parentId;
+    }
 }
+
