@@ -22,6 +22,7 @@ public interface AppPublicationRequestView extends IsWidget {
                         String systemId,
                         ReactSuccessCallback callback,
                         ReactErrorCallback errorCallback);
+        public void setViewDebugId(String baseId);
     }
 
     void load(Presenter presenter);

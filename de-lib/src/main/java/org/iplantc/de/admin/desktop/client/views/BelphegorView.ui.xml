@@ -36,6 +36,10 @@
              type="com.sencha.gxt.widget.core.client.TabItemConfig">
         <ui:attributes text="{appearance.communities}"/>
     </ui:with>
+    <ui:with field="appPublicationRequestTabConfig"
+             type="com.sencha.gxt.widget.core.client.TabItemConfig" >
+        <ui:attributes text="{appearance.appPublicationRequests}"/>
+    </ui:with>
     <ui:with field="statsTabConfig"
              type="com.sencha.gxt.widget.core.client.TabItemConfig" >
         <ui:attributes text="{appearance.appStats}"/>
@@ -78,6 +82,10 @@
                     <de:child config="{communitiesTabConfig}">
                         <con:SimpleContainer ui:field="communitiesPanel"/>
                     </de:child>
+                    <de:child config="{appPublicationRequestTabConfig}">
+                        <con:SimpleContainer ui:field="appPubRequestPanel"/>
+                    </de:child>
+
                     <de:child config="{statsTabConfig}">
                         <con:SimpleContainer ui:field="statsPanel"/>
                     </de:child>

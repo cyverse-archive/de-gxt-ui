@@ -79,4 +79,6 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
 
     void updateAppDoc(HasQualifiedId app, String doc, AsyncCallback<AppDoc> callback);
 
+    void getAppPublicationRequests(AsyncCallback<Splittable> callback);
+
 }

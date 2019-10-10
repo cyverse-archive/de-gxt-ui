@@ -137,4 +137,9 @@ public class BelphegorViewDefaultAppearance implements BelphegorView.BelphegorVi
     public String communities() {
         return belphegorDisplayStrings.communities();
     }
+
+    @Override
+    public String appPublicationRequests() {
+        return belphegorDisplayStrings.appPublicationRequests();
+    }
 }

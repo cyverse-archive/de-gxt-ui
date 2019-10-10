@@ -17,6 +17,9 @@ import org.iplantc.de.admin.apps.client.presenter.toolbar.AdminAppsToolbarPresen
 import org.iplantc.de.admin.apps.client.views.AdminAppViewImpl;
 import org.iplantc.de.admin.apps.client.views.grid.AdminAppsGridImpl;
 import org.iplantc.de.admin.apps.client.views.toolbar.AdminAppsToolbarViewImpl;
+import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
+import org.iplantc.de.admin.desktop.client.appPublicationRequest.presenter.AppPublicationRequestPresenter;
+import org.iplantc.de.admin.desktop.client.appPublicationRequest.views.AppPublicationRequestViewImpl;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.impl.AppAdminServiceFacadeImpl;
 import org.iplantc.de.apps.client.AppCategoriesView;
@@ -82,7 +85,8 @@ public class AdminAppsGinModule extends AbstractGinModule {
 
         bind(AdminAppStatsGridView.class).to(AdminAppStatsGridViewImpl.class);
         bind(AdminAppStatsGridView.Presenter.class).to(AdminAppsStatsGridPresenterImpl.class);
-
+        bind(AppPublicationRequestView.class).to(AppPublicationRequestViewImpl.class);
+        bind(AppPublicationRequestView.Presenter.class).to(AppPublicationRequestPresenter.class);
 
     }
 }
