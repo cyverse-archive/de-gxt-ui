@@ -10,6 +10,7 @@ import styles from "./styles";
 
 import {
     build,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     formatMessage,
@@ -21,7 +22,6 @@ import {
 } from "@cyverse-de/ui-lib";
 import {
     Button,
-    Checkbox,
     IconButton,
     Menu,
     MenuItem,
@@ -448,7 +448,7 @@ function ToolListing(props) {
                 toolList.tools.length > 0 &&
                 toolList.tools.map((tool) => {
                     return (
-                        <TableRow
+                        <DETableRow
                             tabIndex={-1}
                             hover
                             key={tool.id}
@@ -477,7 +477,7 @@ function ToolListing(props) {
                                     ? getMessage("public")
                                     : tool.permission}
                             </TableCell>
-                        </TableRow>
+                        </DETableRow>
                     );
                 })}
         </TableBody>
