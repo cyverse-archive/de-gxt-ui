@@ -47,6 +47,8 @@ public class ReactAppsAdmin {
     public static class AppPublicationRequestProps extends BaseProps {
        public AppPublicationRequestView.Presenter presenter;
        public String parentId;
+       public Splittable requests;
+       public boolean loading;
     }
 }
 

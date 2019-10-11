@@ -3,16 +3,16 @@ package org.iplantc.de.admin.desktop.client.appPublicationRequest.presenter;
 import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
-import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+/**
+ * @author sriram
+ */
 public class AppPublicationRequestPresenter implements AppPublicationRequestView.Presenter {
 
 
@@ -27,22 +27,19 @@ public class AppPublicationRequestPresenter implements AppPublicationRequestView
     }
 
     @Override
-    public void getAppPublicationRequests(ReactSuccessCallback callback,
-                                          ReactErrorCallback errorCallback) {
+    public void getAppPublicationRequests() {
+        view.setLoading(true);
         appService.getAppPublicationRequests(new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught.getMessage(), caught);
-                if (errorCallback != null) {
-                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
-                }
+                ErrorHandler.postReact(caught.getMessage(), caught);
+                view.setLoading(false);
             }
 
             @Override
             public void onSuccess(Splittable result) {
-                if (callback != null) {
-                    callback.onSuccess(result);
-                }
+                view.setLoading(false);
+                view.setRequests(result.get("publication_requests"));
             }
         });
     }
@@ -51,13 +48,25 @@ public class AppPublicationRequestPresenter implements AppPublicationRequestView
     public void go(HasOneWidget container) {
         container.setWidget(view);
         view.load(this);
+        getAppPublicationRequests();
     }
 
     @Override
     public void publishApp(String appId,
-                           String systemId,
-                           ReactSuccessCallback callback,
-                           ReactErrorCallback errorCallback) {
+                           String systemId) {
+        view.setLoading(true);
+        appService.publishApp(appId, systemId, new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.postReact(caught.getMessage(), caught);
+                view.setLoading(false);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                getAppPublicationRequests();
+            }
+        });
 
     }
 
