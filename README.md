@@ -41,11 +41,13 @@ To generate a GWT draft war file:
 
 To start the Super Dev Mode code-server:
 
-    ./gradlew :de:sdm
+    ./gradlew sdm
     
 Once this code-server is started, you can use it to debug any of our wars which have source-maps 
 enabled. Only the draft wars have source-maps enabled. For instructions on how to use 
 Super Dev Mode, please refer to 
 the [GWT project site](http://www.gwtproject.org/articles/superdevmode.html).
 
+## React Development
 
+Find documentation in [/react-components](/react-components/README.md)
