@@ -92,6 +92,9 @@ const intlData = {
         removeFromFavorites: "Remove From Favorites",
         viewTools: "View Tools",
         publish: "Publish",
+        noRequests: "No App publication requests to display",
+        toolsUsed: "Tools used by {appName}",
+        publishApp: "Publish {appName}",
     },
 };
 

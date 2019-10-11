@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
+import messages from "../messages";
+import { injectIntl } from "react-intl";
 import {
     build,
-    EnhancedTableHead,
     DEDialogHeader,
     DEHyperlink,
+    EmptyTable,
+    EnhancedTableHead,
+    formatMessage,
+    getMessage,
+    LoadingMask,
+    withI18N,
 } from "@cyverse-de/ui-lib";
 import {
     Dialog,
-    TableCell,
-    TableRow,
-    Table,
-    TableBody,
     DialogContent,
     IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
     Tooltip,
+    makeStyles,
 } from "@material-ui/core";
 import PublicIcon from "@material-ui/icons/Public";
 
@@ -25,11 +33,22 @@ import PublicIcon from "@material-ui/icons/Public";
  * A component that displays a list of app publication requests.
  *
  */
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+        height:
+            "calc(100% - " +
+            theme.mixins.toolbar["@media (min-width:600px)"].minHeight +
+            "px)",
+        overflow: "auto",
+    },
+}));
+
 const appColumnData = [
-    { name: "App Name", enableSorting: true, key: "name" },
+    { name: "App Name", enableSorting: false, key: "name" },
     {
         name: "Integrated By",
-        enableSorting: true,
+        enableSorting: false,
         key: "integrator_name",
     },
     {
@@ -60,115 +79,143 @@ const toolColumnData = [
     { name: "Tag", align: "left", enableSorting: false, id: "tag" },
 ];
 function ToolsUsed(props) {
-    const { tools, toolsDialogOpen, appName, onClose, parentId } = props;
+    const { tools, appName, parentId, intl } = props;
+    const [toolsDialogOpen, setToolsDialogOpen] = useState(false);
 
     return (
-        <Dialog open={toolsDialogOpen}>
-            <DEDialogHeader
-                heading={"Tools used by " + appName}
-                onClose={onClose}
+        <React.Fragment>
+            <DEHyperlink
+                text={formatMessage(intl, "viewTools")}
+                onClick={() => setToolsDialogOpen(true)}
             />
-            <DialogContent>
-                <Table>
+            <Dialog open={toolsDialogOpen}>
+                <DEDialogHeader
+                    heading={formatMessage(intl, "toolsUsed", {
+                        appName: appName,
+                    })}
+                    onClose={() => setToolsDialogOpen(false)}
+                />
+                <DialogContent>
+                    <Table>
+                        <TableBody>
+                            {tools.map((tool) => {
+                                return (
+                                    <TableRow hover key={tool.id}>
+                                        <TableCell>{tool.name}</TableCell>
+                                        <TableCell>
+                                            {tool.container.image.name}
+                                        </TableCell>
+                                        <TableCell>
+                                            {tool.container.image.tag}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <EnhancedTableHead
+                            selectable={false}
+                            numSelected={0}
+                            rowCount={tools ? tools.length : 0}
+                            baseId={parentId}
+                            columnData={toolColumnData}
+                        />
+                    </Table>
+                </DialogContent>
+            </Dialog>
+        </React.Fragment>
+    );
+}
+function AppPublicationRequests(props) {
+    const { requests, presenter, parentId, loading, intl } = props;
+    const classes = useStyles();
+    const onPublishClicked = (app) => {
+        presenter.publishApp(app.id, app.system_id);
+    };
+    return (
+        <div className={classes.container}>
+            <LoadingMask loading={loading}>
+                <Table size="small" stickyHeader={true}>
                     <TableBody>
-                        {tools.map((tool) => {
-                            return (
-                                <TableRow hover>
-                                    <TableCell>{tool.name}</TableCell>
-                                    <TableCell>
-                                        {tool.container.image.name}
-                                    </TableCell>
-                                    <TableCell>
-                                        {tool.container.image.tag}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
+                        {(!requests || requests.length === 0) && (
+                            <EmptyTable
+                                message={getMessage("noRequests")}
+                                numColumns={appColumnData.length}
+                            />
+                        )}
+                        {requests &&
+                            requests.length > 0 &&
+                            requests.map((request) => {
+                                return (
+                                    <React.Fragment>
+                                        <TableRow hover key={request.id}>
+                                            <TableCell>
+                                                {request.app.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {request.app.integrator_name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {request.app.integrator_email}
+                                            </TableCell>
+                                            <TableCell>
+                                                <ToolsUsed
+                                                    intl={intl}
+                                                    tools={request.app.tools}
+                                                    appName={request.app.name}
+                                                    parentId={build(
+                                                        parentId,
+                                                        "tools"
+                                                    )}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Tooltip
+                                                    title={formatMessage(
+                                                        intl,
+                                                        "publishApp",
+                                                        {
+                                                            appName:
+                                                                request.app
+                                                                    .name,
+                                                        }
+                                                    )}
+                                                >
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            onPublishClicked(
+                                                                request.app
+                                                            )
+                                                        }
+                                                    >
+                                                        <PublicIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                );
+                            })}
                     </TableBody>
                     <EnhancedTableHead
                         selectable={false}
                         numSelected={0}
-                        rowCount={tools ? tools.length : 0}
+                        rowCount={requests ? requests.length : 0}
                         baseId={parentId}
-                        columnData={toolColumnData}
+                        columnData={appColumnData}
                     />
                 </Table>
-            </DialogContent>
-        </Dialog>
-    );
-}
-function AppPublicationRequests(props) {
-    const { requests, parentId } = props;
-    const [toolsDialogOpen, setToolsDialogOpen] = useState(false);
-    const onRequestSort = () => {};
-    const onPublishClicked = (app) => {
-        console.log(app.name + "is published!");
-    };
-    return (
-        <Table size="small">
-            <TableBody>
-                {requests &&
-                    requests.length > 0 &&
-                    requests.map((request) => {
-                        return (
-                            <React.Fragment>
-                                <TableRow hover key={request.id}>
-                                    <TableCell>{request.app.name}</TableCell>
-                                    <TableCell>
-                                        {request.app.integrator_name}
-                                    </TableCell>
-                                    <TableCell>
-                                        {request.app.integrator_email}
-                                    </TableCell>
-                                    <TableCell>
-                                        <DEHyperlink
-                                            text="View Tools"
-                                            onClick={() =>
-                                                setToolsDialogOpen(true)
-                                            }
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Tooltip
-                                            title={
-                                                "Publish " + request.app.name
-                                            }
-                                        >
-                                            <IconButton
-                                                onClick={onPublishClicked}
-                                            >
-                                                <PublicIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                                <ToolsUsed
-                                    tools={request.app.tools}
-                                    toolsDialogOpen={toolsDialogOpen}
-                                    onClose={() => setToolsDialogOpen(false)}
-                                    appName={request.app.name}
-                                    parentId={build(parentId, "tools")}
-                                />
-                            </React.Fragment>
-                        );
-                    })}
-            </TableBody>
-            <EnhancedTableHead
-                selectable={false}
-                numSelected={0}
-                rowCount={requests ? requests.length : 0}
-                order="asc"
-                orderBy="App Name"
-                baseId={parentId}
-                columnData={appColumnData}
-                onRequestSort={onRequestSort}
-            />
-        </Table>
+            </LoadingMask>
+        </div>
     );
 }
 
 AppPublicationRequests.propTypes = {
     loading: PropTypes.bool.isRequired,
+    requests: PropTypes.object,
+    presenter: PropTypes.shape({
+        publishApp: PropTypes.func.isRequired,
+    }),
+    parentId: PropTypes.string.isRequired,
 };
 
-export default AppPublicationRequests;
+export default withI18N(injectIntl(AppPublicationRequests), messages);
