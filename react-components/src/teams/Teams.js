@@ -173,7 +173,7 @@ function TeamsToolbar(props) {
                 onClick={() => presenter.onCreateTeamSelected()}
             >
                 <Add />
-                {getMessage("createTeam")}
+                {getMessage("create")}
             </Button>
             <Select
                 value={teamFilter}

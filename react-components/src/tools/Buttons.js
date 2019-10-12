@@ -4,7 +4,7 @@ import ids from "./ids";
 import styles from "./styles";
 
 import { build } from "@cyverse-de/ui-lib";
-import { Fab } from "@material-ui/core";
+import { Fab, IconButton, makeStyles } from "@material-ui/core";
 import { Add, Delete } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -27,17 +27,20 @@ function AddBtn(props) {
     );
 }
 
+const useStyles = makeStyles(styles);
+
 function DeleteBtn(props) {
     const { parentId, onClick } = props;
+    const classes = useStyles();
     return (
-        <Fab
-            color="secondary"
+        <IconButton
+            className={classes.deleteBtn}
             size="small"
             id={build(parentId, ids.BUTTONS.DELETE)}
             onClick={onClick}
         >
             <Delete />
-        </Fab>
+        </IconButton>
     );
 }
 
