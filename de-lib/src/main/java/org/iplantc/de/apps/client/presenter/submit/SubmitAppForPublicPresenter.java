@@ -24,6 +24,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -240,7 +241,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         pmb.auto();
         pmb.show();
 
-        appService.publishToWorld(publishAppRequest, new AppsCallback<Void>() {
+        appService.publishToWorld(publishAppRequest, new AppsCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 pmb.hide();
@@ -248,11 +249,20 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(String result) {
                 pmb.hide();
-                eventBus.fireEvent(new AppPublishedEvent(view.getSelectedApp()));
-                if (callback != null) {
-                    callback.onSuccess(publishAppRequest.getName());
+                //if app is published right away, the response is empty
+                if (Strings.isNullOrEmpty(result)) {
+                    eventBus.fireEvent(new AppPublishedEvent(view.getSelectedApp()));
+                    if (callback != null) {
+                        callback.onSuccess(publishAppRequest.getName());
+                    }
+                } else {   //when app publication request is created.
+                    AlertMessageBox amb =
+                            new AlertMessageBox(appearance.publicationRequestSubmittedHeading(
+                                    publishAppRequest.getName()),
+                                                appearance.publicationRequestSubmitted(publishAppRequest.getName()));
+                    amb.show();
                 }
             }
         });

@@ -102,6 +102,10 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         String contentPanelHeight();
 
         String publicSubmissionFormCommunities();
+
+        String publicationRequestSubmittedHeading(String appName);
+
+        String publicationRequestSubmitted(String appName);
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

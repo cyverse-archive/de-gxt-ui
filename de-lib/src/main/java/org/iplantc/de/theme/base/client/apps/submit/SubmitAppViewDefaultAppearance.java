@@ -265,4 +265,14 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     public String publicSubmissionFormCommunities() {
         return appsMessages.publicSubmissionFormCommunities();
     }
+
+    @Override
+    public String publicationRequestSubmittedHeading(String appName) {
+        return appsMessages.publicationRequestSubmittedHeading(appName);
+    }
+
+    @Override
+    public String publicationRequestSubmitted(String appName) {
+        return appsMessages.publicationRequestSubmitted(appName);
+    }
 }
