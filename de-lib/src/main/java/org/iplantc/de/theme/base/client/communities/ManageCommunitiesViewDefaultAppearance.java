@@ -6,6 +6,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
+import java.util.List;
+
 public class ManageCommunitiesViewDefaultAppearance implements ManageCommunitiesView.Appearance {
 
     public interface Resources extends ClientBundle {
@@ -76,5 +78,25 @@ public class ManageCommunitiesViewDefaultAppearance implements ManageCommunities
     @Override
     public String agaveAppsNotSupportedToolTip() {
         return displayStrings.agaveAppsNotSupportedToolTip();
+    }
+
+    @Override
+    public String joinCommunityFailure() {
+        return displayStrings.joinCommunityFailure();
+    }
+
+    @Override
+    public String leaveCommunityFailure() {
+        return displayStrings.leaveCommunityFailure();
+    }
+
+    @Override
+    public String removeCommunityAdminFailure(List<String> failedUsers) {
+        return displayStrings.removeCommunityAdminFailure(failedUsers);
+    }
+
+    @Override
+    public String addCommunityAdminFailure(List<String> failedUsers) {
+        return displayStrings.addCommunityAdminFailure(failedUsers);
     }
 }

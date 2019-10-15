@@ -20,6 +20,8 @@ import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.communities.client.ManageCommunitiesView;
 import org.iplantc.de.communities.client.views.ReactCommunities;
 import org.iplantc.de.pipelines.client.views.AppSelectionDialog;
@@ -39,6 +41,7 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import com.sencha.gxt.widget.core.client.Dialog;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Presenter,
                                                        AppSelectionDialog.Presenter {
@@ -57,6 +60,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     private AppsView.Presenter appsPresenter;
     private ReactSuccessCallback selectAppsCallback;
     @Inject AsyncProviderWrapper<RetagAppsConfirmationDialog> retagAppsConfirmationDlgProvider;
+    @Inject IplantAnnouncer announcer;
 
     @Inject
     public ManageCommunitiesPresenterImpl(GroupServiceFacade serviceFacade,
@@ -288,6 +292,11 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
+                List<String> failedUsers = getFailedMemberUpdateNames(result);
+
+                if (failedUsers.size() > 0) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.removeCommunityAdminFailure(failedUsers)));
+                }
                 callback.onSuccess(null);
             }
         });
@@ -309,6 +318,11 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
+                List<String> failedUsers = getFailedMemberUpdateNames(result);
+
+                if (failedUsers.size() > 0) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.addCommunityAdminFailure(failedUsers)));
+                }
                 successCallback.onSuccess(null);
             }
         });
@@ -383,6 +397,11 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
+                List<String> failedUsers = getFailedMemberUpdateNames(result);
+
+                if (failedUsers.size() > 0) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.joinCommunityFailure()));
+                }
                 callback.onSuccess(null);
             }
         });
@@ -399,9 +418,21 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
+                List<String> failedUsers = getFailedMemberUpdateNames(result);
+
+                if (failedUsers.size() > 0) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveCommunityFailure()));
+                }
                 callback.onSuccess(null);
             }
         });
+    }
+
+    List<String> getFailedMemberUpdateNames(List<UpdateMemberResult> results) {
+        return results.stream()
+                      .filter(memberResult -> !memberResult.isSuccess())
+                      .map(UpdateMemberResult::getSubjectName)
+                      .collect(Collectors.toList());
     }
 
     @Override
