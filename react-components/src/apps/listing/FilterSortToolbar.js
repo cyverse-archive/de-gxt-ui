@@ -118,7 +118,7 @@ function FilterSortToolbar(props) {
                     >
                         <MenuItem
                             id={build(baseDebugID, ids.LISTING.TYPE, ids.ALL)}
-                            value={"All"}
+                            value={appType.all}
                         >
                             {appType.all}
                         </MenuItem>
@@ -127,13 +127,13 @@ function FilterSortToolbar(props) {
                                 baseDebugID,
                                 ids.LISTING.TYPE + ids.AGAVE
                             )}
-                            value={"Agave"}
+                            value={appType.agave}
                         >
                             {appType.agave}
                         </MenuItem>
                         <MenuItem
                             id={build(baseDebugID, ids.LISTING.TYPE + ids.DE)}
-                            value={"DE"}
+                            value={appType.de}
                         >
                             {appType.de}
                         </MenuItem>
@@ -142,13 +142,13 @@ function FilterSortToolbar(props) {
                                 baseDebugID,
                                 ids.LISTING.TYPE + ids.INTERACTIVE
                             )}
-                            value={"Interactive"}
+                            value={appType.interactive}
                         >
                             {appType.interactive}
                         </MenuItem>
                         <MenuItem
                             id={build(baseDebugID, ids.LISTING.TYPE + ids.OSG)}
-                            value={"OSG"}
+                            value={appType.osg}
                         >
                             {appType.osg}
                         </MenuItem>
