@@ -142,6 +142,8 @@ public class AppsListPresenterImplTest {
         verify(listView).setLoadingMask(true);
         verify(appServiceMock).getAppsAsSplittable(eq(appCategoryMock),
                                                    eq(null),
+                                                   eq("name"),
+                                                   eq("asc"),
                                                    appListCallbackCaptor.capture());
 
         Splittable resultList = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(mock(App.class)));
@@ -169,6 +171,8 @@ public class AppsListPresenterImplTest {
         verify(listView).setLoadingMask(true);
         verify(appServiceMock).getAppsAsSplittable(eq(appCategoryMock),
                                                    eq(null),
+                                                   eq("name"),
+                                                   eq("asc"),
                                                    appListCallbackCaptor.capture());
 
         List<App> resultList = Lists.newArrayList(mock(App.class));

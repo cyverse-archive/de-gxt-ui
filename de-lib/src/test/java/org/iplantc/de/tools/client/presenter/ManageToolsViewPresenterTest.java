@@ -295,6 +295,7 @@ public class ManageToolsViewPresenterTest {
     public void testOnShowToolInfo() {
         App a1 = mock(App.class);
         List<App> appList = Arrays.asList(a1);
+        Splittable spAppList =  AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appList));
         String toolId = "toolId";
 
         uut.onShowToolInfo(toolId);
@@ -307,10 +308,8 @@ public class ManageToolsViewPresenterTest {
 
         verify(toolInfoDialogProviderMock).get(toolInfoDialogCaptor.capture());
         toolInfoDialogCaptor.getValue().onSuccess(toolInfoDialogMock);
-        verify(toolInfoDialogMock).show(eq(toolMock), eq(appList));
-
-        verify(toolInfoDialogMock).show(eq(t1Mock),
-                                        eq(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appList))));
+        verify(toolInfoDialogMock).show(eq(toolMock),
+                                        eq(spAppList));
 
     }
 
