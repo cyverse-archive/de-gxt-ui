@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import getAppsSorting from "../../apps/listing/appSorting";
 import AppGridListing from "../../apps/listing/AppGridListing";
 import CollaboratorListing from "../../collaborators/CollaboratorListing";
 import ids from "../ids";
@@ -49,6 +48,8 @@ class EditCommunity extends Component {
             leaveCommunity: false,
             joinCommunity: false,
             selectedApps: [],
+            order: "asc",
+            orderBy: "name",
         };
 
         [
@@ -73,6 +74,7 @@ class EditCommunity extends Component {
             "handleAppSelection",
             "resetAppSelection",
             "isSelected",
+            "onSortChange",
         ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
@@ -104,6 +106,8 @@ class EditCommunity extends Component {
             let fetchAppsPromise = new Promise((resolve, reject) => {
                 this.props.presenter.fetchCommunityApps(
                     community.display_name,
+                    "name",
+                    "asc",
                     resolve,
                     reject
                 );
@@ -431,6 +435,22 @@ class EditCommunity extends Component {
         this.setState({ [dialogName]: false });
     }
 
+    onSortChange(sortField, sortDir) {
+        const { presenter, community } = this.props;
+        this.setState({ loading: true, order: sortDir, orderBy: sortField });
+        presenter.fetchCommunityApps(
+            community.display_name,
+            sortField,
+            sortDir,
+            (appList) => {
+                this.setState({ loading: false, apps: appList.apps });
+            },
+            () => {
+                this.setState({ loading: false, apps: [] });
+            }
+        );
+    }
+
     render() {
         const {
             admins,
@@ -439,6 +459,8 @@ class EditCommunity extends Component {
             errors,
             loading,
             selectedApps,
+            order,
+            orderBy,
         } = this.state;
 
         const {
@@ -655,8 +677,10 @@ class EditCommunity extends Component {
                                 handleAppSelection={this.handleAppSelection}
                                 resetAppSelection={this.resetAppSelection}
                                 selectedApps={selectedApps}
-                                getAppsSorting={getAppsSorting}
                                 isSelected={this.isSelected}
+                                sortDir={order}
+                                sortField={orderBy}
+                                onSortChange={this.onSortChange}
                             />
                         </fieldset>
                     </form>

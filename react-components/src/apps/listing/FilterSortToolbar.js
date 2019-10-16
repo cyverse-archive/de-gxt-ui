@@ -46,6 +46,7 @@ function FilterSortToolbar(props) {
         viewType,
         onSortChange,
         sortField,
+        sortDir,
         disableTypeFilter,
     } = props;
     const classes = useStyles();
@@ -54,16 +55,21 @@ function FilterSortToolbar(props) {
             <form autoComplete="off">
                 {viewType === view.TILE && (
                     <FormControl
-                        id={build(baseDebugID, ids.SORT)}
                         className={classes.dropDown}
+                        variant="outlined"
                     >
                         <InputLabel className={classes.dropDownLabel}>
                             {getMessage("sort")}
                         </InputLabel>
                         <Select
                             value={sortField}
-                            onChange={(e) => onSortChange(e.target.value)}
-                            input={<OutlinedInput labelWidth={0} name="sort" />}
+                            onChange={(e) =>
+                                onSortChange(e.target.value, sortDir)
+                            }
+                            inputProps={{
+                                name: "sort",
+                                id: build(baseDebugID, ids.SORT),
+                            }}
                             style={{ minWidth: 120 }}
                         >
                             <MenuItem
@@ -96,17 +102,17 @@ function FilterSortToolbar(props) {
                         </Select>
                     </FormControl>
                 )}
-                <FormControl
-                    id={build(baseDebugID, ids.APP_TYPE)}
-                    className={classes.dropDown}
-                >
+                <FormControl variant="outlined" className={classes.dropDown}>
                     <InputLabel className={classes.dropDownLabel}>
                         {getMessage("appType")}
                     </InputLabel>
                     <Select
                         value={typeFilter}
                         onChange={(e) => onTypeFilterChange(e.target.value)}
-                        input={<OutlinedInput labelWidth={0} name="type" />}
+                        inputProps={{
+                            name: "type",
+                            id: build(baseDebugID, ids.APP_TYPE),
+                        }}
                         style={{ minWidth: 120 }}
                         disabled={disableTypeFilter}
                     >

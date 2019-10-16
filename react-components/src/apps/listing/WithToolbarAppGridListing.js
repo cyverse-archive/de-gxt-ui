@@ -62,7 +62,7 @@ WithToolbarAppGridListing.propTypes = {
     getAppsSorting: PropTypes.func,
     onRatingDeleteClick: PropTypes.func,
     onRatingClick: PropTypes.func,
-    searchRegexPattern: PropTypes.func,
+    searchText: PropTypes.string,
     heading: PropTypes.string.isRequired,
     typeFilter: PropTypes.string,
     viewType: PropTypes.string,

@@ -172,9 +172,15 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
     @Override
     public void fetchCommunityApps(String communityDisplayName,
+                                   String sortField,
+                                   String sortDir,
                                    ReactSuccessCallback successCallback,
                                    ReactErrorCallback errorCallback) {
-        appUserServiceFacade.getCommunityApps(communityDisplayName, null, new AppsCallback<Splittable>() {
+        appUserServiceFacade.getCommunityApps(communityDisplayName,
+                                              null,
+                                              sortField,
+                                              sortDir,
+                                              new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.postReact(exception);

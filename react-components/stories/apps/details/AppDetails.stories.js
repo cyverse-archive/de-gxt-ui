@@ -266,7 +266,7 @@ class AppDetailsTest extends Component {
             <AppDetails
                 details={appDetals}
                 presenter={presenter}
-                searchRegexPattern=""
+                searchText=""
                 loading={false}
                 baseDebugId="appDetails"
             />

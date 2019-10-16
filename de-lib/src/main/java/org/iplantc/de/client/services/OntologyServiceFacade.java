@@ -19,9 +19,18 @@ public interface OntologyServiceFacade {
 
     void getFilteredHierarchies(String rootIri, Avu avu, DECallback<OntologyHierarchy> callback);
 
-    void getAppsInCategory(String iri, Avu avu, String filter,DECallback<Splittable> callback);
+    void getAppsInCategory(String iri,
+                           Avu avu,
+                           String filter,
+                           String sortField,
+                           String sortDir,
+                           DECallback<Splittable> callback);
 
-    void getUnclassifiedAppsInCategory(String iri, Avu avu, String filter,
+    void getUnclassifiedAppsInCategory(String iri,
+                                       Avu avu,
+                                       String filter,
+                                       String sortField,
+                                       String sortDir,
                                        DECallback<Splittable> callback);
 
     void getAppAVUs(App app, AsyncCallback<List<Avu>> callback);

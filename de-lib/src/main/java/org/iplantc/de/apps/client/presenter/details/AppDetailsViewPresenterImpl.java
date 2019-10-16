@@ -127,10 +127,10 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
     @Override
     public void go(final App app,
-                   final String searchRegexPattern) {
+                   final String searchText) {
         Preconditions.checkState(view == null, "Cannot call go(..) more than once");
 
-        view = viewFactoryProvider.get().create(app, searchRegexPattern);
+        view = viewFactoryProvider.get().create(app, searchText);
         eventBus.addHandler(AppUpdatedEvent.TYPE, view);
         view.load(this);
     }

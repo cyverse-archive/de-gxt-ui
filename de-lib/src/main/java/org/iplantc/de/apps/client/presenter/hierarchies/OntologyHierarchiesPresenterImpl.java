@@ -89,7 +89,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
                 @Override
                 public void onSuccess(final AppDetailsView.Presenter result) {
-                    result.go(app, searchRegexPattern);
+                    result.go(app, searchText);
                 }
             });
 
@@ -147,7 +147,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     DETabPanel viewTabPanel;
     private OntologyServiceFacade serviceFacade;
     private OntologyHierarchiesView.OntologyHierarchiesAppearance appearance;
-    protected String searchRegexPattern;
+    protected String searchText;
     private final EventBus eventBus;
     HandlerManager handlerManager;
     Map<String, List<OntologyHierarchy>> iriToHierarchyMap = new FastMap<>();
@@ -272,7 +272,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        searchRegexPattern = event.getSearchText();
+        searchText = event.getSearchText();
         for (Widget widget : viewTabPanel) {
             if (widget instanceof Tree) {
                 ((Tree)widget).getSelectionModel().deselectAll();

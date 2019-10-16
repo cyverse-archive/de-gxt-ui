@@ -28,6 +28,8 @@ public class AppListViewImpl implements AppsListView {
     @Override
     public void load(AppsListView.Presenter presenter,
                      String activeView,
+                     String sortField,
+                     String sortDir,
                      String baseId) {
 
         props = new ReactAppListing.AppListingProps();
@@ -36,8 +38,9 @@ public class AppListViewImpl implements AppsListView {
         props.apps = null;
         props.heading = "";
         props.typeFilter = AppTypeFilter.ALL.getFilterString();
-        props.sortField = "name";
-        props.searchRegexPattern = "";
+        props.sortField = sortField;
+        props.sortDir = sortDir;
+        props.searchText = "";
         props.disableTypeFilter = false;
         props.selectedAppId = null;
         props.viewType = activeView;
@@ -53,7 +56,7 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void setSearchRegexPattern(String pattern) {
-        props.searchRegexPattern = pattern;
+        props.searchText = pattern;
         render();
     }
 
@@ -70,8 +73,8 @@ public class AppListViewImpl implements AppsListView {
                                   boolean loading) {
         props.apps = apps;
         props.heading = heading;
-        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
-        props.loading = false;
+        props.searchText = searchRegexPattern != null ? searchRegexPattern : "";
+        props.loading = loading;
         render();
     }
 
@@ -96,7 +99,7 @@ public class AppListViewImpl implements AppsListView {
 
     @Override
     public void setApps(Splittable apps, boolean loading) {
-        props.searchRegexPattern = "";
+        props.searchText = "";
         props.apps = apps;
         props.loading = loading;
         render();
@@ -108,8 +111,9 @@ public class AppListViewImpl implements AppsListView {
     }
 
     @Override
-    public void setSortField(String sortField) {
+    public void setSortInfo(String sortField, String sortDir) {
         props.sortField = sortField;
+        props.sortDir = sortDir;
         render();
     }
 }

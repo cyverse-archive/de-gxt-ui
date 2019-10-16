@@ -4,7 +4,6 @@ import view from "../model/viewType";
 import WithToolbarAppGridListing from "./WithToolbarAppGridListing";
 import { build } from "@cyverse-de/ui-lib";
 import ids from "./ids";
-import getAppsSorting from "./appSorting";
 
 /**
  *
@@ -62,8 +61,8 @@ export default function AppListingView(props) {
         return false;
     };
 
-    const onSortChange = (sortField) => {
-        presenter.onRequestSort(sortField);
+    const onSortChange = (sortField, sortDir) => {
+        presenter.onRequestSort(sortField, sortDir);
     };
 
     const onAppInfoClick = (app) => {
@@ -105,7 +104,6 @@ export default function AppListingView(props) {
                 resetAppSelection={resetAppSelection}
                 isSelected={isSelected}
                 onAppNameClick={onAppNameClick}
-                getAppsSorting={getAppsSorting}
                 onRatingClick={onRatingClick}
                 onRatingDeleteClick={onRatingDeleteClick}
             />
@@ -117,11 +115,11 @@ export default function AppListingView(props) {
                 onTypeFilterChange={onTypeFilterChange}
                 handleAppSelection={handleAppSelection}
                 selectedApps={selectedApps}
+                onSortChange={onSortChange}
                 resetAppSelection={resetAppSelection}
                 isSelected={isSelected}
                 onAppNameClick={onAppNameClick}
                 onAppInfoClick={onAppInfoClick}
-                getAppsSorting={getAppsSorting}
                 onRatingClick={onRatingClick}
                 onRatingDeleteClick={onRatingDeleteClick}
                 handleSelectAll={handleSelectAll}

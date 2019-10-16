@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, Typography } from "@material-ui/core";
-import { LoadingMask, palette } from "@cyverse-de/ui-lib";
+import { palette } from "@cyverse-de/ui-lib";
 
 /**
  *

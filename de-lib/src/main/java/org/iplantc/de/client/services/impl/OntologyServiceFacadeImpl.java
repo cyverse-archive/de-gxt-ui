@@ -18,6 +18,7 @@ import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -57,8 +58,25 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     public void getAppsInCategory(String iri,
                                   Avu avu,
                                   String filter,
+                                  String sortField,
+                                  String sortDir,
                                   DECallback<Splittable> callback) {
-        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr=" + URL.encodeQueryString(avu.getAttribute());
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+
+        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr="
+                         + URL.encodeQueryString(avu.getAttribute()) + "&sort-field="
+                         + requestedSortField + "&sort-dir=" + requestedSortDir;
+
         if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
             address = address + "&app-type=" + filter;
         }
@@ -70,8 +88,24 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     public void getUnclassifiedAppsInCategory(String iri,
                                               Avu avu,
                                               String filter,
+                                              String sortField,
+                                              String sortDir,
                                               DECallback<Splittable> callback) {
-        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr=" + URL.encodeQueryString(avu.getAttribute());
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr="
+                         + URL.encodeQueryString(avu.getAttribute()) + "&sort-field="
+                         + requestedSortField + "&sort-dir=" + requestedSortDir;
+        ;
         if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
             address = address + "&app-type=" + filter;
         }

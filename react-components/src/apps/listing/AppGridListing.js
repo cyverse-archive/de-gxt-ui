@@ -7,14 +7,13 @@ import {
     AppMenu,
     AppName,
     AppStatusIcon,
+    build,
     EmptyTable,
     EnhancedTableHead,
     getMessage,
-    Rate,
-    stableSort,
-    withI18N,
-    build,
     Highlighter,
+    Rate,
+    withI18N,
 } from "@cyverse-de/ui-lib";
 
 import ids from "./ids";
@@ -37,12 +36,6 @@ import { withStyles } from "@material-ui/core";
 class AppGridListing extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            order: "asc",
-            orderBy: "Name",
-        };
-
         ["handleSelectAllClick", "onRequestSort"].forEach(
             (fn) => (this[fn] = this[fn].bind(this))
         );
@@ -51,11 +44,13 @@ class AppGridListing extends Component {
     onRequestSort(event, property) {
         const orderBy = property;
         let order = "desc";
-
-        if (this.state.orderBy === property && this.state.order === "desc") {
+        if (
+            this.props.sortField === property &&
+            this.props.sortDir === "desc"
+        ) {
             order = "asc";
         }
-        this.setState({ order, orderBy });
+        this.props.onSortChange(orderBy, order);
     }
 
     handleSelectAllClick(event, checked) {
@@ -63,8 +58,6 @@ class AppGridListing extends Component {
     }
 
     render() {
-        const { order, orderBy } = this.state;
-
         const {
             parentId,
             apps,
@@ -79,10 +72,11 @@ class AppGridListing extends Component {
             onCommentsClick,
             onFavoriteClick,
             enableMenu,
-            getAppsSorting,
             onRatingDeleteClick,
             onRatingClick,
-            searchRegexPattern,
+            searchText,
+            sortField,
+            sortDir,
             classes,
         } = this.props;
 
@@ -99,147 +93,129 @@ class AppGridListing extends Component {
                     )}
                     {apps &&
                         apps.length > 0 &&
-                        stableSort(apps, getAppsSorting(order, orderBy)).map(
-                            (app) => {
-                                const {
-                                    average: averageRating,
-                                    user: userRating,
-                                    total: totalRating,
-                                } = app.rating;
-                                const selected = isSelected(app.id);
-                                const external = app.app_type !== appType.de;
-                                const rowId = build(parentId, app.id);
-                                return (
-                                    <TableRow
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        hover
-                                        selected={selected}
-                                        aria-checked={selected}
-                                        onClick={() => handleAppSelection(app)}
-                                        key={app.id}
-                                        id={rowId}
+                        apps.map((app) => {
+                            const {
+                                average: averageRating,
+                                user: userRating,
+                                total: totalRating,
+                            } = app.rating;
+                            const selected = isSelected(app.id);
+                            const external = app.app_type !== appType.de;
+                            const rowId = build(parentId, app.id);
+                            return (
+                                <TableRow
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    hover
+                                    selected={selected}
+                                    aria-checked={selected}
+                                    onClick={() => handleAppSelection(app)}
+                                    key={app.id}
+                                    id={rowId}
+                                >
+                                    {selectable && (
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={selected} />
+                                        </TableCell>
+                                    )}
+                                    <TableCell padding="none">
+                                        <AppStatusIcon
+                                            isPublic={app.is_public}
+                                            isBeta={app.beta}
+                                            isDisabled={app.disabled}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <AppName
+                                            baseDebugId={build(
+                                                rowId,
+                                                ids.LISTING.APP_NAME
+                                            )}
+                                            isDisabled={app.disabled}
+                                            name={app.name}
+                                            onAppNameClicked={
+                                                onAppNameClick
+                                                    ? () => onAppNameClick(app)
+                                                    : undefined
+                                            }
+                                            searchText={searchText}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className={classes.listingFont}>
+                                            <Highlighter search={searchText}>
+                                                {app.integrator_name}
+                                            </Highlighter>
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Rate
+                                            name={app.id}
+                                            value={userRating || averageRating}
+                                            readOnly={
+                                                external ||
+                                                !app.is_public ||
+                                                !onRatingClick
+                                            }
+                                            total={totalRating}
+                                            onChange={(event, score) => {
+                                                onRatingClick(
+                                                    event,
+                                                    app,
+                                                    score
+                                                );
+                                            }}
+                                            onDelete={
+                                                userRating
+                                                    ? () =>
+                                                          onRatingDeleteClick(
+                                                              app
+                                                          )
+                                                    : undefined
+                                            }
+                                        />
+                                    </TableCell>
+                                    <TableCell
+                                        align="right"
+                                        className={classes.listingFont}
                                     >
-                                        {selectable && (
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selected} />
-                                            </TableCell>
-                                        )}
-                                        <TableCell padding="none">
-                                            <AppStatusIcon
-                                                isPublic={app.is_public}
-                                                isBeta={app.beta}
-                                                isDisabled={app.disabled}
+                                        {app.system_id}
+                                    </TableCell>
+                                    {deletable && (
+                                        <TableCell align="right">
+                                            <DeleteBtn
+                                                onClick={() => onRemoveApp(app)}
                                             />
                                         </TableCell>
-                                        <TableCell>
-                                            <AppName
-                                                baseDebugId={build(
-                                                    rowId,
-                                                    ids.LISTING.APP_NAME
-                                                )}
-                                                isDisabled={app.disabled}
-                                                name={app.name}
-                                                onAppNameClicked={
-                                                    onAppNameClick
-                                                        ? () =>
-                                                              onAppNameClick(
-                                                                  app
-                                                              )
-                                                        : undefined
+                                    )}
+                                    {enableMenu && (
+                                        <TableCell padding="none" align="right">
+                                            <AppMenu
+                                                baseDebugId={rowId}
+                                                onAppInfoClick={() =>
+                                                    onAppInfoClick(app)
                                                 }
-                                                searchRegexPattern={
-                                                    searchRegexPattern
+                                                onCommentsClick={() =>
+                                                    onCommentsClick(app)
                                                 }
+                                                onFavoriteClick={() =>
+                                                    onFavoriteClick(app)
+                                                }
+                                                isExternal={external}
+                                                isFavorite={app.is_favorite}
                                             />
                                         </TableCell>
-                                        <TableCell>
-                                            <span
-                                                className={classes.listingFont}
-                                            >
-                                                <Highlighter
-                                                    search={searchRegexPattern}
-                                                >
-                                                    {app.integrator_name}
-                                                </Highlighter>
-                                            </span>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Rate
-                                                name={app.id}
-                                                value={
-                                                    userRating || averageRating
-                                                }
-                                                readOnly={
-                                                    external ||
-                                                    !app.is_public ||
-                                                    !onRatingClick
-                                                }
-                                                total={totalRating}
-                                                onChange={(event, score) => {
-                                                    onRatingClick(
-                                                        event,
-                                                        app,
-                                                        score
-                                                    );
-                                                }}
-                                                onDelete={
-                                                    userRating
-                                                        ? () =>
-                                                              onRatingDeleteClick(
-                                                                  app
-                                                              )
-                                                        : undefined
-                                                }
-                                            />
-                                        </TableCell>
-                                        <TableCell
-                                            align="right"
-                                            className={classes.listingFont}
-                                        >
-                                            {app.system_id}
-                                        </TableCell>
-                                        {deletable && (
-                                            <TableCell align="right">
-                                                <DeleteBtn
-                                                    onClick={() =>
-                                                        onRemoveApp(app)
-                                                    }
-                                                />
-                                            </TableCell>
-                                        )}
-                                        {enableMenu && (
-                                            <TableCell
-                                                padding="none"
-                                                align="right"
-                                            >
-                                                <AppMenu
-                                                    baseDebugId={rowId}
-                                                    onAppInfoClick={() =>
-                                                        onAppInfoClick(app)
-                                                    }
-                                                    onCommentsClick={() =>
-                                                        onCommentsClick(app)
-                                                    }
-                                                    onFavoriteClick={() =>
-                                                        onFavoriteClick(app)
-                                                    }
-                                                    isExternal={external}
-                                                    isFavorite={app.is_favorite}
-                                                />
-                                            </TableCell>
-                                        )}
-                                    </TableRow>
-                                );
-                            }
-                        )}
+                                    )}
+                                </TableRow>
+                            );
+                        })}
                 </TableBody>
                 <EnhancedTableHead
                     selectable={selectable}
                     numSelected={selectedApps ? selectedApps.length : 0}
                     rowsInPage={apps ? apps.length : 0}
-                    order={order}
-                    orderBy={orderBy}
+                    order={sortDir}
+                    orderBy={sortField}
                     baseId={parentId}
                     ids={ids.FIELD}
                     columnData={columnData}
@@ -317,10 +293,12 @@ AppGridListing.propTypes = {
     onAppInfoClick: PropTypes.func,
     onCommentsClick: PropTypes.func,
     onFavoriteClick: PropTypes.func,
-    getAppsSorting: PropTypes.func,
     onRatingDeleteClick: PropTypes.func,
     onRatingClick: PropTypes.func,
-    searchRegexPattern: PropTypes.func,
+    searchText: PropTypes.string,
+    sortField: PropTypes.string.isRequired,
+    sortDir: PropTypes.string.isRequired,
+    onSortChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(exStyles)(withI18N(AppGridListing, messages));

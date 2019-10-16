@@ -6,7 +6,6 @@ import {
     getMessage,
     LoadingMask,
     palette,
-    stableSort,
     withI18N,
 } from "@cyverse-de/ui-lib";
 import intlData from "../../apps/messages";
@@ -42,6 +41,7 @@ function AppTileListing(props) {
         viewType,
         loading,
         sortField,
+        sortDir,
         onTypeFilterChange,
         onSortChange,
         onAppInfoClick,
@@ -51,10 +51,9 @@ function AppTileListing(props) {
         handleAppSelection,
         isSelected,
         onAppNameClick,
-        getAppsSorting,
         onRatingDeleteClick,
         onRatingClick,
-        searchRegexPattern,
+        searchText,
     } = props;
     const classes = useStyles();
 
@@ -69,6 +68,7 @@ function AppTileListing(props) {
                     onSortChange={onSortChange}
                     viewType={viewType}
                     sortField={sortField}
+                    sortDir={sortDir}
                     disableTypeFilter={disableTypeFilter}
                 />
                 {(!apps || apps.length === 0) && (
@@ -81,57 +81,49 @@ function AppTileListing(props) {
                 <Grid container>
                     {apps &&
                         apps.length > 0 &&
-                        stableSort(apps, getAppsSorting("asc", sortField)).map(
-                            (app) => {
-                                const external = app.app_type !== appType.de;
-                                return (
-                                    <Grid key={app.id} item>
-                                        <AppTile
-                                            baseDebugId={parentId}
-                                            uuid={app.id}
-                                            name={app.name}
-                                            creator={app.integrator_name}
-                                            rating={app.rating}
-                                            type={app.app_type}
-                                            isPublic={app.is_public}
-                                            isBeta={app.beta}
-                                            isDisabled={app.disabled}
-                                            isExternal={external}
-                                            selected={isSelected(app.id)}
-                                            onAppSelected={() => {
-                                                handleAppSelection(app);
-                                            }}
-                                            onAppNameClick={() =>
-                                                onAppNameClick(app)
-                                            }
-                                            onRatingChange={(event, score) => {
-                                                onRatingClick(
-                                                    event,
-                                                    app,
-                                                    score
-                                                );
-                                            }}
-                                            onDeleteRatingClick={() =>
-                                                onRatingDeleteClick(app)
-                                            }
-                                            onAppInfoClick={() =>
-                                                onAppInfoClick(app)
-                                            }
-                                            onCommentsClick={() =>
-                                                onCommentsClick(app)
-                                            }
-                                            onFavoriteClick={() =>
-                                                onFavoriteClick(app)
-                                            }
-                                            isFavorite={app.is_favorite}
-                                            searchRegexPattern={
-                                                searchRegexPattern
-                                            }
-                                        />
-                                    </Grid>
-                                );
-                            }
-                        )}
+                        apps.map((app) => {
+                            const external = app.app_type !== appType.de;
+                            return (
+                                <Grid key={app.id} item>
+                                    <AppTile
+                                        baseDebugId={parentId}
+                                        uuid={app.id}
+                                        name={app.name}
+                                        creator={app.integrator_name}
+                                        rating={app.rating}
+                                        type={app.app_type}
+                                        isPublic={app.is_public}
+                                        isBeta={app.beta}
+                                        isDisabled={app.disabled}
+                                        isExternal={external}
+                                        selected={isSelected(app.id)}
+                                        onAppSelected={() => {
+                                            handleAppSelection(app);
+                                        }}
+                                        onAppNameClick={() =>
+                                            onAppNameClick(app)
+                                        }
+                                        onRatingChange={(event, score) => {
+                                            onRatingClick(event, app, score);
+                                        }}
+                                        onDeleteRatingClick={() =>
+                                            onRatingDeleteClick(app)
+                                        }
+                                        onAppInfoClick={() =>
+                                            onAppInfoClick(app)
+                                        }
+                                        onCommentsClick={() =>
+                                            onCommentsClick(app)
+                                        }
+                                        onFavoriteClick={() =>
+                                            onFavoriteClick(app)
+                                        }
+                                        isFavorite={app.is_favorite}
+                                        searchText={searchText}
+                                    />
+                                </Grid>
+                            );
+                        })}
                 </Grid>
             </LoadingMask>
         </div>
@@ -150,7 +142,7 @@ AppTileListing.propTypes = {
     getAppsSorting: PropTypes.func,
     onRatingDeleteClick: PropTypes.func,
     onRatingClick: PropTypes.func,
-    searchRegexPattern: PropTypes.func,
+    searchText: PropTypes.string,
     heading: PropTypes.string.isRequired,
     typeFilter: PropTypes.string,
     viewType: PropTypes.string,

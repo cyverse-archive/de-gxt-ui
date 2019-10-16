@@ -26,7 +26,8 @@ public class ReactAppListing {
         public String heading;
         public String typeFilter;
         public String sortField;
-        public String searchRegexPattern;
+        public String sortDir;
+        public String searchText;
         public boolean disableTypeFilter;
         public String selectedAppId;
         public String viewType;

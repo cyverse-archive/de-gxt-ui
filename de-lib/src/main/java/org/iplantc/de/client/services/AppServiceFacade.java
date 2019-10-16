@@ -41,8 +41,19 @@ public interface AppServiceFacade {
      * @param callback called when the RPC call is complete.*/
     void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
 
+    /**
+     * Retrieves list of apps in the given group.
+     *
+     * @param appCategory unique identifier for the group to search in for apps.
+     * @param filter      filter to be used when getting apps.
+     * @param sortField   the field to sort On
+     * @param sortDir     asc or desc
+     * @param callback    called when the RPC call is complete.
+     */
     void getAppsAsSplittable(HasQualifiedId appCategory,
                              String filter,
+                             String sortField,
+                             String sortDir,
                              DECallback<Splittable> callback);
 
     /**
@@ -78,7 +89,13 @@ public interface AppServiceFacade {
      * Retrieves an app listing for the specified community
      * @param communityDisplayName
      * @param filter
+     * @param sortField   the field to sort On
+     * @param sortDir     asc or desc
      * @param callback
      */
-    void getCommunityApps(String communityDisplayName, String filter, DECallback<Splittable> callback);
+    void getCommunityApps(String communityDisplayName,
+                          String filter,
+                          String sortField,
+                          String sortDir,
+                          DECallback<Splittable> callback);
 }

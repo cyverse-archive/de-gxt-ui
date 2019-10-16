@@ -83,6 +83,7 @@ public interface AppsListView extends IsWidget {
                                 AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
                                 AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
                                 CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+        @SuppressWarnings("unusable-by-js")
         App getSelectedApp();
 
         @JsIgnore
@@ -94,28 +95,39 @@ public interface AppsListView extends IsWidget {
         @JsIgnore
         void loadApps(Splittable apps);
 
+        @SuppressWarnings("unusable-by-js")
         void onTypeFilterChanged(String filter);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppSelectionChanged(Splittable selectedApps);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppNameSelected(Splittable appSplittable);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppInfoSelected(Splittable appSplittable);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppFavoriteSelected(Splittable appSplittable);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppCommentSelected(Splittable appSplittable);
 
-        void onRequestSort(String sortField);
+        @SuppressWarnings("unusable-by-js")
+        void onRequestSort(String sortField, String sortDir);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppRatingDeselected(final Splittable appSplittable);
 
+        @SuppressWarnings("unusable-by-js")
         void onAppRatingSelected(final Splittable appSplittable,
                                  int score);
     }
 
     void load(AppsListView.Presenter presenter,
               String activeView,
+              String sortField,
+              String sortDir,
               String baseId);
 
     void disableTypeFilter(boolean disable);
@@ -140,6 +152,6 @@ public interface AppsListView extends IsWidget {
 
     void setTypeFilter(String filter);
 
-    void setSortField(String sortField);
+    void setSortInfo(String sortField, String sortDir);
 
 }

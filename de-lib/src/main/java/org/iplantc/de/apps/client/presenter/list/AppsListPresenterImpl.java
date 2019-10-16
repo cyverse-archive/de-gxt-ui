@@ -89,6 +89,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     HandlerManager handlerManager;
     AppsListView listView;
     String filter;
+    String sortField = "name";
+    String sortDir = "asc";
     private OntologyHierarchy selectedHierarchy;
     private AppCategory appCategory;
     private App desiredSelectedApp;
@@ -116,7 +118,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public void go(HasOneWidget widget) {
         String baseId = DeModule.WindowIds.APPS_WINDOW + AppsModule.Ids.APPS_VIEW;
         widget.setWidget(listView);
-        listView.load(this, activeView, baseId);
+        listView.load(this, activeView, sortField, sortDir, baseId);
     }
 
     @Override
@@ -249,7 +251,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     void getCommunityApps(Group community) {
         listView.setLoadingMask(true);
-        appService.getCommunityApps(community.getDisplayName(), filter, new AppsCallback<Splittable>() {
+        appService.getCommunityApps(community.getDisplayName(),
+                                    filter,
+                                    sortField,
+                                    sortDir,
+                                    new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 new AppListCallback().onFailure(statusCode, caught);
@@ -264,7 +270,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     protected void getAppsWithSelectedCategory() {
         listView.setLoadingMask(true);
-        appService.getAppsAsSplittable(appCategory, filter, new AppListCallback());
+        appService.getAppsAsSplittable(appCategory, filter, sortField, sortDir, new AppListCallback());
     }
 
     @Override
@@ -277,15 +283,20 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     protected void getAppsWithSelectedHierarchy() {
-        listView.setLoadingMask(true);
         if (selectedHierarchy != null) {
+            listView.setLoadingMask(true);
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
             if (ontologyUtil.isUnclassified(selectedHierarchy)) {
                 ontologyService.getUnclassifiedAppsInCategory(ontologyUtil.getUnclassifiedParentIri(
-                        selectedHierarchy), avu, filter, new AppListCallback());
+                        selectedHierarchy), avu, filter, sortField, sortDir, new AppListCallback());
             } else {
-                ontologyService.getAppsInCategory(iri, avu, filter, new AppListCallback());
+                ontologyService.getAppsInCategory(iri,
+                                                  avu,
+                                                  filter,
+                                                  sortField,
+                                                  sortDir,
+                                                  new AppListCallback());
             }
         }
     }
@@ -410,8 +421,12 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onRequestSort(String sortField) {
-        listView.setSortField(sortField);
+    public void onRequestSort(String sortField,
+                              String sortDir) {
+        this.sortField = sortField;
+        this.sortDir = sortDir;
+        listView.setSortInfo(sortField, sortDir);
+        refreshAppListing();
     }
 
     private void refreshAppListing() {

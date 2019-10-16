@@ -166,13 +166,7 @@ class AppDetails extends Component {
     }
 
     render() {
-        const {
-            details,
-            searchRegexPattern,
-            baseDebugId,
-            intl,
-            classes,
-        } = this.props;
+        const { details, searchText, baseDebugId, intl, classes } = this.props;
         const { loading, dialogOpen } = this.state;
         const isExternal =
             details.app_type.toUpperCase() ===
@@ -211,9 +205,7 @@ class AppDetails extends Component {
                                         {getMessage("descriptionLabel")}:
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.description}
                                         </Highlighter>
                                     </span>
@@ -236,9 +228,7 @@ class AppDetails extends Component {
                                         {getMessage("integratorName")}
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.integrator_name}
                                         </Highlighter>
                                     </span>
@@ -248,9 +238,7 @@ class AppDetails extends Component {
                                         {getMessage("integratorEmail")}
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.integrator_email}
                                         </Highlighter>
                                     </span>
@@ -320,9 +308,7 @@ class AppDetails extends Component {
                                                 {getMessage("category")}
                                             </Typography>
                                             <CategoryTree
-                                                searchRegexPattern={
-                                                    searchRegexPattern
-                                                }
+                                                searchText={searchText}
                                                 hierarchies={
                                                     details.hierarchies
                                                 }
@@ -380,7 +366,7 @@ class AppDetails extends Component {
 
 AppDetails.propTypes = {
     details: PropTypes.object.isRequired,
-    searchRegexPattern: PropTypes.string.isRequired,
+    searchText: PropTypes.string.isRequired,
     baseDebugId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
