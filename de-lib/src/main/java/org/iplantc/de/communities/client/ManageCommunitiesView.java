@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import java.util.List;
+
 import jsinterop.annotations.JsFunction;
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -34,6 +36,14 @@ public interface ManageCommunitiesView extends IsWidget {
         String appSelectionHeader();
 
         String agaveAppsNotSupportedToolTip();
+
+        String joinCommunityFailure();
+
+        String leaveCommunityFailure();
+
+        String removeCommunityAdminFailure(List<String> failedUsers);
+
+        String addCommunityAdminFailure(List<String> failedUsers);
     }
 
     @JsType
