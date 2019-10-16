@@ -296,8 +296,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
                 if (failedUsers.size() > 0) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.removeCommunityAdminFailure(failedUsers)));
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, "Admin update error");
+                } else {
+                    callback.onSuccess(null);
                 }
-                callback.onSuccess(null);
             }
         });
     }
@@ -322,8 +324,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
                 if (failedUsers.size() > 0) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.addCommunityAdminFailure(failedUsers)));
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, "Admin update error");
+                } else {
+                    successCallback.onSuccess(null);
                 }
-                successCallback.onSuccess(null);
             }
         });
     }
@@ -401,8 +405,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
                 if (failedUsers.size() > 0) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.joinCommunityFailure()));
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, "Admin update error");
+                } else {
+                    callback.onSuccess(null);
                 }
-                callback.onSuccess(null);
             }
         });
     }
@@ -422,8 +428,10 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
 
                 if (failedUsers.size() > 0) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveCommunityFailure()));
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, "Admin update error");
+                } else {
+                    callback.onSuccess(null);
                 }
-                callback.onSuccess(null);
             }
         });
     }
