@@ -129,7 +129,7 @@ function AppPublicationRequests(props) {
     const { requests, presenter, parentId, loading, intl } = props;
     const classes = useStyles();
     const onPublishClicked = (app) => {
-        presenter.publishApp(app.id, app.system_id);
+        presenter.publishApp(app.id, app.name, app.system_id);
     };
     return (
         <div className={classes.container}>

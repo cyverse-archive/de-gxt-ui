@@ -1,4 +1,4 @@
-package org.iplantc.de.admin.desktop.client.appPublicationRequest;
+package org.iplantc.de.admin.apps.client;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -8,6 +8,9 @@ import jsinterop.annotations.JsType;
 
 @JsType
 public interface AppPublicationRequestView extends IsWidget {
+     interface AppPublicationRequestAppearance {
+      String publicationRequestSuccess(String appName);
+    };
 
     @JsType
     interface Presenter {
@@ -16,6 +19,7 @@ public interface AppPublicationRequestView extends IsWidget {
         void go(HasOneWidget container);
 
         void publishApp(String appId,
+                        String appName,
                         String systemId);
 
         void setViewDebugId(String baseId);

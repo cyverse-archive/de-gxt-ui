@@ -1,7 +1,5 @@
 package org.iplantc.de.admin.apps.client;
 
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
-
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import gwt.react.client.components.ComponentConstructorFn;

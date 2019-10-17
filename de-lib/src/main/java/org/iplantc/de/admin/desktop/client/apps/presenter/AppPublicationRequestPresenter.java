@@ -1,9 +1,11 @@
-package org.iplantc.de.admin.desktop.client.appPublicationRequest.presenter;
+package org.iplantc.de.admin.desktop.client.apps.presenter;
 
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
+import org.iplantc.de.admin.apps.client.AppPublicationRequestView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -17,13 +19,21 @@ public class AppPublicationRequestPresenter implements AppPublicationRequestView
 
 
     final AppPublicationRequestView view;
+    private IplantAnnouncer announcer;
 
     @Inject
     AppAdminServiceFacade appService;
 
     @Inject
-    public AppPublicationRequestPresenter(AppPublicationRequestView view) {
+    AppPublicationRequestView.AppPublicationRequestAppearance appearance;
+
+    @Inject
+    public AppPublicationRequestPresenter(AppPublicationRequestView view,
+                                          IplantAnnouncer announcer,
+                                          AppPublicationRequestView.AppPublicationRequestAppearance appearance) {
         this.view = view;
+        this.announcer = announcer;
+        this.appearance = appearance;
     }
 
     @Override
@@ -53,6 +63,7 @@ public class AppPublicationRequestPresenter implements AppPublicationRequestView
 
     @Override
     public void publishApp(String appId,
+                           String appName,
                            String systemId) {
         view.setLoading(true);
         appService.publishApp(appId, systemId, new AsyncCallback<String>() {
@@ -64,6 +75,8 @@ public class AppPublicationRequestPresenter implements AppPublicationRequestView
 
             @Override
             public void onSuccess(String result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.publicationRequestSuccess(
+                        appName)));
                 getAppPublicationRequests();
             }
         });

@@ -1,7 +1,7 @@
 package org.iplantc.de.admin.desktop.client.views;
 
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
+import org.iplantc.de.admin.apps.client.AppPublicationRequestView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;

@@ -1,7 +1,7 @@
-package org.iplantc.de.admin.desktop.client.appPublicationRequest.views;
+package org.iplantc.de.admin.desktop.client.apps.views;
 
 import org.iplantc.de.admin.apps.client.ReactAppsAdmin;
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
+import org.iplantc.de.admin.apps.client.AppPublicationRequestView;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.user.client.ui.HTMLPanel;

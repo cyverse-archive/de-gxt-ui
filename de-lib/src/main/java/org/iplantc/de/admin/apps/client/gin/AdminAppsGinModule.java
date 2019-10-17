@@ -17,9 +17,9 @@ import org.iplantc.de.admin.apps.client.presenter.toolbar.AdminAppsToolbarPresen
 import org.iplantc.de.admin.apps.client.views.AdminAppViewImpl;
 import org.iplantc.de.admin.apps.client.views.grid.AdminAppsGridImpl;
 import org.iplantc.de.admin.apps.client.views.toolbar.AdminAppsToolbarViewImpl;
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.AppPublicationRequestView;
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.presenter.AppPublicationRequestPresenter;
-import org.iplantc.de.admin.desktop.client.appPublicationRequest.views.AppPublicationRequestViewImpl;
+import org.iplantc.de.admin.apps.client.AppPublicationRequestView;
+import org.iplantc.de.admin.desktop.client.apps.presenter.AppPublicationRequestPresenter;
+import org.iplantc.de.admin.desktop.client.apps.views.AppPublicationRequestViewImpl;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.impl.AppAdminServiceFacadeImpl;
 import org.iplantc.de.apps.client.AppCategoriesView;
