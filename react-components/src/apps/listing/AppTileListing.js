@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import getAppsSearchRegex from "../appSearchRegex";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
 import {
     AppTile,
@@ -56,7 +56,7 @@ function AppTileListing(props) {
         searchText,
     } = props;
     const classes = useStyles();
-
+    const searchRegex = getAppsSearchRegex(searchText);
     return (
         <div className={classes.container}>
             <LoadingMask loading={loading}>
@@ -119,7 +119,7 @@ function AppTileListing(props) {
                                             onFavoriteClick(app)
                                         }
                                         isFavorite={app.is_favorite}
-                                        searchText={searchText}
+                                        searchText={searchRegex}
                                     />
                                 </Grid>
                             );
@@ -132,7 +132,7 @@ function AppTileListing(props) {
 
 AppTileListing.propTypes = {
     parentId: PropTypes.string.isRequired,
-    apps: PropTypes.array.isRequired,
+    apps: PropTypes.array,
     selectedApps: PropTypes.array.isRequired,
     handleAppSelection: PropTypes.func.isRequired,
     onAppNameClick: PropTypes.func,
@@ -142,7 +142,10 @@ AppTileListing.propTypes = {
     getAppsSorting: PropTypes.func,
     onRatingDeleteClick: PropTypes.func,
     onRatingClick: PropTypes.func,
-    searchText: PropTypes.string,
+    searchText: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RegExp),
+    ]),
     heading: PropTypes.string.isRequired,
     typeFilter: PropTypes.string,
     viewType: PropTypes.string,

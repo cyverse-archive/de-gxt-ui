@@ -36,10 +36,10 @@ import Grid from "@material-ui/core/Grid";
 import {
     Dialog,
     DialogContent,
-    Paper,
-    Typography,
     IconButton,
+    Paper,
     Tooltip,
+    Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -366,7 +366,10 @@ class AppDetails extends Component {
 
 AppDetails.propTypes = {
     details: PropTypes.object.isRequired,
-    searchText: PropTypes.string.isRequired,
+    searchText: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RegExp),
+    ]),
     baseDebugId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,

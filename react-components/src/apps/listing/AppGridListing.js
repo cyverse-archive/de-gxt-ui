@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import exStyles from "../style";
+import getAppsSearchRegex from "../appSearchRegex";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
 
 import {
@@ -79,7 +80,7 @@ class AppGridListing extends Component {
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
-
+        const searchRegex = getAppsSearchRegex(searchText);
         return (
             <Table stickyHeader={true} size="small">
                 <TableBody>
@@ -136,12 +137,12 @@ class AppGridListing extends Component {
                                                     ? () => onAppNameClick(app)
                                                     : undefined
                                             }
-                                            searchText={searchText}
+                                            searchText={searchRegex}
                                         />
                                     </TableCell>
                                     <TableCell>
                                         <span className={classes.listingFont}>
-                                            <Highlighter search={searchText}>
+                                            <Highlighter search={searchRegex}>
                                                 {app.integrator_name}
                                             </Highlighter>
                                         </span>
@@ -279,7 +280,7 @@ AppGridListing.defaultProps = {
 
 AppGridListing.propTypes = {
     parentId: PropTypes.string.isRequired,
-    apps: PropTypes.array.isRequired,
+    apps: PropTypes.array,
     selectable: PropTypes.bool,
     deletable: PropTypes.bool,
     onRemoveApp: PropTypes.func,
@@ -293,7 +294,10 @@ AppGridListing.propTypes = {
     onFavoriteClick: PropTypes.func,
     onRatingDeleteClick: PropTypes.func,
     onRatingClick: PropTypes.func,
-    searchText: PropTypes.string,
+    searchText: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RegExp),
+    ]),
     sortField: PropTypes.string.isRequired,
     sortDir: PropTypes.string.isRequired,
     onSortChange: PropTypes.func.isRequired,
