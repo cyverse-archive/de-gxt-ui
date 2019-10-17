@@ -9,21 +9,23 @@ import ArgumentType from "../../../../src/apps/ArgumentType";
 
 import {
     DEDialogHeader,
+    DETableRow,
     EnhancedTableHead,
     getMessage,
     formatMessage,
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Table,
+    TableBody,
+    TableCell,
+    withStyles,
+} from "@material-ui/core";
 
 function ParameterValue(props) {
     const {
@@ -119,7 +121,7 @@ class AnalysisParametersDialog extends Component {
                         <TableBody>
                             {parameters.map((n) => {
                                 return (
-                                    <TableRow key={n.param_id}>
+                                    <DETableRow key={n.param_id}>
                                         <TableCell>{n.param_name}</TableCell>
                                         <TableCell>{n.param_type}</TableCell>
                                         <TableCell>
@@ -134,7 +136,7 @@ class AnalysisParametersDialog extends Component {
                                                 }
                                             />
                                         </TableCell>
-                                    </TableRow>
+                                    </DETableRow>
                                 );
                             })}
                         </TableBody>

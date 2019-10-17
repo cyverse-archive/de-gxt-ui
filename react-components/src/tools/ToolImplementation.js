@@ -7,6 +7,7 @@ import { nonEmptyField } from "./Validations";
 
 import {
     build,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     FormTextField,
@@ -18,7 +19,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
     Toolbar,
     Typography,
 } from "@material-ui/core";
@@ -64,7 +64,7 @@ function TestFiles(props) {
                     {files &&
                         files.length > 0 &&
                         files.map((path, index) => (
-                            <TableRow tabIndex={-1} key={index}>
+                            <DETableRow tabIndex={-1} key={index}>
                                 <TableCell>
                                     <Field
                                         name={`${name}.${index}`}
@@ -82,7 +82,7 @@ function TestFiles(props) {
                                         onClick={() => remove(index)}
                                     />
                                 </TableCell>
-                            </TableRow>
+                            </DETableRow>
                         ))}
                 </TableBody>
                 <EnhancedTableHead

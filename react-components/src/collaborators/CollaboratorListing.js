@@ -8,6 +8,8 @@ import CollaboratorListIcon from "./CollaboratorListIcon";
 import DeleteBtn from "../data/search/queryBuilder/DeleteBtn";
 
 import {
+    DECheckbox,
+    DETableRow,
     EnhancedTableHead,
     EmptyTable,
     getSorting,
@@ -15,11 +17,7 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import { Table, TableBody, TableCell } from "@material-ui/core";
 
 /**
  * @author aramsey
@@ -119,7 +117,7 @@ class CollaboratorListing extends Component {
                             (subject) => {
                                 const isSelected = this.isSelected(subject);
                                 return (
-                                    <TableRow
+                                    <DETableRow
                                         role="checkbox"
                                         tabIndex={-1}
                                         hover
@@ -132,7 +130,7 @@ class CollaboratorListing extends Component {
                                     >
                                         {selectable && (
                                             <TableCell padding="checkbox">
-                                                <Checkbox
+                                                <DECheckbox
                                                     checked={isSelected}
                                                 />
                                             </TableCell>
@@ -164,7 +162,7 @@ class CollaboratorListing extends Component {
                                                 />
                                             </TableCell>
                                         )}
-                                    </TableRow>
+                                    </DETableRow>
                                 );
                             }
                         )}

@@ -9,6 +9,7 @@ import intlData from "../messages";
 
 import {
     dateConstants,
+    DETableRow,
     formatDate,
     getMessage,
     TablePaginationActions,
@@ -16,20 +17,19 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableHead from "@material-ui/core/TableHead";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import ToolbarSeparator from "@material-ui/core/Toolbar";
-import TextField from "@material-ui/core/TextField";
-import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core";
+import {
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TablePagination,
+    TableHead,
+    TableSortLabel,
+    Toolbar,
+    TextField,
+    Tooltip,
+    withStyles,
+} from "@material-ui/core";
 
 const columnData = [
     { name: "appName", numeric: false },
@@ -208,52 +208,48 @@ class AppStats extends Component {
             <div className={classes.statContainer}>
                 <LoadingMask loading={loading}>
                     <Toolbar>
-                        <ToolbarGroup>
-                            <TextField
-                                className={classes.statSearchTextField}
-                                label={getMessage("searchApps")}
-                                onChange={this.handleSearch}
-                            />
-                            <ToolbarSeparator />
-                            <TextField
-                                label={getMessage("startDate")}
-                                type="date"
-                                defaultValue={formatDate(
-                                    this.state.startDate,
-                                    dateConstants.DATE_FORMAT
-                                )}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={this.onStartDateChange}
-                            />
-                            <TextField
-                                label={getMessage("endDate")}
-                                type="date"
-                                defaultValue={formatDate(
-                                    this.state.endDate,
-                                    dateConstants.DATE_FORMAT
-                                )}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={this.onEndDateChange}
-                            />
-                            <ToolbarSeparator />
-                            <Button
-                                variant="contained"
-                                onClick={this.applyFilter}
-                                className={classes.statFilterButton}
-                            >
-                                {getMessage("applyFilter")}
-                            </Button>
-                        </ToolbarGroup>
+                        <TextField
+                            className={classes.statSearchTextField}
+                            label={getMessage("searchApps")}
+                            onChange={this.handleSearch}
+                        />
+                        <TextField
+                            label={getMessage("startDate")}
+                            type="date"
+                            defaultValue={formatDate(
+                                this.state.startDate,
+                                dateConstants.DATE_FORMAT
+                            )}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.onStartDateChange}
+                        />
+                        <TextField
+                            label={getMessage("endDate")}
+                            type="date"
+                            defaultValue={formatDate(
+                                this.state.endDate,
+                                dateConstants.DATE_FORMAT
+                            )}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.onEndDateChange}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={this.applyFilter}
+                            className={classes.statFilterButton}
+                        >
+                            {getMessage("applyFilter")}
+                        </Button>
                     </Toolbar>
 
                     <div className={classes.statTable}>
                         <Table>
                             <TableHead>
-                                <TableRow hover>
+                                <DETableRow hover>
                                     {columnData.map((column) => (
                                         <TableCell
                                             className={classes.statTableHead}
@@ -288,7 +284,7 @@ class AppStats extends Component {
                                             </Tooltip>
                                         </TableCell>
                                     ))}
-                                </TableRow>
+                                </DETableRow>
                             </TableHead>
                             <TableBody>
                                 {data
@@ -298,7 +294,7 @@ class AppStats extends Component {
                                     )
                                     .map((n) => {
                                         return (
-                                            <TableRow hover key={n.id}>
+                                            <DETableRow hover key={n.id}>
                                                 <TableCell>{n.name}</TableCell>
                                                 <TableCell align="right">
                                                     {n.rating.average
@@ -337,7 +333,7 @@ class AppStats extends Component {
                                                         dateConstants.DATE_FORMAT
                                                     )}
                                                 </TableCell>
-                                            </TableRow>
+                                            </DETableRow>
                                         );
                                     })}
                             </TableBody>

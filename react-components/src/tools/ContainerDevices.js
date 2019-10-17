@@ -7,6 +7,7 @@ import { nonEmptyField } from "./Validations";
 
 import {
     build,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     FormTextField,
@@ -18,7 +19,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
     Toolbar,
     Typography,
 } from "@material-ui/core";
@@ -69,7 +69,7 @@ function ContainerDevices(props) {
                     {devices &&
                         devices.length > 0 &&
                         devices.map((port, index) => (
-                            <TableRow tabIndex={-1} key={index}>
+                            <DETableRow tabIndex={-1} key={index}>
                                 <TableCell>
                                     <Field
                                         name={`${name}.${index}.host_path`}
@@ -106,7 +106,7 @@ function ContainerDevices(props) {
                                         onClick={() => remove(index)}
                                     />
                                 </TableCell>
-                            </TableRow>
+                            </DETableRow>
                         ))}
                 </TableBody>
                 <EnhancedTableHead

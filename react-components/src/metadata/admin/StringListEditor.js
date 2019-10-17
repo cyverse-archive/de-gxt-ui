@@ -14,27 +14,31 @@ import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import {
     build,
+    DETableRow,
     formatMessage,
     FormTextField,
     getMessage,
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
-import ContentRemove from "@material-ui/icons/Delete";
-import ContentEdit from "@material-ui/icons/Edit";
+import {
+    Delete as ContentRemove,
+    Edit as ContentEdit,
+} from "@material-ui/icons";
 
 class StringEditorDialog extends Component {
     static propTypes = {
@@ -208,7 +212,7 @@ class StringListEditor extends Component {
                                     );
 
                                     return (
-                                        <TableRow
+                                        <DETableRow
                                             hover
                                             tabIndex={-1}
                                             key={field}
@@ -266,7 +270,7 @@ class StringListEditor extends Component {
                                                     <ContentRemove />
                                                 </IconButton>
                                             </TableCell>
-                                        </TableRow>
+                                        </DETableRow>
                                     );
                                 })}
                         </TableBody>
