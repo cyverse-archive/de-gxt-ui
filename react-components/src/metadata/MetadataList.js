@@ -13,6 +13,8 @@ import styles from "./style";
 
 import {
     build,
+    DECheckbox,
+    DETableRow,
     EnhancedTableHead,
     formatMessage,
     getMessage,
@@ -21,22 +23,24 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Fab,
+    Grid,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    Toolbar,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
-import ContentAdd from "@material-ui/icons/Add";
-import ContentRemove from "@material-ui/icons/Delete";
-import ContentEdit from "@material-ui/icons/Edit";
-import ContentView from "@material-ui/icons/List";
+import {
+    Add as ContentAdd,
+    Delete as ContentRemove,
+    Edit as ContentEdit,
+    List as ContentView,
+} from "@material-ui/icons";
 
 class MetadataGridToolbar extends Component {
     static propTypes = {
@@ -125,10 +129,10 @@ const AVURow = ({
     onRowEdit,
     onRowDelete,
 }) => (
-    <TableRow hover tabIndex={-1} selected={selected}>
+    <DETableRow hover tabIndex={-1} selected={selected}>
         {selectable && (
             <TableCell padding="checkbox">
-                <Checkbox checked={selected} onChange={onRowSelect} />
+                <DECheckbox checked={selected} onChange={onRowSelect} />
             </TableCell>
         )}
         <TableCell component="th" scope="row">
@@ -178,7 +182,7 @@ const AVURow = ({
                 )}
             </Grid>
         </TableCell>
-    </TableRow>
+    </DETableRow>
 );
 
 class MetadataList extends Component {

@@ -7,6 +7,7 @@ import { minValue, nonEmptyMinValue } from "./Validations";
 
 import {
     build,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     FormCheckbox,
@@ -18,7 +19,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
     Toolbar,
     Typography,
 } from "@material-ui/core";
@@ -93,7 +93,7 @@ function ContainerPorts(props) {
                     {ports &&
                         ports.length > 0 &&
                         ports.map((port, index) => (
-                            <TableRow tabIndex={-1} key={index}>
+                            <DETableRow tabIndex={-1} key={index}>
                                 <TableCell>
                                     <Field
                                         name={`${name}.${index}.container_port`}
@@ -146,7 +146,7 @@ function ContainerPorts(props) {
                                         onClick={() => remove(index)}
                                     />
                                 </TableCell>
-                            </TableRow>
+                            </DETableRow>
                         ))}
                 </TableBody>
                 <EnhancedTableHead

@@ -15,6 +15,8 @@ import notificationCategory from "../model/notificationCategory";
 import NotificationToolbar from "./NotificationToolbar";
 
 import {
+    DECheckbox,
+    DETableRow,
     EnhancedTableHead,
     formatDate,
     LoadingMask,
@@ -22,13 +24,13 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TablePagination,
+    withStyles,
+} from "@material-ui/core";
 
 const columnData = [
     {
@@ -282,7 +284,7 @@ class NotificationView extends Component {
                                         n.message.id
                                     );
                                     return (
-                                        <TableRow
+                                        <DETableRow
                                             onClick={(event) =>
                                                 this.handleRowClick(
                                                     event,
@@ -297,7 +299,7 @@ class NotificationView extends Component {
                                             key={n.message.id}
                                         >
                                             <TableCell padding="checkbox">
-                                                <Checkbox
+                                                <DECheckbox
                                                     checked={isSelected}
                                                 />
                                             </TableCell>
@@ -322,7 +324,7 @@ class NotificationView extends Component {
                                                     constants.DATE_FORMAT
                                                 )}
                                             </TableCell>
-                                        </TableRow>
+                                        </DETableRow>
                                     );
                                 })}
                             </TableBody>

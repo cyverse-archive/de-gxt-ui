@@ -10,6 +10,7 @@ import ids from "../../ids";
 import {
     build,
     dateConstants,
+    DETableRow,
     EnhancedTableHead,
     formatDate,
     getMessage,
@@ -22,16 +23,17 @@ import toolStatusHelpMapping from "../../model/toolStatusHelpMapping";
 import permIdStatusHelpMapping from "../../model/permIdStatusHelpMapping";
 import notificationCategory from "../../model/notificationCategory";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from "@material-ui/core/Typography";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+} from "@material-ui/core";
 
 const columnData = [
     {
@@ -84,7 +86,7 @@ class RequestHistoryDialog extends Component {
                         <TableBody>
                             {history.map((n) => {
                                 return (
-                                    <TableRow key={n.status}>
+                                    <DETableRow key={n.status}>
                                         <TableCell>
                                             <span
                                                 title={
@@ -103,7 +105,7 @@ class RequestHistoryDialog extends Component {
                                             )}
                                         </TableCell>
                                         <TableCell>{n.comments}</TableCell>
-                                    </TableRow>
+                                    </DETableRow>
                                 );
                             })}
                         </TableBody>

@@ -8,6 +8,8 @@ import {
     AppName,
     AppStatusIcon,
     build,
+    DECheckbox,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     getMessage,
@@ -19,14 +21,10 @@ import {
 import ids from "./ids";
 import messages from "../messages";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import { Table, TableBody, TableCell, withStyles } from "@material-ui/core";
+
 import AppFields from "./AppFields";
 import appType from "../../appType";
-import { withStyles } from "@material-ui/core";
 
 /**
  * @author aramsey
@@ -103,7 +101,7 @@ class AppGridListing extends Component {
                             const external = app.app_type !== appType.de;
                             const rowId = build(parentId, app.id);
                             return (
-                                <TableRow
+                                <DETableRow
                                     role="checkbox"
                                     tabIndex={-1}
                                     hover
@@ -115,7 +113,7 @@ class AppGridListing extends Component {
                                 >
                                     {selectable && (
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={selected} />
+                                            <DECheckbox checked={selected} />
                                         </TableCell>
                                     )}
                                     <TableCell padding="none">
@@ -206,7 +204,7 @@ class AppGridListing extends Component {
                                             />
                                         </TableCell>
                                     )}
-                                </TableRow>
+                                </DETableRow>
                             );
                         })}
                 </TableBody>

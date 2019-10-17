@@ -23,9 +23,11 @@ import ShareWithSupportDialog from "./dialogs/ShareWithSupportDialog";
 import {
     build,
     DEAlertDialog,
+    DECheckbox,
     DEConfirmationDialog,
     DEHyperlink,
     DEPromptDialog,
+    DETableRow,
     EnhancedTableHead,
     formatDate,
     formatMessage,
@@ -35,19 +37,22 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import Checkbox from "@material-ui/core/Checkbox";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import ToolTip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-import HourGlass from "@material-ui/icons/HourglassEmptyRounded";
-import IconButton from "@material-ui/core/IconButton";
+import {
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TablePagination,
+    Tooltip,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
-import LaunchIcon from "@material-ui/icons/Launch";
+import {
+    HourglassEmptyRounded as HourGlass,
+    Launch as LaunchIcon,
+} from "@material-ui/icons";
+
 import analysesExpandIcon from "../../resources/images/analyses-expandList.svg";
 import analysesCollapseIcon from "../../resources/images/analyses-collapseList.svg";
 import altAnalysesExpandIcon from "../../resources/images/analyses-expandList.png";
@@ -76,7 +81,7 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                <ToolTip title={getMessage("htDetails")}>
+                <Tooltip title={getMessage("htDetails")}>
                     <img
                         src={analysesExpandIcon}
                         alt={altAnalysesExpandIcon}
@@ -84,7 +89,7 @@ function AnalysisName(props) {
                         style={{ height: 16 }}
                         id={build(baseId, ids.ICONS.BATCH)}
                     />
-                </ToolTip>
+                </Tooltip>
                 <sup>{name}</sup>
             </span>
         );
@@ -96,7 +101,7 @@ function AnalysisName(props) {
     ) {
         return (
             <Fragment>
-                <ToolTip title={getMessage("goToVice")}>
+                <Tooltip title={getMessage("goToVice")}>
                     <LaunchIcon
                         onClick={() =>
                             handleInteractiveUrlClick(interactiveUrls[0])
@@ -104,7 +109,7 @@ function AnalysisName(props) {
                         id={build(baseId, ids.ICONS.INTERACTIVE)}
                         className={interactiveStyle}
                     />
-                </ToolTip>
+                </Tooltip>
                 <span
                     title={formatMessage(intl, "goOutputFolderOf") + " " + name}
                     className={className}
@@ -121,7 +126,7 @@ function AnalysisName(props) {
                 className={className}
                 onClick={() => handleGoToOutputFolder(analysis)}
             >
-                <ToolTip title={getMessage("viewAll")}>
+                <Tooltip title={getMessage("viewAll")}>
                     <img
                         src={analysesCollapseIcon}
                         alt={altAnalysesCollapseIcon}
@@ -129,7 +134,7 @@ function AnalysisName(props) {
                         id={build(baseId, ids.ICONS.COLLAPSE)}
                         style={{ height: 16 }}
                     />
-                </ToolTip>
+                </Tooltip>
                 <sup>{name}</sup>
             </span>
         );
@@ -192,7 +197,7 @@ function Status(props) {
                     text={analysis.status}
                 />
                 {allowTimeExtn && (
-                    <ToolTip title={getMessage("extendTime")}>
+                    <Tooltip title={getMessage("extendTime")}>
                         <IconButton
                             id={build(baseId, ids.BUTTON_EXTEND_TIME_LIMIT)}
                             className={interactiveStyle}
@@ -201,7 +206,7 @@ function Status(props) {
                         >
                             <HourGlass />
                         </IconButton>
-                    </ToolTip>
+                    </Tooltip>
                 )}
             </React.Fragment>
         );
@@ -1111,7 +1116,7 @@ class AnalysesView extends Component {
                                                   )[0]
                                                 : analysis.username;
                                         return (
-                                            <TableRow
+                                            <DETableRow
                                                 onClick={() =>
                                                     this.handleRowClick(id)
                                                 }
@@ -1124,7 +1129,7 @@ class AnalysesView extends Component {
                                                 title={analysis.name}
                                             >
                                                 <TableCell padding="none">
-                                                    <Checkbox
+                                                    <DECheckbox
                                                         id={build(
                                                             gridId,
                                                             id + ids.CHECKBOX
@@ -1312,7 +1317,7 @@ class AnalysesView extends Component {
                                                         }
                                                     />
                                                 </TableCell>
-                                            </TableRow>
+                                            </DETableRow>
                                         );
                                     })}
                                 </TableBody>

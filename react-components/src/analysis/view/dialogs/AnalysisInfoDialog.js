@@ -13,6 +13,7 @@ import { injectIntl } from "react-intl";
 
 import {
     build,
+    DETableRow,
     formatDate,
     CopyTextArea,
     DEDialogHeader,
@@ -21,19 +22,20 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import { withStyles } from "@material-ui/core/styles";
+import {
+    Dialog,
+    DialogContent,
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    Table,
+    TableBody,
+    TableCell,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TableBody from "@material-ui/core/TableBody";
-import Table from "@material-ui/core/Table";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
 
 const columnData = [
     {
@@ -66,7 +68,7 @@ function Updates(props) {
                     const timestamp = update.timestamp;
 
                     return (
-                        <TableRow key={index}>
+                        <DETableRow key={index}>
                             <TableCell className={classes.analysisInfoFont}>
                                 {formatDate(timestamp)}
                             </TableCell>
@@ -80,7 +82,7 @@ function Updates(props) {
                                         .toLowerCase()
                                         .replace(/[_]/gi, " ")}
                             </TableCell>
-                        </TableRow>
+                        </DETableRow>
                     );
                 })}
             </TableBody>

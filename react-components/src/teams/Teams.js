@@ -10,7 +10,9 @@ import styles from "./styles";
 
 import {
     build,
+    DECheckbox,
     DEHyperlink,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     formatMessage,
@@ -29,13 +31,11 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
     Toolbar,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
-import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles(styles);
 
@@ -259,7 +259,7 @@ function TeamsListing(props) {
                                     selectedTeams.includes(team);
 
                                 return (
-                                    <TableRow
+                                    <DETableRow
                                         role="checkbox"
                                         tabIndex={-1}
                                         hover
@@ -271,7 +271,7 @@ function TeamsListing(props) {
                                     >
                                         {isSelectable && (
                                             <TableCell padding="checkbox">
-                                                <Checkbox
+                                                <DECheckbox
                                                     checked={isSelected}
                                                 />
                                             </TableCell>
@@ -294,7 +294,7 @@ function TeamsListing(props) {
                                         <TableCell>
                                             {team.description}
                                         </TableCell>
-                                    </TableRow>
+                                    </DETableRow>
                                 );
                             })}
                     </TableBody>

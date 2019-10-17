@@ -7,6 +7,7 @@ import { nonEmptyField } from "./Validations";
 
 import {
     build,
+    DETableRow,
     EmptyTable,
     EnhancedTableHead,
     FormCheckbox,
@@ -19,7 +20,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
     Toolbar,
     Typography,
 } from "@material-ui/core";
@@ -78,7 +78,7 @@ function ContainerVolumesFrom(props) {
                     {volumesFrom &&
                         volumesFrom.length > 0 &&
                         volumesFrom.map((port, index) => (
-                            <TableRow tabIndex={-1} key={index}>
+                            <DETableRow tabIndex={-1} key={index}>
                                 <TableCell>
                                     <Field
                                         name={`${name}.${index}.name`}
@@ -153,7 +153,7 @@ function ContainerVolumesFrom(props) {
                                         parentId={build(parentId, index)}
                                     />
                                 </TableCell>
-                            </TableRow>
+                            </DETableRow>
                         ))}
                 </TableBody>
                 <EnhancedTableHead
