@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import AppListingView from "../../../src/apps/listing/AppListingView";
 import viewType from "../../../src/apps/model/viewType";
-import PropTypes from "prop-types";
 
 class AppGridListingTest extends Component {
     render() {
