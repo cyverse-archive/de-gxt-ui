@@ -548,6 +548,8 @@ class AppGridListingTest extends Component {
                 heading="Heading"
                 viewType={viewType.TABLE}
                 presenter={presenter}
+                sortField="name"
+                sortDir="asc"
             />
         );
     }
