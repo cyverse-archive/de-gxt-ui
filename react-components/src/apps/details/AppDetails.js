@@ -25,6 +25,7 @@ import {
     getMessage,
     Highlighter,
     LoadingMask,
+    palette,
     Rate,
     withI18N,
 } from "@cyverse-de/ui-lib";
@@ -32,25 +33,48 @@ import {
 import Book from "../../resources/images/bookIcon.png";
 
 import Grid from "@material-ui/core/Grid";
-import { Dialog, DialogContent, Paper, Typography } from "@material-ui/core";
+import {
+    Dialog,
+    DialogContent,
+    Paper,
+    Typography,
+    IconButton,
+    Tooltip,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+
+import UnFavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 function Favorite(props) {
     const { is_favorite, id } = props.details;
-    const { classes, isExternal, onFavoriteClick } = props;
+    const { classes, isExternal, onFavoriteClick, intl } = props;
     let className = classes.disableFavorite;
     const debugId = build(props.baseDebugId, id);
-    if (!isExternal) {
-        className = is_favorite ? classes.favorite : classes.notFavorite;
-    }
 
-    return (
-        <div
-            id={build(debugId, ids.DETAILS.APP_FAVORITE_CELL)}
-            className={className}
-            onClick={() => onFavoriteClick(isExternal)}
-        />
-    );
+    if (is_favorite) {
+        return (
+            <Tooltip title={formatMessage(intl, "removeFromFavorites")}>
+                <IconButton
+                    onClick={() => onFavoriteClick(isExternal)}
+                    disabled={isExternal}
+                >
+                    <FavoriteIcon style={{ color: palette.darkBlue }} />
+                </IconButton>
+            </Tooltip>
+        );
+    } else {
+        return (
+            <Tooltip title={formatMessage(intl, "addToFavorites")}>
+                <IconButton
+                    onClick={() => onFavoriteClick(isExternal)}
+                    disabled={isExternal}
+                >
+                    <UnFavoriteIcon style={{ color: palette.darkBlue }} />
+                </IconButton>
+            </Tooltip>
+        );
+    }
 }
 
 class AppDetails extends Component {
@@ -142,13 +166,7 @@ class AppDetails extends Component {
     }
 
     render() {
-        const {
-            details,
-            searchRegexPattern,
-            baseDebugId,
-            intl,
-            classes,
-        } = this.props;
+        const { details, searchText, baseDebugId, intl, classes } = this.props;
         const { loading, dialogOpen } = this.state;
         const isExternal =
             details.app_type.toUpperCase() ===
@@ -174,6 +192,7 @@ class AppDetails extends Component {
                             >
                                 <Grid item xs={12}>
                                     <Favorite
+                                        intl={intl}
                                         baseDebugId={baseDebugId}
                                         details={details}
                                         isExternal={isExternal}
@@ -186,9 +205,7 @@ class AppDetails extends Component {
                                         {getMessage("descriptionLabel")}:
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.description}
                                         </Highlighter>
                                     </span>
@@ -211,9 +228,7 @@ class AppDetails extends Component {
                                         {getMessage("integratorName")}
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.integrator_name}
                                         </Highlighter>
                                     </span>
@@ -223,9 +238,7 @@ class AppDetails extends Component {
                                         {getMessage("integratorEmail")}
                                     </span>
                                     <span className={valueClass}>
-                                        <Highlighter
-                                            search={searchRegexPattern}
-                                        >
+                                        <Highlighter search={searchText}>
                                             {details.integrator_email}
                                         </Highlighter>
                                     </span>
@@ -267,12 +280,11 @@ class AppDetails extends Component {
                                         {getMessage("detailsRatingLbl")}
                                     </div>
                                     <Rate
-                                        value={
-                                            userRating
-                                                ? userRating
-                                                : averageRating
+                                        name={details.id}
+                                        value={userRating || averageRating}
+                                        readOnly={
+                                            isExternal || !details.is_public
                                         }
-                                        readOnly={isExternal}
                                         total={totalRating}
                                         onChange={this.onRatingChange}
                                         onDelete={
@@ -296,9 +308,7 @@ class AppDetails extends Component {
                                                 {getMessage("category")}
                                             </Typography>
                                             <CategoryTree
-                                                searchRegexPattern={
-                                                    searchRegexPattern
-                                                }
+                                                searchText={searchText}
                                                 hierarchies={
                                                     details.hierarchies
                                                 }
@@ -356,7 +366,7 @@ class AppDetails extends Component {
 
 AppDetails.propTypes = {
     details: PropTypes.object.isRequired,
-    searchRegexPattern: PropTypes.string.isRequired,
+    searchText: PropTypes.string.isRequired,
     baseDebugId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,

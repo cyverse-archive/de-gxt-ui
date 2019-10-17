@@ -17,6 +17,8 @@ import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import CreateQuickLaunchDialogTest from "./apps/quickLaunch/CreateQuickLaunchDialog.stories";
 import QuickLaunchListingTest from "./apps/quickLaunch/QuickLaunchListing.stories";
+import AppTileListingTest from "./apps/listing/AppTileListing.stories";
+import AppGridListingTest from "./apps/listing/AppGridListing.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
@@ -102,6 +104,9 @@ storiesOf("apps/qlaunch", module).add("CreateQuickLaunch", () => (
 storiesOf("apps/qlaunch", module).add("QuickLaunchListing", () => (
     <QuickLaunchListingTest />
 ));
+
+storiesOf("apps/listing", module).add("AppTile", () => <AppTileListingTest />);
+storiesOf("apps/listing", module).add("AppGrid", () => <AppGridListingTest />);
 
 storiesOf("collaborators", module).add("Subject Search Field", () => (
     <SubjectSearchFieldTest logger={action("Selected Subject")} />

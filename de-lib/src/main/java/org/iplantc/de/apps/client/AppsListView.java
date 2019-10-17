@@ -1,55 +1,29 @@
 package org.iplantc.de.apps.client;
 
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
-import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CommunitySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
-import org.iplantc.de.client.models.AppTypeFilter;
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.event.StoreAddEvent;
-import com.sencha.gxt.data.shared.event.StoreClearEvent;
-import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
-import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
-
-import java.util.List;
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
- * @author aramsey
+ * @author aramsey, sriram
  */
-public interface AppsListView extends IsWidget,
-                                      IsMaskable,
-                                      AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
-                                      AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
-                                      AppNameSelectedEvent.HasAppNameSelectedEventHandlers,
-                                      AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
-                                      AppCommentSelectedEvent.HasAppCommentSelectedEventHandlers,
-                                      AppRatingSelected.HasAppRatingSelectedEventHandlers,
-                                      AppRatingDeselected.HasAppRatingDeselectedHandlers,
-                                      AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
-                                      AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
-                                      AppFavoritedEvent.HasAppFavoritedEventHandlers,
-                                      BeforeAppSearchEvent.BeforeAppSearchEventHandler,
-                                      OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
-                                      CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+@JsType
+public interface AppsListView extends IsWidget {
     String GRID_VIEW = "grid";
     String TILE_VIEW = "tile";
 
@@ -97,13 +71,10 @@ public interface AppsListView extends IsWidget,
      * To update the {@code ListStore}, it listens for {@link AppCategory} selection and search result
      * load events.
      */
+    @JsType
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                 AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
-                                StoreAddEvent.HasStoreAddHandlers<App>,
-                                StoreRemoveEvent.HasStoreRemoveHandler<App>,
-                                StoreUpdateEvent.HasStoreUpdateHandlers<App>,
-                                StoreClearEvent.HasStoreClearHandler<App>,
                                 DeleteAppsSelected.DeleteAppsSelectedHandler,
                                 RunAppSelected.RunAppSelectedHandler,
                                 BeforeAppSearchEvent.BeforeAppSearchEventHandler,
@@ -112,34 +83,75 @@ public interface AppsListView extends IsWidget,
                                 AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
                                 AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
                                 CommunitySelectionChangedEvent.CommunitySelectionChangedEventHandler {
+        @SuppressWarnings("unusable-by-js")
         App getSelectedApp();
 
-        List<DragSource> getAppsDragSources();
-
-        void go(CardLayoutContainer container);
-
-        void setViewDebugId(String baseID);
-
-        void loadApps(List<App> apps);
-
+        @JsIgnore
         String getActiveView();
 
+        @JsIgnore
         void setActiveView(String activeView);
+
+        @JsIgnore
+        void loadApps(Splittable apps);
+
+        @SuppressWarnings("unusable-by-js")
+        void onTypeFilterChanged(String filter);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppSelectionChanged(Splittable selectedApps);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppNameSelected(Splittable appSplittable);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppInfoSelected(Splittable appSplittable);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppFavoriteSelected(Splittable appSplittable);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppCommentSelected(Splittable appSplittable);
+
+        @SuppressWarnings("unusable-by-js")
+        void onRequestSort(String sortField, String sortDir);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppRatingDeselected(final Splittable appSplittable);
+
+        @SuppressWarnings("unusable-by-js")
+        void onAppRatingSelected(final Splittable appSplittable,
+                                 int score);
     }
 
-    List<DragSource> getAppsDragSources();
+    void load(AppsListView.Presenter presenter,
+              String activeView,
+              String sortField,
+              String sortDir,
+              String baseId);
 
-    App getSelectedItem();
+    void disableTypeFilter(boolean disable);
 
-    void select(App app, boolean keepExisting);
+    void setSearchRegexPattern(String pattern);
 
-    void deselectAll();
+    void setHeading(String heading);
 
-    void setSearchPattern(String searchPattern);
+    void setLoadingMask(boolean loading);
 
-    void setHeading(String text);
+    void setApps(Splittable apps, boolean loading);
 
-    void setAppTypeFilter(AppTypeFilter filter);
+    void render();
 
-    void enableAppTypeFilter(boolean enabled);
+    void setViewType(String viewType);
+
+    void loadSearchResults(Splittable apps,
+                           String searchRegexPattern,
+                           String heading,
+                           boolean loading);
+
+
+    void setTypeFilter(String filter);
+
+    void setSortInfo(String sortField, String sortDir);
+
 }

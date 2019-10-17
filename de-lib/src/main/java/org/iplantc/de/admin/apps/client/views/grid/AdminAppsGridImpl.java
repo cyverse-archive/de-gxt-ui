@@ -114,7 +114,7 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
 //        searchRegexPattern = event.getSearchPattern();
 //        acm.setSearchRegexPattern(searchRegexPattern);
 
-        int total = event.getResults() == null ? 0 : event.getResults().size();
+        int total = event.getResults() == null ? 0 : event.getResults().getTotal();
         setHeading(appearance.searchAppResultsHeader(event.getSearchText(), total));
     }
 

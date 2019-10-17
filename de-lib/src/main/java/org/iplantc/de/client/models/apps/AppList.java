@@ -13,4 +13,6 @@ import java.util.List;
 public interface AppList {
     @PropertyName("apps")
     List<App> getApps();
+
+    int getTotal();
 }

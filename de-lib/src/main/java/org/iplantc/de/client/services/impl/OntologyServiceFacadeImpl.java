@@ -4,7 +4,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
@@ -12,17 +11,18 @@ import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.converters.AvuListCallbackConverter;
-import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.OntologyHierarchyCallbackConverter;
 import org.iplantc.de.client.services.converters.OntologyHierarchyListCallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -57,39 +57,60 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     @Override
     public void getAppsInCategory(String iri,
                                   Avu avu,
-                                  AppTypeFilter filter,
-                                  DECallback<List<App>> callback) {
-        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr=" + URL.encodeQueryString(avu.getAttribute());
-        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "&app-type=" + filter.getFilterString();
+                                  String filter,
+                                  String sortField,
+                                  String sortDir,
+                                  DECallback<Splittable> callback) {
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+
+        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr="
+                         + URL.encodeQueryString(avu.getAttribute()) + "&sort-field="
+                         + requestedSortField + "&sort-dir=" + requestedSortDir;
+
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override
     public void getUnclassifiedAppsInCategory(String iri,
                                               Avu avu,
-                                              AppTypeFilter filter,
-                                              DECallback<List<App>> callback) {
-        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr=" + URL.encodeQueryString(avu.getAttribute());
-        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "&app-type=" + filter.getFilterString();
+                                              String filter,
+                                              String sortField,
+                                              String sortDir,
+                                              DECallback<Splittable> callback) {
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+        String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr="
+                         + URL.encodeQueryString(avu.getAttribute()) + "&sort-field="
+                         + requestedSortField + "&sort-dir=" + requestedSortDir;
+        ;
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override

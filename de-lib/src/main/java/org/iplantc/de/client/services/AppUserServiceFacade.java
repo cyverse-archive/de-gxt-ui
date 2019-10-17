@@ -98,3 +98,4 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
 
     void isPublishable(String system_id, String id, DECallback<Publishable> callback);
 }
+

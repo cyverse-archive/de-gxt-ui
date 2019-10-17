@@ -30,14 +30,14 @@ const Icon = (props) => {
     return <img src={src} alt={title} height={height} width={width} />;
 };
 class CategoryTree extends Component {
-    renderHierarchyNode(hierarchyClass, parentKey, searchRegexPattern) {
+    renderHierarchyNode(hierarchyClass, parentKey, searchText) {
         let modelKey =
             (parentKey ? parentKey + "/" : "") + hierarchyClass.label;
         return (
             <TreeNode
                 key={modelKey}
                 title={
-                    <Highlighter search={searchRegexPattern}>
+                    <Highlighter search={searchText}>
                         {hierarchyClass.label}
                     </Highlighter>
                 }
@@ -49,7 +49,7 @@ class CategoryTree extends Component {
                           this.renderHierarchyNode(
                               subclass,
                               modelKey,
-                              searchRegexPattern
+                              searchText
                           )
                       )
                     : null}
@@ -57,7 +57,7 @@ class CategoryTree extends Component {
         );
     }
     render() {
-        const { hierarchies, searchRegexPattern } = this.props;
+        const { hierarchies, searchText } = this.props;
 
         return (
             <Tree
@@ -66,11 +66,7 @@ class CategoryTree extends Component {
                 selectable={false}
             >
                 {hierarchies.map((hierarchyClass) =>
-                    this.renderHierarchyNode(
-                        hierarchyClass,
-                        "",
-                        searchRegexPattern
-                    )
+                    this.renderHierarchyNode(hierarchyClass, "", searchText)
                 )}
             </Tree>
         );

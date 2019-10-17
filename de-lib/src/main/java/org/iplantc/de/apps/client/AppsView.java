@@ -10,10 +10,6 @@ import org.iplantc.de.commons.client.widgets.DETabPanel;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import com.sencha.gxt.dnd.core.client.DragSource;
-
-import java.util.List;
-
 /**
  * This is the primary view for the Apps module. It is a composite of all other views within the
  * module.
@@ -63,8 +59,6 @@ public interface AppsView extends IsWidget,
                 HasId selectedApp,
                 String activeView,
                 boolean catPanelCollapsed);
-
-        List<DragSource> getAppsDragSources();
 
         Presenter hideAppMenu();
 

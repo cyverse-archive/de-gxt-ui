@@ -197,7 +197,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.appUserService = appUserServiceMock;
         uut.handlerManager = handlerManagerMock;
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
-        uut.searchRegexPattern = "test";
+        uut.searchText = "test";
         uut.viewTabPanel = tabPanelMock;
         uut.unclassifiedHierarchies = unclassifiedHierarchiesMock;
         uut.views = viewsMock;

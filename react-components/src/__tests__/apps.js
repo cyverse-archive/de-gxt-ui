@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { getDefaultTheme, MuiThemeProvider } from "../lib";
+import AppGridListingTest from "../../stories/apps/listing/AppGridListing.stories";
+import AppTileListingTest from "../../stories/apps/listing/AppTileListing.stories";
 import AppStatsTest from "../../stories/apps/admin/AppStats.stories";
 
 import AppDetailsTest from "../../stories/apps/details/AppDetails.stories";
@@ -95,6 +97,28 @@ it("renders create Quick launch dialog without crashing", () => {
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
             <CreateQuickLaunchDialogTest />
+        </MuiThemeProvider>,
+        div
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it("renders app grid listing without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <AppGridListingTest />
+        </MuiThemeProvider>,
+        div
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it("renders app tile listing without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <AppTileListingTest />
         </MuiThemeProvider>,
         div
     );

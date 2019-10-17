@@ -49,10 +49,10 @@ public class PipelineViewToolbarImpl implements PipelineViewToolbar {
         presenter.onPublishClicked();
     }
 
-    @UiHandler("swapViewBtn")
+  /*  @UiHandler("swapViewBtn")
     public void onSwapViewClick(SelectEvent e) {
         presenter.onSwapViewClicked();
-    }
+    }*/
 
     @Override
     public void setPublishButtonEnabled(boolean enabled) {

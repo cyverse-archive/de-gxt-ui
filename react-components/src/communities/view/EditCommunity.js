@@ -47,6 +47,9 @@ class EditCommunity extends Component {
             deleteCommunity: false,
             leaveCommunity: false,
             joinCommunity: false,
+            selectedApps: [],
+            order: "asc",
+            orderBy: "name",
         };
 
         [
@@ -68,6 +71,10 @@ class EditCommunity extends Component {
             "handleDialogConfirmed",
             "onDialogBtnClicked",
             "closeDialog",
+            "handleAppSelection",
+            "resetAppSelection",
+            "isSelected",
+            "onSortChange",
         ].forEach((fn) => (this[fn] = this[fn].bind(this)));
     }
 
@@ -99,6 +106,8 @@ class EditCommunity extends Component {
             let fetchAppsPromise = new Promise((resolve, reject) => {
                 this.props.presenter.fetchCommunityApps(
                     community.display_name,
+                    "name",
+                    "asc",
                     resolve,
                     reject
                 );
@@ -129,6 +138,14 @@ class EditCommunity extends Component {
                 admins: [currentUser],
             });
         }
+    }
+
+    isSelected(id) {
+        const { selectedApps } = this.state;
+        if (selectedApps && selectedApps.length > 0) {
+            return selectedApps.filter((app) => app.id === id).length > 0;
+        }
+        return false;
     }
 
     validate(name) {
@@ -278,6 +295,31 @@ class EditCommunity extends Component {
         }
     }
 
+    handleAppSelection(id) {
+        const { selectedApps } = this.state;
+        const selectedIndex = selectedApps.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedApps, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedApps.slice(1));
+        } else if (selectedIndex === selectedApps.length - 1) {
+            newSelected = newSelected.concat(selectedApps.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedApps.slice(0, selectedIndex),
+                selectedApps.slice(selectedIndex + 1)
+            );
+        }
+
+        this.setState({ selectedApps: newSelected });
+    }
+
+    resetAppSelection() {
+        this.setState({ selectedApps: [] });
+    }
+
     removeAdmin(subject) {
         const { admins } = this.state;
         this.setState({
@@ -393,8 +435,33 @@ class EditCommunity extends Component {
         this.setState({ [dialogName]: false });
     }
 
+    onSortChange(sortField, sortDir) {
+        const { presenter, community } = this.props;
+        this.setState({ loading: true, order: sortDir, orderBy: sortField });
+        presenter.fetchCommunityApps(
+            community.display_name,
+            sortField,
+            sortDir,
+            (appList) => {
+                this.setState({ loading: false, apps: appList.apps });
+            },
+            () => {
+                this.setState({ loading: false, apps: [] });
+            }
+        );
+    }
+
     render() {
-        const { admins, apps, name, errors, loading } = this.state;
+        const {
+            admins,
+            apps,
+            name,
+            errors,
+            loading,
+            selectedApps,
+            order,
+            orderBy,
+        } = this.state;
 
         const {
             isCommunityAdmin,
@@ -603,10 +670,17 @@ class EditCommunity extends Component {
                             )}
                             <AppGridListing
                                 parentId={parentId}
-                                data={apps}
+                                apps={apps}
                                 selectable={false}
                                 deletable={isCommunityAdmin}
                                 onRemoveApp={this.handleRemoveApp}
+                                handleAppSelection={this.handleAppSelection}
+                                resetAppSelection={this.resetAppSelection}
+                                selectedApps={selectedApps}
+                                isSelected={this.isSelected}
+                                sortDir={order}
+                                sortField={orderBy}
+                                onSortChange={this.onSortChange}
                             />
                         </fieldset>
                     </form>

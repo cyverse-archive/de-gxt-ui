@@ -25,7 +25,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
 
     private final App app;
     private final AppDetailsAppearance appearance;
-    private String searchRegexPattern;
+    private String searchText;
     HTMLPanel panel;
 
     @Inject
@@ -39,11 +39,11 @@ public class AppDetailsViewImpl implements AppDetailsView,
     AppDetailsViewImpl(final AppDetailsView.AppDetailsAppearance appearance,
                        final EventBus eventBus,
                        @Assisted final App app,
-                       @Assisted final String searchRegexPattern) {
+                       @Assisted final String searchText) {
         this.appearance = appearance;
         this.eventBus = eventBus;
         this.app = app;
-        this.searchRegexPattern = searchRegexPattern;
+        this.searchText = searchText;
         panel = new HTMLPanel("<div></div>");
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
     }
@@ -62,7 +62,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
         props.dialogOpen = true;
         props.docEditable = userInfo.getEmail().equals(app.getIntegratorEmail());
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
-        props.searchRegexPattern = searchRegexPattern != null ? searchRegexPattern : "";
+        props.searchText = searchText != null ? searchText : "";
         props.userName = userInfo.getFullUsername();
 
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());

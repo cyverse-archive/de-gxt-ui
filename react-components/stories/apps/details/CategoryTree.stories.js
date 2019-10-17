@@ -68,7 +68,7 @@ class CategoryTreeTest extends Component {
             <CategoryTree
                 hierarchies={app.hierarchies}
                 presenter={presenter}
-                searchRegexPattern=""
+                searchText=""
             />
         );
     }

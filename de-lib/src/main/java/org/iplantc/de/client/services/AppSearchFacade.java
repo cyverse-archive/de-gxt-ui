@@ -16,3 +16,4 @@ public interface AppSearchFacade {
      */
     void searchApp(String term, String startDate, String endDate, DECallback<AppListLoadResult> callback);
 }
+

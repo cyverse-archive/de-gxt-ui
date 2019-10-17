@@ -119,10 +119,27 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback) {
-        String address = APP_COMMUNITIES + "/" + URL.encode(communityDisplayName) + "/apps";
-        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
-            address = address + "?app-type=" + filter.getFilterString();
+    public void getCommunityApps(String communityDisplayName,
+                                 String filter,
+                                 String sortField,
+                                 String sortDir,
+                                 DECallback<Splittable> callback) {
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+        String address =
+                APP_COMMUNITIES + "/" + URL.encode(communityDisplayName) + "/apps?" + "sort-field="
+                + requestedSortField + "&sort-dir=" + requestedSortDir;
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -158,6 +175,36 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
                 + sortField + "&sort-dir=" + sortDir.toString() + "&offset=" + offset;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, asyncCallback);
+    }
+
+    @Override
+    public void getAppsAsSplittable(HasQualifiedId appCategory,
+                                    String filter,
+                                    String sortField,
+                                    String sortDir,
+                                    DECallback<Splittable> callback) {
+        String requestedSortField = sortField;
+        String requestedSortDir = sortDir;
+
+        if (Strings.isNullOrEmpty(sortField)) {
+            requestedSortField = "name";
+        }
+        if (Strings.isNullOrEmpty(sortDir)) {
+            requestedSortDir = "ASC";
+        } else {
+            requestedSortDir = requestedSortDir.toUpperCase();
+        }
+
+        String address =
+                CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId() + "?sort-field="
+                + requestedSortField + "&sort-dir=" + requestedSortDir;
+
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL.getFilterString()))) {
+            address = address + "&app-type=" + filter;
+        }
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override
@@ -374,11 +421,12 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         deServiceFacade.getServiceData(wrapper,  new DECallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
+                AppList appList = AutoBeanCodex.decode(svcFactory, AppList.class, object).as();
                 AutoBean<AppListLoadResult> loadResultAutoBean = svcFactory.loadResult();
 
                 final AppListLoadResult loadResult = loadResultAutoBean.as();
-                loadResult.setData(apps);
+                loadResult.setData(appList.getApps());
+                loadResult.setTotal(appList.getTotal());
                 return loadResult;
             }
         });

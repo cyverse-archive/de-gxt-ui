@@ -23,7 +23,7 @@ import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.services.AppServiceFacade;
@@ -212,7 +212,9 @@ public class AdminAppsListPresenterImplTest {
     public void verifyListStoreUpdated_onAppSearchResultLoad() {
         AppSearchResultLoadEvent eventMock = mock(AppSearchResultLoadEvent.class);
         final ArrayList<App> resultsMock = Lists.newArrayList(mock(App.class), mock(App.class));
-        when(eventMock.getResults()).thenReturn(resultsMock);
+        AppListLoadResult results = mock(AppListLoadResult.class);
+        when(eventMock.getResults()).thenReturn(results);
+        when(results.getData()).thenReturn(resultsMock);
 
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppSearchResultLoad(eventMock);

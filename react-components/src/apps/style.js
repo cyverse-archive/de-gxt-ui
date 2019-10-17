@@ -63,4 +63,7 @@ export default (theme) => ({
     paper: {
         padding: "20px",
     },
+    listingFont: {
+        fontSize: "12px",
+    },
 });

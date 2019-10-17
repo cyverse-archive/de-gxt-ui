@@ -7,7 +7,6 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.CommunitiesView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.WorkspaceView;
-import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
@@ -24,10 +23,7 @@ import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.TabPanel;
-
-import java.util.List;
 
 /**
  * The presenter for the AppsView.
@@ -93,11 +89,6 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsListPresenter);
         toolbarPresenter.getView().addRefreshAppsSelectedEventHandler(this);
         toolbarPresenter.getView().addManageToolsClickedEventHandler(toolbarPresenter);
-    }
-
-    @Override
-    public List<DragSource> getAppsDragSources() {
-        return appsListPresenter.getAppsDragSources();
     }
 
     @Override

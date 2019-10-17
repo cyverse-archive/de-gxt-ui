@@ -9,7 +9,6 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -41,6 +40,21 @@ public interface AppServiceFacade {
      * @param filter filter to be used when getting apps.
      * @param callback called when the RPC call is complete.*/
     void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
+
+    /**
+     * Retrieves list of apps in the given group.
+     *
+     * @param appCategory unique identifier for the group to search in for apps.
+     * @param filter      filter to be used when getting apps.
+     * @param sortField   the field to sort On
+     * @param sortDir     asc or desc
+     * @param callback    called when the RPC call is complete.
+     */
+    void getAppsAsSplittable(HasQualifiedId appCategory,
+                             String filter,
+                             String sortField,
+                             String sortDir,
+                             DECallback<Splittable> callback);
 
     /**
      * Retrieves a paged listing of templates in the given group.
@@ -75,7 +89,13 @@ public interface AppServiceFacade {
      * Retrieves an app listing for the specified community
      * @param communityDisplayName
      * @param filter
+     * @param sortField   the field to sort On
+     * @param sortDir     asc or desc
      * @param callback
      */
-    void getCommunityApps(String communityDisplayName, AppTypeFilter filter, DECallback<Splittable> callback);
+    void getCommunityApps(String communityDisplayName,
+                          String filter,
+                          String sortField,
+                          String sortDir,
+                          DECallback<Splittable> callback);
 }

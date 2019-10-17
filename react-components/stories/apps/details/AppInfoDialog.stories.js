@@ -335,7 +335,7 @@ class AppInfoDialogTest extends Component {
         return (
             <AppInfoDialog
                 baseDebugId="appDetails"
-                searchRegexPattern={text("Search Pattern", "roger")}
+                searchText={text("Search Pattern", "roger")}
                 app={appDetals}
                 dialogOpen={true}
                 presenter={presenter}

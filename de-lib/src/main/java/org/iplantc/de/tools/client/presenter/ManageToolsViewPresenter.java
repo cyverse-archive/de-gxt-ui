@@ -395,7 +395,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(ToolInfoDialog o) {
-                o.show(tool, result);
+                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
+                o.show(tool, sp);
             }
         });
     }

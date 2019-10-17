@@ -39,7 +39,7 @@ function AppInfoDialog(props) {
         app,
         presenter,
         docEditable,
-        searchRegexPattern,
+        searchText,
         userName,
         baseDebugId,
         intl,
@@ -223,7 +223,7 @@ function AppInfoDialog(props) {
                                 baseDebugId,
                                 ids.DETAILS.APP_INFO
                             )}
-                            searchRegexPattern={searchRegexPattern}
+                            searchText={searchText}
                             details={app}
                             presenter={presenter}
                         />
@@ -254,7 +254,7 @@ function AppInfoDialog(props) {
                                 baseDebugId,
                                 ids.DETAILS.APP_TOOLS
                             )}
-                            searchRegexPattern={searchRegexPattern}
+                            searchText={searchText}
                             details={app.tools}
                         />
                     )}
@@ -299,7 +299,7 @@ AppInfoDialog.propTypes = {
     app: PropTypes.object.isRequired,
     presenter: PropTypes.object.isRequired,
     docEditable: PropTypes.bool.isRequired,
-    searchRegexPattern: PropTypes.string.isRequired,
+    searchText: PropTypes.string.isRequired,
     baseDebugId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
 };

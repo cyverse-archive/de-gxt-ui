@@ -38,7 +38,7 @@ class ToolDetailsV1 extends Component {
         let tools = this.props.details,
             labelClass = classes.detailsLabel,
             valueClass = classes.detailsValue;
-        const { baseDebugId, searchRegexPattern } = this.props;
+        const { baseDebugId, searchText } = this.props;
         return tools.map((toolInfo, index) => (
             <ExpansionPanel
                 key={index}
@@ -46,11 +46,11 @@ class ToolDetailsV1 extends Component {
             >
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography variant="caption">
-                        <Highlighter search={searchRegexPattern}>
+                        <Highlighter search={searchText}>
                             {toolInfo.name}
                         </Highlighter>
                         :
-                        <Highlighter search={searchRegexPattern}>
+                        <Highlighter search={searchText}>
                             {toolInfo.description}
                         </Highlighter>
                     </Typography>
@@ -66,7 +66,7 @@ class ToolDetailsV1 extends Component {
                                     {getMessage("toolNameLabel")}
                                 </td>
                                 <td className={valueClass}>
-                                    <Highlighter search={searchRegexPattern}>
+                                    <Highlighter search={searchText}>
                                         {toolInfo.name}
                                     </Highlighter>
                                 </td>
@@ -76,7 +76,7 @@ class ToolDetailsV1 extends Component {
                                     {getMessage("descriptionLabel")}
                                 </td>
                                 <td className={valueClass}>
-                                    <Highlighter search={searchRegexPattern}>
+                                    <Highlighter search={searchText}>
                                         {toolInfo.description}
                                     </Highlighter>
                                 </td>

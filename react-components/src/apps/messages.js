@@ -87,6 +87,9 @@ const intlData = {
         appDocumentation: "DE App Documentation",
         documentationTemplate: "View Documentation Template",
         htcondorExtraRequirements: "HTCondor Extra Requirements",
+        appType: "Type",
+        addToFavorites: "Add To Favorites",
+        removeFromFavorites: "Remove From Favorites",
     },
 };
 
