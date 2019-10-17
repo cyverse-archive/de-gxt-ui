@@ -68,6 +68,12 @@ public class CollaboratorsUtil {
     }
 
     @SuppressWarnings("unusable-by-js")
+    public String getGroupShortName(Splittable splSubject) {
+        Subject subject = convertToSubject(splSubject);
+        return subject.getGroupShortName();
+    }
+
+    @SuppressWarnings("unusable-by-js")
     public boolean isCollaboratorList(Splittable splSubject) {
         Subject subject = convertToSubject(splSubject);
         return subject.isCollaboratorList();

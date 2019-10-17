@@ -39,6 +39,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,19 +78,22 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getTeams(AsyncCallback<List<Group>> callback) {
+    public void getTeams(boolean myTeams, String searchTerm, AsyncCallback<Splittable> callback) {
         String address = TEAMS;
+        if (searchTerm != null) {
+            address += "?search=" + URL.encodeQueryString(searchTerm) + "&";
+        } else {
+            address += myTeams ? "?member=" + userInfo.getUsername() + "&" : "?";
+        }
+        address += "details=true";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new GroupListCallbackConverter(factory, callback));
-    }
-
-    @Override
-    public void getMyTeams(AsyncCallback<List<Group>> callback) {
-        String address = TEAMS + "?member=" + userInfo.getUsername();
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new GroupListCallbackConverter(factory, callback));
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, Splittable>(callback) {
+            @Override
+            protected Splittable convertFrom(String object) {
+                return StringQuoter.split(object);
+            }
+        });
     }
 
     @Override
@@ -407,20 +411,6 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(voidCallback));
-    }
-
-    @Override
-    public void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback) {
-        String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm);
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
-            @Override
-            protected List<Group> convertFrom(String object) {
-                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
-                return groupList.getGroups();
-            }
-        });
     }
 
     @Override

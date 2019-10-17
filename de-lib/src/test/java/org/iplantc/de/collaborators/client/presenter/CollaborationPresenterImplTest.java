@@ -80,7 +80,6 @@ public class CollaborationPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.go(containerMock);
         verify(collabPresenterMock).go();
-        verify(teamPresenterMock).go();
 
         verify(containerMock).setWidget(eq(viewMock));
     }

@@ -38,7 +38,6 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
     @Override
     public void go(HasOneWidget container) {
         collabPresenter.go();
-        teamPresenter.go();
         teamPresenter.showCheckBoxes();
         container.setWidget(view);
     }

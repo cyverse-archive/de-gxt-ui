@@ -12,8 +12,6 @@ public interface TeamsDisplayStrings extends Messages {
 
     String createNewTeam();
 
-    String manageTeam();
-
     String leaveTeam();
 
     String teamInfoBtnToolTip();
@@ -54,8 +52,6 @@ public interface TeamsDisplayStrings extends Messages {
 
     String teamSuccessfullySaved();
 
-    String searchFieldEmptyText();
-
     String teamSearchFailed();
 
     String leaveTeamSuccess(String subjectDisplayName);
@@ -68,8 +64,6 @@ public interface TeamsDisplayStrings extends Messages {
 
     String deleteTeam();
 
-    String joinTeam();
-
     String requestToJoinTeam();
 
     String deleteTeamWarning();
@@ -79,8 +73,6 @@ public interface TeamsDisplayStrings extends Messages {
     String deleteTeamSuccess(String subjectDisplayName);
 
     String joinTeamSuccess(String teamName);
-
-    String joinTeamFail(String teamName);
 
     String requestMessageLabel();
 
@@ -93,8 +85,6 @@ public interface TeamsDisplayStrings extends Messages {
     String requestToJoinSubmitted(String teamName);
 
     String getCreatorNamesFailed();
-
-    String creatorColumnLabel();
 
     SafeHtml editTeamHelpText();
 
