@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.gin.CommunityTreeStoreProvider;
 import org.iplantc.de.apps.client.gin.OntologyHierarchyTreeStoreProvider;
 import org.iplantc.de.apps.client.presenter.communities.GroupComparator;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
@@ -146,6 +147,22 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
         addHelp();
 
         setFieldLabelHTML();
+    }
+
+    @Override
+    public void setDebugId(String baseId) {
+        appName.setId(baseId + AppsModule.Ids.APP_NAME_TEXT);
+        appDesc.setId(baseId + AppsModule.Ids.APP_DESC_TEXT_AREA);
+        inputDesc.setId(baseId + AppsModule.Ids.APP_INPUT_DESC_TEXT_AREA);
+        paramDesc.setId(baseId + AppsModule.Ids.APP_PARAM_DESC_TEXT_AREA);
+        outputDesc.setId(baseId + AppsModule.Ids.APP_OUTPUT_DESC_TEXT_AREA);
+        communityTree.setId(baseId + AppsModule.Ids.APP_COMMUNITY_SELECTION_TREE);
+        categoryTree.setId(baseId + AppsModule.Ids.APP_CATEGORY_SELECTION_TREE);
+        grid.setId(baseId + AppsModule.Ids.APP_REF_LINK_GRID);
+        addBtn.setId(baseId + AppsModule.Ids.APP_REF_LINK_ADD_BTN);
+        delBtn.setId(baseId + AppsModule.Ids.APP_REF_LINK_DEL_BTN);
+        dataFolderSelector.ensureDebugId(baseId + AppsModule.Ids.APP_TEST_DATA_FOLDER);
+
     }
 
     private void setFieldLabelHTML() {

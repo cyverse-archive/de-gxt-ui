@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client.views.submit.dialog;
 
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppCategoryCountUpdateEvent;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.util.JsonUtil;
@@ -79,6 +80,7 @@ public class SubmitAppForPublicDialog extends IPlantDialog implements SelectHand
     public void show(final App appToSubmit) {
         presenter.go(this, appToSubmit, new SubmitAppForPublicCallbackImpl());
         super.show();
+        ensureDebugId(AppsModule.Ids.MAKE_PUBLIC_DLG);
     }
 
     @Override
@@ -97,6 +99,14 @@ public class SubmitAppForPublicDialog extends IPlantDialog implements SelectHand
             return jsonUtil.getString(obj, "reason");
         }
         return "";
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+        getOkButton().ensureDebugId(baseID + AppsModule.Ids.DONE_BTN);
     }
 
 }

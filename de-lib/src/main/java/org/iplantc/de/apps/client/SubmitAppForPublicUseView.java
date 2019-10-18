@@ -112,6 +112,8 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         void onSubmit();
 
         void go(HasOneWidget container, App selectedApp, AsyncCallback<String> callback);
+
+        void setViewDebugId(String debugId);
     }
 
     Tree<OntologyHierarchy, String> getCategoryTree();
@@ -137,4 +139,6 @@ public interface SubmitAppForPublicUseView extends IsWidget {
     void setIsInteractive(boolean interactive);
 
     boolean getIsInteractive();
+
+    void setDebugId(String baseId);
 }

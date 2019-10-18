@@ -59,7 +59,6 @@
                              toolTip="{appearance.publicNameNote}">
                 <form:widget>
                     <form:TextField ui:field="appName"
-                                    debugId="idTxtAppName"
                                     name="{appearance.publicName}"
                                     allowBlank="false"
                                     toolTip="{appearance.publicNameNote}"/>
@@ -72,7 +71,6 @@
                              toolTip="{appearance.publicDescriptionNote}">
                 <form:widget>
                     <form:TextArea ui:field="appDesc"
-                                   debugId="idTxtAppDesc"
                                    name="desc"
                                    height="100"
                                    allowBlank="false"
@@ -97,7 +95,6 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <selector:FolderSelectorField ui:field="dataFolderSelector"
-                                          debugId="idDataSelector"
                                           validatePermissions="false"/>
         </con:child>
         <con:child layoutData="{layoutData}">
@@ -105,7 +102,6 @@
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="inputDesc"
-                                   debugId="idInputDesc"
                                    name="inputdesc"
                                    height="100"
                                    allowBlank="false"
@@ -119,7 +115,6 @@
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="paramDesc"
-                                   debugId="idParamDesc"
                                    name="paramdesc"
                                    height="100"
                                    allowBlank="false"
@@ -133,7 +128,6 @@
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="outputDesc"
-                                   debugId="idOutputDesc"
                                    name="outputdesc"
                                    height="100"
                                    allowBlank="false"
@@ -150,11 +144,9 @@
                     <con:child>
                         <toolbar:ToolBar>
                             <c:TextButton ui:field="addBtn"
-                                          debugId='idAddBtn'
                                           text="{appearance.add}"
                                           icon="{appearance.addIcon}"/>
                             <c:TextButton ui:field="delBtn"
-                                          debugId='idDelBtn'
                                           text="{appearance.delete}"
                                           icon="{appearance.deleteIcon}"
                                           enabled="false"/>

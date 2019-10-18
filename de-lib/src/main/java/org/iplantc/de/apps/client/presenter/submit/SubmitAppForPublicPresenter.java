@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client.presenter.submit;
 
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppPublishedEvent;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
@@ -149,6 +150,12 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         this.callback = callback;
         getAppDetails();
         go(container);
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId + AppsModule.Ids.MAKE_PUBLIC_VIEW);
+        view.setDebugId(debugId + AppsModule.Ids.MAKE_PUBLIC_VIEW);
     }
 
     @Override
