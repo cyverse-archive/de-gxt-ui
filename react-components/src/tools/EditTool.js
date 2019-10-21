@@ -15,6 +15,9 @@ import styles from "./styles";
 import ToolImplementation from "./ToolImplementation";
 import { nonEmptyField } from "./Validations";
 
+import PropTypes from "prop-types";
+import { injectIntl } from "react-intl";
+
 import {
     build,
     DEDialogHeader,
@@ -38,7 +41,6 @@ import {
     Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 
 function EditToolDialog(props) {
     const {
@@ -55,6 +57,7 @@ function EditToolDialog(props) {
         handleSubmit,
         values,
         presenter,
+        intl,
     } = props;
 
     return (
@@ -86,6 +89,7 @@ function EditToolDialog(props) {
                         maxCPUCore={maxCPUCore}
                         maxMemory={maxMemory}
                         maxDiskSpace={maxDiskSpace}
+                        intl={intl}
                     />
                 </LoadingMask>
             </DialogContent>
@@ -125,6 +129,7 @@ function EditToolForm(props) {
         maxMemory,
         maxDiskSpace,
         classes,
+        intl,
     } = props;
 
     const selectedToolType = getIn(values, "type");
@@ -218,6 +223,7 @@ function EditToolForm(props) {
                 parentId={parentId}
                 isOSGTool={isOSGTool}
                 component={ContainerImage}
+                intl={intl}
             />
             {isAdmin && (
                 <Field
@@ -437,4 +443,4 @@ export default withFormik({
     enableReinitialize: true,
     mapPropsToValues,
     handleSubmit,
-})(withI18N(EditToolDialog, messages));
+})(withI18N(injectIntl(EditToolDialog), messages));
