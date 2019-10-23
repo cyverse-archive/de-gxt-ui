@@ -137,6 +137,7 @@ class EditComments extends Component {
         let commentItems = this.state.commentList
             ? this.state.commentList.map((comment, index) => (
                   <Comment
+                      key={comment.id}
                       message={comment.comment}
                       id={comment.id}
                       retracted={comment.retracted}
