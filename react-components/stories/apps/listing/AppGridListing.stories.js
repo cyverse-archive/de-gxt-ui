@@ -550,6 +550,8 @@ class AppGridListingTest extends Component {
                 presenter={presenter}
                 sortField="name"
                 sortDir="asc"
+                loading={false}
+                typeFilter="All"
             />
         );
     }

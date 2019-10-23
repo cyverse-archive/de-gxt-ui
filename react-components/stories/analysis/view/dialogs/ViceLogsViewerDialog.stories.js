@@ -10,6 +10,19 @@ class ViceLogsViewerTest extends Component {
         window.setTimeout(() => {
             this.setState({ mask: false });
         }, 3000);
+
+        const presenter = {
+            onFollowViceLogs: (checked) => {
+                console.log("On follow vice logs " + checked);
+            },
+            closeViceLogsViewer: () => {
+                console.log("Close Vice Logs Viewer");
+            },
+            refreshViceLogs: () => {
+                console.log("Refresh Vice Logs");
+            },
+        };
+
         const logs =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vehicula ipsum a arcu cursus vitae congue mauris rhoncus. Adipiscing enim eu turpis egestas pretium. Velit dignissim sodales ut eu sem integer vitae. Nunc non blandit massa enim nec dui nunc mattis. Mollis nunc sed id semper risus in. Malesuada fames ac turpis egestas integer eget aliquet nibh praesent. Diam sit amet nisl suscipit adipiscing bibendum est ultricies. Sem fringilla ut morbi tincidunt augue interdum velit euismod in. Quam vulputate dignissim suspendisse in. Tristique senectus et netus et malesuada fames ac. Aliquet nec ullamcorper sit amet risus nullam eget felis. Porttitor lacus luctus accumsan tortor posuere ac. Nunc sed augue lacus viverra vitae congue eu. Etiam erat velit scelerisque in dictum.\n" +
             "\n" +
@@ -26,6 +39,7 @@ class ViceLogsViewerTest extends Component {
                 dialogOpen={true}
                 analysisName="test analyses"
                 loading={this.state.mask}
+                presenter={presenter}
             />
         );
     }
