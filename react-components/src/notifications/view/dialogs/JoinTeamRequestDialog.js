@@ -46,10 +46,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
     formControl: {
-        margin: theme.spacing.unit * 1,
+        margin: theme.spacing(1),
     },
     group: {
-        margin: `${theme.spacing.unit}px 0`,
+        margin: `${theme.spacing(1)}px 0`,
     },
     grid: {
         border: "1px solid",

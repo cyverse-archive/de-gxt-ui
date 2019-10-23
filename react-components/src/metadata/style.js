@@ -27,8 +27,8 @@ const styles = (theme) => ({
         },
     },
     toolbar: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
     },
     spacer: {
         flex: "1 1 100%",
@@ -37,7 +37,7 @@ const styles = (theme) => ({
         color: theme.palette.text.secondary,
     },
     title: {
-        paddingLeft: theme.spacing.unit,
+        paddingLeft: theme.spacing(1),
         flex: "0 0 auto",
         maxWidth: "25rem",
     },
@@ -49,7 +49,7 @@ const styles = (theme) => ({
         paddingRight: theme.typography.pxToRem(4),
     },
     helpText: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
     },
 });
 
