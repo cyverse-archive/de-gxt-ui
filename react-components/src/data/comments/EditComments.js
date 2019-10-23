@@ -34,7 +34,7 @@ class EditComments extends Component {
             open: true,
             commentList: null,
             loading: false,
-            commentText: null,
+            commentText: "",
         };
 
         this.handleClose = this.handleClose.bind(this);
