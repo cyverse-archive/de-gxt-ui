@@ -198,7 +198,7 @@ function ListQuickLaunches(props) {
             <React.Fragment>
                 <Paper style={{ padding: 5 }} id={baseDebugId}>
                     <LoadingMask loading={loading}>
-                        <Grid container spacing={24}>
+                        <Grid container spacing={1}>
                             {quickLaunches.map((qLaunch, index) => {
                                 const id = build(baseDebugId, qLaunch.id);
                                 const is_public = qLaunch.is_public;
