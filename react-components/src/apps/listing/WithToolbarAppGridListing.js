@@ -33,7 +33,7 @@ export default function WithToolbarAppGridListing(props) {
             <LoadingMask loading={loading}>
                 <AppListingHeader heading={heading} />
                 <FilterSortToolbar
-                    baseDebugId={parentId}
+                    baseDebugID={parentId}
                     typeFilter={typeFilter}
                     onTypeFilterChange={onTypeFilterChange}
                     onSortChange={onSortChange}
