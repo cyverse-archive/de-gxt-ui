@@ -62,9 +62,9 @@ class DesktopView extends Component {
         new Sockette(this.getWebSocketUrl(), {
             maxAttempts: 10,
             onmessage: this.handleMessage,
-            onreconnect: (e) => console.log("Reconnecting...", e),
-            onmaximum: (e) => console.log("Stop Attempting!", e),
-            onerror: (e) => console.log("Error:", e),
+            onreconnect: (e) => console.log("Websocket - Reconnecting...", e),
+            onmaximum: (e) => console.log("Websocket - Stop Attempting!", e),
+            onerror: (e) => console.log("Websocket - Error:", e),
         });
 
         this.initIntro();
