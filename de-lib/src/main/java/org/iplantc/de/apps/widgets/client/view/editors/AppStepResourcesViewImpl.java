@@ -137,7 +137,7 @@ public class AppStepResourcesViewImpl extends ContentPanel implements AppStepRes
         // This ComboBox's LabelProvider does some int -> float math conversions
         // to ensure we display partial GB values with 0.1 precision.
         final SimpleComboBox<Long> resourceSizeSimpleComboBox =
-                new SimpleComboBox<>(size -> (float)Math.round((float)(size * 10) / ONE_GB) / 10 + " GB");
+                new SimpleComboBox<>(size -> (float)Math.round((float)(size * 10) / ONE_GB) / 10 + " GiB");
 
         resourceSizeSimpleComboBox.setEditable(false);
         resourceSizeSimpleComboBox.setAllowBlank(true);
