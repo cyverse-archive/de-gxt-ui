@@ -7,6 +7,7 @@ import { nonEmptyField } from "./Validations";
 import {
     build,
     FormTextField,
+    formatMessage,
     getMessage,
     getFormError,
 } from "@cyverse-de/ui-lib";
@@ -18,6 +19,7 @@ function ContainerImage(props) {
         parentId,
         field: { name },
         form: { errors, touched },
+        intl,
     } = props;
 
     let hasErrors = !!getFormError(name, touched, errors);
@@ -34,6 +36,7 @@ function ContainerImage(props) {
                 required
                 validate={nonEmptyField}
                 component={FormTextField}
+                helperText={formatMessage(intl, "imageNameHelp")}
             />
             <Field
                 name={`${name}.url`}

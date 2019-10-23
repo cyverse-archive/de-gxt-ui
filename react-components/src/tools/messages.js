@@ -85,5 +85,8 @@ export default {
         share: "Share",
         searchTools: "Search tools",
         refresh: "Refresh",
+        imageNameHelp:
+            "If the image is in Docker Hub, this field should be in username/image-name" +
+            " format, where username is your Docker Hub username. If it's in another registry, such as the CyVerse registry, it should be in registry-host/image-name format.",
     },
 };
