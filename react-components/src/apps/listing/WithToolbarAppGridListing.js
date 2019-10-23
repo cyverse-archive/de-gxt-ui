@@ -21,6 +21,7 @@ export default function WithToolbarAppGridListing(props) {
         heading,
         parentId,
         typeFilter,
+        sortField,
         onTypeFilterChange,
         onSortChange,
         viewType,
@@ -38,6 +39,7 @@ export default function WithToolbarAppGridListing(props) {
                     onTypeFilterChange={onTypeFilterChange}
                     onSortChange={onSortChange}
                     viewType={viewType}
+                    sortField={sortField}
                     disableTypeFilter={disableTypeFilter}
                 />
                 <AppGridListing
