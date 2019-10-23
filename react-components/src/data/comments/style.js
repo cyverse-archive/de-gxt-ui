@@ -1,4 +1,4 @@
-export default {
+export default (theme) => ({
     main: {
         margin: 0,
         maxWidth: "lg",
@@ -47,4 +47,8 @@ export default {
     addCommentDContent: {
         height: 300,
     },
-};
+
+    redactedText: {
+        color: theme.palette.error.main,
+    },
+});

@@ -27,11 +27,11 @@ class Comment extends Component {
                         {getMessage("commentWrote")}:
                         <br />
                         {retracted ? (
-                            <Typography color="error">
+                            <span className={classes.redactedText}>
                                 {getMessage("commentRetracted")}
-                            </Typography>
+                            </span>
                         ) : (
-                            <Typography>{message}</Typography>
+                            <span>{message}</span>
                         )}
                     </Typography>
                     <IconButton
