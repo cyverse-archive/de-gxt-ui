@@ -28,7 +28,6 @@
         "classnames": "^2.2.6",
         "formik": "^1.5.0",
         "intro.js": "^2.9.3",
-        "numeral": "^2.0.6",
         "object-assign": "4.1.1",
         "numeral": "^2.0.6",
         "promise": "8.0.1",

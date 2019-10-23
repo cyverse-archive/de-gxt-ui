@@ -261,15 +261,15 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
                 //if app is published right away, the response is empty
                 if (Strings.isNullOrEmpty(result)) {
                     eventBus.fireEvent(new AppPublishedEvent(view.getSelectedApp()));
-                    if (callback != null) {
-                        callback.onSuccess(publishAppRequest.getName());
-                    }
                 } else {   //when app publication request is created.
                     AlertMessageBox amb =
                             new AlertMessageBox(appearance.publicationRequestSubmittedHeading(
                                     publishAppRequest.getName()),
                                                 appearance.publicationRequestSubmitted(publishAppRequest.getName()));
                     amb.show();
+                }
+                if (callback != null) {
+                    callback.onSuccess(publishAppRequest.getName());
                 }
             }
         });

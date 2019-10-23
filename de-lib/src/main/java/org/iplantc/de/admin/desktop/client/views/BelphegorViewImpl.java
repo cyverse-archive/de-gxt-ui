@@ -95,7 +95,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
              permIdPresenter,
              workshopAdminPresenter,
              appStatsPresenter,
-            appPublicationRequestsPresenter);
+             appPublicationRequestsPresenter);
         ensureDebugId(Belphegor.Ids.BELPHEGOR);
     }
 

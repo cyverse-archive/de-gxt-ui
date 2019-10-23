@@ -92,6 +92,7 @@ public interface ManageToolsView extends IsWidget {
         @SuppressWarnings("unusable-by-js")
         void onShareToolsSelected(Splittable tool);
 
+        @SuppressWarnings("unusable-by-js")
         void submitRequest(Splittable toolRequest,
                            ReactSuccessCallback callback,
                            ReactErrorCallback errorCallback);

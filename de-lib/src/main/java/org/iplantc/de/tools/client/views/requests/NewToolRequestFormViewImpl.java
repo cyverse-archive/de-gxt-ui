@@ -1,8 +1,7 @@
 package org.iplantc.de.tools.client.views.requests;
 
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
-import org.iplantc.de.tools.client.ReactTools;
-import org.iplantc.de.tools.client.presenter.ManageToolsViewPresenter;
+import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.gwt.core.client.Scheduler;
@@ -21,7 +20,7 @@ public final class NewToolRequestFormViewImpl implements NewToolRequestFormView 
     ManageToolsView.Presenter presenter;
 
     HTMLPanel panel;
-    private ReactTools.ToolRequestProps props;
+    private ReactToolViews.ToolRequestProps props;
 
     @Inject
     NewToolRequestFormViewImpl() {
@@ -41,11 +40,11 @@ public final class NewToolRequestFormViewImpl implements NewToolRequestFormView 
 
     @Override
     public void load(ManageToolsView.Presenter presenter) {
-        props = new ReactTools.ToolRequestProps();
+        props = new ReactToolViews.ToolRequestProps();
         props.dialogOpen = true;
         Scheduler.get().scheduleFinally(() -> {
             props.presenter = presenter;
-            CyVerseReactComponents.render(ReactTools.NewToolRequestForm, props, panel.getElement());
+            CyVerseReactComponents.render(ReactToolViews.NewToolRequestForm, props, panel.getElement());
         });
 
     }
@@ -53,6 +52,6 @@ public final class NewToolRequestFormViewImpl implements NewToolRequestFormView 
     @Override
     public void onClose() {
         props.dialogOpen = false;
-        CyVerseReactComponents.render(ReactTools.NewToolRequestForm, props, panel.getElement());
+        CyVerseReactComponents.render(ReactToolViews.NewToolRequestForm, props, panel.getElement());
     }
 }

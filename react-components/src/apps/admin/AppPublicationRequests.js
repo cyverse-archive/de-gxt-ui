@@ -54,7 +54,7 @@ const appColumnData = [
     {
         name: "Integrator Email",
         enableSorting: false,
-        key: "Email",
+        key: "integrator_email",
     },
     {
         name: "Tools Used",

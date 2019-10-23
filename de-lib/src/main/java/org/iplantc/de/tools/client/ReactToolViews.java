@@ -61,4 +61,14 @@ public class ReactToolViews {
         public int rowsPerPage;
         public String searchTerm;
     }
+
+
+    @JsProperty
+    public  static ComponentConstructorFn<ToolRequestProps> NewToolRequestForm;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name="Object")
+    public static class ToolRequestProps extends BaseProps {
+        public ManageToolsView.Presenter presenter;
+        public boolean dialogOpen;
+    }
 }
