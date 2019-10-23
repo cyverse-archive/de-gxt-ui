@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import getAppsSearchRegex from "../appSearchRegex";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
 import {

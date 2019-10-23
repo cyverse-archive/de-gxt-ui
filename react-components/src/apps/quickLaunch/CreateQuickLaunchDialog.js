@@ -57,7 +57,7 @@ function CreateQuickLaunchDialog(props) {
                 initialValues={{ description: "", is_public: false }}
                 enableReinitialize={true}
                 onSubmit={handleSubmit}
-                render={({ errors, status, touched, isSubmitting }) => (
+                render={({ isSubmitting }) => (
                     <Form>
                         <DialogContent>
                             <Field

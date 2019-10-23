@@ -5,7 +5,7 @@ import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
 
 import { build, FormTextField } from "@cyverse-de/ui-lib";
-import { Field, getIn } from "formik";
+import { Field } from "formik";
 
 /**
  * A component which allows users to specify file names in QueryBuilder

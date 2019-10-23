@@ -15,11 +15,9 @@ import {
     withStyles,
     Divider,
     DialogActions,
-    FormControl,
 } from "@material-ui/core";
 import {
     DEDialogHeader,
-    palette,
     formatDate,
     stableSort,
     getSorting,

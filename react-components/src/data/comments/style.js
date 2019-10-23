@@ -1,5 +1,3 @@
-import { palette } from "@cyverse-de/ui-lib";
-
 export default {
     main: {
         margin: 0,

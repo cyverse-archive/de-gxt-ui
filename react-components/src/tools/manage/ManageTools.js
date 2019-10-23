@@ -30,7 +30,6 @@ import {
     TableBody,
     TableCell,
     TablePagination,
-    TableRow,
     Toolbar,
     withStyles,
 } from "@material-ui/core";

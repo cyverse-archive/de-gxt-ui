@@ -173,14 +173,7 @@ function AppName(props) {
 }
 
 function Status(props) {
-    const {
-        analysis,
-        onClick,
-        username,
-        handleTimeLimitExtn,
-        classes,
-        baseId,
-    } = props;
+    const { analysis, onClick, username, handleTimeLimitExtn, baseId } = props;
     const interactiveStyle = props.classes.interactiveButton;
     const allowTimeExtn =
         analysis.interactive_urls &&
