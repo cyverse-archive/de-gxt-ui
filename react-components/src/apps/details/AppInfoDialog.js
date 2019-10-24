@@ -10,7 +10,7 @@ import { injectIntl } from "react-intl";
 
 import intlData from "../messages";
 import ids from "../ids";
-
+import getAppsSearchRegex from "../appSearchRegex";
 import AppDetails from "./AppDetails";
 import AppDoc from "./AppDoc";
 
@@ -48,6 +48,7 @@ function AppInfoDialog(props) {
     const quickLaunchLabel = formatMessage(intl, "quickLaunchLabel");
     const toolInfoLabel = formatMessage(intl, "toolInformationLbl");
     const appDocLabel = formatMessage(intl, "appDocLabel");
+    const searchRegex = getAppsSearchRegex(searchText);
 
     const [tabIndex, setTabIndex] = useState(0);
     const [dirty, setDirty] = useState(false);
@@ -223,7 +224,7 @@ function AppInfoDialog(props) {
                                 baseDebugId,
                                 ids.DETAILS.APP_INFO
                             )}
-                            searchText={searchText}
+                            searchText={searchRegex}
                             details={app}
                             presenter={presenter}
                         />
@@ -254,7 +255,7 @@ function AppInfoDialog(props) {
                                 baseDebugId,
                                 ids.DETAILS.APP_TOOLS
                             )}
-                            searchText={searchText}
+                            searchText={searchRegex}
                             details={app.tools}
                         />
                     )}
