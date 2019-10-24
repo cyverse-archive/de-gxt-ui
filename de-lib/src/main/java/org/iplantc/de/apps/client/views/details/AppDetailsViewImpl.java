@@ -26,7 +26,6 @@ public class AppDetailsViewImpl implements AppDetailsView,
     private final App app;
     private final AppDetailsAppearance appearance;
     private String searchText;
-    private String searchRegexPattern;
     private boolean showQuickLaunchFirst;
     HTMLPanel panel;
 
