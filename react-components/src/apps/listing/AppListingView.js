@@ -123,6 +123,7 @@ export default function AppListingView(props) {
                 onRatingClick={onRatingClick}
                 onRatingDeleteClick={onRatingDeleteClick}
                 handleSelectAll={handleSelectAll}
+                onFavoriteClick={onFavoriteClick}
                 {...props}
             />
         );
