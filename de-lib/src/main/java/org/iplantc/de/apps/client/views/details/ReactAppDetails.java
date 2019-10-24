@@ -27,6 +27,7 @@ public class ReactAppDetails {
         public String baseDebugId;
         public String searchText;
         public String userName;
+        public boolean showQuickLaunchFirst;
     }
 
 }

@@ -34,6 +34,7 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
 
         @JsIgnore
         void go(App app,
+                boolean showQuickLaunchFirst,
                 String searchRegexPattern);
 
         @SuppressWarnings("unusable-by-js")

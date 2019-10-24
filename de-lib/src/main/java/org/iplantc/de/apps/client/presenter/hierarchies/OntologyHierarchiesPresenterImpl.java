@@ -69,9 +69,12 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     class AppDetailsCallback extends AppsCallback<App> {
 
         private App app;
+        private boolean showQuickLaunchFirst;
 
-        public AppDetailsCallback(App app) {
+        public AppDetailsCallback(App app,
+                                  boolean showQuickLaunchFirst) {
             this.app = app;
+            this.showQuickLaunchFirst = showQuickLaunchFirst;
         }
 
         @Override
@@ -89,7 +92,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
                 @Override
                 public void onSuccess(final AppDetailsView.Presenter result) {
-                    result.go(app, searchText);
+                    result.go(app,showQuickLaunchFirst, searchText);
                 }
             });
 
@@ -221,7 +224,8 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
         App app = event.getApp();
-        appUserService.getAppDetails(app, new AppDetailsCallback(app));
+        boolean showQuickLaunchFirst = event.isShowQuickLaunchFirst();
+        appUserService.getAppDetails(app, new AppDetailsCallback(app, showQuickLaunchFirst));
     }
 
     void createViewTabs(final OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {

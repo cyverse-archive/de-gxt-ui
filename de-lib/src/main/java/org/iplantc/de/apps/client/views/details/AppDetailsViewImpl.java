@@ -26,6 +26,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
     private final App app;
     private final AppDetailsAppearance appearance;
     private String searchText;
+    private boolean showQuickLaunchFirst;
     HTMLPanel panel;
 
     @Inject
@@ -39,11 +40,13 @@ public class AppDetailsViewImpl implements AppDetailsView,
     AppDetailsViewImpl(final AppDetailsView.AppDetailsAppearance appearance,
                        final EventBus eventBus,
                        @Assisted final App app,
+                       @Assisted final boolean showQuickLaunchFirst,
                        @Assisted final String searchText) {
         this.appearance = appearance;
         this.eventBus = eventBus;
         this.app = app;
         this.searchText = searchText;
+        this.showQuickLaunchFirst = showQuickLaunchFirst;
         panel = new HTMLPanel("<div></div>");
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
     }
@@ -64,6 +67,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
         props.searchText = searchText != null ? searchText : "";
         props.userName = userInfo.getFullUsername();
+        props.showQuickLaunchFirst = showQuickLaunchFirst;
 
         CyVerseReactComponents.render(ReactAppDetails.AppInfoDialog, props, panel.getElement());
     }

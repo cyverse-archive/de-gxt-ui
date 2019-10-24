@@ -167,8 +167,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppInfoSelected(Splittable app) {
-        AppInfoSelectedEvent event = new AppInfoSelectedEvent(splittableToApp(app));
+    public void onAppInfoSelected(Splittable app, boolean showQuickLaunchFirst) {
+        AppInfoSelectedEvent event = new AppInfoSelectedEvent(splittableToApp(app), showQuickLaunchFirst);
         fireEvent(event);
     }
 

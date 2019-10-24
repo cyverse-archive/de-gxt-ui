@@ -22,14 +22,24 @@ public class AppInfoSelectedEvent extends GwtEvent<AppInfoSelectedEvent.AppInfoS
 
     public static final Type<AppInfoSelectedEventHandler> TYPE = new Type<>();
     private final App app;
+    private final boolean showQuickLaunchFirst;
 
     public AppInfoSelectedEvent(final App app) {
+        this(app, false);
+    }
+
+    public AppInfoSelectedEvent(App app, boolean showQuickLaunchFirst) {
         Preconditions.checkNotNull(app);
         this.app = app;
+        this.showQuickLaunchFirst = showQuickLaunchFirst;
     }
 
     public App getApp() {
         return app;
+    }
+
+    public boolean isShowQuickLaunchFirst() {
+        return showQuickLaunchFirst;
     }
 
     @Override
