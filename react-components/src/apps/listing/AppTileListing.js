@@ -84,6 +84,10 @@ function AppTileListing(props) {
                         apps.length > 0 &&
                         apps.map((app) => {
                             const external = app.app_type !== appType.de;
+                            const disabled =
+                                app.isDisabled instanceof Boolean
+                                    ? app.isDisabled.valueOf()
+                                    : app.isDisabled;
                             return (
                                 <Grid key={app.id} item>
                                     <AppTile
@@ -92,10 +96,10 @@ function AppTileListing(props) {
                                         name={app.name}
                                         creator={app.integrator_name}
                                         rating={app.rating}
-                                        type={app.app_type}
+                                        type={app.system_id}
                                         isPublic={app.is_public}
                                         isBeta={app.beta}
-                                        isDisabled={app.disabled}
+                                        isDisabled={disabled}
                                         isExternal={external}
                                         selected={isSelected(app.id)}
                                         onAppSelected={() => {

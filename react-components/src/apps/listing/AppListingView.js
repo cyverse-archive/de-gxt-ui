@@ -82,7 +82,7 @@ export default function AppListingView(props) {
     };
 
     const onRatingClick = (event, app, score) => {
-        presenter.onAppRatingSelected(app, score);
+        presenter.onAppRatingSelected(app, Math.ceil(score));
     };
 
     const onRatingDeleteClick = (app) => {
@@ -130,6 +130,7 @@ export default function AppListingView(props) {
                 handleSelectAll={handleSelectAll}
                 onFavoriteClick={onFavoriteClick}
                 onQuickLaunchClick={onQuickLaunchClick}
+                onCommentsClick={onCommentsClick}
                 {...props}
             />
         );

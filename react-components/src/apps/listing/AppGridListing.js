@@ -102,6 +102,10 @@ class AppGridListing extends Component {
                             const selected = isSelected(app.id);
                             const external = app.app_type !== appType.de;
                             const rowId = build(parentId, app.id);
+                            const disabled =
+                                app.isDisabled instanceof Boolean
+                                    ? app.isDisabled.valueOf()
+                                    : app.isDisabled;
                             return (
                                 <DETableRow
                                     role="checkbox"
@@ -122,7 +126,7 @@ class AppGridListing extends Component {
                                         <AppStatusIcon
                                             isPublic={app.is_public}
                                             isBeta={app.beta}
-                                            isDisabled={app.disabled}
+                                            isDisabled={disabled}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -131,7 +135,7 @@ class AppGridListing extends Component {
                                                 rowId,
                                                 ids.LISTING.APP_NAME
                                             )}
-                                            isDisabled={app.disabled}
+                                            isDisabled={disabled}
                                             name={app.name}
                                             onAppNameClicked={
                                                 onAppNameClick
@@ -250,7 +254,7 @@ function getTableColumns(deletable, enableMenu) {
         },
         {
             name: AppFields.SYSTEM.fieldName,
-            enableSorting: true,
+            enableSorting: false,
             key: AppFields.SYSTEM.key,
             align: "right",
         },
