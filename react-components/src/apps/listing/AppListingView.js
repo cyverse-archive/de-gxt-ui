@@ -66,7 +66,7 @@ export default function AppListingView(props) {
     };
 
     const onAppInfoClick = (app) => {
-        presenter.onAppInfoSelected(app, false);
+        presenter.onAppInfoSelected({ ...app }, false);
     };
 
     const onCommentsClick = (app) => {
@@ -74,7 +74,7 @@ export default function AppListingView(props) {
     };
 
     const onFavoriteClick = (app) => {
-        presenter.onAppFavoriteSelected(app);
+        presenter.onAppFavoriteSelected({ ...app });
     };
 
     const onAppNameClick = (app) => {
@@ -90,7 +90,7 @@ export default function AppListingView(props) {
     };
 
     const onQuickLaunchClick = (app) => {
-        presenter.onAppInfoSelected(app, true);
+        presenter.onAppInfoSelected({ ...app }, true);
     };
 
     if (viewType === view.TILE) {
