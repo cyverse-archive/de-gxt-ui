@@ -62,6 +62,10 @@ public interface AppsListView extends IsWidget {
         String executionSystemLabel();
 
         int menuColumnWidth();
+
+        String favSuccess(String name);
+
+        String unFavSuccess(String name);
     }
 
     /**

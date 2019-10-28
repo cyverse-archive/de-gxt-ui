@@ -2,7 +2,6 @@ package org.iplantc.de.apps.client.presenter.details;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.QuickLaunchEvent;
 import org.iplantc.de.apps.client.events.RequestCreateQuickLaunchEvent;
@@ -248,7 +247,6 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
                 }
 
                 app.setFavorite(!app.isFavorite());
-                eventBus.fireEvent(new AppFavoritedEvent(app));
                 eventBus.fireEvent(new AppUpdatedEvent(app));
             }
         });

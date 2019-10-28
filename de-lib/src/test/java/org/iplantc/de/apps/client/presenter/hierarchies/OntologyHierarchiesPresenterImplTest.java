@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
@@ -431,7 +430,6 @@ public class OntologyHierarchiesPresenterImplTest {
         voidCallbackCaptor.getValue().onSuccess(null);
 
         verify(selectedAppMock).setFavorite(eq(true));
-        verify(eventBusMock, times(2)).fireEvent(any(AppFavoritedEvent.class));
         verify(eventBusMock, times(2)).fireEvent(any(AppUpdatedEvent.class));
 
         verifyNoMoreInteractions(eventBusMock,

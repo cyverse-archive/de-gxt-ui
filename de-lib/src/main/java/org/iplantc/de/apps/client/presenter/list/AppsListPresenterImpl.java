@@ -2,7 +2,6 @@ package org.iplantc.de.apps.client.presenter.list;
 
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.CommunitiesView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
@@ -37,6 +36,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.shared.AppsCallback;
@@ -336,8 +336,12 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             @Override
             public void onSuccess(Void result) {
                 app.setFavorite(!app.isFavorite());
-                eventBus.fireEvent(new AppFavoritedEvent(app));
                 eventBus.fireEvent(new AppUpdatedEvent(app));
+                if (app.isFavorite()) {
+                    announcer.schedule(new SuccessAnnouncementConfig(appearance.favSuccess(app.getName())));
+                } else {
+                    announcer.schedule(new SuccessAnnouncementConfig(appearance.unFavSuccess(app.getName())));
+                }
             }
         });
     }

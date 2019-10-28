@@ -11,7 +11,7 @@
  * {@code gin} package. In particular, assisted injection is used to a large degree.
  *
  * The {@link org.iplantc.de.apps.client.events.AppUpdatedEvent} and
- * {@link org.iplantc.de.apps.client.events.AppFavoritedEvent} are each fired through the global
+ *  are each fired through the global
  * event bus. This was done to reduce coupling of the Grid and Category related presenters,
  * since app updates can affect category counts or visual state representation of an app in the
  * listing (e.g. when an app is favorited through the

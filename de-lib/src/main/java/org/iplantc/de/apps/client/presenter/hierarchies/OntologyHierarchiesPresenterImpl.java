@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
@@ -378,7 +377,6 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
             public void onSuccess(Void result) {
                 app.setFavorite(!app.isFavorite());
                 // Have to fire global events.
-                eventBus.fireEvent(new AppFavoritedEvent(app));
                 eventBus.fireEvent(new AppUpdatedEvent(app));
             }
         });

@@ -108,4 +108,14 @@ public class AppsListViewDefaultAppearance implements AppsListView.AppsListAppea
     public int menuColumnWidth() {
         return 30;
     }
+
+    @Override
+    public String favSuccess(String name) {
+        return appsMessages.favSuccess(name);
+    }
+
+    @Override
+    public String unFavSuccess(String name) {
+        return appsMessages.unFavSuccess(name);
+    }
 }
