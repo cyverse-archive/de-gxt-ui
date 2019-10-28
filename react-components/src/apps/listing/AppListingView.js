@@ -38,7 +38,7 @@ export default function AppListingView(props) {
             );
         }
         setSelectedApps(newSelected);
-        presenter.onAppSelectionChanged(newSelected);
+        presenter.onAppSelectionChanged({ apps: newSelected });
     };
 
     const handleSelectAll = (checked) => {
@@ -47,7 +47,7 @@ export default function AppListingView(props) {
 
     const resetAppSelection = () => {
         setSelectedApps([]);
-        presenter.onAppSelectionChanged([]);
+        presenter.onAppSelectionChanged({ apps: [] });
     };
 
     const onTypeFilterChange = (filter) => {

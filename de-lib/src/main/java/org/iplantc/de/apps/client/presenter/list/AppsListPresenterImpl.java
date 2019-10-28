@@ -24,6 +24,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.groups.Group;
@@ -178,11 +179,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onAppSelectionChanged(Splittable splittableSelectedApps) {
-        selectedApps.clear();
-        for (int i = 0; i < splittableSelectedApps.size(); i++) {
-            App app = splittableToApp(splittableSelectedApps.get(i));
-            selectedApps.add(app);
-        }
+        selectedApps = AutoBeanCodex.decode(factory, AppList.class, splittableSelectedApps.getPayload()).as().getApps();
         AppSelectionChangedEvent event = new AppSelectionChangedEvent(selectedApps);
         fireEvent(event);
     }
