@@ -166,17 +166,23 @@ class AppDetails extends Component {
     }
 
     render() {
-        const { details, searchText, baseDebugId, intl, classes } = this.props;
+        const {
+            app,
+            details,
+            searchText,
+            baseDebugId,
+            intl,
+            classes,
+        } = this.props;
         const { loading, dialogOpen } = this.state;
         const isExternal =
-            details.app_type.toUpperCase() ===
-            constants.EXTERNAL_APP.toUpperCase();
-        const showAppURL = details.is_public || isExternal;
+            app.app_type.toUpperCase() === constants.EXTERNAL_APP.toUpperCase();
+        const showAppURL = app.is_public || isExternal;
         const {
             average: averageRating,
             user: userRating,
             total: totalRating,
-        } = details.rating;
+        } = app.rating;
         const labelClass = classes.detailsLabel,
             valueClass = classes.detailsValue;
 

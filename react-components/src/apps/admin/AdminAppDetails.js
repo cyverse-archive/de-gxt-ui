@@ -35,6 +35,7 @@ function AdminAppDetailsDialog(props) {
     const {
         open,
         app,
+        details,
         parentId,
         presenter,
         restrictedChars,
@@ -303,6 +304,7 @@ AdminAppDetailsDialog.propTypes = {
         closeAppDetailsDlg: PropTypes.func.isRequired,
     }),
     app: PropTypes.object.isRequired,
+    details: PropTypes.object,
     restrictedChars: PropTypes.string.isRequired,
     restrictedStartingChars: PropTypes.string.isRequired,
     createDocWikiUrl: PropTypes.string.isRequired,
@@ -312,6 +314,6 @@ AdminAppDetailsDialog.propTypes = {
 
 export default withFormik({
     enableReinitialize: true,
-    mapPropsToValues: ({ app }) => ({ ...app }),
+    mapPropsToValues: ({ details }) => ({ ...details }),
     handleSubmit,
 })(withI18N(AdminAppDetailsDialog, messages));

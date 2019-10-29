@@ -31,6 +31,7 @@ import org.iplantc.de.shared.DEProperties;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
@@ -68,7 +69,8 @@ public class AdminAppsCategoriesPresenterImplTest {
 
     @Captor ArgumentCaptor<DECallback<List<AppCategory>>> appCatListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<AppCategory>> appCatCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
+    @Captor
+    ArgumentCaptor<AsyncCallback<Splittable>> appCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
 
     private final String mockBetaCategoryId = "mockBetaCategoryID";
@@ -273,20 +275,16 @@ public class AdminAppsCategoriesPresenterImplTest {
         CategorizeAppSelected eventMock = mock(CategorizeAppSelected.class);
         App appMock = mock(App.class);
         when(eventMock.getApps()).thenReturn(Lists.newArrayList(appMock));
+        when(appMock.getId()).thenReturn("1");
+        when(appMock.getSystemId()).thenReturn("DE");
 
         /*** CALL METHOD UNDER TEST ***/
         spy.onCategorizeAppSelected(eventMock);
 
         verify(viewMock).mask(anyString());
-        verify(adminAppServiceMock).getAppDetails(eq(appMock),
+        verify(adminAppServiceMock).getAppDetails(eq("1"), eq("DE"),
                                                   appCallbackCaptor.capture());
 
-        App resultMock = mock(App.class);
-        /*** CALL METHOD UNDER TEST ***/
-        appCallbackCaptor.getValue().onSuccess(resultMock);
-
-        verify(spy).showCategorizeAppDialog(eq(resultMock));
-        verify(viewMock).unmask();
         verifyNoMoreInteractions(viewMock,
                                  adminAppServiceMock);
         verifyZeroInteractions(treeStoreMock,

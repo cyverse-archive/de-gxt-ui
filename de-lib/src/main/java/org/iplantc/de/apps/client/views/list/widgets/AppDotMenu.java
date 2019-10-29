@@ -8,6 +8,9 @@ import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
@@ -35,7 +38,11 @@ public class AppDotMenu extends Menu {
 
     void addHandlers(HasHandlers hasHandlers, App app) {
         if (hasHandlers != null) {
-            infoBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppInfoSelectedEvent(app)));
+            Splittable appSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+            infoBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppInfoSelectedEvent(app.getId(),
+                                                                                                app.getSystemId(),
+                                                                                                app.isPublic(),
+                                                                                                appSplittable)));
             favoriteBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppFavoriteSelectedEvent(app)));
             commentBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppCommentSelectedEvent(app)));
         }

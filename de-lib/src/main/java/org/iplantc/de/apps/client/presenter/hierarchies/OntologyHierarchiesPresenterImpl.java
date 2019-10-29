@@ -41,6 +41,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.SortDir;
@@ -65,12 +66,12 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                                                          DetailsHierarchyClicked.DetailsHierarchyClickedHandler,
                                                          DetailsCategoryClicked.DetailsCategoryClickedHandler {
 
-    class AppDetailsCallback extends AppsCallback<App> {
+    class AppDetailsCallback extends AppsCallback<Splittable> {
 
-        private App app;
+        private Splittable app;
         private boolean showQuickLaunchFirst;
 
-        public AppDetailsCallback(App app,
+        public AppDetailsCallback(Splittable app,
                                   boolean showQuickLaunchFirst) {
             this.app = app;
             this.showQuickLaunchFirst = showQuickLaunchFirst;
@@ -82,7 +83,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         }
 
         @Override
-        public void onSuccess(final App appDetails) {
+        public void onSuccess(final Splittable appDetails) {
             presenterProvider.get(new AsyncCallback<AppDetailsView.Presenter>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -91,7 +92,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
                 @Override
                 public void onSuccess(final AppDetailsView.Presenter result) {
-                    result.go(app,showQuickLaunchFirst, searchText);
+                    result.go(app, appDetails,showQuickLaunchFirst, searchText);
                 }
             });
 
@@ -222,9 +223,10 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
-        App app = event.getApp();
+        Splittable app = event.getApp();
         boolean showQuickLaunchFirst = event.isShowQuickLaunchFirst();
-        appUserService.getAppDetails(app, new AppDetailsCallback(app, showQuickLaunchFirst));
+        appUserService.getAppDetails(event.getAppId(),event.getSystemId(), new AppDetailsCallback(app,
+                                                                              showQuickLaunchFirst));
     }
 
     void createViewTabs(final OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {

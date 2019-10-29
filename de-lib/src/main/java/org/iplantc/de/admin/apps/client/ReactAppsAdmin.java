@@ -29,6 +29,7 @@ public class ReactAppsAdmin {
     public static class AdminAppDetailsProps extends BaseProps {
         public AdminAppsGridView.Presenter presenter;
         public Splittable app;
+        public Splittable details;
         public String restrictedChars;
         public String restrictedStartingChars;
         public String createDocWikiUrl;

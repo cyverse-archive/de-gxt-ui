@@ -17,6 +17,9 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * @author jstroot
@@ -92,9 +95,13 @@ public class AppInfoCell extends AbstractCell<App> implements HasCell<App, App> 
         this.hasHandlers = hasHandlers;
     }
 
-    private void doOnClick(App value) {
+    private void doOnClick(App app) {
         if(hasHandlers != null){
-            hasHandlers.fireEvent(new AppInfoSelectedEvent(value));
+            Splittable appSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+            hasHandlers.fireEvent(new AppInfoSelectedEvent(app.getId(),
+                                                           app.getSystemId(),
+                                                           app.isPublic(),
+                                                           appSplittable));
         }
     }
 

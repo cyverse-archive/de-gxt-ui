@@ -109,8 +109,11 @@ public interface AppsListView extends IsWidget {
         void onAppNameSelected(Splittable appSplittable);
 
         @SuppressWarnings("unusable-by-js")
-        void onAppInfoSelected(Splittable appSplittable,
-                               boolean showQuickLaunchFirst);
+        void onAppInfoSelected(String appId,
+                               String systemId,
+                               boolean isPublic,
+                               boolean showQuickLaunchFirst,
+                               Splittable app);
 
 
         @SuppressWarnings("unusable-by-js")

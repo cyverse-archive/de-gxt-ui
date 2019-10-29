@@ -43,51 +43,139 @@ class AdminAppDetailsTest extends Component {
         };
 
         const app = {
-            integration_date: "2015-06-18T19:12:46Z",
+            integration_date: "2018-11-28T18:20:32.000Z",
             description:
-                "Takes a Blastp output from mapping against a uniprot database and retrieves the matching GO headings.",
+                "Jupyter Lab based on jupyter/datascience-notebook with updated iJab plugin and jupyterlab_irods",
             deleted: false,
             pipeline_eligibility: {
-                is_valid: true,
-                reason: "",
+                is_valid: false,
+                reason:
+                    "Job type, interactive, canu0027t currently be included in a pipeline.",
             },
             is_favorite: false,
-            integrator_name: "rogerab",
+            integrator_name: "Upendra Kumar Devisetty",
             beta: false,
             permission: "read",
             can_favor: true,
             disabled: false,
             can_rate: true,
-            name: "Add GO to Blastp-uniprot output",
+            name: "JupyterLab-0.0.3",
             system_id: "de",
             is_public: true,
-            id: "f4818d90-13e9-11e5-ae9c-d3fdcba95883",
-            edited_date: "2015-06-18T19:12:46Z",
+            id: "34f2c392-9a8a-11e8-9c8e-008cfa5ae621",
+            edited_date: "2019-02-28T19:12:20.000Z",
             step_count: 1,
             can_run: true,
             job_stats: {
-                job_count_completed: 0,
-                job_count: 0,
-                job_count_failed: 0,
+                job_count_completed: 79,
+                job_last_completed: "2019-10-25T16:23:08.000Z",
+                job_count: 148,
+                job_count_failed: 2,
+                last_used: "2019-10-21T18:51:51.000Z",
             },
-            integrator_email: "rogerab@email.arizona.edu",
+            integrator_email: "upendra@cyverse.org",
             app_type: "DE",
             rating: {
-                average: 4.75,
-                total: 4,
+                average: 5.0,
+                total: 2,
             },
+        };
+
+        const details = {
+            integration_date: "2018-11-28T18:20:32.000Z",
+            description:
+                "Jupyter Lab" +
+                " based on jupyter/datascience-notebook with updated iJab plugin and jupyterlab_irods",
+            deleted: false,
+            integrator_name: "Upendra Kumar Devisetty",
+            disabled: false,
+            suggested_categories: [],
+            hierarchies: [
+                {
+                    iri: "http://edamontology.org/topic_0003",
+                    label: "Topic",
+                    subclasses: [
+                        {
+                            iri: "http://edamontology.org/topic_3316",
+                            label: "Computer science",
+                            subclasses: [
+                                {
+                                    iri: "http://edamontology.org/topic_0092",
+                                    label: "Data visualisation",
+                                },
+                                {
+                                    iri: "http://edamontology.org/topic_3474",
+                                    label: "Machine learning",
+                                },
+                                {
+                                    iri: "http://edamontology.org/topic_3473",
+                                    label: "Data mining",
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    iri: "http://edamontology.org/operation_0004",
+                    label: "Operation",
+                    subclasses: [
+                        {
+                            iri: "http://edamontology.org/operation_2945",
+                            label: "Analysis",
+                        },
+                    ],
+                },
+            ],
+            name: "JupyterLab-0.0.3",
+            tools: [
+                {
+                    name: "jupyter-lab",
+                    type: "interactive",
+                    description:
+                        "Cyverse Jupyter Lab beta with updated iJab plugin and jupyterlab_irods",
+                    id: "5db4e2c7-7a0a-492a-bf79-09cba3801e0d",
+                    container: {
+                        image: {
+                            name: "gims.cyverse.org:5000/jupyter-lab",
+                            tag: "1.0",
+                            deprecated: false,
+                        },
+                    },
+                    version: "0.0.3",
+                },
+            ],
+            system_id: "de",
+            references: [
+                "https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/user_guide/quick-jupyter.html",
+            ],
             documentation: {
-                app_id: "f4818d90-13e9-11e5-ae9c-d3fdcba95883",
+                app_id: "34f2c392-9a8a-11e8-9c8e-008cfa5ae621",
                 documentation:
-                    "### Add GO to Blastp-uniprot output \n> #### Description and Quick Start \n>> Takes a Blastp output from mapping against a uniprot database and retrieves the matching GO headings. \n> #### Test Data \n>> /iplant/home/shared/iplantcollaborative/example_data/Add_GO_to_blast-uniprot_output \n> #### Input File(s) \n>> blastp_out.txt from Blastp a subset of uniprot, or similar tab-delimited blast output, where the ids are uniprot ids. \n> #### Parameters Used in App \n>> None. \n> #### Output File(s) \n>> A non-redundant list of the blast ids used. The goa_entries.srt.txt file, which is the sorted list of blast ids matched with appropriate GO annotation headings.",
+                    "### JupyterLab-0.0.3 \n #### Description and Quick Start \n" +
+                    " Jupyter Lab based on jupyter/datascience-notebook with updated iJab plugin and" +
+                    " jupyterlab_irods \n #### Test Data \n" +
+                    " /iplant/home/shared/iplantcollaborative/example_data/VICE/JupyterLab \n ####" +
+                    " Input File(s)\n  Any file or folder \n #### Parameters Used in App" +
+                    " \n No parameters \n #### Output File(s) \n No outputs",
                 references: [
-                    "http://archive.sysbio.harvard.edu/csb/resources/computational/scriptome/UNIX/Tools/Merge.html",
+                    "https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/user_guide/quick-jupyter.html",
                 ],
-                created_on: "2015-06-18T19:12:46Z",
-                modified_on: "2019-07-19T21:53:27Z",
-                created_by: "rogerab@iplantcollaborative.org",
-                modified_by: "aramsey@iplantcollaborative.org",
+                created_on: "2018-11-28T18:20:32.000Z",
+                modified_on: "2019-02-28T19:12:20.000Z",
+                created_by: "upendra_35@iplantcollaborative.org",
+                modified_by: "upendra_35@iplantcollaborative.org",
             },
+            categories: [],
+            id: "34f2c392-9a8a-11e8-9c8e-008cfa5ae621",
+            edited_date: "2019-02-28T19:12:20.000Z",
+            job_stats: {
+                job_count_completed: 79,
+                job_last_completed: "2019-10-25T16:23:08.000Z",
+                job_count: 148,
+                job_count_failed: 2,
+                last_used: "2019-10-21T18:51:51.000Z",
+            },
+            integrator_email: "upendra@cyverse.org",
             extra: {
                 htcondor: {
                     extra_requirements: "TRUE && TRUE",
@@ -108,6 +196,7 @@ class AdminAppDetailsTest extends Component {
                 open={true}
                 parentId={parentId}
                 app={object("app", app)}
+                details={object("details", details)}
                 restrictedChars={restrictedChars}
                 restrictedStartingChars={restrictedStartingChars}
                 createDocWikiUrl={createDocWikiUrl}

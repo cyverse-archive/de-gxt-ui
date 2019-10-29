@@ -3,11 +3,10 @@ import PropTypes from "prop-types";
 import exStyles from "../style";
 import getAppsSearchRegex from "../appSearchRegex";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
-
 import {
-    AppMenu,
     AppName,
     AppStatusIcon,
+    AppMenu,
     build,
     DECheckbox,
     DETableRow,
@@ -102,10 +101,6 @@ class AppGridListing extends Component {
                             const selected = isSelected(app.id);
                             const external = app.app_type !== appType.de;
                             const rowId = build(parentId, app.id);
-                            const disabled =
-                                app.isDisabled instanceof Boolean
-                                    ? app.isDisabled.valueOf()
-                                    : app.isDisabled;
                             return (
                                 <DETableRow
                                     role="checkbox"
@@ -126,7 +121,7 @@ class AppGridListing extends Component {
                                         <AppStatusIcon
                                             isPublic={app.is_public}
                                             isBeta={app.beta}
-                                            isDisabled={disabled}
+                                            isDisabled={app.disabled}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -135,7 +130,7 @@ class AppGridListing extends Component {
                                                 rowId,
                                                 ids.LISTING.APP_NAME
                                             )}
-                                            isDisabled={disabled}
+                                            isDisabled={app.disabled}
                                             name={app.name}
                                             onAppNameClicked={
                                                 onAppNameClick

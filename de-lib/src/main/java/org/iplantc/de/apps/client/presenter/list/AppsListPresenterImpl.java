@@ -167,8 +167,13 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void onAppInfoSelected(Splittable app, boolean showQuickLaunchFirst) {
-        AppInfoSelectedEvent event = new AppInfoSelectedEvent(splittableToApp(app), showQuickLaunchFirst);
+    public void onAppInfoSelected(String appId,
+                                  String systemId,
+                                  boolean isPublic,
+                                  boolean showQuickLaunchFirst,
+                                  Splittable app) {
+        AppInfoSelectedEvent event =
+                new AppInfoSelectedEvent(appId, systemId, isPublic, showQuickLaunchFirst, app);
         fireEvent(event);
     }
 
@@ -216,7 +221,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);
         listView.setHeading(Joiner.on(" >> ").join(event.getGroupHierarchy()));
         appCategory = event.getAppCategorySelection().iterator().next();
-
+        selectedHierarchy = null;
         disableTypeFilterForHPC();
         getAppsWithSelectedCategory();
     }
@@ -246,7 +251,6 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             }
         }
         listView.setTypeFilter(filter);
-
     }
 
     void getCommunityApps(Group community) {
@@ -277,6 +281,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public void onOntologyHierarchySelectionChanged(OntologyHierarchySelectionChangedEvent event) {
         listView.setLoadingMask(true);
         selectedHierarchy = event.getSelectedHierarchy();
+        appCategory = null;
         listView.setHeading(Joiner.on(" >> ").join(event.getPath()));
         listView.disableTypeFilter(false);
         getAppsWithSelectedHierarchy();
@@ -335,9 +340,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
             @Override
             public void onSuccess(Void result) {
-                app.setFavorite(!app.isFavorite());
                 eventBus.fireEvent(new AppUpdatedEvent(app));
-                if (app.isFavorite()) {
+                if (!app.isFavorite()) {
                     announcer.schedule(new SuccessAnnouncementConfig(appearance.favSuccess(app.getName())));
                 } else {
                     announcer.schedule(new SuccessAnnouncementConfig(appearance.unFavSuccess(app.getName())));

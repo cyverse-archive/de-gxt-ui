@@ -44,6 +44,7 @@ function AppInfoDialog(props) {
     const {
         dialogOpen,
         app,
+        appDetails,
         presenter,
         docEditable,
         searchText,
@@ -237,7 +238,8 @@ function AppInfoDialog(props) {
                                 ids.DETAILS.APP_INFO
                             )}
                             searchText={searchRegex}
-                            details={app}
+                            app={app}
+                            details={appDetails}
                             presenter={presenter}
                         />
                     )}
@@ -268,7 +270,7 @@ function AppInfoDialog(props) {
                                 ids.DETAILS.APP_TOOLS
                             )}
                             searchText={searchRegex}
-                            details={app.tools}
+                            details={appDetails.tools}
                         />
                     )}
                     {tabIndex === TAB_INDEX.APP_DOC && (

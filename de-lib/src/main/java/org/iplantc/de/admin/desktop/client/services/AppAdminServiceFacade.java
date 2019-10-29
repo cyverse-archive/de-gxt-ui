@@ -11,6 +11,7 @@ import org.iplantc.de.shared.DECallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -68,7 +69,9 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
 
     void categorizeApp(AppCategorizeRequest request, AsyncCallback<String> callback);
 
-    void getAppDetails(HasQualifiedId app, AsyncCallback<App> callback);
+    void getAppDetails(final String appId,
+                       final String systemId,
+                       final AsyncCallback<Splittable> callback);
 
     void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 

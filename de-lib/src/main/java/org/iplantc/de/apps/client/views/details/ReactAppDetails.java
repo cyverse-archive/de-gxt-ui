@@ -21,6 +21,7 @@ public class ReactAppDetails {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class AppInfoProps extends BaseProps {
         public Splittable app;
+        public Splittable appDetails;
         public AppDetailsView.Presenter presenter;
         public boolean dialogOpen;
         public boolean docEditable;

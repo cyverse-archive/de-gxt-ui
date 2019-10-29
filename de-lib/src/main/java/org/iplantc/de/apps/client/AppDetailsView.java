@@ -1,7 +1,6 @@
 package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
@@ -33,7 +32,8 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
     interface Presenter {
 
         @JsIgnore
-        void go(App app,
+        void go(Splittable app,
+                Splittable appDetails,
                 boolean showQuickLaunchFirst,
                 String searchRegexPattern);
 
@@ -82,7 +82,11 @@ public interface AppDetailsView extends IsWidget, AppUpdatedEvent.AppUpdatedEven
 
     }
 
-    void load(Presenter presenter);
+    void load(Presenter presenter,
+              final Splittable app,
+              final Splittable appDetails,
+              boolean showQuickLaunchFirst,
+              final String searchText);
 
     void onClose();
 }

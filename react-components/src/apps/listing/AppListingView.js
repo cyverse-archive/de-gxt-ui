@@ -66,7 +66,13 @@ export default function AppListingView(props) {
     };
 
     const onAppInfoClick = (app) => {
-        presenter.onAppInfoSelected(app, false);
+        presenter.onAppInfoSelected(
+            app.id,
+            app.system_id,
+            app.is_public,
+            false,
+            app
+        );
     };
 
     const onCommentsClick = (app) => {
@@ -90,7 +96,13 @@ export default function AppListingView(props) {
     };
 
     const onQuickLaunchClick = (app) => {
-        presenter.onAppInfoSelected(app, true);
+        presenter.onAppInfoSelected(
+            app.id,
+            app.system_id,
+            app.is_public,
+            true,
+            app
+        );
     };
 
     if (viewType === view.TILE) {

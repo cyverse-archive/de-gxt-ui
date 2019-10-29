@@ -213,34 +213,34 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
         appEditor.setBaseProps(getBaseProps());
         view.mask(appearance.saveAppLoadingMask());
-        App selectedApp = event.getApp();
+        Splittable selectedApp = event.getApp();
         //get doc only for public apps!
-        if (selectedApp.isPublic()) {
-            adminAppService.getAppDetails(selectedApp, new AsyncCallback<App>() {
+        if (event.isPublic()) {
+            adminAppService.getAppDetails(event.getAppId(),
+                                          event.getSystemId(),
+                                          new AsyncCallback<Splittable>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     view.unmask();
-                    showAppEditor(selectedApp);
+                    showAppEditor(selectedApp, null);
                     ErrorHandler.postReact(caught);
                 }
 
                 @Override
-                public void onSuccess(final App details) {
-                    // Get result
+                public void onSuccess(final Splittable details) {
                     view.unmask();
-                    selectedApp.setDocumentation(details.getDocumentation());
-                    selectedApp.setExtra(details.getExtra());
-                    showAppEditor(selectedApp);
+                    showAppEditor(selectedApp, details);
                 }
             });
         } else {
             view.unmask();
-            showAppEditor(selectedApp);
+            showAppEditor(selectedApp, null);
         }
     }
 
-    protected void showAppEditor(App app) {
-        appEditor.edit(convertAppToSplittable(app));
+    protected void showAppEditor(Splittable app,
+                                 Splittable details) {
+        appEditor.edit(app, details);
     }
 
     @Override

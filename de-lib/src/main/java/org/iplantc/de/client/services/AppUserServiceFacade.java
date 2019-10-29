@@ -73,7 +73,9 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
     /**
      * Get app details
      */
-    void getAppDetails(App app, DECallback<App> callback);
+    void getAppDetails(String appId,
+                       String systemId,
+                       DECallback<Splittable> callback);
 
     void getAppDoc(HasQualifiedId app, DECallback<Splittable> callback);
 

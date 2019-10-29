@@ -16,6 +16,7 @@ import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper;
@@ -110,18 +111,12 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void getAppDetails(final HasQualifiedId app,
-                              final AsyncCallback<App> callback) {
-        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId() + "/details";
-
+    public void getAppDetails(final String appId,
+                              final String systemId,
+                              final AsyncCallback<Splittable> callback) {
+        String address = APPS_ADMIN + "/" + systemId + "/" + appId + "/details";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, App>(callback) {
-            @Override
-            protected App convertFrom(String object) {
-                AutoBean<App> appAutoBean = AutoBeanCodex.decode(factory, App.class, object);
-                return appAutoBean.as();
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableCallbackConverter(callback));
     }
 
     @Override

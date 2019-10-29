@@ -49,6 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
@@ -118,7 +119,7 @@ public class OntologyHierarchiesPresenterImplTest {
 
     @Captor ArgumentCaptor<DECallback<List<OntologyHierarchy>>> hierarchyListCallback;
     @Captor ArgumentCaptor<OntologyHierarchiesPresenterImpl.FilteredHierarchyCallback> hierarchyCallback;
-    @Captor ArgumentCaptor<DECallback<App>> appDetailsCallback;
+    @Captor ArgumentCaptor<DECallback<Splittable>> appDetailsCallback;
     @Captor ArgumentCaptor<DECallback<List<Avu>>> appAvuCallbackCaptor;
     @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<ParentFilteredHierarchyCallback> parentCallbackCaptor;
@@ -264,17 +265,22 @@ public class OntologyHierarchiesPresenterImplTest {
     @Test
     public void testOnAppInfoSelected_HPCApp() throws Exception {
         AppInfoSelectedEvent eventMock = mock(AppInfoSelectedEvent.class);
-        when(eventMock.getApp()).thenReturn(appMock);
+        Splittable appMockSplittable = mock(Splittable.class);
+        when(eventMock.getApp()).thenReturn(appMockSplittable);
+        when(eventMock.getAppId()).thenReturn("1");
+        when(eventMock.getSystemId()).thenReturn("DE");
         when(appMock.getAppType()).thenReturn(App.EXTERNAL_APP);
         when(appMock.getGroups()).thenReturn(appCategoryListMock);
         when(appMock.getHierarchies()).thenReturn(hierarchyListMock);
         when(avuListMock.iterator()).thenReturn(avuIteratorMock);
+        Splittable appDetails = mock(Splittable.class);
 
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
-        verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
-        appDetailsCallback.getValue().onSuccess(appMock);
+        verify(appUserServiceMock).getAppDetails(eq("1"),eq("DE"),
+                                                 appDetailsCallback.capture());
+        appDetailsCallback.getValue().onSuccess(appDetails);
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
     }
@@ -282,19 +288,25 @@ public class OntologyHierarchiesPresenterImplTest {
     @Test
     public void testOnAppInfoSelected_UnclassifiedApp() throws Exception {
         AppInfoSelectedEvent eventMock = mock(AppInfoSelectedEvent.class);
-        when(eventMock.getApp()).thenReturn(appMock);
+        Splittable appMockSplittable = mock(Splittable.class);
+        when(eventMock.getApp()).thenReturn(appMockSplittable);
+        when(eventMock.getAppId()).thenReturn("1");
+        when(eventMock.getSystemId()).thenReturn("DE");
         when(appMock.getAppType()).thenReturn("DE");
+        when(appMock.getSystemId()).thenReturn("DE");
         when(appMock.getGroups()).thenReturn(appCategoryListMock);
         when(appMock.getHierarchies()).thenReturn(hierarchyListMock);
         when(avuListMock.iterator()).thenReturn(avuIteratorMock);
         when(hierarchyListMock.size()).thenReturn(0);
+        Splittable appDetails = mock(Splittable.class);
 
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
 
-        verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
-        appDetailsCallback.getValue().onSuccess(appMock);
+        verify(appUserServiceMock).getAppDetails(eq("1"),eq("DE"),
+                                                 appDetailsCallback.capture());
+        appDetailsCallback.getValue().onSuccess(appDetails);
 
         verifyZeroInteractions(categoryTreeStoreMock);
 
@@ -305,16 +317,20 @@ public class OntologyHierarchiesPresenterImplTest {
     @Test
     public void testOnAppInfoSelected_ClassifiedApp() throws Exception {
         AppInfoSelectedEvent eventMock = mock(AppInfoSelectedEvent.class);
-        when(eventMock.getApp()).thenReturn(appMock);
-        when(appMock.getAppType()).thenReturn("DE");
+        Splittable appMockSplittable = mock(Splittable.class);
+        when(eventMock.getApp()).thenReturn(appMockSplittable);
+        when(eventMock.getAppId()).thenReturn("1");
+        when(eventMock.getSystemId()).thenReturn("DE");
         when(avuListMock.iterator()).thenReturn(avuIteratorMock);
+        Splittable appDetails = mock(Splittable.class);
 
         /** CALL METHOD UNDER TEST **/
         uut.onAppInfoSelected(eventMock);
 
 
-        verify(appUserServiceMock).getAppDetails(eq(appMock), appDetailsCallback.capture());
-        appDetailsCallback.getValue().onSuccess(appMock);
+        verify(appUserServiceMock).getAppDetails(eq("1"),eq("DE"),
+                                                 appDetailsCallback.capture());
+        appDetailsCallback.getValue().onSuccess(appDetails);
 
         verifyZeroInteractions(categoryTreeStoreMock);
 
@@ -430,7 +446,7 @@ public class OntologyHierarchiesPresenterImplTest {
         voidCallbackCaptor.getValue().onSuccess(null);
 
         verify(selectedAppMock).setFavorite(eq(true));
-        verify(eventBusMock, times(2)).fireEvent(any(AppUpdatedEvent.class));
+        verify(eventBusMock, times(1)).fireEvent(any(AppUpdatedEvent.class));
 
         verifyNoMoreInteractions(eventBusMock,
                                  appUserServiceMock);
