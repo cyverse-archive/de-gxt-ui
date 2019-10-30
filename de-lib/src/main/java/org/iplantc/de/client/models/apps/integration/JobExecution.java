@@ -1,10 +1,12 @@
 package org.iplantc.de.client.models.apps.integration;
 
 import org.iplantc.de.client.models.HasDescription;
+import org.iplantc.de.client.models.HasSystemId;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import org.iplantc.de.client.models.HasSystemId;
+
+import java.util.List;
 
 /**
  * 
@@ -44,4 +46,8 @@ public interface JobExecution extends HasName, HasDescription, HasSystemId {
 
     @PropertyName("output_dir")
     void setOutputDirectory(String outputDirectory);
+
+    List<AppTemplateStepRequirements> getRequirements();
+
+    void setRequirements(List<AppTemplateStepRequirements> requirements);
 }

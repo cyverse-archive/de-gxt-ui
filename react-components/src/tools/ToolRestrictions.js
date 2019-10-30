@@ -8,21 +8,20 @@ import {
     FormCheckbox,
     FormNumberField,
     FormSelectField,
-    FormTextField,
     getMessage,
 } from "@cyverse-de/ui-lib";
-import { Field } from "formik";
+
 import { MenuItem, Typography } from "@material-ui/core";
+import { Field, getIn } from "formik";
+import numeral from "numeral";
 import PropTypes from "prop-types";
 
 const NETWORK_MODES = ["bridge", "none"];
 
 const ONE_GB = 1024 * 1024 * 1024;
 
-function convertToGB(size) {
-    let gbValue = Math.round(size / ONE_GB);
-    return gbValue + " GB";
-}
+const formatGBListItem = (size) => size && numeral(size).format("0 ib");
+const formatGBValue = (size) => size && numeral(size).format("0.0 ib");
 
 function buildLimitList(startValue, maxValue) {
     let limits = [];
@@ -38,11 +37,62 @@ function buildLimitList(startValue, maxValue) {
 }
 
 function Restrictions(props) {
-    const { parentId, isAdmin, maxCPUCore, maxMemory, maxDiskSpace } = props;
+    const {
+        parentId,
+        isAdmin,
+        maxCPUCore,
+        maxMemory,
+        maxDiskSpace,
+        form: { values },
+    } = props;
 
     const maxCPUCoreList = buildLimitList(1, maxCPUCore);
     const memoryLimitList = buildLimitList(2 * ONE_GB, maxMemory);
     const minDiskSpaceList = buildLimitList(ONE_GB, maxDiskSpace);
+
+    const validateMinCPUs = (value) => {
+        if (value && value < 0) {
+            return getMessage("validationErrMustBePositive");
+        }
+
+        const max_cpu_cores = getIn(values, "container.max_cpu_cores");
+        if (max_cpu_cores > 0 && value > max_cpu_cores) {
+            return getMessage("validationErrMinCPUsGreaterThanMax");
+        }
+    };
+
+    const validateMaxCPUs = (value) => {
+        if (value && value < 0) {
+            return getMessage("validationErrMustBePositive");
+        }
+
+        const min_cpu_cores = getIn(values, "container.min_cpu_cores");
+        if (0 < value && value < min_cpu_cores) {
+            return getMessage("validationErrMaxCPUsLessThanMin");
+        }
+    };
+
+    const validateMinRAM = (value) => {
+        if (value && value < 0) {
+            return getMessage("validationErrMustBePositive");
+        }
+
+        const memory_limit = getIn(values, "container.memory_limit");
+        if (memory_limit > 0 && value > memory_limit) {
+            return getMessage("validationErrMinRAMGreaterThanMax");
+        }
+    };
+
+    const validateMaxRAM = (value) => {
+        if (value && value < 0) {
+            return getMessage("validationErrMustBePositive");
+        }
+
+        const min_memory_limit = getIn(values, "container.min_memory_limit");
+        if (0 < value && value < min_memory_limit) {
+            return getMessage("validationErrMaxRAMLessThanMin");
+        }
+    };
 
     return (
         <SimpleExpansionPanel
@@ -63,6 +113,7 @@ function Restrictions(props) {
                     label={getMessage("minCPUCores")}
                     id={build(parentId, ids.EDIT_TOOL_DLG.MIN_CPU_CORES)}
                     component={FormNumberField}
+                    validate={validateMinCPUs}
                 />
             )}
             <Field
@@ -70,6 +121,7 @@ function Restrictions(props) {
                 label={getMessage("maxCPUCores")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.MAX_CPU_CORES)}
                 component={FormSelectField}
+                validate={validateMaxCPUs}
             >
                 {maxCPUCoreList.map((size, index) => (
                     <MenuItem
@@ -91,14 +143,16 @@ function Restrictions(props) {
                     label={getMessage("minMemoryLimit")}
                     id={build(parentId, ids.EDIT_TOOL_DLG.MIN_MEMORY_LIMIT)}
                     component={FormNumberField}
+                    validate={validateMinRAM}
                 />
             )}
             <Field
                 name="container.memory_limit"
                 label={getMessage("memoryLimit")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.MEMORY_LIMIT)}
-                renderValue={convertToGB}
                 component={FormSelectField}
+                renderValue={formatGBValue}
+                validate={validateMaxRAM}
             >
                 {memoryLimitList.map((size, index) => (
                     <MenuItem
@@ -110,7 +164,7 @@ function Restrictions(props) {
                             size
                         )}
                     >
-                        {convertToGB(size)}
+                        {formatGBListItem(size)}
                     </MenuItem>
                 ))}
             </Field>
@@ -126,8 +180,8 @@ function Restrictions(props) {
                 name="container.min_disk_space"
                 label={getMessage("minDiskSpace")}
                 id={build(parentId, ids.EDIT_TOOL_DLG.MIN_DISK_SPACE)}
-                renderValue={convertToGB}
                 component={FormSelectField}
+                renderValue={formatGBValue}
             >
                 {minDiskSpaceList.map((size, index) => (
                     <MenuItem
@@ -139,7 +193,7 @@ function Restrictions(props) {
                             size
                         )}
                     >
-                        {convertToGB(size)}
+                        {formatGBListItem(size)}
                     </MenuItem>
                 ))}
             </Field>

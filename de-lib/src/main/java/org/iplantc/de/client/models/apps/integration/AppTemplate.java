@@ -69,5 +69,8 @@ public interface AppTemplate extends HasQualifiedId, HasLabel, HasName, HasDescr
     @PropertyName("debug")
     Boolean isRetainInputs();
 
+    List<AppTemplateStepLimits> getRequirements();
+
+    void setRequirements(List<AppTemplateStepLimits> requirements);
 }
 

@@ -15,7 +15,6 @@ public interface AppsModule {
         String MENU_ITEM_APPS = ".apps";
         String MENU_ITEM_USE_APP = ".useApp";
         String MENU_ITEM_CREATE_APP = ".createNew";
-        String MENU_ITEM_REQUEST_TOOL = ".requestTool";
         String MENU_ITEM_COPY_APP = ".copy";
         String MENU_ITEM_EDIT_APP = ".edit";
         String MENU_ITEM_DELETE_APP = ".delete";
@@ -39,7 +38,6 @@ public interface AppsModule {
         String APP_INFO_CELL = ".appInfo";
         String DETAILS_VIEW = "appDetails";
         String APP_TOOLS = ".tools";
-        String TOOL_COLLAPSE_BTN = ".collapse";
         String HPC = ".hpc";
         String WORKSPACE_TAB = ".workspaceTab";
         String HPC_TAB = ".hpcTab";
@@ -83,6 +81,7 @@ public interface AppsModule {
         String APP_LAUNCH_REFERENCE_ANNOTATION = ".referenceAnnotation";
         String APP_LAUNCH_REFERENCE_GENOME = ".referenceGenome";
         String APP_LAUNCH_REFERENCE_SEQUENCE = ".referenceSequence";
+        String APP_LAUNCH_RESOURCE_REQUESTS = ".resourceRequests";
         String APP_LAUNCH_TEXT_INPUT = ".textInput";
         String APP_LAUNCH_TEXT_SELECTION = ".textSelection";
         String APP_LAUNCH_TREE = ".tree";

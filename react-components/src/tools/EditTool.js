@@ -322,12 +322,13 @@ function EditToolForm(props) {
                     )}
                 />
             )}
-            <Restrictions
+            <Field
                 isAdmin={isAdmin}
                 parentId={build(parentId, ids.EDIT_TOOL_DLG.RESTRICTIONS)}
                 maxDiskSpace={maxDiskSpace}
                 maxCPUCore={maxCPUCore}
                 maxMemory={maxMemory}
+                component={Restrictions}
             />
         </Form>
     );

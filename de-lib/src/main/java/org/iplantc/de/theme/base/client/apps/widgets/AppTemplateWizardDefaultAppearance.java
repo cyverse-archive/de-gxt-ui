@@ -371,6 +371,31 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     }
 
     @Override
+    public String resourceRequirements() {
+        return labels.resourceRequirements();
+    }
+
+    @Override
+    public String resourceRequirementsForStep(int step) {
+        return labels.resourceRequirementsForStep(step);
+    }
+
+    @Override
+    public String minCPUCoresLabel() {
+        return labels.minCPUCoresLabel();
+    }
+
+    @Override
+    public String minMemoryLabel() {
+        return labels.minMemoryLabel();
+    }
+
+    @Override
+    public String minDiskSpaceLabel() {
+        return labels.minDiskSpaceLabel();
+    }
+
+    @Override
     public SafeHtml createChkBoxContextualHelpLabel(String labelToolTipText, String propertyToolTip) {
         return templates.fieldLabelImgFloatRightChkBox(SafeHtmlUtils.fromString(labelToolTipText),
                                                  res.help().getSafeUri(),

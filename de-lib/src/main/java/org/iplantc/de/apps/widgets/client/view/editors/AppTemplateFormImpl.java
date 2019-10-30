@@ -167,6 +167,11 @@ public class AppTemplateFormImpl extends Composite implements AppTemplateForm {
     }
 
     @Override
+    public void appendResourceRequirements(AppStepResourcesView resourcesView) {
+        groupsContainer.insert(resourcesView, groupsContainer.getWidgetCount());
+    }
+
+    @Override
     public void onAppTemplateSelected(AppTemplateSelectedEvent event) {
         clearSelectionStyles(event.getSource());
     }
