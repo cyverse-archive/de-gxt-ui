@@ -23,7 +23,7 @@ import messages from "../messages";
 
 import { Table, TableBody, TableCell, withStyles } from "@material-ui/core";
 
-import AppFields from "./AppFields";
+import AppFields from "../AppFields";
 import appType from "../../appType";
 
 /**

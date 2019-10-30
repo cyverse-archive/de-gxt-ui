@@ -12,7 +12,7 @@ import {
     MenuItem,
     Select,
 } from "@material-ui/core";
-import AppFields from "./AppFields";
+import AppFields from "../AppFields";
 import PropTypes from "prop-types";
 
 /**
