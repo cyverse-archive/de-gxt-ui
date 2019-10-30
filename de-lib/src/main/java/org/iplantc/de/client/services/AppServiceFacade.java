@@ -4,7 +4,6 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppList;
@@ -39,7 +38,7 @@ public interface AppServiceFacade {
      * @param appCategory unique identifier for the group to search in for apps.
      * @param filter filter to be used when getting apps.
      * @param callback called when the RPC call is complete.*/
-    void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
+    void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<Splittable> callback);
 
     /**
      * Retrieves list of apps in the given group.

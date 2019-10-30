@@ -133,11 +133,11 @@ public class AdminCommunitiesViewImpl extends Composite implements AdminCommunit
         List<App> appSelection = event.getAppSelection();
         targetApp = null;
         if (appSelection != null && appSelection.size() != 0) {
-            if (event.getSource() == communityGridView) {
+          /*  if (event.getSource() == communityGridView) {
                 hierarchyGridView.deselectAll();
             } else {
                 communityGridView.deselectAll();
-            }
+            }*/
             targetApp = appSelection.get(0);
         }
         updateButtonStatus();

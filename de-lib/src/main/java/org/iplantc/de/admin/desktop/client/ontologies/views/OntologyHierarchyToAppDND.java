@@ -108,14 +108,14 @@ public class OntologyHierarchyToAppDND implements DndDragStartEvent.DndDragStart
     }
 
     private App getDropTargetApp(Element eventTarget, Widget dropTarget) {
-        if (dropTarget == previewGridPresenter.getView().asWidget()) {
+      /*  if (dropTarget == previewGridPresenter.getView().asWidget()) {
             return previewGridPresenter.getAppFromElement(eventTarget);
         }
 
         if (dropTarget == editorGridPresenter.getView().asWidget()) {
             return editorGridPresenter.getAppFromElement(eventTarget);
         }
-
+*/
         return null;
     }
 

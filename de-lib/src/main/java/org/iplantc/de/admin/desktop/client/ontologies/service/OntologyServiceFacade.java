@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.ontologies.OntologyVersionDetail;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface OntologyServiceFacade {
      * @param root
      * @param callback
      */
-    void getUnclassifiedApps(String version, String root, Avu avu, AsyncCallback<List<App>> callback);
+    void getUnclassifiedApps(String version, String root, Avu avu, AsyncCallback<Splittable> callback);
     /**
      * Set the active ontology version used by the app-hierarchies endpoints
      * @param version
@@ -60,7 +61,7 @@ public interface OntologyServiceFacade {
      * @param attr
      * @param callback
      */
-    void getAppsByHierarchy(String version, String iri, String attr, AsyncCallback<List<App>> callback);
+    void getAppsByHierarchy(String version, String iri, String attr, AsyncCallback<Splittable> callback);
 
     /**
      * Add/Append a list of metadata tags to an App

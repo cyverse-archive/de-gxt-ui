@@ -116,12 +116,12 @@ public class AppToCommunityDND implements DndDragStartEvent.DndDragStartHandler,
     }
 
     private List<App> getDragSources(Widget dragWidget) {
-        if (isHierarchyGridApp(dragWidget)) {
+       /* if (isHierarchyGridApp(dragWidget)) {
             return hierarchyGridPresenter.getSelectedApps();
         }
         if (isCommunityGridApp(dragWidget)) {
             return communityGridPresenter.getSelectedApps();
-        }
+        }*/
         return null;
     }
 

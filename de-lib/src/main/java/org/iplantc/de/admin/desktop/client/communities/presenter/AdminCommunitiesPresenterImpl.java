@@ -30,7 +30,6 @@ import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -53,6 +52,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -137,8 +137,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                                          communityGridPresenter,
                                                          this));
 
-        hierarchyGridPresenter.getView().addAppSelectionChangedEventHandler(view);
-        communityGridPresenter.getView().addAppSelectionChangedEventHandler(view);
+        hierarchyGridPresenter.addAppSelectionChangedEventHandler(view);
+        communityGridPresenter.addAppSelectionChangedEventHandler(view);
 
         proxy.setHasHandlers(view);
 
@@ -315,20 +315,19 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
         Group community = event.getCommunity();
         AdminAppsGridView communityApps = communityGridPresenter.getView();
-        communityApps.mask(appearance.loadingMask());
+        communityApps.setLoading(true);
 
-        serviceFacade.getCommunityApps(community, new AppsCallback<List<App>>() {
+        serviceFacade.getCommunityApps(community, new AppsCallback<Splittable>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                communityApps.unmask();
+                communityApps.setLoading(false);
                 ErrorHandler.post(exception);
             }
 
             @Override
-            public void onSuccess(List<App> result) {
-                communityApps.clearAndAdd(result);
-                communityApps.unmask();
+            public void onSuccess(Splittable result) {
+                communityApps.setApps(result.get("apps"), false);
             }
         });
     }
@@ -336,22 +335,21 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
         AdminAppsGridView hierarchyView = hierarchyGridPresenter.getView();
-        hierarchyView.mask(appearance.loadingMask());
+        hierarchyView.setLoading(true);
         OntologyHierarchy hierarchy = event.getHierarchy();
         ontologyServiceFacade.getAppsByHierarchy(activeOntologyVersion,
                                                  hierarchy.getIri(),
                                                  ontologyUtil.getAttr(hierarchy),
-                                                 new AsyncCallback<List<App>>() {
+                                                 new AsyncCallback<Splittable>() {
                                                      @Override
                                                      public void onFailure(Throwable caught) {
                                                          ErrorHandler.post(caught);
-                                                         hierarchyView.unmask();
+                                                         hierarchyView.setLoading(false);
                                                      }
 
                                                      @Override
-                                                     public void onSuccess(List<App> result) {
-                                                        hierarchyView.clearAndAdd(result);
-                                                        hierarchyView.unmask();
+                                                     public void onSuccess(Splittable result) {
+                                                        hierarchyView.setApps(result.get("apps"), false);
                                                      }
                                                  });
     }

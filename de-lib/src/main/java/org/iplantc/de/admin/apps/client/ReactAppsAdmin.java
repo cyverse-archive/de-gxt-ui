@@ -48,5 +48,16 @@ public class ReactAppsAdmin {
        public Splittable requests;
        public boolean loading;
     }
+
+    @JsProperty
+    public static ComponentConstructorFn<AdminAppListingProps> AdminAppGridListing;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class AdminAppListingProps extends BaseProps {
+        public Splittable apps;
+        public boolean loading;
+        public String parentId;
+    }
+
 }
 

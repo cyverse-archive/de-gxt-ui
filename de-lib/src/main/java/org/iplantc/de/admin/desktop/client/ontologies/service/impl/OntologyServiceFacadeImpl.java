@@ -6,12 +6,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
-import org.iplantc.de.client.services.converters.OntologyHierarchyCallbackConverter;
-import org.iplantc.de.client.services.converters.OntologyHierarchyListCallbackConverter;
-import org.iplantc.de.client.services.converters.OntologyListCallbackConverter;
-import org.iplantc.de.client.services.converters.OntologyVersionCallbackConverter;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
 import org.iplantc.de.client.models.avu.AvuList;
@@ -20,8 +15,12 @@ import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.ontologies.OntologyVersionDetail;
 import org.iplantc.de.client.services.AppServiceFacade;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.AvuListCallbackConverter;
+import org.iplantc.de.client.services.converters.OntologyHierarchyCallbackConverter;
+import org.iplantc.de.client.services.converters.OntologyHierarchyListCallbackConverter;
+import org.iplantc.de.client.services.converters.OntologyListCallbackConverter;
+import org.iplantc.de.client.services.converters.OntologyVersionCallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -85,17 +84,14 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     }
 
     @Override
-    public void getAppsByHierarchy(String version, String iri, String attr, AsyncCallback<List<App>> callback) {
+    public void getAppsByHierarchy(String version,
+                                   String iri,
+                                   String attr,
+                                   AsyncCallback<Splittable> callback) {
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version) + "/" + URL.encodeQueryString(iri) + "/apps" + "?attr=" + URL.encodeQueryString(attr);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableCallbackConverter(callback));
     }
 
     @Override
@@ -149,18 +145,12 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     }
 
     @Override
-    public void getUnclassifiedApps(String version, String root, Avu avu, AsyncCallback<List<App>> callback) {
+    public void getUnclassifiedApps(String version, String root, Avu avu, AsyncCallback<Splittable> callback) {
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version) + "/" + URL.encodeQueryString(root) + "/unclassified";
         address += "?attr=" + URL.encodeQueryString(avu.getAttribute());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableCallbackConverter(callback));
     }
 
     @Override

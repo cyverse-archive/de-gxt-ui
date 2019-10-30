@@ -238,11 +238,11 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         List<App> appSelection = event.getAppSelection();
         targetApp = null;
         if (appSelection != null && appSelection.size() != 0) {
-            if (event.getSource() == previewGridView) {
+           /* if (event.getSource() == previewGridView) {
                 editorGridView.deselectAll();
             } else {
                 previewGridView.deselectAll();
-            }
+            }*/
             targetApp = appSelection.get(0);
         }
         updateButtonStatus();
@@ -475,14 +475,14 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     public void maskGrid(ViewType type) {
         switch(type) {
             case EDITOR:
-                editorGridView.mask(appearance.loadingMask());
+                editorGridView.setLoading(true);
                 break;
             case PREVIEW:
-                previewGridView.mask(appearance.loadingMask());
+                previewGridView.setLoading(true);
                 break;
             case ALL:
-                editorGridView.mask(appearance.loadingMask());
-                previewGridView.mask(appearance.loadingMask());
+                editorGridView.setLoading(true);
+                previewGridView.setLoading(true);
                 break;
         }
     }
@@ -491,28 +491,28 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     public void unmaskGrid(ViewType type) {
         switch(type) {
             case EDITOR:
-                editorGridView.unmask();
+                editorGridView.setLoading(false);
                 break;
             case PREVIEW:
-                previewGridView.unmask();
+                previewGridView.setLoading(false);
                 break;
             case ALL:
-                editorGridView.unmask();
-                previewGridView.unmask();
+                editorGridView.setLoading(false);
+                previewGridView.setLoading(false);
                 break;
         }
     }
 
     @Override
     public void removeApp(App selectedApp) {
-        previewGridView.removeApp(selectedApp);
-        editorGridView.removeApp(selectedApp);
+        //previewGridView.removeApp(selectedApp);
+       // editorGridView.removeApp(selectedApp);
     }
 
     @Override
     public void deselectAll() {
-        previewGridView.deselectAll();
-        editorGridView.deselectAll();
+       // previewGridView.deselectAll();
+      //  editorGridView.deselectAll();
     }
 
     @UiHandler("publishButton")

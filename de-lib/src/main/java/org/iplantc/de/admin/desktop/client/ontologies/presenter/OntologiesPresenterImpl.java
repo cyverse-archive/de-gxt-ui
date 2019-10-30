@@ -55,6 +55,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -238,8 +239,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
                                                                  previewGridPresenter,
                                                                  editorGridPresenter, this));
 
-        previewGridPresenter.getView().addAppSelectionChangedEventHandler(view);
-        editorGridPresenter.getView().addAppSelectionChangedEventHandler(view);
+        previewGridPresenter.addAppSelectionChangedEventHandler(view);
+        editorGridPresenter.addAppSelectionChangedEventHandler(view);
 
         proxy.setHasHandlers(view);
 
@@ -585,18 +586,20 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
         Avu avu = ontologyUtil.convertHierarchyToAvu(hierarchy);
 
-        gridView.mask(appearance.loadingMask());
-        serviceFacade.getAppsByHierarchy(editedOntology.getVersion(), hierarchy.getIri(), attr, new AsyncCallback<List<App>>() {
+        gridView.setLoading(true);
+        serviceFacade.getAppsByHierarchy(editedOntology.getVersion(),
+                                         hierarchy.getIri(),
+                                         attr,
+                                         new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
-                gridView.unmask();
+                gridView.setLoading(false);
             }
 
             @Override
-            public void onSuccess(List<App> result) {
-                gridView.clearAndAdd(result);
-                gridView.unmask();
+            public void onSuccess(Splittable result) {
+                gridView.setApps(result.get("apps"), false);
             }
         });
     }
@@ -605,19 +608,22 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
                              OntologyHierarchy hierarchy,
                              Ontology editedOntology) {
         String parentIri = ontologyUtil.getUnclassifiedParentIri(hierarchy);
-        gridView.mask(appearance.loadingMask());
+        gridView.setLoading(true);
         Avu avu = ontologyUtil.convertHierarchyToAvu(hierarchy);
-        serviceFacade.getUnclassifiedApps(editedOntology.getVersion(), parentIri, avu, new AsyncCallback<List<App>>() {
+        serviceFacade.getUnclassifiedApps(editedOntology.getVersion(),
+                                          parentIri,
+                                          avu,
+                                          new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
-                gridView.unmask();
+                gridView.setLoading(false);
             }
 
             @Override
-            public void onSuccess(List<App> result) {
-                gridView.clearAndAdd(result);
-                gridView.unmask();
+            public void onSuccess(Splittable result) {
+                gridView.setApps(result.get("apps"), false);
+
             }
         });
     }
@@ -745,7 +751,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(App result) {
-                editorGridPresenter.getView().removeApp(result);
+             //   editorGridPresenter.getView().removeApp(result);
                 view.unmaskGrid(OntologiesView.ViewType.EDITOR);
                 List<String> hierarchyNames = Lists.newArrayList();
                 for(OntologyHierarchy hierarchy : result.getHierarchies()){
@@ -770,7 +776,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         QualifiedId qualifiedId = new QualifiedId(systemId, id);
 
         view.maskGrid(OntologiesView.ViewType.EDITOR);
-        appService.getApps(qualifiedId, null, new AppsCallback<List<App>>() {
+        appService.getApps(qualifiedId, null, new AppsCallback<Splittable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
@@ -778,8 +784,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
             }
 
             @Override
-            public void onSuccess(List<App> result) {
-                editorGridPresenter.getView().clearAndAdd(result);
+            public void onSuccess(Splittable result) {
+                editorGridPresenter.getView().clearAndAdd(result.get("apps"));
                 view.unmaskGrid(OntologiesView.ViewType.EDITOR);
             }
         });

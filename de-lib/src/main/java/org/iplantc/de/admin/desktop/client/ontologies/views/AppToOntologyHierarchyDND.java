@@ -114,12 +114,12 @@ public class AppToOntologyHierarchyDND implements DndDragStartEvent.DndDragStart
     }
 
     private List<App> getDragSources(Widget dragWidget) {
-        if (isOldGridApp(dragWidget)) {
+       /* if (isOldGridApp(dragWidget)) {
             return previewGridPresenter.getSelectedApps();
         }
         if (isNewGridApp(dragWidget)) {
             return editorGridPresenter.getSelectedApps();
-        }
+        }*/
         return null;
     }
 

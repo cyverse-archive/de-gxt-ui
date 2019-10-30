@@ -108,13 +108,13 @@ public class CommunityToAppDND implements DndDragStartEvent.DndDragStartHandler,
     }
 
     private App getDropTargetApp(Element eventTarget, Widget dropTarget) {
-        if (dropTarget == hierarchyGridPresenter.getView().asWidget()) {
+      /*  if (dropTarget == hierarchyGridPresenter.getView().asWidget()) {
             return hierarchyGridPresenter.getAppFromElement(eventTarget);
         }
 
         if (dropTarget == communityGridPresenter.getView().asWidget()) {
             return communityGridPresenter.getAppFromElement(eventTarget);
-        }
+        }*/
 
         return null;
     }

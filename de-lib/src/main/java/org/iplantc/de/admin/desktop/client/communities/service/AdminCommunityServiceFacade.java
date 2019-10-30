@@ -1,12 +1,12 @@
 package org.iplantc.de.admin.desktop.client.communities.service;
 
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface AdminCommunityServiceFacade {
      * @param community
      * @param appListCallback
      */
-    void getCommunityApps(Group community, DECallback<List<App>> appListCallback);
+    void getCommunityApps(Group community, DECallback<Splittable> appListCallback);
 
     /**
      * Update the details of a Community
