@@ -206,13 +206,14 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
 
     private List<AppRefLink> parseRefLinks(Splittable arr) {
         List<AppRefLink> linksList = Lists.newArrayList();
-       for (int i = 0; i < arr.size(); i++)  {
-            AppRefLink refLink = factory.appRefLink().as();
-            refLink.setId(arr.get(i).asString());
-            refLink.setRefLink(arr.get(i).asString());
-            linksList.add(refLink);
+        if (arr != null) {
+            for (int i = 0; i < arr.size(); i++) {
+                AppRefLink refLink = factory.appRefLink().as();
+                refLink.setId(arr.get(i).asString());
+                refLink.setRefLink(arr.get(i).asString());
+                linksList.add(refLink);
+            }
         }
-
         return linksList;
     }
 

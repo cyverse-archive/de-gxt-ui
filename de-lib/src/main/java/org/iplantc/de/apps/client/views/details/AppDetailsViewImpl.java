@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.AppUpdatedEvent.AppUpdatedEventHandler;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -53,7 +54,7 @@ public class AppDetailsViewImpl implements AppDetailsView,
         props.appDetails = appDetails;
         props.presenter = presenter;
         props.dialogOpen = true;
-        props.docEditable = userInfo.getEmail().equals(app.get("integrator_email").asString());
+        props.docEditable = userInfo.getEmail().equals(app.get(App.INTEGRATOR_EMAIL_KEY).asString());
         props.baseDebugId = AppsModule.Ids.DETAILS_VIEW;
         props.searchText = searchText != null ? searchText : "";
         props.userName = userInfo.getFullUsername();
