@@ -19,7 +19,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
-import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
@@ -79,15 +79,6 @@ public class ManageToolsViewPresenterTest {
     ToolSharingDialog toolSharingDialogMock;
 
     @Mock
-    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProviderMock;
-
-    @Captor
-    ArgumentCaptor<AsyncCallback<NewToolRequestDialog>> newToolDialogCaptor;
-
-    @Mock
-    NewToolRequestDialog toolRequestMock;
-
-    @Mock
     AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProviderMock;
 
     @Captor
@@ -138,9 +129,15 @@ public class ManageToolsViewPresenterTest {
     Iterator<Tool> iteratorMock;
     @Mock ManageToolsViewPresenter spy;
 
+    @Mock
+    NewToolRequestFormView requestFormViewMock;
+
     @Before
     public void setUp() {
-        uut = new ManageToolsViewPresenter(appearanceMock, manageToolsViewFactoryMock, editToolViewFactoryMock) {
+        uut = new ManageToolsViewPresenter(appearanceMock,
+                                           manageToolsViewFactoryMock,
+                                           editToolViewFactoryMock,
+                                           requestFormViewMock) {
 
             @Override
             void displayInfoMessage(String title, String message) {
@@ -167,7 +164,7 @@ public class ManageToolsViewPresenterTest {
         uut.toolServices = toolServicesMock;
         uut.editToolView = editToolViewMock;
         uut.shareDialogProvider = shareDialogProviderMock;
-        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
+
         uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
@@ -270,25 +267,6 @@ public class ManageToolsViewPresenterTest {
         verify(shareDialogProviderMock).get(sharingDialogCaptor.capture());
         sharingDialogCaptor.getValue().onSuccess(toolSharingDialogMock);
         verify(toolSharingDialogMock).show(any());
-    }
-
-    @Test
-    public void testOnRequestToolSelected() {
-        uut.onRequestToolSelected();
-
-        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
-        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
-        verify(toolRequestMock).show(eq(NewToolRequestFormView.Mode.NEWTOOL));
-    }
-
-    @Test
-    public void testOnRequestToMakePublicSelected() {
-        uut.onRequestToMakeToolPublicSelected(toolSplMock);
-
-        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
-        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
-        verify(toolRequestMock).setTool(eq(toolMock));
-        verify(toolRequestMock).show(eq(NewToolRequestFormView.Mode.MAKEPUBLIC));
     }
 
     @Test

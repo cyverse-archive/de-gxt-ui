@@ -38,4 +38,15 @@ public class ReactAppsAdmin {
         public boolean open;
     }
 
+    @JsProperty
+    public static  ComponentConstructorFn<AppPublicationRequestProps> AppPublicationRequests;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class AppPublicationRequestProps extends BaseProps {
+       public AppPublicationRequestView.Presenter presenter;
+       public String parentId;
+       public Splittable requests;
+       public boolean loading;
+    }
 }
+

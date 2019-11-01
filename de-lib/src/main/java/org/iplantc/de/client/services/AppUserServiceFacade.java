@@ -68,7 +68,7 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
     /**
      * Adds an app to the given public categories.
      */
-    void publishToWorld(PublishAppRequest req, DECallback<Void> callback);
+    void publishToWorld(PublishAppRequest req, DECallback<String> callback);
 
     /**
      * Get app details

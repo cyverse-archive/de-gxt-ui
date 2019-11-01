@@ -46,8 +46,9 @@ public interface AppsModule {
         String SWAP_VIEW_BTN = ".swapBtn";
         String APP_STATUS_CELL = ".status";
         String MENU_ITEM_REFRESH = ".refresh";
-        String SHARING_DLG = "appSharingDlg";
+
         String SHARING_VIEW = ".view";
+        String MAKE_PUBLIC_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
         String MANAGE_TOOLS_BTN = ".manageTools";
         String APP_DOT_MENU = ".dotMenu";
@@ -91,6 +92,21 @@ public interface AppsModule {
         String COMMUNITIES = ".communities";
         String COMMUNITIES_TREE = ".tree";
         String DONE_BTN = ".doneBtn";
+
+        String SHARING_DLG = "appSharingDlg";
+        String MAKE_PUBLIC_DLG = "appMakePublicDlg";
+        String APP_NAME_TEXT = ".txtAppName";
+        String APP_DESC_TEXT_AREA = ".txtAreaAppDesc";
+        String APP_INPUT_DESC_TEXT_AREA = ".txtAreaAppInputDesc";
+        String APP_PARAM_DESC_TEXT_AREA = ".txtAreaAppParamDesc";
+        String APP_OUTPUT_DESC_TEXT_AREA = ".txtAreaAppOutputDesc";
+        String APP_TEST_DATA_FOLDER = ".folderAppTestData";
+        String APP_COMMUNITY_SELECTION_TREE = ".appCommunitySelectionTree";
+        String APP_CATEGORY_SELECTION_TREE = ".appCategorySelectionTree";
+        String APP_REF_LINK_GRID = ".appRefLinkGrid";
+        String APP_REF_LINK_ADD_BTN = ".appRefLinkAddBtn";
+        String APP_REF_LINK_DEL_BTN = ".appRefLinkDelBtn";
     }
+
 }
 

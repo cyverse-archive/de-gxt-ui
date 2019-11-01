@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
-import { DeleteBtn, StyledAddBtn } from "./Buttons";
-import ids from "./ids";
-import SimpleExpansionPanel from "./SimpleExpansionPanel";
+import { DeleteBtn, StyledAddBtn } from "../Buttons";
+import ids from "../ids";
+import SimpleExpansionPanel from "../SimpleExpansionPanel";
 import { minValue, nonEmptyMinValue } from "./Validations";
 
 import {

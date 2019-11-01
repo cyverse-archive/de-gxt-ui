@@ -8,10 +8,10 @@ import ContainerImage from "./ContainerImage";
 import ContainerPorts from "./ContainerPorts";
 import ContainerVolumes from "./ContainerVolumes";
 import ContainerVolumesFrom from "./ContainerVolumesFrom";
-import ids from "./ids";
-import messages from "./messages";
+import ids from "../ids";
+import messages from "../messages";
 import Restrictions from "./ToolRestrictions";
-import styles from "./styles";
+import styles from "../styles";
 import ToolImplementation from "./ToolImplementation";
 import { nonEmptyField } from "./Validations";
 

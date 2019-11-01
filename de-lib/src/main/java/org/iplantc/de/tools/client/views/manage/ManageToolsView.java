@@ -1,6 +1,8 @@
 
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -12,8 +14,8 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 4/20/17.
  */
+@JsType
 public interface ManageToolsView extends IsWidget {
-
     interface ManageToolsViewAppearance {
         String name();
 
@@ -91,7 +93,11 @@ public interface ManageToolsView extends IsWidget {
         void onShareToolsSelected(Splittable tool);
 
         @SuppressWarnings("unusable-by-js")
-        void onRequestToMakeToolPublicSelected(Splittable tool);
+        void submitRequest(Splittable toolRequest,
+                           ReactSuccessCallback callback,
+                           ReactErrorCallback errorCallback);
+
+        void onToolRequestDialogClose();
     }
 
     Splittable getCurrentToolList();

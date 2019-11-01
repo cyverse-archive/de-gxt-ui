@@ -82,6 +82,10 @@ public interface BelphegorDisplayStrings extends Messages {
     String appStats();
 
     String communities();
+
+    String appPublicationRequests();
+
+    String publicationRequestSuccess(String appName);
 }
 
 

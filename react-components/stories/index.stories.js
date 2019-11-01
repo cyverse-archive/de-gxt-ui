@@ -11,6 +11,7 @@ import ViceLogsViewerTest from "./analysis/view/dialogs/ViceLogsViewerDialog.sto
 import AdminAppDetailsTest from "./apps/admin/AdminAppDetails.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";
 import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
+import AppPublicationRequestsTest from "./apps/admin/AppPublicationRequests.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
@@ -45,6 +46,7 @@ import TeamsTest from "./teams/Teams.stories";
 
 import EditToolTest from "./tools/EditTool.stories";
 import ManageToolsTest from "./tools/ManageTools.stories";
+import NewToolRequestFormTest from "./tools/requests/NewToolRequestsForm.stories";
 
 import {
     EditDataCiteMetadataTest,
@@ -85,12 +87,16 @@ storiesOf("analysis/view/dialogs", module).add("with test VICE logs", () => (
     <ViceLogsViewerTest />
 ));
 
-storiesOf("apps/admin", module).add("AdminAppDetails", () => (
+storiesOf("apps/admin/AppDetails", module).add("AdminAppDetails", () => (
     <AdminAppDetailsTest />
 ));
 storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
     <AppStatsTest />
 ));
+storiesOf("apps/admin/PublicationRequests", module).add(
+    "with test requests",
+    () => <AppPublicationRequestsTest />
+);
 storiesOf("apps/details", module).add("CategoryTree", () => (
     <CategoryTreeTest logger={action("hierarchy")} />
 ));
@@ -238,4 +244,5 @@ storiesOf("tools", module)
     .add("Edit Tool", () => <EditToolTest logger={action("Saved Tool")} />)
     .add("Manage Tools", () => (
         <ManageToolsTest logger={action("Manage Tools")} />
-    ));
+    ))
+    .add("NewToolRequest", () => <NewToolRequestFormTest />);

@@ -2,7 +2,9 @@ package org.iplantc.de.apps.client.presenter.submit;
 
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.events.AppPublishedEvent;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppRefLink;
@@ -13,6 +15,8 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolList;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
@@ -21,6 +25,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -95,6 +100,8 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject EventBus eventBus;
     @Inject SubmitAppPresenterBeanFactory factory;
     @Inject AppAutoBeanFactory appAutoBeanFactory;
+    @Inject
+    ToolAutoBeanFactory toolAutoBeanFactory;
     @Inject GroupAutoBeanFactory groupAutoBeanFactory;
     @Inject AvuAutoBeanFactory avuAutoBeanFactory;
     @Inject SubmitAppForPublicUseView view;
@@ -143,6 +150,12 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         this.callback = callback;
         getAppDetails();
         go(container);
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId + AppsModule.Ids.MAKE_PUBLIC_VIEW);
+        view.setDebugId(debugId + AppsModule.Ids.MAKE_PUBLIC_VIEW);
     }
 
     @Override
@@ -200,6 +213,15 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             @Override
             public void onSuccess(Splittable result) {
                 view.loadReferences(parseRefLinks(result.get("references")));
+                ToolList toolsLst =
+                        AutoBeanCodex.decode(toolAutoBeanFactory, ToolList.class, result).as();
+                boolean isInteractive = toolsLst.getToolList()
+                                                .stream()
+                                                .anyMatch(tool -> tool.getType()
+                                                                      .equalsIgnoreCase(AppTypeFilter.INTERACTIVE
+                                                                                                .getFilterString()));
+                view.setIsInteractive(isInteractive);
+
             }
         });
     }
@@ -226,7 +248,7 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         pmb.auto();
         pmb.show();
 
-        appService.publishToWorld(publishAppRequest, new AppsCallback<Void>() {
+        appService.publishToWorld(publishAppRequest, new AppsCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 pmb.hide();
@@ -234,9 +256,18 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(String result) {
                 pmb.hide();
-                eventBus.fireEvent(new AppPublishedEvent(view.getSelectedApp()));
+                //if app is published right away, the response is empty
+                if (Strings.isNullOrEmpty(result)) {
+                    eventBus.fireEvent(new AppPublishedEvent(view.getSelectedApp()));
+                } else {   //when app publication request is created.
+                    AlertMessageBox amb =
+                            new AlertMessageBox(appearance.publicationRequestSubmittedHeading(
+                                    publishAppRequest.getName()),
+                                                appearance.publicationRequestSubmitted(publishAppRequest.getName()));
+                    amb.show();
+                }
                 if (callback != null) {
                     callback.onSuccess(publishAppRequest.getName());
                 }

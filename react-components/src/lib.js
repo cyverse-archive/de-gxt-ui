@@ -9,9 +9,9 @@ import * as metadata from "./metadata";
 import * as notifications from "./notifications";
 import * as teams from "./teams";
 import * as tools from "./tools";
-import { ErrorHandler, palette } from "@cyverse-de/ui-lib";
 import React from "react";
 import ReactDOM from "react-dom";
+import { ErrorHandler, palette } from "@cyverse-de/ui-lib";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"; // v1.x
 
 // gwt-react needs React and ReactDOM on the global object

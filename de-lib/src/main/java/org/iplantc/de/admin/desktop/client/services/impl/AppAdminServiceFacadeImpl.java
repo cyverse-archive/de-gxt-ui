@@ -239,6 +239,20 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
         sendAppDocUpdate(app, doc, callback, PATCH);
     }
 
+    @Override
+    public void getAppPublicationRequests(AsyncCallback<Splittable> callback) {
+        String address = APPS_ADMIN + "/" + "publication-requests";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new SplittableCallbackConverter(callback));
+    }
+
+    @Override
+    public void publishApp(String appId, String systemId, AsyncCallback<String> callback) {
+        String address = APPS_ADMIN + "/" + systemId + "/" + appId + "/publish";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST,address, "{}");
+        deService.getServiceData(wrapper,callback);
+    }
+
     private void sendAppDocUpdate(HasQualifiedId app,
                                   String doc,
                                   final AsyncCallback<AppDoc> callback,

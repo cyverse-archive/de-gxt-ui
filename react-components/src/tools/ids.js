@@ -63,7 +63,7 @@ export default {
         VIEW: "toolsView",
         TOOLBAR: "toolbar",
         TOOLS_MENU: "toolsMenu",
-        SHARE_MENU: "shareMenu",
+        SHARE: "share",
         SEARCH: "search",
         TOOL_FILTER: "toolFilter",
         ALL_MI: "all",

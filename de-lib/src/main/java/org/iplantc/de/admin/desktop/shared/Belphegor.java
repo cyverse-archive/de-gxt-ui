@@ -5,6 +5,10 @@ package org.iplantc.de.admin.desktop.shared;
  */
 public interface Belphegor {
 
+    interface AppPublicationRequestsIds {
+        String VIEW = ".view" ;
+    }
+
     interface Ids {
         String BELPHEGOR = "belphegorViewport";
         String MENU_BUTTON = ".menuButton";
@@ -27,6 +31,8 @@ public interface Belphegor {
         String STATS = ".stats";
         String COMMUNITIES_TAB = ".communitiesTab";
         String COMMUNITIES = ".communities";
+        String APP_PUBLICATION_REQUEST = ".appPublicationRequest";
+        String APP_PUBLICATION_REQUEST_TAB = ".appPublicationRequestTab";
     }
 
     interface AppIds {

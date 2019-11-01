@@ -93,5 +93,18 @@ export default {
         validationErrMinRAMGreaterThanMax: "Must be less than Max Memory",
         validationErrMaxRAMLessThanMin: "Must be greater than Min Memory",
         validationErrMustBePositive: "Must be at least 0",
+        newToolRequestDialogHeading: "New Tool Request",
+        submit: "Submit",
+        toolNameLabel: "What is the name of the tool?",
+        toolDescLabel: "Briefly describe the tool:",
+        toolSrcLinkLabel:
+            "Provide a link for your tool's source (GitHub, BitBucket, DockerHub etc...):",
+        toolVersionLabel: "What is your tool's version?",
+        toolDocumentationLabel: "Provide a link for your tool's documentation:",
+        toolInstructionsLabel:
+            "Enter any other instructions or relevant information:",
+        toolTestDataLabel: "Provide a link for your tool's test data:",
+        validationErrMsgURL:
+            "A valid URL must begin with either ftp or http or https.",
     },
 };

@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.views;
 
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
+import org.iplantc.de.admin.apps.client.AppPublicationRequestView;
 import org.iplantc.de.admin.desktop.client.communities.AdminCommunitiesView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
@@ -45,7 +46,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     @UiField HtmlLayoutContainer northCon;
     @UiField DETabPanel deTabPanel;
     @UiField SimpleContainer ontologiesPanel, communitiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
-            permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel;
+            permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel, appPubRequestPanel;
     @UiField(provided = true) BelphegorViewAppearance appearance;
     private TextButton menuButton;
     private RefGenomeView.Presenter refGenPresenter;
@@ -57,6 +58,8 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     private WorkshopAdminView.Presenter workshopAdminPresenter;
     private AdminAppStatsGridView.Presenter appStatsPresenter;
     private AdminCommunitiesView.Presenter communitiesPresenter;
+    private AppPublicationRequestView.Presenter appPublicationRequestsPresenter;
+
 
     @Inject
     public BelphegorViewImpl(final OntologiesView.Presenter ontologiesPresenter,
@@ -68,6 +71,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                              final PermanentIdRequestView.Presenter permIdPresenter,
                              final WorkshopAdminView.Presenter workshopAdminPresenter,
                              final AdminAppStatsGridView.Presenter appStatsPresenter,
+                             final AppPublicationRequestView.Presenter appPublicationRequestsPresenter,
                              final BelphegorViewAppearance appearance) {
         this.communitiesPresenter = communitiesPresenter;
         this.appearance = appearance;
@@ -79,6 +83,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         this.permIdPresenter = permIdPresenter;
         this.workshopAdminPresenter = workshopAdminPresenter;
         this.appStatsPresenter = appStatsPresenter;
+        this.appPublicationRequestsPresenter = appPublicationRequestsPresenter;
 
         initWidget(uiBinder.createAndBindUi(this));
         init(ontologiesPresenter,
@@ -88,7 +93,9 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
              toolAdminPresenter,
              tempPresenter,
              permIdPresenter,
-             workshopAdminPresenter, appStatsPresenter);
+             workshopAdminPresenter,
+             appStatsPresenter,
+             appPublicationRequestsPresenter);
         ensureDebugId(Belphegor.Ids.BELPHEGOR);
     }
 
@@ -105,7 +112,8 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                       final TemplateListingView.Presenter tempPresenter,
                       final PermanentIdRequestView.Presenter permIdPresenter,
                       final WorkshopAdminView.Presenter workshopAdminPresenter,
-                      final AdminAppStatsGridView.Presenter appStatsPresenter) {
+                      final AdminAppStatsGridView.Presenter appStatsPresenter,
+                      final AppPublicationRequestView.Presenter appPublicationRequestsPresenter) {
         buildUserMenu();
 
         ontologiesPresenter.go(ontologiesPanel);
@@ -117,6 +125,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         permIdPresenter.go(permIdPanel);
         workshopAdminPresenter.go(workshopAdminPanel);
         appStatsPresenter.go(statsPanel);
+        appPublicationRequestsPresenter.go(appPubRequestPanel);
     }
 
     private void buildUserMenu() {
@@ -155,6 +164,10 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         deTabPanel.setTabDebugId(communitiesPanel, baseID + Belphegor.Ids.COMMUNITIES_TAB);
         communitiesPanel.ensureDebugId(baseID + Belphegor.Ids.COMMUNITIES);
         communitiesPresenter.setViewDebugId(baseID + Belphegor.Ids.COMMUNITIES);
+
+        deTabPanel.setTabDebugId(appPubRequestPanel, baseID + Belphegor.Ids.APP_PUBLICATION_REQUEST_TAB);
+        appPubRequestPanel.ensureDebugId(baseID + Belphegor.Ids.APP_PUBLICATION_REQUEST);
+        appPublicationRequestsPresenter.setViewDebugId(baseID + Belphegor.Ids.APP_PUBLICATION_REQUEST);
 
         deTabPanel.setTabDebugId(statsPanel, baseID + Belphegor.Ids.STATS_TAB);
         statsPanel.ensureDebugId(baseID + Belphegor.Ids.STATS);

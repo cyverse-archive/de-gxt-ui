@@ -216,18 +216,13 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void publishToWorld(PublishAppRequest request, DECallback<Void> callback) {
+    public void publishToWorld(PublishAppRequest request, DECallback<String> callback) {
         String address = APPS + "/" + request.getSystemId() + "/" + request.getId() + "/publish";
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
 
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
-            @Override
-            protected Void convertFrom(String object) {
-                return null;
-            }
-        });
+        deServiceFacade.getServiceData(wrapper,callback);
     }
 
 

@@ -181,4 +181,8 @@ public interface AppsMessages extends Messages {
     String favSuccess(String name);
 
     String unFavSuccess(String name);
+
+    String publicationRequestSubmittedHeading(String appName);
+
+    String publicationRequestSubmitted(String appName);
 }
