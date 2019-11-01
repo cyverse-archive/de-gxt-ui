@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import messages from "../messages";
 import { injectIntl } from "react-intl";
@@ -17,12 +17,12 @@ import {
     Dialog,
     DialogContent,
     IconButton,
+    makeStyles,
     Table,
     TableBody,
     TableCell,
     TableRow,
     Tooltip,
-    makeStyles,
 } from "@material-ui/core";
 import PublicIcon from "@material-ui/icons/Public";
 
@@ -144,57 +144,46 @@ function AppPublicationRequests(props) {
                         )}
                         {requests &&
                             requests.length > 0 &&
-                            requests.map((request) => {
-                                return (
-                                    <React.Fragment>
-                                        <TableRow hover key={request.id}>
-                                            <TableCell>
-                                                {request.app.name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {request.app.integrator_name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {request.app.integrator_email}
-                                            </TableCell>
-                                            <TableCell>
-                                                <ToolsUsed
-                                                    intl={intl}
-                                                    tools={request.app.tools}
-                                                    appName={request.app.name}
-                                                    parentId={build(
-                                                        parentId,
-                                                        "tools"
-                                                    )}
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Tooltip
-                                                    title={formatMessage(
-                                                        intl,
-                                                        "publishApp",
-                                                        {
-                                                            appName:
-                                                                request.app
-                                                                    .name,
-                                                        }
-                                                    )}
-                                                >
-                                                    <IconButton
-                                                        onClick={() =>
-                                                            onPublishClicked(
-                                                                request.app
-                                                            )
-                                                        }
-                                                    >
-                                                        <PublicIcon fontSize="small" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </TableCell>
-                                        </TableRow>
-                                    </React.Fragment>
-                                );
-                            })}
+                            requests.map((request) => (
+                                <TableRow hover key={request.id}>
+                                    <TableCell>{request.app.name}</TableCell>
+                                    <TableCell>
+                                        {request.app.integrator_name}
+                                    </TableCell>
+                                    <TableCell>
+                                        {request.app.integrator_email}
+                                    </TableCell>
+                                    <TableCell>
+                                        <ToolsUsed
+                                            intl={intl}
+                                            tools={request.app.tools}
+                                            appName={request.app.name}
+                                            parentId={build(parentId, "tools")}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Tooltip
+                                            title={formatMessage(
+                                                intl,
+                                                "publishApp",
+                                                {
+                                                    appName: request.app.name,
+                                                }
+                                            )}
+                                        >
+                                            <IconButton
+                                                onClick={() =>
+                                                    onPublishClicked(
+                                                        request.app
+                                                    )
+                                                }
+                                            >
+                                                <PublicIcon fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                     <EnhancedTableHead
                         selectable={false}

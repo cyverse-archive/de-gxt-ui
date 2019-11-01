@@ -75,9 +75,7 @@ class NewToolRequestForm extends Component {
         return (
             <Dialog open={dialogOpen} disableBackdropClick disableEscapeKeyDown>
                 <DEDialogHeader
-                    heading={intl.formatMessage({
-                        id: "newToolRequestDialogHeading",
-                    })}
+                    heading={formatMessage(intl, "newToolRequestDialogHeading")}
                     onClose={this.handleClose}
                 />
                 <DialogContent>
