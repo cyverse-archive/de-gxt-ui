@@ -5,13 +5,14 @@
 
 import React, { Component } from "react";
 
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { injectIntl } from "react-intl";
 
 import constants from "../../constants";
 import intlData from "../../tools/messages";
 import {
     DEDialogHeader,
+    formatMessage,
     FormMultilineTextField,
     FormTextField,
     getMessage,
@@ -92,17 +93,12 @@ class NewToolRequestForm extends Component {
                                     margin="dense"
                                     component={FormTextField}
                                 />
-                                <ErrorMessage name="name" component="div" />
                                 <Field
                                     name="description"
                                     label={getMessage("toolDescLabel")}
                                     required={true}
                                     margin="dense"
                                     component={FormMultilineTextField}
-                                />
-                                <ErrorMessage
-                                    name="description"
-                                    component="div"
                                 />
                                 <Field
                                     name="source_url"
@@ -112,10 +108,6 @@ class NewToolRequestForm extends Component {
                                     validate={this.validateUrl}
                                     component={FormTextField}
                                 />
-                                <ErrorMessage
-                                    name="source_url"
-                                    component="div"
-                                />
                                 <Field
                                     name="version"
                                     label={getMessage("toolVersionLabel")}
@@ -123,7 +115,6 @@ class NewToolRequestForm extends Component {
                                     margin="dense"
                                     component={FormTextField}
                                 />
-                                <ErrorMessage name="version" component="div" />
                                 <Field
                                     name="documentation_url"
                                     label={getMessage("toolDocumentationLabel")}
@@ -132,10 +123,6 @@ class NewToolRequestForm extends Component {
                                     validate={this.validateUrl}
                                     component={FormTextField}
                                 />
-                                <ErrorMessage
-                                    name="documentation_url"
-                                    component="div"
-                                />
                                 <Field
                                     name="cmd_line"
                                     label={getMessage("toolInstructionsLabel")}
@@ -143,7 +130,6 @@ class NewToolRequestForm extends Component {
                                     margin="dense"
                                     component={FormMultilineTextField}
                                 />
-                                <ErrorMessage name="cmd_line" component="div" />
                                 <Field
                                     name="test_data_path"
                                     label={getMessage("toolTestDataLabel")}
@@ -151,16 +137,12 @@ class NewToolRequestForm extends Component {
                                     margin="dense"
                                     component={FormTextField}
                                 />
-                                <ErrorMessage
-                                    name="test_data_path"
-                                    component="div"
-                                />
-
                                 <Button
                                     style={{ float: "right" }}
                                     variant="contained"
                                     color="primary"
                                     type="submit"
+                                    aria-label={formatMessage(intl, "submit")}
                                     disabled={isSubmitting}
                                 >
                                     {getMessage("submit")}
