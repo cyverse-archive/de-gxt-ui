@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.RunAppEvent;
@@ -250,7 +249,6 @@ public class AppsListPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         voidCallbackCaptor.getValue().onSuccess(null);
         verify(appMock).setFavorite(false);
-        verify(eventBusMock, times(2)).fireEvent(any(AppFavoritedEvent.class));
         verify(eventBusMock, times(2)).fireEvent(any(AppUpdatedEvent.class));
 
         verifyNoMoreInteractions(appServiceMock, listView);

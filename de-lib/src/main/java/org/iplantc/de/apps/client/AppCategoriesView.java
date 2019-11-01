@@ -1,6 +1,5 @@
 package org.iplantc.de.apps.client;
 
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
@@ -63,8 +62,6 @@ public interface AppCategoriesView extends IsWidget,
      * The copy events are handled by this presenter in order to refresh the user's app development
      * category when the service call to copy the App completes.
      *
-     * {@link AppFavoritedEvent}s are handled here for the sake of updating {@code AppCategory}
-     * counts.
      */
     interface Presenter extends AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                 CopyAppSelected.CopyAppSelectedHandler,

@@ -188,7 +188,9 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     }
 
     private void getAppDetails() {
-        appService.getAppDetails(view.getSelectedApp(), new AppsCallback<App>() {
+        appService.getAppDetails(view.getSelectedApp().getId(),
+                                 view.getSelectedApp().getSystemId(),
+                                 new AppsCallback<Splittable>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -196,21 +198,22 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
             }
 
             @Override
-            public void onSuccess(App result) {
-                view.loadReferences(parseRefLinks(result.getReferences()));
+            public void onSuccess(Splittable result) {
+                view.loadReferences(parseRefLinks(result.get("references")));
             }
         });
     }
 
-    private List<AppRefLink> parseRefLinks(List<String> arr) {
+    private List<AppRefLink> parseRefLinks(Splittable arr) {
         List<AppRefLink> linksList = Lists.newArrayList();
-        for (String ref : arr) {
-            AppRefLink refLink = factory.appRefLink().as();
-            refLink.setId(ref);
-            refLink.setRefLink(ref);
-            linksList.add(refLink);
+        if (arr != null) {
+            for (int i = 0; i < arr.size(); i++) {
+                AppRefLink refLink = factory.appRefLink().as();
+                refLink.setId(arr.get(i).asString());
+                refLink.setRefLink(arr.get(i).asString());
+                linksList.add(refLink);
+            }
         }
-
         return linksList;
     }
 

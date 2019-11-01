@@ -177,4 +177,8 @@ public interface AppsMessages extends Messages {
     String failedToLoadCommunities();
 
     String getQuickLaunchesError();
+
+    String favSuccess(String name);
+
+    String unFavSuccess(String name);
 }

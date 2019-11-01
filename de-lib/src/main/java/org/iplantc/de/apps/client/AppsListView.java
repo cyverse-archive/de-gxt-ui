@@ -62,6 +62,10 @@ public interface AppsListView extends IsWidget {
         String executionSystemLabel();
 
         int menuColumnWidth();
+
+        String favSuccess(String name);
+
+        String unFavSuccess(String name);
     }
 
     /**
@@ -105,8 +109,11 @@ public interface AppsListView extends IsWidget {
         void onAppNameSelected(Splittable appSplittable);
 
         @SuppressWarnings("unusable-by-js")
-        void onAppInfoSelected(Splittable appSplittable,
-                               boolean showQuickLaunchFirst);
+        void onAppInfoSelected(String appId,
+                               String systemId,
+                               boolean isPublic,
+                               boolean showQuickLaunchFirst,
+                               Splittable app);
 
 
         @SuppressWarnings("unusable-by-js")

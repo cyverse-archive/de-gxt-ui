@@ -2,11 +2,9 @@ package org.iplantc.de.apps.client.presenter.details;
 
 import org.iplantc.de.apps.client.AppDetailsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
-import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.QuickLaunchEvent;
 import org.iplantc.de.apps.client.events.RequestCreateQuickLaunchEvent;
-import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.client.events.EventBus;
@@ -27,7 +25,6 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -39,7 +36,6 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
     @Inject AppUserServiceFacade appUserService;
     @Inject
     QuickLaunchServiceFacade qlService;
-    @Inject Provider<AppDetailsViewFactory> viewFactoryProvider;
     @Inject IplantAnnouncer announcer;
     @Inject AppDetailsView.AppDetailsAppearance appearance;
     @Inject EventBus eventBus;
@@ -49,7 +45,8 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
     HandlerManager handlerManager;
 
-    private AppDetailsView view;
+    @Inject
+    AppDetailsView view;
     private OntologyHierarchiesView.OntologyHierarchiesAppearance ontologyHierarchiesAppearance;
 
 
@@ -126,13 +123,12 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
 
 
     @Override
-    public void go(final App app,
+    public void go(final Splittable app,
+                   final Splittable appDetails,
                    boolean showQuickLaunchFirst,
                    final String searchText) {
-        Preconditions.checkState(view == null, "Cannot call go(..) more than once");
-        view = viewFactoryProvider.get().create(app,showQuickLaunchFirst, searchText);
         eventBus.addHandler(AppUpdatedEvent.TYPE, view);
-        view.load(this);
+        view.load(this, app, appDetails, showQuickLaunchFirst, searchText);
     }
 
     @Override
@@ -248,7 +244,6 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter {
                 }
 
                 app.setFavorite(!app.isFavorite());
-                eventBus.fireEvent(new AppFavoritedEvent(app));
                 eventBus.fireEvent(new AppUpdatedEvent(app));
             }
         });

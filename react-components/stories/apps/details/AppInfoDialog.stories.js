@@ -4,36 +4,45 @@ import { text } from "@storybook/addon-knobs";
 
 class AppInfoDialogTest extends Component {
     render() {
-        const appDetals = {
-            is_favorite: true,
-            beta: false,
-            deleted: false,
-            disabled: false,
-            is_public: true,
-            can_run: true,
-            step_count: 1,
-            app_type: "DE",
+        const app = {
+            integration_date: "2013-05-24T21:44:49.000Z",
             description:
                 "This App will add existing reference annotation information to newly assembled transcripts in GFF format.",
-            id: "676846d4-854a-11e4-980d-7f0fcca75dbb",
-            integrator_email: "rogerab@email.arizona.edu",
+            deleted: false,
+            pipeline_eligibility: {
+                is_valid: true,
+                reason: "",
+            },
+            is_favorite: true,
             integrator_name: "Roger Barthelson",
-            name: "Annotate transcripts",
+            beta: false,
             permission: "read",
+            can_favor: true,
+            disabled: false,
+            can_rate: true,
+            name: "Annotate transcripts",
             system_id: "de",
-            wiki_url: "https://wiki.cyverse.org/wiki/display/DEapps/Word+Count",
-            edited_date: "1369428963000",
-            integration_date: "1369431889000",
-            references: [
-                "",
-                "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html",
-            ],
-            categories: [
-                {
-                    id: "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
-                    name: "Assembly Annotation",
-                },
-            ],
+            is_public: true,
+            id: "676846d4-854a-11e4-980d-7f0fcca75dbb",
+            edited_date: "2013-05-24T20:56:03.000Z",
+            step_count: 1,
+            can_run: true,
+            integrator_email: "rogerab@email.arizona.edu",
+            app_type: "AGAVE",
+            wiki_url:
+                "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
+            rating: {
+                average: 0.0,
+                total: 0,
+            },
+        };
+        const appDetals = {
+            integration_date: "2013-05-24T21:44:49.000Z",
+            description:
+                "This App will add existing reference annotation information to newly assembled transcripts in GFF format.",
+            deleted: false,
+            integrator_name: "Roger Barthelson",
+            disabled: false,
             suggested_categories: [
                 {
                     id: "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
@@ -45,6 +54,38 @@ class AppInfoDialogTest extends Component {
                     iri: "http://edamontology.org/topic_0003",
                     label: "Topic",
                     subclasses: [
+                        {
+                            iri: "http://edamontology.org/topic_3070",
+                            label: "Biology",
+                            subclasses: [
+                                {
+                                    iri: "http://edamontology.org/topic_3053",
+                                    label: "Genetics",
+                                    subclasses: [
+                                        {
+                                            iri:
+                                                "http://edamontology.org/topic_3321",
+                                            label: "Molecular genetics",
+                                            subclasses: [
+                                                {
+                                                    iri:
+                                                        "http://edamontology.org/topic_0203",
+                                                    label: "Gene expression",
+                                                    subclasses: [
+                                                        {
+                                                            iri:
+                                                                "http://edamontology.org/topic_3308",
+                                                            label:
+                                                                "Transcriptomics",
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                         {
                             iri: "http://edamontology.org/topic_3307",
                             label: "Computational biology",
@@ -81,38 +122,6 @@ class AppInfoDialogTest extends Component {
                                             iri:
                                                 "http://edamontology.org/topic_3308",
                                             label: "Transcriptomics",
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                        {
-                            iri: "http://edamontology.org/topic_3070",
-                            label: "Biology",
-                            subclasses: [
-                                {
-                                    iri: "http://edamontology.org/topic_3053",
-                                    label: "Genetics",
-                                    subclasses: [
-                                        {
-                                            iri:
-                                                "http://edamontology.org/topic_3321",
-                                            label: "Molecular genetics",
-                                            subclasses: [
-                                                {
-                                                    iri:
-                                                        "http://edamontology.org/topic_0203",
-                                                    label: "Gene expression",
-                                                    subclasses: [
-                                                        {
-                                                            iri:
-                                                                "http://edamontology.org/topic_3308",
-                                                            label:
-                                                                "Transcriptomics",
-                                                        },
-                                                    ],
-                                                },
-                                            ],
                                         },
                                     ],
                                 },
@@ -204,37 +213,48 @@ class AppInfoDialogTest extends Component {
                     ],
                 },
             ],
+            name: "Annotate transcripts",
             tools: [
                 {
                     attribution: "rogerab",
+                    name: "gffintersect_wrapper.pl",
+                    type: "executable",
                     description: "gffintersect",
                     id: "66fbef16-854a-11e4-9d48-ab603f97c137",
                     location:
                         "/usr/local2/AnnotateTranscripts/annotate_transcripts",
-                    name: "gffintersect_wrapper.pl",
-                    type: "executable",
-                    version: "1.0",
                     container: {
                         image: {
-                            deprecated: true,
                             name: "docker.cyverse.org/backwards-compat",
                             tag: "latest",
                             url:
                                 "https://registry.hub.docker.com/u/discoenv/backwards-compat",
+                            deprecated: true,
                         },
                     },
+                    version: "1.0",
                 },
             ],
-            rating: {
-                average: 4,
-                total: 1,
-                user: 4,
+            system_id: "de",
+            references: [
+                "",
+                "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html",
+            ],
+            categories: [
+                {
+                    id: "f9f22c5a-09f5-4630-997c-4e3a00ae924b",
+                    name: "Assembly Annotation",
+                },
+            ],
+            id: "676846d4-854a-11e4-980d-7f0fcca75dbb",
+            edited_date: "2013-05-24T20:56:03.000Z",
+            job_stats: {
+                job_count_completed: 88,
+                job_last_completed: "2018-09-19T19:23:50.000Z",
             },
-            job_stats: {},
-            pipeline_eligibility: {
-                is_valid: true,
-                reason: "",
-            },
+            integrator_email: "rogerab@email.arizona.edu",
+            wiki_url:
+                "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
         };
         const quickLaunches = [
             {
@@ -336,7 +356,8 @@ class AppInfoDialogTest extends Component {
             <AppInfoDialog
                 baseDebugId="appDetails"
                 searchText={text("Search Pattern", "roger")}
-                app={appDetals}
+                app={app}
+                appDetails={appDetals}
                 dialogOpen={true}
                 presenter={presenter}
                 editable={false}

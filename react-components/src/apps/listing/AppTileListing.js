@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppTileListing(props) {
-    const [menuOpen, setMenuOpen] = useState(false);
     const {
         apps,
         parentId,
@@ -92,7 +91,7 @@ function AppTileListing(props) {
                                         name={app.name}
                                         creator={app.integrator_name}
                                         rating={app.rating}
-                                        type={app.app_type}
+                                        type={app.system_id}
                                         isPublic={app.is_public}
                                         isBeta={app.beta}
                                         isDisabled={app.disabled}

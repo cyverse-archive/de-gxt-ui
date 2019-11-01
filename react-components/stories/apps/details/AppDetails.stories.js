@@ -3,7 +3,39 @@ import AppDetails from "../../../src/apps/details/AppDetails";
 
 class AppDetailsTest extends Component {
     render() {
-        const appDetals = {
+        const app = {
+            integration_date: "2013-05-24T21:44:49.000Z",
+            description:
+                "This App will add existing reference annotation information to newly assembled transcripts in GFF format.",
+            deleted: false,
+            pipeline_eligibility: {
+                is_valid: true,
+                reason: "",
+            },
+            is_favorite: true,
+            integrator_name: "Roger Barthelson",
+            beta: false,
+            permission: "read",
+            can_favor: true,
+            disabled: false,
+            can_rate: true,
+            name: "Annotate transcripts",
+            system_id: "de",
+            is_public: true,
+            id: "676846d4-854a-11e4-980d-7f0fcca75dbb",
+            edited_date: "2013-05-24T20:56:03.000Z",
+            step_count: 1,
+            can_run: true,
+            integrator_email: "rogerab@email.arizona.edu",
+            app_type: "AGAVE",
+            wiki_url:
+                "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
+            rating: {
+                average: 0.0,
+                total: 0,
+            },
+        };
+        const appDetails = {
             is_favorite: true,
             beta: false,
             deleted: false,
@@ -264,7 +296,8 @@ class AppDetailsTest extends Component {
 
         return (
             <AppDetails
-                details={appDetals}
+                app={app}
+                details={appDetails}
                 presenter={presenter}
                 searchText=""
                 loading={false}

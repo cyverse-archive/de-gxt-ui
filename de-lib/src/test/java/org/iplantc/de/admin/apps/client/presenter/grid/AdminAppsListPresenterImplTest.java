@@ -195,15 +195,17 @@ public class AdminAppsListPresenterImplTest {
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
         AppInfoSelectedEvent eventMock = mock(AppInfoSelectedEvent.class);
-        App appMock = mock(App.class);
-        when(appMock.isPublic()).thenReturn(true);
+        Splittable appMock = mock(Splittable.class);
+        when(eventMock.isPublic()).thenReturn(true);
+        when(eventMock.getAppId()).thenReturn("1");
+        when(eventMock.getSystemId()).thenReturn("DE");
         when(eventMock.getApp()).thenReturn(appMock);
 
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppInfoSelected(eventMock);
         verify(viewMock).mask(anyString());
 
-        verify(adminAppServiceMock).getAppDetails(eq(appMock), Matchers.<AsyncCallback<App>>any());
+        verify(adminAppServiceMock).getAppDetails(eq("1"),eq("DE"), Matchers.<AsyncCallback<Splittable>>any());
 
         verifyZeroInteractions(viewMock, appServiceMock, listStoreMock);
     }

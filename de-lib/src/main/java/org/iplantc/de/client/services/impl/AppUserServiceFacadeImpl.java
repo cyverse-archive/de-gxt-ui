@@ -230,23 +230,17 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         });
     }
 
+
     @Override
-    public void getAppDetails(final App app, DECallback<App> callback) {
-        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/details";
+    public void getAppDetails(final String appId,
+                              String systemId,
+                              DECallback<Splittable> callback) {
+        String address = APPS + "/" + systemId + "/" + appId + "/details";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, App>(callback) {
-            @Override
-            protected App convertFrom(String object) {
-                Splittable split = StringQuoter.split(object);
-                AutoBean<App> appAutoBean = AutoBeanUtils.getAutoBean(app);
-                AutoBeanCodex.decodeInto(split, appAutoBean);
-                return appAutoBean.as();
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
-
 
 
     /**

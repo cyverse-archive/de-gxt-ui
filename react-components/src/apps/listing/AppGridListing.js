@@ -3,11 +3,10 @@ import PropTypes from "prop-types";
 import exStyles from "../style";
 import getAppsSearchRegex from "../appSearchRegex";
 import DeleteBtn from "../../data/search/queryBuilder/DeleteBtn";
-
 import {
-    AppMenu,
     AppName,
     AppStatusIcon,
+    AppMenu,
     build,
     DECheckbox,
     DETableRow,
@@ -250,7 +249,7 @@ function getTableColumns(deletable, enableMenu) {
         },
         {
             name: AppFields.SYSTEM.fieldName,
-            enableSorting: true,
+            enableSorting: false,
             key: AppFields.SYSTEM.key,
             align: "right",
         },

@@ -16,18 +16,18 @@ import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.client.DEClientConstants;
-import org.iplantc.de.shared.AppsCallback;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.services.AppServiceFacade;
-import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -35,7 +35,9 @@ import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
@@ -59,6 +61,8 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     @Inject DEProperties properties;
     @Inject DEClientConstants constants;
     @Inject AppAdminServiceRequestAutoBeanFactory serviceFactory;
+    @Inject
+    AppAutoBeanFactory appAutoBeanFactory;
 
     private final TreeStore<AppCategory> treeStore;
     private final AppCategoriesView view;
@@ -156,8 +160,9 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
         final App selectedApp = event.getApps().iterator().next();
         view.mask(appearance.getAppDetailsLoadingMask());
 
-        adminAppService.getAppDetails(selectedApp, new AsyncCallback<App>() {
-
+        adminAppService.getAppDetails(selectedApp.getId(),
+                                      selectedApp.getSystemId(),
+                                      new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -165,8 +170,9 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
             }
 
             @Override
-            public void onSuccess(App result) {
-                showCategorizeAppDialog(result);
+            public void onSuccess(Splittable result) {
+                showCategorizeAppDialog(AutoBeanCodex.decode(appAutoBeanFactory, App.class, result)
+                                                     .as());
                 view.unmask();
             }
         });

@@ -35,6 +35,7 @@ function AdminAppDetailsDialog(props) {
     const {
         open,
         app,
+        details,
         parentId,
         presenter,
         restrictedChars,
@@ -236,8 +237,10 @@ function validateAppName(restrictedStartingChars, restrictedChars, value) {
 }
 
 const handleSubmit = (values, { props, setSubmitting }) => {
-    const { presenter } = props;
-
+    const {
+        presenter,
+        details: { documentation = {} },
+    } = props;
     let promises = [];
     if (props.app !== values) {
         let saveApp = new Promise((resolve, reject) => {
@@ -254,7 +257,7 @@ const handleSubmit = (values, { props, setSubmitting }) => {
     }
 
     if (
-        !props.app.documentation.documentation &&
+        (!documentation || !documentation.documentation) &&
         values.documentation.documentation
     ) {
         let addAppDoc = new Promise((resolve, reject) => {
@@ -268,8 +271,7 @@ const handleSubmit = (values, { props, setSubmitting }) => {
         });
         promises.push(addAppDoc);
     } else if (
-        props.app.documentation.documentation !==
-        values.documentation.documentation
+        documentation.documentation !== values.documentation.documentation
     ) {
         let updateAppDoc = new Promise((resolve, reject) => {
             presenter.updateAppDocumentation(
@@ -303,6 +305,7 @@ AdminAppDetailsDialog.propTypes = {
         closeAppDetailsDlg: PropTypes.func.isRequired,
     }),
     app: PropTypes.object.isRequired,
+    details: PropTypes.object,
     restrictedChars: PropTypes.string.isRequired,
     restrictedStartingChars: PropTypes.string.isRequired,
     createDocWikiUrl: PropTypes.string.isRequired,
@@ -312,6 +315,6 @@ AdminAppDetailsDialog.propTypes = {
 
 export default withFormik({
     enableReinitialize: true,
-    mapPropsToValues: ({ app }) => ({ ...app }),
+    mapPropsToValues: ({ app, details }) => ({ ...app, ...details }),
     handleSubmit,
 })(withI18N(AdminAppDetailsDialog, messages));
