@@ -11,6 +11,7 @@ import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
+import com.google.common.base.Joiner;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -25,18 +26,20 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
 
     HTMLPanel panel;
 
-    private ReactAppsAdmin.AdminAppListingProps props;
+    private ReactAppsAdmin.AdminAppsListingProps props;
 
     @Inject
     AdminAppsGridImpl() {
+        panel = new HTMLPanel("<div></div>");
     }
 
     @Override
     public void load(Presenter presenter) {
-        props = new ReactAppsAdmin.AdminAppListingProps();
+        props = new ReactAppsAdmin.AdminAppsListingProps();
         props.apps = null;
         props.loading = false;
         props.parentId = "adminAppListing";
+        props.heading = "";
         render();
     }
 
@@ -60,36 +63,40 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
     }
 
     private void render() {
-        CyVerseReactComponents.render(ReactAppsAdmin.AdminAppGridListing, props, panel.getElement());
+        CyVerseReactComponents.render(ReactAppsAdmin.AdminAppsGridListing, props, panel.getElement());
     }
 
 
     @Override
     public void clearAndAdd(Splittable apps) {
-        props.apps = apps;
-        render();
+       /* props.apps = apps;
+        render();*/
     }
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
         // FIXME Move to appearance
-       // setHeading(Joiner.on(" >> ").join(event.getGroupHierarchy()));
+        props.heading = Joiner.on(" >> ").join(event.getGroupHierarchy());
+        render();
     }
 
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
-        //setHeading(Joiner.on(" >> ").join(event.getPath()));
+        props.heading =   Joiner.on(" >> ").join(event.getPath()) ;
+        render();
     }
 
     @Override
     public void onPreviewHierarchySelected(PreviewHierarchySelectedEvent event) {
-        //setHeading(Joiner.on(" >> ").join(event.getPath()));
+        props.heading = Joiner.on(" >> ").join(event.getPath());
+        render();
     }
 
 
     @Override
     public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
-        //setHeading(event.getPath());
+        props.heading = event.getPath();
+        render();
     }
 
     @Override

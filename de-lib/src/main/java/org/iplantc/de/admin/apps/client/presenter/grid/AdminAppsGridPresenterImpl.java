@@ -46,6 +46,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -166,9 +167,16 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     AdminAppsGridView view;
     OntologyUtil ontologyUtil = OntologyUtil.getInstance();
 
+    List<Splittable> selectedApps = new ArrayList<>();
+
     @Inject
     AdminAppsGridPresenterImpl() {
 
+    }
+
+    @Override
+    public void go() {
+        view.load(this);
     }
 
    /* @Override
@@ -186,10 +194,18 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
         return view.getAppFromElement(Element.as(eventTarget));
     }*/
 
-   /* @Override
-    public List<App> getSelectedApps() {
-        return view.getSelectedApps();
-    }*/
+    @Override
+    public List<Splittable> getSelectedApps() {
+        return selectedApps;
+    }
+
+     @Override
+     public void onAppSelectionChanged(Splittable splittableSelectedApps) {
+        selectedApps.clear();
+         for (int i = 0; i < splittableSelectedApps.size(); i++) {
+             selectedApps.add(splittableSelectedApps.get(0));
+         }
+     }
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {

@@ -283,6 +283,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     @Override
     public void go(HasOneWidget container) {
         getOntologies(true);
+        previewGridPresenter.go();
+        editorGridPresenter.go();
         container.setWidget(view);
     }
 
@@ -390,8 +392,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     }
 
     void getOntologies(final boolean selectActiveOntology) {
-        editorGridPresenter.getView().clearAndAdd(null);
-        previewGridPresenter.getView().clearAndAdd(null);
+       // editorGridPresenter.getView().clearAndAdd(null);
+      // previewGridPresenter.getView().clearAndAdd(null);
         view.clearTreeStore(OntologiesView.ViewType.ALL);
         serviceFacade.getOntologies(new AsyncCallback<List<Ontology>>() {
             @Override

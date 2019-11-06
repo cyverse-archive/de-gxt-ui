@@ -11,12 +11,15 @@ import {
     Highlighter,
     LoadingMask,
     palette,
+    withI18N,
 } from "@cyverse-de/ui-lib";
 
 import { makeStyles, Table, TableBody, TableCell } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import AppFields from "../AppFields";
 import ids from "../listing/ids";
+import { injectIntl } from "react-intl";
+import messages from "../../teams/messages";
 
 const useStyles = makeStyles((theme) => ({
     toolbarItemColor: {
@@ -56,8 +59,8 @@ const tableColumns = [
     },
 ];
 
-export default function AdminAppGridListing(props) {
-    const { apps, searchText, parentId, loading } = props;
+function AdminAppGridListing(props) {
+    const { apps, searchText, parentId, loading, intl } = props;
     const searchRegex = getAppsSearchRegex(searchText);
     const classes = useStyles();
     const onRequestSort = () => {
@@ -140,3 +143,5 @@ export default function AdminAppGridListing(props) {
         </div>
     );
 }
+
+export default withI18N(injectIntl(AdminAppGridListing), messages);

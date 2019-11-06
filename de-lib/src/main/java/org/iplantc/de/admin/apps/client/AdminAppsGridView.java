@@ -18,6 +18,8 @@ import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import java.util.List;
+
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
@@ -82,11 +84,16 @@ public interface AdminAppsGridView extends IsWidget,
         @JsIgnore
         AdminAppsGridView getView();
 
+        @SuppressWarnings("unusable-by-js")
+        void onAppSelectionChanged(Splittable selectedApps);
+
         /*@JsIgnore
         App getAppFromElement(Element eventTarget);*/
 
-       /* @JsIgnore
-        List<App> getSelectedApps();*/
+       @JsIgnore
+       List<Splittable> getSelectedApps();
+
+        void go();
 
         @SuppressWarnings("unusable-by-js")
         void onSaveAppSelected(Splittable appSpl,
