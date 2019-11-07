@@ -156,9 +156,6 @@ function ManageTools(props) {
     };
 
     const onToolSelection = (tool) => {
-        if (selectedTool === tool) {
-            tool = null;
-        }
         setSelectedTool(tool);
         setNumToolsSelected(tool ? 1 : 0);
         presenter.onToolSelectionChanged(tool);
@@ -441,7 +438,6 @@ function ToolListing(props) {
                             <TableCell padding="none">
                                 <IconButton
                                     onClick={(event) => {
-                                        event.stopPropagation();
                                         onToolInfoSelection(tool);
                                     }}
                                     id={build(
