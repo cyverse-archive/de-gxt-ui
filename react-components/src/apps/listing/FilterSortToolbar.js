@@ -10,7 +10,6 @@ import {
     InputLabel,
     makeStyles,
     MenuItem,
-    OutlinedInput,
     Select,
 } from "@material-ui/core";
 import AppFields from "./AppFields";

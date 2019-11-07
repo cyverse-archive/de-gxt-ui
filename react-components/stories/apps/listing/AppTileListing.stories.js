@@ -546,6 +546,9 @@ class AppTileListingTest extends Component {
                 heading="Heading"
                 viewType={viewType.TILE}
                 presenter={presenter}
+                loading={false}
+                sortField="name"
+                typeFilter="All"
             />
         );
     }

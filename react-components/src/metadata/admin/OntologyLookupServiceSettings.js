@@ -36,7 +36,7 @@ class OntologyLookupServiceSettings extends Component {
         return (
             <Grid
                 container
-                spacing={16}
+                spacing={2}
                 direction="column"
                 justify="flex-start"
                 alignItems="stretch"

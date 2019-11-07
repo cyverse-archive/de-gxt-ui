@@ -356,9 +356,9 @@ class AnalysesViewTest extends Component {
                 email="abc@cyverse.org"
                 name="sriram srinivasan"
                 baseDebugId="AnalysesWindow"
-                viewFilter="all"
+                viewFilter="All"
                 diskResourceUtil={drUtil}
-                appTypeFilter="de"
+                appTypeFilter="DE"
             />
         );
     }

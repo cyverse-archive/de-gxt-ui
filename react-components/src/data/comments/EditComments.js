@@ -15,11 +15,9 @@ import {
     withStyles,
     Divider,
     DialogActions,
-    FormControl,
 } from "@material-ui/core";
 import {
     DEDialogHeader,
-    palette,
     formatDate,
     stableSort,
     getSorting,
@@ -36,7 +34,7 @@ class EditComments extends Component {
             open: true,
             commentList: null,
             loading: false,
-            commentText: null,
+            commentText: "",
         };
 
         this.handleClose = this.handleClose.bind(this);
@@ -139,6 +137,7 @@ class EditComments extends Component {
         let commentItems = this.state.commentList
             ? this.state.commentList.map((comment, index) => (
                   <Comment
+                      key={comment.id}
                       message={comment.comment}
                       id={comment.id}
                       retracted={comment.retracted}

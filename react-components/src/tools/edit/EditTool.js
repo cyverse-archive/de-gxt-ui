@@ -21,7 +21,6 @@ import { injectIntl } from "react-intl";
 import {
     build,
     DEDialogHeader,
-    FormCheckbox,
     FormMultilineTextField,
     FormNumberField,
     FormSelectField,

@@ -294,7 +294,7 @@ class MetadataTemplateAttributeView extends Component {
                                         <Grid
                                             item
                                             container
-                                            spacing={16}
+                                            spacing={2}
                                             justify="flex-start"
                                             alignItems="center"
                                         >
@@ -413,7 +413,7 @@ class MetadataTemplateAttributeView extends Component {
                                     <ExpansionPanelDetails>
                                         <Grid
                                             container
-                                            spacing={16}
+                                            spacing={2}
                                             direction="column"
                                             justify="flex-start"
                                             alignItems="stretch"

@@ -57,7 +57,7 @@ function CreateQuickLaunchDialog(props) {
                 initialValues={{ description: "", is_public: false }}
                 enableReinitialize={true}
                 onSubmit={handleSubmit}
-                render={({ errors, status, touched, isSubmitting }) => (
+                render={({ isSubmitting }) => (
                     <Form>
                         <DialogContent>
                             <Field
@@ -70,16 +70,18 @@ function CreateQuickLaunchDialog(props) {
                             <Tooltip
                                 title={formatMessage(intl, "publicQLTooltip")}
                             >
-                                <Field
-                                    id={build(
-                                        baseDebugId,
-                                        ids.QUICK_LAUNCH.public
-                                    )}
-                                    name="is_public"
-                                    label={getMessage("publicLabel")}
-                                    required={false}
-                                    component={FormCheckbox}
-                                />
+                                <div>
+                                    <Field
+                                        id={build(
+                                            baseDebugId,
+                                            ids.QUICK_LAUNCH.public
+                                        )}
+                                        name="is_public"
+                                        label={getMessage("publicLabel")}
+                                        required={false}
+                                        component={FormCheckbox}
+                                    />
+                                </div>
                             </Tooltip>
                             <br />
                         </DialogContent>

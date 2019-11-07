@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import Teams from "../../src/teams/Teams";
 import { boolean } from "@storybook/addon-knobs";
-import { search } from "../../src/data";
 
 class TeamsTest extends Component {
     render() {

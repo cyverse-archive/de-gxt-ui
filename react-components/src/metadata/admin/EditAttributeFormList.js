@@ -203,7 +203,7 @@ class EditAttribute extends Component {
                 <ExpansionPanelDetails>
                     <Grid
                         container
-                        spacing={16}
+                        spacing={2}
                         direction="column"
                         justify="flex-start"
                         alignItems="stretch"
@@ -435,7 +435,7 @@ class EditAttributeFormList extends Component {
                 <ExpansionPanelDetails>
                     <Grid
                         container
-                        spacing={16}
+                        spacing={2}
                         direction="column"
                         justify="flex-start"
                         alignItems="stretch"

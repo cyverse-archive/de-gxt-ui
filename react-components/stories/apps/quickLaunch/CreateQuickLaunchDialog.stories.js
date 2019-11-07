@@ -3,11 +3,20 @@ import CreateQuickLaunchDialog from "../../../src/apps/quickLaunch/CreateQuickLa
 
 class CreateQuickLaunchDialogTest extends Component {
     render() {
+        const presenter = {
+            createQuickLaunch: (name, description, isPublic) => {
+                console.log("Create Quick Launch", name, description, isPublic);
+            },
+            onHideCreateQuickLaunchRequestDialog: () => {
+                console.log("Close Quick Launch Dialog");
+            },
+        };
         return (
             <CreateQuickLaunchDialog
                 appName="All new word count"
                 dialogOpen={true}
                 isOwner={true}
+                presenter={presenter}
             />
         );
     }

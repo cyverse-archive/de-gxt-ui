@@ -101,7 +101,6 @@ function ViceLogsViewer(props) {
                             label={getMessage("followLogs")}
                         />
                         <Button
-                            id={build(baseId, ids.REFRESH_BTN)}
                             variant="contained"
                             size="small"
                             className={classes.toolbarButton}

@@ -56,32 +56,28 @@ class SearchFormTagPanelTest extends Component {
             remove: removeTagLogger,
         };
 
-        const tagQuery = {
-            input: {
-                value: [
-                    {
-                        id: "10",
-                        value: "cucumber",
-                        description: "old cucumber",
-                    },
-                    {
-                        id: "20",
-                        value: "tomato",
-                        description: "old tomato",
-                    },
-                    {
-                        id: "30",
-                        value: "carrot",
-                        description: "old carrot",
-                    },
-                    {
-                        id: "40",
-                        value: "lettuce",
-                        description: "old lettuce",
-                    },
-                ],
+        const tagQuery = [
+            {
+                id: "10",
+                value: "cucumber",
+                description: "old cucumber",
             },
-        };
+            {
+                id: "20",
+                value: "tomato",
+                description: "old tomato",
+            },
+            {
+                id: "30",
+                value: "carrot",
+                description: "old carrot",
+            },
+            {
+                id: "40",
+                value: "lettuce",
+                description: "old lettuce",
+            },
+        ];
 
         const parentId = "searchForm";
 

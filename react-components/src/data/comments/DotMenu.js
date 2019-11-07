@@ -30,7 +30,7 @@ class DotMenu extends Component {
         return (
             <div>
                 <IconButton
-                    aria-Label={formatMessage(intl, "moreDD")}
+                    aria-label={formatMessage(intl, "moreDD")}
                     aria-owns={open ? "long-menu" : null}
                     aria-haspopup="true"
                     onClick={this.handleDotMenuClick}

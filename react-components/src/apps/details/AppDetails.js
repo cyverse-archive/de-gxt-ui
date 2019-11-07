@@ -47,10 +47,8 @@ import UnFavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
 function Favorite(props) {
-    const { is_favorite, id } = props.details;
-    const { classes, isExternal, onFavoriteClick, intl } = props;
-    let className = classes.disableFavorite;
-    const debugId = build(props.baseDebugId, id);
+    const { is_favorite } = props.details;
+    const { isExternal, onFavoriteClick, intl } = props;
 
     if (is_favorite) {
         return (
