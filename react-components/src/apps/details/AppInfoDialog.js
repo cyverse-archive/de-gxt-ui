@@ -193,7 +193,7 @@ function AppInfoDialog(props) {
 
     return (
         <React.Fragment>
-            <Dialog open={dialogOpen} maxWidth="sm" id={baseDebugId}>
+            <Dialog open={dialogOpen} id={baseDebugId}>
                 <DEDialogHeader
                     heading={app.name}
                     onClose={onClose}

@@ -2,7 +2,6 @@ package org.iplantc.de.tools.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
@@ -25,7 +24,6 @@ import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
-import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
@@ -46,7 +44,6 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -63,7 +60,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
-    @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
     @Inject EventBus eventBus;
     @Inject ToolAutoBeanFactory factory;
     @Inject DEProperties deProperties;
@@ -357,60 +353,61 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         });
     }
 
-
     @Override
-    public void onShowToolInfo(String toolId) {
-        toolServices.getAppsForTool(toolId, new AppsCallback<List<App>>() {
-
+    public void getToolInfo(String toolId,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback) {
+        toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
             @Override
-            public void onFailure(Integer statusCode, Throwable exception) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
-                getToolInfo(toolId, Arrays.asList());
-
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
             }
 
             @Override
-            public void onSuccess(final List<App> apps) {
-                getToolInfo(toolId, apps);
+            public void onSuccess(final Tool tool) {
+                if (callback != null) {
+                    callback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)));
+                }
             }
         });
 
     }
 
+    @Override
+    public void getAppsForTool(String toolId,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback) {
+        toolServices.getAppsForTool(toolId, new AppsCallback<Splittable>() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onSuccess(final Splittable apps) {
+                if (callback != null) {
+                    callback.onSuccess(apps.get("apps"));
+                }
+            }
+        });
+
+    }
 
     @Override
     public void onToolRequestDialogClose() {
         requestFormView.onClose();
     }
 
-    private void getToolInfo(String toolId, List<App> appsUsingTool) {
-        toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable exception) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
-            }
-
-            @Override
-            public void onSuccess(final Tool tool) {
-                showToolInfo(tool, appsUsingTool);
-            }
-        });
-    }
-
-    private void showToolInfo(final Tool tool, final List<App> result) {
-        toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(ToolInfoDialog o) {
-                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
-                o.show(tool, sp);
-            }
-        });
-    }
 
     void displayInfoMessage(String title, String message) {
         IplantInfoBox iib = new IplantInfoBox(title, message);

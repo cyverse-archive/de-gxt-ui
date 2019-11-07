@@ -41,6 +41,7 @@ import {
 } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
+import ToolInfoDialog from "../details/ToolInfoDialog";
 
 const TOOL_FILTER_VALUES = {
     ALL: "ALL",
@@ -70,6 +71,7 @@ function ManageTools(props) {
         TOOL_FILTER_VALUES.ALL
     );
     const [numToolsSelected, setNumToolsSelected] = useState(0);
+    const [dialogOpen, setInfoDialogOpen] = useState(false);
 
     const refreshListing = (
         toolFilter,
@@ -162,6 +164,11 @@ function ManageTools(props) {
         presenter.onToolSelectionChanged(tool);
     };
 
+    const onToolInfoSelection = (tool) => {
+        setSelectedTool(tool);
+        setInfoDialogOpen(true);
+    };
+
     return (
         <Fragment>
             <StyledToolbar
@@ -184,6 +191,7 @@ function ManageTools(props) {
                             presenter={presenter}
                             selectedTool={selectedTool}
                             onToolSelection={onToolSelection}
+                            onToolInfoSelection={onToolInfoSelection}
                         />
                         <EnhancedTableHead
                             numSelected={numToolsSelected}
@@ -209,6 +217,13 @@ function ManageTools(props) {
                     rowsPerPageOptions={PAGING_OPTIONS}
                 />
             </div>
+            <ToolInfoDialog
+                dialogOpen={dialogOpen}
+                selectedTool={selectedTool}
+                onClose={() => setInfoDialogOpen(false)}
+                presenter={presenter}
+                baseDebugId={parentId}
+            />
         </Fragment>
     );
 }
@@ -397,6 +412,7 @@ function ToolListing(props) {
         presenter,
         selectedTool,
         onToolSelection,
+        onToolInfoSelection,
     } = props;
 
     const isSelected = (tool) => {
@@ -424,9 +440,10 @@ function ToolListing(props) {
                         >
                             <TableCell padding="none">
                                 <IconButton
-                                    onClick={() =>
-                                        presenter.onShowToolInfo(tool.id)
-                                    }
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onToolInfoSelection(tool);
+                                    }}
                                     id={build(
                                         parentId,
                                         tool.id,

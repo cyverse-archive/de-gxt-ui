@@ -19,8 +19,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.ReactToolViews;
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
-
-import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
@@ -29,9 +27,6 @@ import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
@@ -44,7 +39,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,15 +71,6 @@ public class ManageToolsViewPresenterTest {
 
     @Mock
     ToolSharingDialog toolSharingDialogMock;
-
-    @Mock
-    AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProviderMock;
-
-    @Captor
-    ArgumentCaptor<AsyncCallback<ToolInfoDialog>> toolInfoDialogCaptor;
-
-    @Mock
-    ToolInfoDialog toolInfoDialogMock;
 
     @Mock EditToolView editToolViewMock;
     @Mock EditToolViewFactory editToolViewFactoryMock;
@@ -165,7 +150,6 @@ public class ManageToolsViewPresenterTest {
         uut.editToolView = editToolViewMock;
         uut.shareDialogProvider = shareDialogProviderMock;
 
-        uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
         uut.factory = factoryMock;
@@ -267,28 +251,6 @@ public class ManageToolsViewPresenterTest {
         verify(shareDialogProviderMock).get(sharingDialogCaptor.capture());
         sharingDialogCaptor.getValue().onSuccess(toolSharingDialogMock);
         verify(toolSharingDialogMock).show(any());
-    }
-
-    @Test
-    public void testOnShowToolInfo() {
-        App a1 = mock(App.class);
-        List<App> appList = Arrays.asList(a1);
-        Splittable spAppList =  AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appList));
-        String toolId = "toolId";
-
-        uut.onShowToolInfo(toolId);
-
-        verify(toolServicesMock).getAppsForTool(eq(toolId), appListCaptor.capture());
-        appListCaptor.getValue().onSuccess(appList);
-
-        verify(toolServicesMock).getToolInfo(eq(toolId), toolCaptor.capture());
-        toolCaptor.getValue().onSuccess(toolMock);
-
-        verify(toolInfoDialogProviderMock).get(toolInfoDialogCaptor.capture());
-        toolInfoDialogCaptor.getValue().onSuccess(toolInfoDialogMock);
-        verify(toolInfoDialogMock).show(eq(toolMock),
-                                        eq(spAppList));
-
     }
 
 }

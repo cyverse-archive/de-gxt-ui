@@ -74,8 +74,6 @@ public interface ManageToolsView extends IsWidget {
         @SuppressWarnings("unusable-by-js")
         void updateTool(Splittable tool);
 
-        void onShowToolInfo(String toolId);
-
         void closeEditToolDlg();
 
         void onNewToolSelected();
@@ -98,6 +96,16 @@ public interface ManageToolsView extends IsWidget {
                            ReactErrorCallback errorCallback);
 
         void onToolRequestDialogClose();
+
+        @SuppressWarnings("unusable-by-js")
+        void getToolInfo(String toolId,
+                         ReactSuccessCallback callback,
+                         ReactErrorCallback errorCallback);
+
+        @SuppressWarnings("unusable-by-js")
+        void getAppsForTool(String toolId,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback);
     }
 
     Splittable getCurrentToolList();

@@ -3,8 +3,6 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolType;
@@ -16,6 +14,7 @@ import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToSplittableDECallbackConverter;
 import org.iplantc.de.client.services.converters.ToolCallbackConverter;
 import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
@@ -187,18 +186,12 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void getAppsForTool(String toolId, AppsCallback<List<App>> appsCallback) {
+    public void getAppsForTool(String toolId,
+                               AppsCallback<Splittable> appsCallback) {
        String address = TOOLS + "/" + toolId + "/apps";
 
        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deServiceFacade.getServiceData(wrapper,
-                                       new DECallbackConverter<String, List<App>>(appsCallback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(appsCallback));
        
     }
 

@@ -106,5 +106,14 @@ export default {
         toolTestDataLabel: "Provide a link for your tool's test data:",
         validationErrMsgURL:
             "A valid URL must begin with either ftp or http or https.",
+        toolAttributionLabel: "Attribution",
+        descriptionLabel: "Description",
+        restrictionsLabel: "Restrictions",
+        memoryLimitLabel: "Memory Limit (bytes)",
+        pidsLimitLabel: "PIDs Limit",
+        secondsLimitLabel: "Maximum Run Time (seconds)",
+        networkingLabel: "Networking",
+        toolInformationLbl: "Tool Information",
+        appsUsingToolLbl: "Apps using this tool",
     },
 };

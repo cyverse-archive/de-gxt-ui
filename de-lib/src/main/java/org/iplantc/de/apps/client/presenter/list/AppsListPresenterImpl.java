@@ -230,11 +230,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     public void onCommunitySelectionChanged(CommunitySelectionChangedEvent event) {
         Group selectedCommunity = event.getCommunitySelection();
         Preconditions.checkNotNull(selectedCommunity);
+        listView.setHeading(Joiner.on(" >> ").join(event.getPath()));
         if (!selectedCommunity.getId().equals(CommunitiesView.COMMUNITIES_ROOT)) {
             getCommunityApps(selectedCommunity);
         } else {
             listView.setApps(null, false);
-            listView.setHeading(Joiner.on(" >> ").join(event.getPath()));
             listView.setLoadingMask(true);
             getCommunityApps(selectedCommunity);
         }
