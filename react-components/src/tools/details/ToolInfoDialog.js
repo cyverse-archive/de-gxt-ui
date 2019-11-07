@@ -110,7 +110,7 @@ function ToolInfoDialog(props) {
                     onClose={onClose}
                     id={baseDebugId}
                 />
-                <DialogContent style={{ minHeight: 600 }}>
+                <DialogContent style={{ minHeight: 400 }}>
                     <LoadingMask loading={loading}>
                         <Tabs
                             indicatorColor="primary"
