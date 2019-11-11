@@ -139,6 +139,11 @@ function ToolInfoDialog(props) {
                                     style={{ paddingLeft: 5 }}
                                 >
                                     <Grid item xs={12}>
+                                        <Typography variant="h6">
+                                            {getMessage("detailsLbl")}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
                                         <span className={labelClass}>
                                             {getMessage("toolAttributionLabel")}
                                             :
@@ -153,6 +158,111 @@ function ToolInfoDialog(props) {
                                         </span>
                                         <span className={valueClass}>
                                             {selectedTool.description}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("imageNameLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.image.name}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("imageTagLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.image.tag}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("imageUrlLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.image.url}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("deprecatedLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.image.deprecated
+                                                ? "True"
+                                                : "False"}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("entryPointLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.entrypoint}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("uidLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.uid}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("workingDirLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.working_directory}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("versionLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.version}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6">
+                                            {getMessage(
+                                                "resourceRequirementsLbl"
+                                            )}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("minCPUCoresLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.min_cpu_cores}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("maxCPUCoresLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.max_cpu_cores}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("minMemoryLimitLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.min_memory_limit}
+                                        </span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <span className={labelClass}>
+                                            {getMessage("minDiskSpaceLbl")}:
+                                        </span>
+                                        <span className={valueClass}>
+                                            {tool.container.min_disk_space}
                                         </span>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -187,7 +297,7 @@ function ToolInfoDialog(props) {
                                         <span className={valueClass}>
                                             {tool.container.network_mode
                                                 ? tool.container.network_mode
-                                                : NOT_APPLICABLE}
+                                                : getMessage("enabled")}
                                         </span>
                                     </Grid>
                                     <Grid item xs={12}>
