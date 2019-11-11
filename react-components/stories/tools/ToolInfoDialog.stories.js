@@ -27,41 +27,6 @@ class TooInfoDialogTest extends Component {
             },
             time_limit_seconds: 0,
         };
-        const toolInfo = {
-            permission: "own",
-            interactive: false,
-            name: "austria-demo",
-            type: "executable",
-            restricted: true,
-            is_public: false,
-            id: "0d769188-6b8e-11e9-81f7-008cfa5ae621",
-            container: {
-                pids_limit: 1024,
-                network_mode: "none",
-                id: "0d774a56-6b8e-11e9-81f7-008cfa5ae621",
-                memory_limit: 17179869184,
-                image: {
-                    name: "docker/whalesay",
-                    id: "0d77279c-6b8e-11e9-81f7-008cfa5ae621",
-                    tag: "latest",
-                    url: null,
-                    deprecated: false,
-                    osg_image_path: null,
-                },
-                skip_tmp_mount: false,
-            },
-            version: "1",
-            implementation: {
-                implementor: "sriram",
-                implementor_email: "sriram@iplantcollaborative.org",
-                test: {
-                    input_files: [],
-                    output_files: [],
-                },
-            },
-            time_limit_seconds: 86400,
-        };
-
         const toolInfoPublic = {
             description: "16sblaster",
             permission: "read",

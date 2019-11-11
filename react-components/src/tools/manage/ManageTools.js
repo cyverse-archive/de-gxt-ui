@@ -406,7 +406,6 @@ function ToolListing(props) {
     const {
         parentId,
         toolList,
-        presenter,
         selectedTool,
         onToolSelection,
         onToolInfoSelection,
@@ -466,7 +465,6 @@ function ToolListing(props) {
 
 ManageTools.propTypes = {
     presenter: PropTypes.shape({
-        onShowToolInfo: PropTypes.func.isRequired,
         onNewToolSelected: PropTypes.func.isRequired,
         onRequestToolSelected: PropTypes.func.isRequired,
         onEditToolSelected: PropTypes.func.isRequired,

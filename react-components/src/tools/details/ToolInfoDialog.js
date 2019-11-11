@@ -24,6 +24,7 @@ import {
 import { AppGridListing } from "../../apps/listing";
 import { injectIntl } from "react-intl";
 import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
 
 const NOT_APPLICABLE = "N/A";
 
@@ -213,8 +214,8 @@ function ToolInfoDialog(props) {
                                 isSelected={() => false}
                                 selectedApps={[]}
                                 onSortChange={() => {}}
-                                resetAppSelection={() => {}}
                                 handleAppSelection={() => {}}
+                                parentId={baseDebugId}
                             />
                         )}
                     </LoadingMask>
@@ -223,5 +224,15 @@ function ToolInfoDialog(props) {
         </React.Fragment>
     );
 }
+
+ToolInfoDialog.propTypes = {
+    presenter: PropTypes.shape({
+        getToolInfo: PropTypes.func.isRequired,
+        getAppsForTool: PropTypes.func.isRequired,
+    }),
+    dialogOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    selectedTool: PropTypes.object,
+};
 
 export default withI18N(injectIntl(ToolInfoDialog), messages);
