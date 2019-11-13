@@ -1,163 +1,172 @@
 package org.iplantc.de.teams.client;
 
-import org.iplantc.de.client.models.IsHideable;
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.Privilege;
-import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
-import org.iplantc.de.teams.client.events.AddPublicUserSelected;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
 import org.iplantc.de.teams.client.events.JoinTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
-import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
-import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
-import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
 
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.event.StoreAddEvent;
-import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
-
-import java.util.List;
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
- * An interface for users to create and edit teams
+ * A dialog interface for users to create and edit teams
  */
-public interface EditTeamView extends IsWidget,
-                                      IsMaskable,
-                                      UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers,
-                                      RemoveMemberPrivilegeSelected.HasRemoveMemberPrivilegeSelectedHandlers,
-                                      RemoveNonMemberPrivilegeSelected.HasRemoveNonMemberPrivilegeSelectedHandlers,
-                                      AddPublicUserSelected.HasAddPublicUserSelectedHandlers,
-                                      StoreAddEvent.HasStoreAddHandlers<Privilege>,
-                                      StoreRemoveEvent.HasStoreRemoveHandler<Privilege> {
+@JsType
+public interface EditTeamView extends IsWidget {
 
-    enum MODE {
-        CREATE,
-        EDIT,
-        VIEW
-    }
-
-    String SEARCH_MEMBERS_TAG = "members";
-    String SEARCH_NON_MEMBERS_TAG = "nonMembers";
-
+    @JsType
     interface Presenter extends TeamSaved.HasTeamSavedHandlers,
                                 LeaveTeamCompleted.HasLeaveTeamCompletedHandlers,
-                                PrivilegeAndMembershipLoaded.HasPrivilegeAndMembershipLoadedHandlers,
                                 DeleteTeamCompleted.HasDeleteTeamCompletedHandlers,
                                 JoinTeamCompleted.HasJoinTeamCompletedHandlers {
 
         /**
          * Initialize the presenter which creates the view
-         * @param widget
-         * @param group
+         * @param team - parameter that should be included if a team is being edited,
+         *             null if a team is being created
          */
-        void go(HasOneWidget widget, Group group);
+        @JsIgnore
+        void go(Group team);
+
+        /**
+         * Close the Edit Team Dialog in React
+         */
+        void closeEditTeamDlg();
+
+        /**
+         * Update an already existing team's name or description
+         * @param originalName - the team's name in the format creatorName:teamName
+         * @param name
+         * @param description
+         */
+        void updateTeam(String originalName, String name, String description);
+
+        /**
+         * Search for collaborators/subjects based on a search term
+         * @param searchTerm
+         * @param callback
+         * @param errorCallback
+         */
+        void searchCollaborators(String searchTerm, ReactSuccessCallback callback, ReactErrorCallback errorCallback);
+
+        /**
+         * Save a new team
+         * @param name - the team's name in the format creatorName:teamName
+         * @param createTeamRequest - same format as {@link org.iplantc.de.client.models.groups.CreateTeamRequest}
+         * @param updatePrivilegeReq - same format as {@link org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList}
+         * @param memberIds - String array containing the user IDs of the subjects to be added as team members
+         */
+        @SuppressWarnings("unusable-by-js")
+        void saveTeamSelected(String name,
+                              Splittable createTeamRequest,
+                              Splittable updatePrivilegeReq,
+                              String[] memberIds);
+
+        /**
+         * Update privileges to a team.  Optionally, if memberIds is provided, this will also add
+         * those memberIDs as team members.
+         * @param teamName - the team's name in the format creatorName:teamName
+         * @param updatePrivilegeReq - same format as {@link org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList}
+         * @param memberIds - String array containing the user IDs of the subjects to be added as team members
+         * @param callback - Optional callback to EditTeamDialog
+         */
+        @SuppressWarnings("unusable-by-js")
+        void updatePrivilegesToTeam(String teamName,
+                                    Splittable updatePrivilegeReq,
+                                    String[] memberIds,
+                                    ReactSuccessCallback callback);
+
+        /**
+         * Delete a member of a team and also remove their privileges on that team
+         * @param originalName - the team's name in the format creatorName:teamName
+         * @param subjectId - the user ID of the subject being removed from the team
+         * @param updatePrivilegeReq - same format as {@link org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList}
+         * @param callback
+         */
+        @SuppressWarnings("unusable-by-js")
+        void removeMemberAndPrivilege(String originalName,
+                                      String subjectId,
+                                      Splittable updatePrivilegeReq,
+                                      ReactSuccessCallback callback);
+
+        /**
+         * Remove the current user's membership from a team
+         * @param teamName - the team's name in the format creatorName:teamName
+         * @param callback
+         */
+        void leaveTeamSelected(String teamName, ReactSuccessCallback callback);
+
+        /**
+         * Delete the team
+         * @param teamName - the team's name in the format creatorName:teamName
+         * @param callback
+         */
+        void deleteTeamSelected(String teamName, ReactSuccessCallback callback);
+
+        /**
+         * Attempt to have the current user join a team.
+         * This should be successful if the team admin granted OPTIN privileges to either the public
+         * user or the current user.
+         * This will fail otherwise and prompt the user with a dialog to send a request to join
+         * the team to one of the team's admins
+         * @param teamName - the team's name in the format creatorName:teamName
+         * @param errorCallback
+         */
+        void joinTeamSelected(String teamName, ReactErrorCallback errorCallback);
+
+        /**
+         * Send a request to the team's admin to allow the current user to join the team
+         * @param teamName - the team's name in the format creatorName:teamName
+         * @param hasMessage - same format as {@link org.iplantc.de.client.models.HasMessage}, contains a
+         *                   message that will be sent to the team's admin detailing why this user wants
+         *                   to join this team
+         * @param callback
+         * @param errorCallback
+         */
+        @SuppressWarnings("unusable-by-js")
+        void sendRequestToJoin(String teamName,
+                               Splittable hasMessage,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback);
 
         /**
          * Set the static ID for the view
          * @param debugId
          */
         void setViewDebugId(String debugId);
-
-        /**
-         * Returns true if the view has no validation errors
-         * @return
-         */
-        boolean isViewValid();
-
-        /**
-         * This method is called when the user hits the OK button in the EditTeamDialog,
-         * which indicates they are ready to save the team
-         * @param hideable the EditTeamDialog
-         */
-        void saveTeamSelected(IsHideable hideable);
-
-        /**
-         * This method is called when the "Leave Team" button is selected
-         * @param hideable
-         */
-        void onLeaveButtonSelected(IsHideable hideable);
-
-        /**
-         * This method is called when the user hits the Delete team button in the EditTeamDialog
-         * @param hideable
-         */
-        void onDeleteButtonSelected(IsHideable hideable);
-
-        /**
-         * This method is called when the user his the Join team button in the EditTeamDialog
-         * @param hideable
-         */
-        void onJoinButtonSelected(IsHideable hideable);
     }
 
     /**
      * Load up the details of the Team (group) into the view
-     * @param group
      */
-    void edit(Group group);
+    @JsIgnore
+    void edit(Splittable team, Splittable privileges, Splittable members);
 
     /**
-     * Add subjects and privileges to the non-members section
-     * @param privilegeList
+     * Update the `team` prop for the view
+     * @param team
      */
-    void addNonMembers(List<Privilege> privilegeList);
+    @JsIgnore
+    void updateTeam(Splittable team);
 
     /**
-     * Add subjects and privileges to the members section
-     * @param privilegeList
+     * Apply a loading mask to the view
      */
-    void addMembers(List<Privilege> privilegeList);
+    void mask();
 
     /**
-     * Returns true if the view has no validation errors (e.g. missing required information)
-     * @return
+     * Remove a loading mask from the view
      */
-    boolean isValid();
+    void unmask();
 
     /**
-     * Get the team name and description in Group form from the view
-     * @return
+     * Close the Edit Team Dialog
      */
-    Group getTeam();
-
-    /**
-     * Get the list of privileges being assigned to members
-     * @return
-     */
-    List<Privilege> getMemberPrivileges();
-
-    /**
-     * Get the list of privileges being assigned to non-members
-     * @return
-     */
-    List<Privilege> getNonMemberPrivileges();
-
-    /**
-     * Remove the specified privilege from the Members section
-     * @param privilege
-     */
-    void removeMemberPrivilege(Privilege privilege);
-
-    /**
-     * Remove the specified privilege from the Non-Members section
-     * @param privilege
-     */
-    void removeNonMemberPrivilege(Privilege privilege);
-
-    /**
-     * Show the "Add All Public Users" button in the UI if the public user is not currently present
-     * @param isVisible
-     */
-    void setPublicUserButtonVisibility(boolean isVisible);
-
-    /**
-     * Enables aspects of the Edit Team view that are only applicable to those with admin privileges
-     * @param adminMode
-     */
-    void showAdminMode(boolean adminMode);
-
+    void close();
 }

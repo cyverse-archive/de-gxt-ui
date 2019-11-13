@@ -6,15 +6,14 @@ import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.ReactTeamViews;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
-import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.collect.Lists;
@@ -33,24 +32,21 @@ import java.util.List;
  */
 public class TeamsPresenterImpl implements TeamsView.Presenter {
 
-    private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
     private GroupAutoBeanFactory factory;
     private CollaboratorsUtil collaboratorsUtil;
     private List<Group> selectedTeams;
 
-    @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
+    @Inject EditTeamView.Presenter editTeamPresenter;
     @Inject IplantAnnouncer announcer;
     TeamsFilter currentFilter;
 
     @Inject
-    public TeamsPresenterImpl(TeamsView.TeamsViewAppearance appearance,
-                              GroupServiceFacade serviceFacade,
+    public TeamsPresenterImpl(GroupServiceFacade serviceFacade,
                               TeamsViewFactory viewFactory,
                               GroupAutoBeanFactory factory,
                               CollaboratorsUtil collaboratorsUtil) {
-        this.appearance = appearance;
         this.serviceFacade = serviceFacade;
         this.factory = factory;
         this.collaboratorsUtil = collaboratorsUtil;
@@ -81,28 +77,18 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
     @SuppressWarnings("unusable-by-js")
     public void onTeamNameSelected(Splittable teamSpl) {
         Group group = convertSplittableToGroup(teamSpl);
-        editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                ErrorHandler.post(throwable);
-            }
-
-            @Override
-            public void onSuccess(EditTeamDialog dialog) {
-                dialog.show(group);
-                dialog.addTeamSavedHandler(event1 -> {
-                    refreshTeamListing();
-                });
-                dialog.addLeaveTeamCompletedHandler(event -> {
-                    refreshTeamListing();
-                });
-                dialog.addDeleteTeamCompletedHandler(event -> {
-                    refreshTeamListing();
-                });
-                dialog.addJoinTeamCompletedHandler(event -> {
-                    refreshTeamListing();
-                });
-            }
+        editTeamPresenter.go(group);
+        editTeamPresenter.addTeamSavedHandler(event1 -> {
+            refreshTeamListing();
+        });
+        editTeamPresenter.addLeaveTeamCompletedHandler(event -> {
+            refreshTeamListing();
+        });
+        editTeamPresenter.addDeleteTeamCompletedHandler(event -> {
+            refreshTeamListing();
+        });
+        editTeamPresenter.addJoinTeamCompletedHandler(event -> {
+            refreshTeamListing();
         });
     }
 
@@ -151,23 +137,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter {
 
     @Override
     public void onCreateTeamSelected() {
-        editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                ErrorHandler.post(throwable);
-            }
-
-            @Override
-            public void onSuccess(EditTeamDialog dialog) {
-                dialog.show(null);
-                dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
-                    @Override
-                    public void onTeamSaved(TeamSaved event) {
-                        refreshTeamListing();
-                    }
-                });
-            }
-        });
+        editTeamPresenter.go(null);
+        editTeamPresenter.addTeamSavedHandler(event -> refreshTeamListing());
     }
 
     @Override

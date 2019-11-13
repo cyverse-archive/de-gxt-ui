@@ -26,4 +26,22 @@ public class ReactTeamViews {
         public Splittable selectedTeams;
         public boolean isSelectable;
     }
+
+    @JsProperty
+    public static ComponentConstructorFn<ReactTeamViews.TeamProps> EditTeamDialog;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    public static class EditTeamProps extends BaseProps {
+        public String parentId;
+        public EditTeamView.Presenter presenter;
+        public boolean loading;
+        public boolean open;
+        public CollaboratorsUtil collaboratorsUtil;
+        public Splittable team;
+        public Splittable privileges;
+        public Splittable members;
+        public String groupNameRestrictedChars;
+        public Splittable selfSubject;
+        public String publicUsersId;
+    }
 }

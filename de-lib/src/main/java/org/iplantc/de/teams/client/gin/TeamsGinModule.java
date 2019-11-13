@@ -21,8 +21,9 @@ public class TeamsGinModule extends AbstractGinModule {
     protected void configure() {
         install(new GinFactoryModuleBuilder().implement(TeamsView.class, TeamsViewImpl.class)
                                              .build(TeamsViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(EditTeamView.class, EditTeamViewImpl.class)
+                                             .build(EditTeamViewFactory.class));
         bind(TeamsView.Presenter.class).to(TeamsPresenterImpl.class);
-        bind(EditTeamView.class).to(EditTeamViewImpl.class);
         bind(EditTeamView.Presenter.class).to(EditTeamPresenterImpl.class);
     }
 }

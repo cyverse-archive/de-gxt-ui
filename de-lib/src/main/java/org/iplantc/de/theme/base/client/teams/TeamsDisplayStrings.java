@@ -10,81 +10,17 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 public interface TeamsDisplayStrings extends Messages {
     String teamsMenu();
 
-    String createNewTeam();
-
-    String leaveTeam();
-
     String teamInfoBtnToolTip();
-
-    String teamNameLabel();
-
-    String teamDescLabel();
-
-    String detailsHeading(String subjectDisplayName);
-
-    String membersLabel();
-
-    String detailsGridEmptyText();
-
-    String editTeamHeader(String teamName);
-
-    String nonMembersSectionHeader();
-
-    String membersSectionHeader();
-
-    String nonMembersPrivilegeExplanation();
-
-    String memberOptOutExplanation();
-
-    String privilegeColumnLabel();
-
-    String addPublicUser();
-
-    String saveTeamHeader();
-
-    String updatingTeamMsg();
-
-    String updatingPrivilegesMsg();
-
-    String updatingMembershipMsg();
-
-    String miscTeamUpdates();
-
-    String teamSuccessfullySaved();
-
-    String teamSearchFailed();
 
     String leaveTeamSuccess(String subjectDisplayName);
 
-    String leaveTeamWarning();
-
-    String leaveTeamHeader(String subjectDisplayName);
-
     String leaveTeamFail();
-
-    String deleteTeam();
-
-    String requestToJoinTeam();
-
-    String deleteTeamWarning();
-
-    String deleteTeamHeader(String teamName);
 
     String deleteTeamSuccess(String subjectDisplayName);
 
     String joinTeamSuccess(String teamName);
 
-    String requestMessageLabel();
-
-    String sendRequestButton();
-
-    String joinTeamHeader(String teamName);
-
-    String joinTeamText(String teamName);
-
     String requestToJoinSubmitted(String teamName);
-
-    String getCreatorNamesFailed();
 
     SafeHtml editTeamHelpText();
 

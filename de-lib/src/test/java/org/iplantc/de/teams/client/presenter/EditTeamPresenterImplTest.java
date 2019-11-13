@@ -30,11 +30,9 @@ import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.JoinTeamCompleted;
-import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.views.dialogs.DeleteTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.JoinTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
-import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -393,7 +391,7 @@ public class EditTeamPresenterImplTest {
         groupCaptor.getValue().onSuccess(groupMock);
         verify(privilegeListMock).addAll(memberPrivsMock);
         verify(privilegeListMock).addAll(nonMemberPrivsMock);
-        verify(spy).addPrivilegesToTeam(eq(groupMock), eq(hideableMock));
+        verify(spy).updatePrivilegesToTeam(eq(groupMock), eq(hideableMock));
     }
 
     @Test
@@ -432,7 +430,7 @@ public class EditTeamPresenterImplTest {
         spy.mode = EditTeamView.MODE.CREATE;
 
         /** CALL METHOD UNDER TEST **/
-        spy.addPrivilegesToTeam(groupMock, hideableMock);
+        spy.updatePrivilegesToTeam(groupMock, hideableMock);
 
         verify(updateRequestListMock).setRequests(listUpdateRequestMock);
         verify(serviceFacadeMock).updateTeamPrivileges(eq(groupMock),
@@ -449,7 +447,7 @@ public class EditTeamPresenterImplTest {
         IsHideable hideableMock = mock(IsHideable.class);
 
         /** CALL METHOD UNDER TEST **/
-        uut.addPrivilegesToTeam(groupMock, hideableMock);
+        uut.updatePrivilegesToTeam(groupMock, hideableMock);
 
         verify(updateRequestListMock).setRequests(listUpdateRequestMock);
         verify(serviceFacadeMock).updateTeamPrivileges(eq(groupMock),
@@ -675,7 +673,7 @@ public class EditTeamPresenterImplTest {
         when(appearanceMock.joinTeamSuccess(any())).thenReturn("success");
 
         /** CALL METHOD UNDER TEST **/
-        uut.onJoinButtonSelected(hideableMock);
+        uut.joinTeamSelected(hideableMock);
 
         verify(serviceFacadeMock).joinTeam(eq(groupMock), updateMemberCaptor.capture());
 
@@ -696,7 +694,7 @@ public class EditTeamPresenterImplTest {
         EditTeamPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        spy.onJoinButtonSelected(hideableMock);
+        spy.joinTeamSelected(hideableMock);
 
         verify(serviceFacadeMock).joinTeam(eq(groupMock), updateMemberCaptor.capture());
 
