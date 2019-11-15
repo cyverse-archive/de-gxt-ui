@@ -5,6 +5,7 @@ import { getDefaultTheme, MuiThemeProvider } from "../lib";
 import EditToolTest from "../../stories/tools/EditTool.stories";
 import ManageToolsTest from "../../stories/tools/ManageTools.stories";
 import NewToolRequestFormTest from "../../stories/tools/requests/NewToolRequestsForm.stories";
+import TooInfoDialogTest from "../../stories/tools/ToolInfoDialog.stories";
 
 it("renders EditToolTest without crashing", () => {
     const div = document.createElement("div");
@@ -33,6 +34,17 @@ it("renders NewToolRequestForm without crashing", () => {
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
             <NewToolRequestFormTest />
+        </MuiThemeProvider>,
+        div
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it("renders Tool Details without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <TooInfoDialogTest />
         </MuiThemeProvider>,
         div
     );

@@ -2,7 +2,6 @@ package org.iplantc.de.tools.client.gin;
 
 import org.iplantc.de.tools.client.gin.factory.EditToolViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ManageToolsViewFactory;
-import org.iplantc.de.tools.client.gin.factory.ToolInfoViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.tools.client.presenter.ManageToolsViewPresenter;
 import org.iplantc.de.tools.client.presenter.ToolSharingPresenterImpl;
@@ -10,8 +9,6 @@ import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.EditToolViewImpl;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsViewImpl;
-import org.iplantc.de.tools.client.views.manage.ToolInfoView;
-import org.iplantc.de.tools.client.views.manage.ToolInfoViewImpl;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 import org.iplantc.de.tools.client.views.manage.ToolSharingView;
 import org.iplantc.de.tools.client.views.manage.ToolSharingViewImpl;
@@ -34,8 +31,6 @@ public class ToolsGinModule extends AbstractGinModule {
                                              .build(ManageToolsViewFactory.class));
         bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
         bind(ToolSharingView.class).to(ToolSharingViewImpl.class);
-        install(new GinFactoryModuleBuilder().implement(ToolInfoView.class, ToolInfoViewImpl.class)
-                                             .build(ToolInfoViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(ToolSharingPresenter.class,
                                                         ToolSharingPresenterImpl.class)
                                              .build(ToolSharingPresenterFactory.class));

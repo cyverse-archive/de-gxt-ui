@@ -41,6 +41,7 @@ import {
 } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
+import ToolInfoDialog from "../details/ToolInfoDialog";
 
 const TOOL_FILTER_VALUES = {
     ALL: "ALL",
@@ -70,6 +71,7 @@ function ManageTools(props) {
         TOOL_FILTER_VALUES.ALL
     );
     const [numToolsSelected, setNumToolsSelected] = useState(0);
+    const [dialogOpen, setInfoDialogOpen] = useState(false);
 
     const refreshListing = (
         toolFilter,
@@ -154,12 +156,14 @@ function ManageTools(props) {
     };
 
     const onToolSelection = (tool) => {
-        if (selectedTool === tool) {
-            tool = null;
-        }
         setSelectedTool(tool);
         setNumToolsSelected(tool ? 1 : 0);
         presenter.onToolSelectionChanged(tool);
+    };
+
+    const onToolInfoSelection = (tool) => {
+        setSelectedTool(tool);
+        setInfoDialogOpen(true);
     };
 
     return (
@@ -184,6 +188,7 @@ function ManageTools(props) {
                             presenter={presenter}
                             selectedTool={selectedTool}
                             onToolSelection={onToolSelection}
+                            onToolInfoSelection={onToolInfoSelection}
                         />
                         <EnhancedTableHead
                             numSelected={numToolsSelected}
@@ -209,6 +214,13 @@ function ManageTools(props) {
                     rowsPerPageOptions={PAGING_OPTIONS}
                 />
             </div>
+            <ToolInfoDialog
+                dialogOpen={dialogOpen}
+                selectedTool={selectedTool}
+                onClose={() => setInfoDialogOpen(false)}
+                presenter={presenter}
+                baseDebugId={parentId}
+            />
         </Fragment>
     );
 }
@@ -394,9 +406,9 @@ function ToolListing(props) {
     const {
         parentId,
         toolList,
-        presenter,
         selectedTool,
         onToolSelection,
+        onToolInfoSelection,
     } = props;
 
     const isSelected = (tool) => {
@@ -424,9 +436,9 @@ function ToolListing(props) {
                         >
                             <TableCell padding="none">
                                 <IconButton
-                                    onClick={() =>
-                                        presenter.onShowToolInfo(tool.id)
-                                    }
+                                    onClick={(event) => {
+                                        onToolInfoSelection(tool);
+                                    }}
                                     id={build(
                                         parentId,
                                         tool.id,
@@ -453,7 +465,6 @@ function ToolListing(props) {
 
 ManageTools.propTypes = {
     presenter: PropTypes.shape({
-        onShowToolInfo: PropTypes.func.isRequired,
         onNewToolSelected: PropTypes.func.isRequired,
         onRequestToolSelected: PropTypes.func.isRequired,
         onEditToolSelected: PropTypes.func.isRequired,

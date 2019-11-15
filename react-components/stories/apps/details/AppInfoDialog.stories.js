@@ -36,7 +36,7 @@ class AppInfoDialogTest extends Component {
                 total: 0,
             },
         };
-        const appDetals = {
+        const appDetails = {
             integration_date: "2013-05-24T21:44:49.000Z",
             description:
                 "This App will add existing reference annotation information to newly assembled transcripts in GFF format.",
@@ -357,7 +357,7 @@ class AppInfoDialogTest extends Component {
                 baseDebugId="appDetails"
                 searchText={text("Search Pattern", "roger")}
                 app={app}
-                appDetails={appDetals}
+                appDetails={appDetails}
                 dialogOpen={true}
                 presenter={presenter}
                 editable={false}

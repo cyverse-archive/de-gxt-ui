@@ -67,6 +67,7 @@ import NotificationViewTest from "./notifications/view/NotificationView.stories"
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
+import TooInfoDialogTest from "./tools/ToolInfoDialog.stories";
 
 storiesOf("analysis/view", module).add("with test analyses", () => (
     <AnalysesViewTest />
@@ -245,4 +246,5 @@ storiesOf("tools", module)
     .add("Manage Tools", () => (
         <ManageToolsTest logger={action("Manage Tools")} />
     ))
+    .add("Tool Info", () => <TooInfoDialogTest logger={action("Tool Info")} />)
     .add("NewToolRequest", () => <NewToolRequestFormTest />);

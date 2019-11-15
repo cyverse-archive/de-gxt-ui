@@ -77,6 +77,7 @@ class AppGridListing extends Component {
             sortDir,
             classes,
             onQuickLaunchClick,
+            onSortChange,
         } = this.props;
 
         let columnData = getTableColumns(deletable, enableMenu);
@@ -98,7 +99,7 @@ class AppGridListing extends Component {
                                 user: userRating,
                                 total: totalRating,
                             } = app.rating;
-                            const selected = isSelected(app.id);
+                            const selected = isSelected && isSelected(app.id);
                             const external = app.app_type !== appType.de;
                             const rowId = build(parentId, app.id);
                             return (
@@ -108,7 +109,11 @@ class AppGridListing extends Component {
                                     hover
                                     selected={selected}
                                     aria-checked={selected}
-                                    onClick={() => handleAppSelection(app)}
+                                    onClick={
+                                        handleAppSelection
+                                            ? () => handleAppSelection(app)
+                                            : undefined
+                                    }
                                     key={app.id}
                                     id={rowId}
                                 >
@@ -221,7 +226,9 @@ class AppGridListing extends Component {
                     baseId={parentId}
                     ids={ids.FIELD}
                     columnData={columnData}
-                    onRequestSort={this.onRequestSort}
+                    onRequestSort={
+                        onSortChange ? this.onRequestSort : undefined
+                    }
                     onSelectAllClick={this.handleSelectAllClick}
                 />
             </Table>
@@ -288,8 +295,7 @@ AppGridListing.propTypes = {
     deletable: PropTypes.bool,
     onRemoveApp: PropTypes.func,
     selectedApps: PropTypes.array.isRequired,
-    handleAppSelection: PropTypes.func.isRequired,
-    resetAppSelection: PropTypes.func.isRequired,
+    handleAppSelection: PropTypes.func,
     enableMenu: PropTypes.bool,
     onAppNameClick: PropTypes.func,
     onAppInfoClick: PropTypes.func,
@@ -303,8 +309,9 @@ AppGridListing.propTypes = {
     ]),
     sortField: PropTypes.string.isRequired,
     sortDir: PropTypes.string.isRequired,
-    onSortChange: PropTypes.func.isRequired,
+    onSortChange: PropTypes.func,
     onQuickLaunchClick: PropTypes.func,
+    isSelected: PropTypes.func,
 };
 
 export default withStyles(exStyles)(withI18N(AppGridListing, messages));
