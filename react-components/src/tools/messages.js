@@ -80,7 +80,7 @@ export default {
         edit: "Edit",
         delete: "Delete",
         useToolInApp: "Use in app",
-        shareWithCollaborators: "Share with collaborators",
+        shareWithCollaborators: "Share",
         tools: "Tools",
         share: "Share",
         searchTools: "Search tools",
