@@ -24,7 +24,7 @@ update-ca-certificates
 
 EXPOSE 8080
 
-ENTRYPOINT ["cyverse-ui", "-Dlogging.config=file:/etc/iplant/de/logging/de-ui.xml", "-cp", "resources:de.war", "org.springframework.boot.loader.WarLauncher", "--spring.config.location=file:/etc/iplant/de/de-application.yaml"]
+ENTRYPOINT ["cyverse-ui", "-Dlogging.config=file:/etc/iplant/de/logging/de-ui.xml", "-jar", "de.war", "--spring.config.location=file:/etc/iplant/de/de-application.yaml"]
 LABEL org.label-schema.vcs-ref="$git_commit"
 LABEL org.label-schema.vcs-url="https://github.com/cyverse-de/ui"
 LABEL org.label-schema.version="$descriptive_version"
