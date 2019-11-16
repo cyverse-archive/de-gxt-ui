@@ -26,4 +26,22 @@ public interface ToolResourceLimits extends ToolResourceRequirements {
 
     @PropertyName("max_cpu_cores")
     void setMaxCPUCores(Double cores);
+
+    @PropertyName("default_memory")
+    Long getDefaultMemory();
+
+    @PropertyName("default_memory")
+    void setDefaultMemory(Long defaultMemory);
+
+    @PropertyName("default_cpu_cores")
+    Double getDefaultCPUCores();
+
+    @PropertyName("default_cpu_cores")
+    void setDefaultCPUCores(Double cores);
+
+    @PropertyName("default_disk_space")
+    Long getDefaultDiskSpace();
+
+    @PropertyName("default_disk_space")
+    void setDefaultDiskSpace(Long defaultDiskSpace);
 }

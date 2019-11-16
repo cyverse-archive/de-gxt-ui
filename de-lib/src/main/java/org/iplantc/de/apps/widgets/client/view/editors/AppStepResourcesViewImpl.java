@@ -67,6 +67,14 @@ public class AppStepResourcesViewImpl extends ContentPanel implements AppStepRes
                                     @Assisted AppTemplateStepLimits limits) {
         this.appearance = appearance;
 
+        buildResourceLists(limits, deProperties);
+
+        setWidget(uiBinder.createAndBindUi(this));
+        editorDriver.initialize(this);
+        editorDriver.edit(buildStepRequirements(limits, factory));
+    }
+
+    private void buildResourceLists(AppTemplateStepLimits limits, DEProperties deProperties) {
         minDiskSpaceEditor = createDataSizeComboBox();
         memory = createDataSizeComboBox();
         minCPUCoresEditor = createDoubleComboBox();
@@ -89,16 +97,6 @@ public class AppStepResourcesViewImpl extends ContentPanel implements AppStepRes
         final double cpuEditorMax =
                 (maxCPUCores != null && maxCPUCores > 0) ? maxCPUCores : deProperties.getToolsMaxCPULimit();
         buildResourceDoubleLimitList(minCPUCoresEditor, 1, cpuEditorMin, cpuEditorMax);
-
-        setWidget(uiBinder.createAndBindUi(this));
-
-        editorDriver.initialize(this);
-
-        final Splittable json = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(limits));
-        final AppTemplateStepRequirements requirements =
-                AutoBeanCodex.decode(factory, AppTemplateStepRequirements.class, json).as();
-
-        editorDriver.edit(requirements);
     }
 
     private void buildResourceSizeLimitList(SimpleComboBox<Long> limitSelectionList,
@@ -154,6 +152,29 @@ public class AppStepResourcesViewImpl extends ContentPanel implements AppStepRes
         resourceSizeSimpleComboBox.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
         return resourceSizeSimpleComboBox;
+    }
+
+    private AppTemplateStepRequirements buildStepRequirements(AppTemplateStepLimits limits,
+                                                              AppTemplateAutoBeanFactory factory) {
+        final Splittable json = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(limits));
+        final AppTemplateStepRequirements requirements =
+                AutoBeanCodex.decode(factory, AppTemplateStepRequirements.class, json).as();
+
+        // check for default settings
+        final Long defaultDiskSpace = limits.getDefaultDiskSpace();
+        if (defaultDiskSpace != null && defaultDiskSpace > 0) {
+            requirements.setMinDiskSpace(defaultDiskSpace);
+        }
+        final Long defaultMemory = limits.getDefaultMemory();
+        if (defaultMemory != null && defaultMemory > 0) {
+            requirements.setMinMemoryLimit(defaultMemory);
+        }
+        final Double defaultCPUCores = limits.getDefaultCPUCores();
+        if (defaultCPUCores != null && defaultCPUCores > 0) {
+            requirements.setMinCPUCores(defaultCPUCores);
+        }
+
+        return requirements;
     }
 
     @Override
