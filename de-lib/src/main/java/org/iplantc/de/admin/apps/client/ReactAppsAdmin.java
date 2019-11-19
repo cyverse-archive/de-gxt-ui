@@ -58,6 +58,7 @@ public class ReactAppsAdmin {
         public boolean loading;
         public String parentId;
         public String heading;
+        public AdminAppsGridView.Presenter presenter;
     }
 
 }

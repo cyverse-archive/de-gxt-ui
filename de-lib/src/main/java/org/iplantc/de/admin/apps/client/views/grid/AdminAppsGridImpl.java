@@ -6,7 +6,6 @@ import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelection
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.PreviewHierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.SelectOntologyVersionEvent;
-import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
@@ -40,6 +39,7 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
         props.loading = false;
         props.parentId = "adminAppListing";
         props.heading = "";
+        props.presenter = presenter;
         render();
     }
 
@@ -99,24 +99,25 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
         render();
     }
 
-    @Override
-    public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        //unmask();
-        //        searchRegexPattern = event.getSearchPattern();
-        //        acm.setSearchRegexPattern(searchRegexPattern);
 
-        int total = event.getResults() == null ? 0 : event.getResults().getTotal();
-        //setHeading(appearance.searchAppResultsHeader(event.getSearchText(), total));
+    @Override
+    public void loadSearchResults(Splittable apps, String heading) {
+        props.apps = apps;
+        props.heading = heading;
+        props.loading = false;
+        render();
     }
 
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
-        //mask(appearance.beforeAppSearchLoadingMask());
+        props.loading = true;
+        render();
     }
 
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
-       // getHeader().setHTML("&nbsp;");
+         props.heading = "";
+        render();
     }
 
 /*    @Override

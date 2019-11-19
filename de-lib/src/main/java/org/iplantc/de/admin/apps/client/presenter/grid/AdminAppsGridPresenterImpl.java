@@ -9,14 +9,15 @@ import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.services.AppServiceFacade;
@@ -35,6 +36,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.Response;
@@ -52,8 +54,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
-                                                   AppInfoSelectedEvent.AppInfoSelectedEventHandler {
+public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
 
     private HandlerManager handlerManager;
 
@@ -65,12 +66,6 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
         return new HandlerManager(this);
     }
 
-
-    @Override
-    public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {
-        return ensureHandlers().addHandler(AppInfoSelectedEvent.TYPE, handler);
-
-    }
 
     @Override
     public HandlerRegistration addAppSelectionChangedEventHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler) {
@@ -162,12 +157,14 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     @Inject IplantAnnouncer announcer;
     @Inject AppEditor appEditor;
     @Inject CommonUiConstants uiConstants;
+    @Inject
+    EventBus eventBus;
 
     @Inject
     AdminAppsGridView view;
     OntologyUtil ontologyUtil = OntologyUtil.getInstance();
 
-    List<Splittable> selectedApps = new ArrayList<>();
+    List<App> selectedApps = new ArrayList<>();
 
     @Inject
     AdminAppsGridPresenterImpl() {
@@ -195,7 +192,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
     }*/
 
     @Override
-    public List<Splittable> getSelectedApps() {
+    public List<App> getSelectedApps() {
         return selectedApps;
     }
 
@@ -203,9 +200,18 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
      public void onAppSelectionChanged(Splittable splittableSelectedApps) {
         selectedApps.clear();
          for (int i = 0; i < splittableSelectedApps.size(); i++) {
-             selectedApps.add(splittableSelectedApps.get(0));
+             App app = convertSplittableToApp(splittableSelectedApps.get(i));
+             selectedApps.add(app);
          }
+         AppSelectionChangedEvent event = new AppSelectionChangedEvent(selectedApps);
+         fireEvent(event);
      }
+
+    public void fireEvent(GwtEvent<?> event) {
+        if (handlerManager != null) {
+            handlerManager.fireEvent(event);
+        }
+    }
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
@@ -232,14 +238,15 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
 
     @Override
-    public void onAppInfoSelected(final AppInfoSelectedEvent event) {
+    public void onAppInfoSelected(Splittable selectedApp,
+                                  String appId,
+                                  String systemId,
+                                  boolean isPublic) {
         appEditor.setBaseProps(getBaseProps());
         view.setLoading(true);
-        Splittable selectedApp = event.getApp();
         //get doc only for public apps!
-        if (event.isPublic()) {
-            adminAppService.getAppDetails(event.getAppId(),
-                                          event.getSystemId(),
+        if (isPublic) {
+            adminAppService.getAppDetails(appId, systemId,
                                           new AsyncCallback<Splittable>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -250,7 +257,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
                 @Override
                 public void onSuccess(final Splittable details) {
-                    view.setLoading(true);
+                    view.setLoading(false);
                     showAppEditor(selectedApp, details);
                 }
             });
@@ -267,8 +274,18 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        // listStore.clear();
-        // listStore.addAll(event.getResults().getData());
+        Splittable apps;
+        AppListLoadResult results = event.getResults();
+        String searchText = event.getSearchText();
+        int total = event.getResults() != null ? event.getResults().getTotal() : 0;
+        String heading = appearance.searchAppResultsHeader(searchText, total);
+        if (results != null) {
+            apps = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(results));
+            view.loadSearchResults(apps, heading);
+            view.setApps(apps.get("apps"), false);
+        } else {
+            view.loadSearchResults(null, heading);
+        }
     }
 
     @Override
@@ -330,7 +347,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
                                                                      + appearance.restoreAppSuccessMsg(result.getName(),
                                                                                                        joinedCatNames)));
                 }
-                // eventBus.fireEvent(new CatalogCategoryRefreshEvent());
+            //   eventBus.fireEvent(new CatalogCategoryRefreshEvent());
             });
     }
 

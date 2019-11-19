@@ -59,7 +59,7 @@ public class AdminAppsViewPresenterImpl implements AdminAppsView.AdminPresenter 
         toolbarPresenter.getView().addMoveCategorySelectedHandler(categoriesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(categoriesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(gridPresenter);
-        toolbarPresenter.getView().addAppSearchResultLoadEventHandler(gridPresenter.getView());
+       // toolbarPresenter.getView().addAppSearchResultLoadEventHandler(gridPresenter.getView());
         toolbarPresenter.getView().addBeforeAppSearchEventHandler(gridPresenter.getView());
     }
 

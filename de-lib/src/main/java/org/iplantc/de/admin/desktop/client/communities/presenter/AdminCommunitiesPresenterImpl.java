@@ -10,8 +10,6 @@ import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityCli
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
-import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
-import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.DeleteCommunityConfirmationDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.EditCommunityDialog;
@@ -127,15 +125,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                    hierarchyTreeStore,
                                    loader,
                                    hierarchyGridPresenter.getView(),
-                                   communityGridPresenter.getView(),
-                                   new CommunityToAppDND(appearance,
-                                                         hierarchyGridPresenter,
-                                                         communityGridPresenter,
-                                                         this),
-                                   new AppToCommunityDND(appearance,
-                                                         hierarchyGridPresenter,
-                                                         communityGridPresenter,
-                                                         this));
+                                   communityGridPresenter.getView()
+                                 );
 
         hierarchyGridPresenter.addAppSelectionChangedEventHandler(view);
         communityGridPresenter.addAppSelectionChangedEventHandler(view);
@@ -147,7 +138,7 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addHierarchySelectedEventHandler(hierarchyGridPresenter.getView());
         view.addCommunitySelectionChangedHandler(communityGridPresenter.getView());
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
-        view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
+      //  view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
         view.addAddCommunityClickedHandler(this);
         view.addEditCommunityClickedHandler(this);
@@ -170,6 +161,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     @Override
     public void go(HasOneWidget container) {
+        hierarchyGridPresenter.go();
+        communityGridPresenter.go();
         getCommunities();
         getHierarchies();
         container.setWidget(view);

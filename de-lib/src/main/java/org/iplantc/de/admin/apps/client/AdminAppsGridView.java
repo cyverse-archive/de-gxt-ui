@@ -9,9 +9,9 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
@@ -29,7 +29,6 @@ import jsinterop.annotations.JsType;
  */
 public interface AdminAppsGridView extends IsWidget,
                                            AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
-                                           AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                            BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                            HierarchySelectedEvent.HierarchySelectedEventHandler,
                                            PreviewHierarchySelectedEvent.PreviewHierarchySelectedEventHandler,
@@ -46,8 +45,7 @@ public interface AdminAppsGridView extends IsWidget,
             //  StoreRemoveEvent.HasStoreRemoveHandler<App>,
                                 RestoreAppSelected.RestoreAppSelectedHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
-                                AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
-                                AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers {
+                                AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers {
 
         interface Appearance extends AppsListView.AppsListAppearance {
 
@@ -91,7 +89,7 @@ public interface AdminAppsGridView extends IsWidget,
         App getAppFromElement(Element eventTarget);*/
 
        @JsIgnore
-       List<Splittable> getSelectedApps();
+       List<App> getSelectedApps();
 
         void go();
 
@@ -117,6 +115,11 @@ public interface AdminAppsGridView extends IsWidget,
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);
 
+        void onAppInfoSelected(Splittable selectedApp,
+                               String appId,
+                               String systemId,
+                               boolean isPublic);
+
         void closeAppDetailsDlg();
     }
 
@@ -136,4 +139,7 @@ public interface AdminAppsGridView extends IsWidget,
 
     void setApps(Splittable apps,
                  boolean loading);
+
+    void loadSearchResults(Splittable apps,
+                           String heading);
 }

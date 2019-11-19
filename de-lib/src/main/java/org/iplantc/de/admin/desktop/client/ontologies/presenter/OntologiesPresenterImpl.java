@@ -262,7 +262,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
         view.addAppSearchResultLoadEventHandler(this);
         view.addAppSearchResultLoadEventHandler(previewGridPresenter);
-        view.addAppSearchResultLoadEventHandler(previewGridPresenter.getView());
+     //   view.addAppSearchResultLoadEventHandler(previewGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(previewGridPresenter.getView());
         view.addRestoreAppButtonClickedHandlers(this);
     }
