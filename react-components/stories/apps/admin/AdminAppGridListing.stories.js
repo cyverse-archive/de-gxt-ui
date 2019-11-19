@@ -527,6 +527,7 @@ class AdminAppGridListingTest extends Component {
                 apps={apps}
                 loading={false}
                 parentId="adminListing"
+                heading="This is a heading"
             />
         );
     }

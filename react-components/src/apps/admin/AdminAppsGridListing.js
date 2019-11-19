@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import getAppsSearchRegex from "../appSearchRegex";
 import {
     AppName,
@@ -14,12 +14,19 @@ import {
     withI18N,
 } from "@cyverse-de/ui-lib";
 
-import { makeStyles, Table, TableBody, TableCell } from "@material-ui/core";
+import {
+    IconButton,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    Typography,
+} from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import AppFields from "../AppFields";
 import ids from "../listing/ids";
 import { injectIntl } from "react-intl";
-import messages from "../../teams/messages";
+import messages from "../messages";
 
 const useStyles = makeStyles((theme) => ({
     toolbarItemColor: {
@@ -34,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 0,
         overflow: "auto",
         backgroundColor: palette.white,
+    },
+    heading: {
+        backgroundColor: palette.lightGray,
+        width: "100%",
+        height: 30,
     },
 }));
 const tableColumns = [
@@ -60,14 +72,57 @@ const tableColumns = [
 ];
 
 function AdminAppGridListing(props) {
-    const { apps, searchText, parentId, loading, intl } = props;
+    const {
+        apps,
+        heading,
+        presenter,
+        searchText,
+        parentId,
+        loading,
+        intl,
+    } = props;
+    const [selectedApps, setSelectedApps] = useState([]);
     const searchRegex = getAppsSearchRegex(searchText);
     const classes = useStyles();
     const onRequestSort = () => {
         console.log("Sorting...");
     };
+    const onInfoClick = (app) => {
+        presenter.onAppInfoSelected(app, app.id, app.system_id, app.is_public);
+    };
+
+    const handleAppSelection = (app) => {
+        const selectedIndex = selectedApps.indexOf(app);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedApps, app);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedApps.slice(1));
+        } else if (selectedIndex === selectedApps.length - 1) {
+            newSelected = newSelected.concat(selectedApps.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedApps.slice(0, selectedIndex),
+                selectedApps.slice(selectedIndex + 1)
+            );
+        }
+        setSelectedApps(newSelected);
+        presenter.onAppSelectionChanged(newSelected);
+    };
+
+    const isSelected = (id) => {
+        if (selectedApps && selectedApps.length > 0) {
+            return selectedApps.filter((app) => app.id === id).length > 0;
+        }
+        return false;
+    };
+
     return (
         <div className={classes.container}>
+            <div className={classes.heading}>
+                <Typography variant="subtitle1">{heading}</Typography>
+            </div>
             <LoadingMask loading={loading}>
                 <Table stickyHeader={true} size="small">
                     <TableBody>
@@ -81,12 +136,15 @@ function AdminAppGridListing(props) {
                             apps.length > 0 &&
                             apps.map((app) => {
                                 const rowId = build(parentId, app.id);
+                                const selected = isSelected(app.id);
                                 return (
                                     <DETableRow
                                         tabIndex={-1}
                                         hover
+                                        selected={selected}
                                         key={app.id}
                                         id={rowId}
+                                        onClick={() => handleAppSelection(app)}
                                     >
                                         <TableCell>
                                             <AppName
@@ -111,11 +169,14 @@ function AdminAppGridListing(props) {
                                             </span>
                                         </TableCell>
                                         <TableCell>
-                                            <InfoIcon
+                                            <IconButton
+                                                onClick={() => onInfoClick(app)}
                                                 className={
                                                     classes.toolbarItemColor
                                                 }
-                                            />
+                                            >
+                                                <InfoIcon />
+                                            </IconButton>
                                         </TableCell>
                                         <TableCell padding="none">
                                             <AppStatusIcon
