@@ -176,20 +176,10 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
         view.load(this);
     }
 
-   /* @Override
-    public HandlerRegistration addStoreRemoveHandler(StoreRemoveEvent.StoreRemoveHandler<App> handler) {
-        return listStore.addStoreRemoveHandler(handler);
-    }*/
-
     @Override
     public AdminAppsGridView getView() {
         return view;
     }
-
-/*    @Override
-    public App getAppFromElement(Element eventTarget) {
-        return view.getAppFromElement(Element.as(eventTarget));
-    }*/
 
     @Override
     public List<App> getSelectedApps() {
@@ -262,7 +252,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
                 }
             });
         } else {
-            view.setLoading(true);
+            view.setLoading(false);
             showAppEditor(selectedApp, null);
         }
     }
@@ -306,7 +296,6 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
                                       @Override
                                       public void onSuccess(Void result) {
                                           view.setLoading(false);
-                                          //  eventBus.fireEvent(new CatalogCategoryRefreshEvent());
                                           //   view.getGrid().getSelectionModel().deselectAll();
                                           //   listStore.remove(selectedApp);
                                       }
@@ -347,7 +336,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
                                                                      + appearance.restoreAppSuccessMsg(result.getName(),
                                                                                                        joinedCatNames)));
                 }
-            //   eventBus.fireEvent(new CatalogCategoryRefreshEvent());
+
             });
     }
 
