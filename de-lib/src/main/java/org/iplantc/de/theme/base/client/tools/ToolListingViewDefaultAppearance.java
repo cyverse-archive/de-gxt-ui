@@ -44,7 +44,7 @@ public class ToolListingViewDefaultAppearance implements ToolListingDialog.Tools
 
     @Override
     public int dcListingDialogWidth() {
-        return 600;
+        return 950;
     }
 
     @Override

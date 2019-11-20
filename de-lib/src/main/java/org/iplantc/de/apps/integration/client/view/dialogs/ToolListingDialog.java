@@ -48,7 +48,7 @@ public class ToolListingDialog extends IPlantDialog implements ToolSelectionChan
         this.appearance = appearance;
         this.toolsPresenter = toolsPresenter;
         setPixelSize(appearance.dcListingDialogWidth(), appearance.dcListingDialogHeight());
-        setResizable(false);
+        setResizable(true);
         setModal(true);
         setHeading(appearance.dcListingDialogHeading());
         setHideOnButtonClick(false);

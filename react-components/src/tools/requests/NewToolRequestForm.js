@@ -9,8 +9,10 @@ import { Field, Form, Formik } from "formik";
 import { injectIntl } from "react-intl";
 
 import constants from "../../constants";
+import ids from "../ids";
 import intlData from "../../tools/messages";
 import {
+    build,
     DEDialogHeader,
     formatMessage,
     FormMultilineTextField,
@@ -72,9 +74,16 @@ class NewToolRequestForm extends Component {
 
     render() {
         const { intl, dialogOpen } = this.props;
+        const baseId = ids.TOOL_REQUEST.DIALOG;
         return (
-            <Dialog open={dialogOpen} disableBackdropClick disableEscapeKeyDown>
+            <Dialog
+                id={baseId}
+                open={dialogOpen}
+                disableBackdropClick
+                disableEscapeKeyDown
+            >
                 <DEDialogHeader
+                    id={baseId}
                     heading={formatMessage(intl, "newToolRequestDialogHeading")}
                     onClose={this.handleClose}
                 />
@@ -89,6 +98,7 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolNameLabel")}
                                     required={true}
                                     margin="dense"
+                                    id={build(baseId, ids.TOOL_REQUEST.NAME)}
                                     component={FormTextField}
                                 />
                                 <Field
@@ -96,6 +106,10 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolDescLabel")}
                                     required={true}
                                     margin="dense"
+                                    id={build(
+                                        baseId,
+                                        ids.TOOL_REQUEST.DESCRIPTION
+                                    )}
                                     component={FormMultilineTextField}
                                 />
                                 <Field
@@ -104,6 +118,10 @@ class NewToolRequestForm extends Component {
                                     required={true}
                                     margin="dense"
                                     validate={this.validateUrl}
+                                    id={build(
+                                        baseId,
+                                        ids.TOOL_REQUEST.SRC_LINK
+                                    )}
                                     component={FormTextField}
                                 />
                                 <Field
@@ -111,6 +129,7 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolVersionLabel")}
                                     required={true}
                                     margin="dense"
+                                    id={build(baseId, ids.TOOL_REQUEST.VERSION)}
                                     component={FormTextField}
                                 />
                                 <Field
@@ -118,6 +137,10 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolDocumentationLabel")}
                                     required={true}
                                     margin="dense"
+                                    id={build(
+                                        baseId,
+                                        ids.TOOL_REQUEST.DOCUMENTATION
+                                    )}
                                     validate={this.validateUrl}
                                     component={FormTextField}
                                 />
@@ -126,6 +149,10 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolInstructionsLabel")}
                                     required={false}
                                     margin="dense"
+                                    id={build(
+                                        baseId,
+                                        ids.TOOL_REQUEST.INSTRUCTIONS
+                                    )}
                                     component={FormMultilineTextField}
                                 />
                                 <Field
@@ -133,6 +160,10 @@ class NewToolRequestForm extends Component {
                                     label={getMessage("toolTestDataLabel")}
                                     required={false}
                                     margin="dense"
+                                    id={build(
+                                        baseId,
+                                        ids.TOOL_REQUEST.TEST_DATA_LINK
+                                    )}
                                     component={FormTextField}
                                 />
                                 <Button
@@ -140,6 +171,7 @@ class NewToolRequestForm extends Component {
                                     variant="contained"
                                     color="primary"
                                     type="submit"
+                                    id={build(baseId, ids.BUTTONS.SUBMIT)}
                                     aria-label={formatMessage(intl, "submit")}
                                     disabled={isSubmitting}
                                 >

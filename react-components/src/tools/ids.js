@@ -50,6 +50,7 @@ export default {
         ADD: "addBtn",
         DELETE: "deleteBtn",
         EXPAND: "expandBtn",
+        SUBMIT: "submitBtn",
     },
     PORTS_TABLE: {
         NAME: "name",
@@ -79,5 +80,15 @@ export default {
         MAKE_PUBLIC_MI: "sharePublic",
         TOOL_INFO_BTN: "toolInfoCell",
         TOOL_CHECKBOX: "checkBox",
+    },
+    TOOL_REQUEST: {
+        DIALOG: "toolRequestDlg",
+        NAME: "name",
+        DESCRIPTION: "description",
+        SRC_LINK: "srcLink",
+        VERSION: "version",
+        DOCUMENTATION: "documentation",
+        INSTRUCTIONS: "instructions",
+        TEST_DATA_LINK: "testDataLink",
     },
 };
