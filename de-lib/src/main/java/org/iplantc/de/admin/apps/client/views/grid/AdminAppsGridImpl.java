@@ -18,10 +18,9 @@ import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * Created by jstroot on 3/9/15.
- * @author jstroot
+ * @author jstroot sriram
  */
-public class AdminAppsGridImpl implements AdminAppsGridView/*,
-                                                               SelectionChangedEvent.SelectionChangedHandler<App>*/ {
+public class AdminAppsGridImpl implements AdminAppsGridView {
 
     HTMLPanel panel;
 
@@ -68,14 +67,7 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
 
 
     @Override
-    public void clearAndAdd(Splittable apps) {
-       /* props.apps = apps;
-        render();*/
-    }
-
-    @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
-        // FIXME Move to appearance
         props.heading = Joiner.on(" >> ").join(event.getGroupHierarchy());
         render();
     }
@@ -100,11 +92,8 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
     }
 
 
-    @Override
-    public void loadSearchResults(Splittable apps, String heading) {
-        props.apps = apps;
+    public void setSearchResultsHeader(String heading) {
         props.heading = heading;
-        props.loading = false;
         render();
     }
 
@@ -116,7 +105,7 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
 
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
-         props.heading = "";
+        props.heading = "";
         render();
     }
 
@@ -136,30 +125,4 @@ public class AdminAppsGridImpl implements AdminAppsGridView/*,
         });
     } */
 
-  /*  @Override
-    public App getAppFromElement(Element as) {
-        Element row = gridView.findRow(as);
-        int dropIndex = gridView.findRowIndex(row);
-        return listStore.get(dropIndex);
-    }
-
-    @Override
-    public List<App> getSelectedApps() {
-        return grid.getSelectionModel().getSelectedItems();
-    }
-
-    @Override
-    public void deselectAll() {
-        grid.getSelectionModel().deselectAll();
-    }
-
-    @Override
-    public void removeApp(App selectedApp) {
-        App app = listStore.findModelWithKey(selectedApp.getId());
-        if (app != null) {
-            listStore.remove(app);
-        }
-    }
-
-   */
 }

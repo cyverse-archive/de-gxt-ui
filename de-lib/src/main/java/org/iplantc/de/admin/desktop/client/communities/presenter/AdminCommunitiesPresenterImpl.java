@@ -270,8 +270,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     }
 
     void getCommunities() {
-        communityGridPresenter.getView().clearAndAdd(null);
-        hierarchyGridPresenter.getView().clearAndAdd(null);
+        communityGridPresenter.setApps(null);
+        hierarchyGridPresenter.setApps(null);
 
         view.maskCommunities();
         serviceFacade.getCommunities(new AsyncCallback<List<Group>>() {
@@ -320,7 +320,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
             @Override
             public void onSuccess(Splittable result) {
-                communityApps.setApps(result.get("apps"), false);
+                //  communityApps.setApps(result.get("apps"), false);
+                communityGridPresenter.setApps(result);
             }
         });
     }
@@ -342,7 +343,9 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
                                                      @Override
                                                      public void onSuccess(Splittable result) {
-                                                        hierarchyView.setApps(result.get("apps"), false);
+                                                         //hierarchyView.setApps(result.get("apps"),
+                                                       // false);
+                                                         hierarchyGridPresenter.setApps(result);
                                                      }
                                                  });
     }

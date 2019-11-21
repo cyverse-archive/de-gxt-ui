@@ -422,8 +422,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
         view.clearTreeStore(OntologiesView.ViewType.ALL);
-        editorGridPresenter.getView().clearAndAdd(null);
-        previewGridPresenter.getView().clearAndAdd(null);
+        editorGridPresenter.setApps(null);
+        previewGridPresenter.setApps(null);
         iriToHierarchyMap.clear();
 
         view.showTreePanel();
@@ -557,21 +557,28 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     public void onPreviewHierarchySelected(PreviewHierarchySelectedEvent event) {
         OntologyHierarchy hierarchy = event.getHierarchy();
         Ontology editedOntology = event.getEditedOntology();
-        getAppsByHierarchy(previewGridPresenter.getView(), hierarchy, editedOntology);
+        getAppsByHierarchy(previewGridPresenter,
+                           previewGridPresenter.getView(),
+                           hierarchy,
+                           editedOntology);
     }
 
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
         OntologyHierarchy hierarchy = event.getHierarchy();
         Ontology editedOntology = event.getEditedOntology();
-        getAppsByHierarchy(editorGridPresenter.getView(), hierarchy, editedOntology);
+        getAppsByHierarchy(editorGridPresenter,
+                           editorGridPresenter.getView(),
+                           hierarchy,
+                           editedOntology);
     }
 
-    void getAppsByHierarchy(final AdminAppsGridView gridView,
+    void getAppsByHierarchy(final AdminAppsGridView.Presenter presenter,
+                            final AdminAppsGridView gridView,
                             OntologyHierarchy hierarchy,
                             Ontology editedOntology) {
         if (ontologyUtil.isUnclassified(hierarchy)){
-            getUnclassifiedApps(gridView, hierarchy, editedOntology);
+            getUnclassifiedApps(presenter, presenter.getView(), hierarchy, editedOntology);
             return;
         }
 
@@ -601,12 +608,13 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(Splittable result) {
-                gridView.setApps(result.get("apps"), false);
+                presenter.setApps(result);
             }
         });
     }
 
-    void getUnclassifiedApps(final AdminAppsGridView gridView,
+    void getUnclassifiedApps(final AdminAppsGridView.Presenter presenter,
+                             final AdminAppsGridView gridView,
                              OntologyHierarchy hierarchy,
                              Ontology editedOntology) {
         String parentIri = ontologyUtil.getUnclassifiedParentIri(hierarchy);
@@ -624,8 +632,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(Splittable result) {
-                gridView.setApps(result.get("apps"), false);
-
+                presenter.setApps(result);
             }
         });
     }
@@ -787,7 +794,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(Splittable result) {
-                editorGridPresenter.getView().clearAndAdd(result.get("apps"));
+                editorGridPresenter.setApps(result);
                 view.unmaskGrid(OntologiesView.ViewType.EDITOR);
             }
         });

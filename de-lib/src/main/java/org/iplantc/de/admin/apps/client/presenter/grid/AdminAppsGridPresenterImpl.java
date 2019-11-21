@@ -17,6 +17,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuList;
@@ -50,6 +51,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -166,6 +168,8 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
 
     List<App> selectedApps = new ArrayList<>();
 
+    Splittable apps = null;
+
     @Inject
     AdminAppsGridPresenterImpl() {
 
@@ -184,6 +188,17 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
     @Override
     public List<App> getSelectedApps() {
         return selectedApps;
+    }
+
+    @Override
+    public void setApps(Splittable apps) {
+        if (apps != null) {
+            this.apps = apps;
+            view.setApps(apps.get("apps"), false);
+        } else {
+            this.apps = null;
+            view.setApps(null, false);
+        }
     }
 
      @Override
@@ -221,7 +236,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
 
             @Override
             public void onSuccess(final Splittable apps) {
-                view.setApps(apps.get("apps"), false);
+                setApps(apps);
             }
         });
     }
@@ -269,12 +284,12 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
         String searchText = event.getSearchText();
         int total = event.getResults() != null ? event.getResults().getTotal() : 0;
         String heading = appearance.searchAppResultsHeader(searchText, total);
+        view.setSearchResultsHeader(heading);
         if (results != null) {
             apps = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(results));
-            view.loadSearchResults(apps, heading);
-            view.setApps(apps.get("apps"), false);
+            setApps(apps);
         } else {
-            view.loadSearchResults(null, heading);
+            setApps(null);
         }
     }
 
@@ -296,8 +311,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
                                       @Override
                                       public void onSuccess(Void result) {
                                           view.setLoading(false);
-                                          //   view.getGrid().getSelectionModel().deselectAll();
-                                          //   listStore.remove(selectedApp);
+                                          deleteApp(selectedApp);
                                       }
                                   });
     }
@@ -358,7 +372,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
 
                 @Override
                 public void onSuccess(App result) {
-                    //   listStore.update(app);
+                    updateApp(app);
                     callback.onSuccess(null);
                 }
             });
@@ -454,5 +468,46 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
 
     App convertSplittableToApp(Splittable appSpl) {
         return AutoBeanCodex.decode(factory, App.class, appSpl.getPayload()).as();
+    }
+
+    List<App> SplittableToAppList(Splittable apps) {
+        return AutoBeanCodex.decode(factory, AppList.class, apps).as().getApps();
+    }
+
+    List<App> removeAppFromListing(String id) {
+        if (apps != null) {
+            List<App> appList = SplittableToAppList(apps);
+            if (appList != null) {
+                List<App> newAppList = appList.stream()
+                                              .filter(app -> !app.getId().equals(id))
+                                              .collect(Collectors.toList());
+                return newAppList;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    void deleteApp(App selectedApp) {
+        if (apps != null) {
+            List<App> newAppList = removeAppFromListing(selectedApp.getId());
+            if (newAppList != null) {
+                AppList appListBean = factory.appList().as();
+                appListBean.setApps(newAppList);
+                setApps(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appListBean)));
+            }
+        }
+    }
+
+    void updateApp(App updatedApp) {
+        if (apps != null) {
+            List<App> newAppList = removeAppFromListing(updatedApp.getId());
+            if (newAppList != null) {
+                AppList appListBean = factory.appList().as();
+                newAppList.add(updatedApp);
+                appListBean.setApps(newAppList);
+                setApps(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appListBean)));
+            }
+        }
     }
 }

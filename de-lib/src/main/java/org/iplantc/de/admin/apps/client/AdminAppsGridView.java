@@ -121,9 +121,9 @@ public interface AdminAppsGridView extends IsWidget,
                                boolean isPublic);
 
         void closeAppDetailsDlg();
-    }
 
-    void clearAndAdd(Splittable apps);
+        void setApps(Splittable apps);
+    }
 
  /*   App getAppFromElement(Element as);
 
@@ -140,6 +140,5 @@ public interface AdminAppsGridView extends IsWidget,
     void setApps(Splittable apps,
                  boolean loading);
 
-    void loadSearchResults(Splittable apps,
-                           String heading);
+    void setSearchResultsHeader(String heading);
 }
