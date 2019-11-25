@@ -42,7 +42,6 @@ public interface AdminAppsGridView extends IsWidget,
     @JsType
     interface Presenter extends AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 DeleteAppsSelected.DeleteAppsSelectedHandler,
-            //  StoreRemoveEvent.HasStoreRemoveHandler<App>,
                                 RestoreAppSelected.RestoreAppSelectedHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                 AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers {
@@ -62,7 +61,6 @@ public interface AdminAppsGridView extends IsWidget,
             String restoreAppFailureMsgTitle();
 
             String restoreAppLoadingMask();
-
 
             String restoreAppSuccessMsg(String name, String s);
 
@@ -85,13 +83,10 @@ public interface AdminAppsGridView extends IsWidget,
         @SuppressWarnings("unusable-by-js")
         void onAppSelectionChanged(Splittable selectedApps);
 
-        /*@JsIgnore
-        App getAppFromElement(Element eventTarget);*/
-
        @JsIgnore
        List<App> getSelectedApps();
 
-        void go();
+        void go(String baseId);
 
         @SuppressWarnings("unusable-by-js")
         void onSaveAppSelected(Splittable appSpl,
@@ -123,17 +118,11 @@ public interface AdminAppsGridView extends IsWidget,
         void closeAppDetailsDlg();
 
         void setApps(Splittable apps);
+
+        void deleteApp(App selectedApp);
     }
 
- /*   App getAppFromElement(Element as);
-
-    List<App> getSelectedApps();
-
-    void deselectAll();
-
-    void removeApp(App selectedApp);*/
-
-    void load(Presenter presenter);
+    void load(Presenter presenter, String baseID);
 
     void setLoading(boolean loading);
 

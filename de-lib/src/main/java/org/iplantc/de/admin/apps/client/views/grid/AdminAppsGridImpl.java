@@ -32,8 +32,9 @@ public class AdminAppsGridImpl implements AdminAppsGridView {
     }
 
     @Override
-    public void load(Presenter presenter) {
+    public void load(Presenter presenter, String baseId) {
         props = new ReactAppsAdmin.AdminAppsListingProps();
+        props.baseId = baseId;
         props.apps = null;
         props.loading = false;
         props.parentId = "adminAppListing";
@@ -108,21 +109,4 @@ public class AdminAppsGridImpl implements AdminAppsGridView {
         props.heading = "";
         render();
     }
-
-/*    @Override
-    protected void onEnsureDebugId(final String baseID) {
-        super.onEnsureDebugId(baseID);
-
-        acm.ensureDebugId(baseID);
-        grid.asWidget().ensureDebugId(baseID + Belphegor.AppIds.GRID);
-        grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
-            @Override
-            public void onViewReady(ViewReadyEvent event) {
-                StaticIdHelper.getInstance()
-                              .gridColumnHeaders(baseID + Belphegor.AppIds.GRID
-                                                 + Belphegor.AppIds.COL_HEADER, grid);
-            }
-        });
-    } */
-
 }

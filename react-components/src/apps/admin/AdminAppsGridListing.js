@@ -73,11 +73,11 @@ const tableColumns = [
 
 function AdminAppGridListing(props) {
     const {
+        baseId,
         apps,
         heading,
         presenter,
         searchText,
-        parentId,
         loading,
         intl,
     } = props;
@@ -124,7 +124,7 @@ function AdminAppGridListing(props) {
                 <Typography variant="subtitle1">{heading}</Typography>
             </div>
             <LoadingMask loading={loading}>
-                <Table stickyHeader={true} size="small">
+                <Table stickyHeader={true} size="small" id={baseId}>
                     <TableBody>
                         {(!apps || apps.length === 0) && (
                             <EmptyTable
@@ -135,7 +135,7 @@ function AdminAppGridListing(props) {
                         {apps &&
                             apps.length > 0 &&
                             apps.map((app) => {
-                                const rowId = build(parentId, app.id);
+                                const rowId = build(baseId, app.id);
                                 const selected = isSelected(app.id);
                                 return (
                                     <DETableRow
@@ -194,7 +194,7 @@ function AdminAppGridListing(props) {
                         rowsInPage={apps ? apps.length : 0}
                         order="asc"
                         orderBy="name"
-                        baseId={parentId}
+                        baseId={baseId}
                         ids={ids.FIELD}
                         columnData={tableColumns}
                         onRequestSort={onRequestSort}

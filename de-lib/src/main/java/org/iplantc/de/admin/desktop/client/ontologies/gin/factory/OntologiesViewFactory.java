@@ -2,8 +2,6 @@ package org.iplantc.de.admin.desktop.client.ontologies.gin.factory;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
-import org.iplantc.de.admin.desktop.client.ontologies.views.AppToOntologyHierarchyDND;
-import org.iplantc.de.admin.desktop.client.ontologies.views.OntologyHierarchyToAppDND;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
@@ -23,7 +21,5 @@ public interface OntologiesViewFactory {
                           @Assisted("previewTreeStore") TreeStore<OntologyHierarchy> previewTreeStore,
                           PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader,
                           @Assisted("previewGridView") AdminAppsGridView oldGridView,
-                          @Assisted("editorGridView") AdminAppsGridView newGridView,
-                          OntologyHierarchyToAppDND dndHandler,
-                          AppToOntologyHierarchyDND appDndHandler);
+                          @Assisted("editorGridView") AdminAppsGridView newGridView);
 }

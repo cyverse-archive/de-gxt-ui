@@ -176,8 +176,8 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
     }
 
     @Override
-    public void go() {
-        view.load(this);
+    public void go(String baseId) {
+        view.load(this, baseId);
     }
 
     @Override
@@ -449,6 +449,18 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
         appEditor.close();
     }
 
+    @Override
+    public void deleteApp(App selectedApp) {
+        if (apps != null) {
+            List<App> newAppList = removeAppFromListing(selectedApp.getId());
+            if (newAppList != null) {
+                AppList appListBean = factory.appList().as();
+                appListBean.setApps(newAppList);
+                setApps(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appListBean)));
+            }
+        }
+    }
+
     ReactAppsAdmin.AdminAppDetailsProps getBaseProps() {
         ReactAppsAdmin.AdminAppDetailsProps props = new ReactAppsAdmin.AdminAppDetailsProps();
         props.presenter = this;
@@ -486,17 +498,6 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter {
             return null;
         }
         return null;
-    }
-
-    void deleteApp(App selectedApp) {
-        if (apps != null) {
-            List<App> newAppList = removeAppFromListing(selectedApp.getId());
-            if (newAppList != null) {
-                AppList appListBean = factory.appList().as();
-                appListBean.setApps(newAppList);
-                setApps(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appListBean)));
-            }
-        }
     }
 
     void updateApp(App updatedApp) {

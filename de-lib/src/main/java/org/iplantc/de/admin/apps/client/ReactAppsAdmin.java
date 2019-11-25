@@ -54,6 +54,7 @@ public class ReactAppsAdmin {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class AdminAppsListingProps extends BaseProps {
+        public String baseId;
         public Splittable apps;
         public boolean loading;
         public String parentId;

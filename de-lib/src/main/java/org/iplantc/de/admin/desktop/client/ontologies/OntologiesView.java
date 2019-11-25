@@ -90,10 +90,6 @@ public interface OntologiesView extends IsWidget,
 
     void unmaskGrid(ViewType type);
 
-    void removeApp(App selectedApp);
-
-    void deselectAll();
-
     void unmaskTree(ViewType type);
 
 

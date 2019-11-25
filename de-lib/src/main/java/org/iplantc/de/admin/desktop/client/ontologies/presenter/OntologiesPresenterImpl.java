@@ -17,8 +17,6 @@ import org.iplantc.de.admin.desktop.client.ontologies.events.SelectOntologyVersi
 import org.iplantc.de.admin.desktop.client.ontologies.gin.factory.OntologiesViewFactory;
 import org.iplantc.de.admin.desktop.client.ontologies.service.OntologyServiceFacade;
 import org.iplantc.de.admin.desktop.client.ontologies.views.AppCategorizeView;
-import org.iplantc.de.admin.desktop.client.ontologies.views.AppToOntologyHierarchyDND;
-import org.iplantc.de.admin.desktop.client.ontologies.views.OntologyHierarchyToAppDND;
 import org.iplantc.de.admin.desktop.client.ontologies.views.dialogs.CategorizeDialog;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
@@ -230,14 +228,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         this.view = factory.create(editorTreeStore,
                                    previewTreeStore,
                                    loader,
-                                   previewGridPresenter.getView(),
-                                   editorGridPresenter.getView(),
-                                   new OntologyHierarchyToAppDND(appearance,
-                                                                 previewGridPresenter,
-                                                                 editorGridPresenter, this),
-                                   new AppToOntologyHierarchyDND(appearance,
-                                                                 previewGridPresenter,
-                                                                 editorGridPresenter, this));
+                                   previewGridPresenter.getView(), editorGridPresenter.getView());
 
         previewGridPresenter.addAppSelectionChangedEventHandler(view);
         editorGridPresenter.addAppSelectionChangedEventHandler(view);
@@ -262,7 +253,6 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
         view.addAppSearchResultLoadEventHandler(this);
         view.addAppSearchResultLoadEventHandler(previewGridPresenter);
-     //   view.addAppSearchResultLoadEventHandler(previewGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(previewGridPresenter.getView());
         view.addRestoreAppButtonClickedHandlers(this);
     }
@@ -283,8 +273,12 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     @Override
     public void go(HasOneWidget container) {
         getOntologies(true);
-        previewGridPresenter.go();
-        editorGridPresenter.go();
+        previewGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.CatalogIds.VIEW + Belphegor.CatalogIds.PREVIEW_PANEL
+                + Belphegor.CatalogIds.PREVIEW_GRID);
+        editorGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.CatalogIds.VIEW + Belphegor.CatalogIds.EDITOR_PANEL
+                + Belphegor.CatalogIds.EDITOR_GRID);
         container.setWidget(view);
     }
 
@@ -354,7 +348,6 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
             public void onSuccess(List<Avu> result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.appClassified(targetApp.getName(), hierarchy.getLabel())));
                 view.selectHierarchy(hierarchy);
-                view.deselectAll();
                 if (!previewTreeHasHierarchy(hierarchy)) {
                     getFilteredOntologyHierarchies(getSelectedOntology().getVersion(), editorTreeStore.getRootItems());
                 }
@@ -392,8 +385,6 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     }
 
     void getOntologies(final boolean selectActiveOntology) {
-       // editorGridPresenter.getView().clearAndAdd(null);
-      // previewGridPresenter.getView().clearAndAdd(null);
         view.clearTreeStore(OntologiesView.ViewType.ALL);
         serviceFacade.getOntologies(new AsyncCallback<List<Ontology>>() {
             @Override
@@ -710,7 +701,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
                 @Override
                 public void onSuccess(Void result) {
-                    view.removeApp(selectedApp);
+                    previewGridPresenter.deleteApp(selectedApp);
+                    editorGridPresenter.deleteApp(selectedApp);
                     view.unmaskGrid(OntologiesView.ViewType.ALL);
                 }
             });

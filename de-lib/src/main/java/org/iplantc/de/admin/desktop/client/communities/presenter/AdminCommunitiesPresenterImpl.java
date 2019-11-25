@@ -138,7 +138,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addHierarchySelectedEventHandler(hierarchyGridPresenter.getView());
         view.addCommunitySelectionChangedHandler(communityGridPresenter.getView());
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
-      //  view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
         view.addAddCommunityClickedHandler(this);
         view.addEditCommunityClickedHandler(this);
@@ -161,8 +160,12 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     @Override
     public void go(HasOneWidget container) {
-        hierarchyGridPresenter.go();
-        communityGridPresenter.go();
+        hierarchyGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.Ids.COMMUNITIES + Belphegor.CatalogIds.PREVIEW_PANEL
+                + Belphegor.CatalogIds.PREVIEW_GRID);
+        communityGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.Ids.COMMUNITIES + Belphegor.CatalogIds.EDITOR_PANEL
+                + Belphegor.CatalogIds.EDITOR_GRID);
         getCommunities();
         getHierarchies();
         container.setWidget(view);
@@ -320,7 +323,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
             @Override
             public void onSuccess(Splittable result) {
-                //  communityApps.setApps(result.get("apps"), false);
                 communityGridPresenter.setApps(result);
             }
         });
@@ -343,8 +345,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
                                                      @Override
                                                      public void onSuccess(Splittable result) {
-                                                         //hierarchyView.setApps(result.get("apps"),
-                                                       // false);
                                                          hierarchyGridPresenter.setApps(result);
                                                      }
                                                  });
