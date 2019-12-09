@@ -122,16 +122,16 @@ public interface Subject extends HasSettableId, HasName {
      */
     default boolean isCollaboratorList() {
         RegExp regex = RegExp.compile(LIST_LONG_NAME_REGEX);
-        return regex.test(getDisplayName());
+        return regex.test(getDisplayName()) || regex.test(getName());
     }
 
     default boolean isTeam() {
         RegExp regex = RegExp.compile(TEAM_LONG_NAME_REGEX);
-        return regex.test(getDisplayName());
+        return regex.test(getDisplayName()) || regex.test(getName());
     }
 
     default boolean isCommunity() {
         RegExp regex = RegExp.compile(COMMUNITY_LONG_NAME_REGEX);
-        return regex.test(getDisplayName());
+        return regex.test(getDisplayName()) || regex.test(getName());
     }
 }
