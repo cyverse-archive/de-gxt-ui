@@ -228,11 +228,6 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         List<App> appSelection = event.getAppSelection();
         targetApp = null;
         if (appSelection != null && appSelection.size() != 0) {
-           /* if (event.getSource() == previewGridView) {
-                editorGridView.deselectAll();
-            } else {
-                previewGridView.deselectAll();
-            }*/
             targetApp = appSelection.get(0);
         }
         updateButtonStatus();

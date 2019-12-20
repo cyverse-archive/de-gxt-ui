@@ -8,9 +8,11 @@ import {
     EmptyTable,
     EnhancedTableHead,
     getMessage,
+    getSorting,
     Highlighter,
     LoadingMask,
     palette,
+    stableSort,
     withI18N,
 } from "@cyverse-de/ui-lib";
 
@@ -82,10 +84,24 @@ function AdminAppGridListing(props) {
         intl,
     } = props;
     const [selectedApps, setSelectedApps] = useState([]);
+    const [sortConfig, setSortConfig] = useState({
+        order: "asc",
+        orderBy: "name",
+    });
     const searchRegex = getAppsSearchRegex(searchText);
     const classes = useStyles();
-    const onRequestSort = () => {
-        console.log("Sorting...");
+    const onRequestSort = (event, property) => {
+        const orderBy = property;
+        let order = "desc";
+
+        if (sortConfig.orderBy === property && sortConfig.order === "desc") {
+            order = "asc";
+        }
+
+        setSortConfig({
+            order: order,
+            orderBy: orderBy,
+        });
     };
     const onInfoClick = (app) => {
         presenter.onAppInfoSelected(app, app.id, app.system_id, app.is_public);
@@ -134,7 +150,10 @@ function AdminAppGridListing(props) {
                         )}
                         {apps &&
                             apps.length > 0 &&
-                            apps.map((app) => {
+                            stableSort(
+                                apps,
+                                getSorting(sortConfig.order, sortConfig.orderBy)
+                            ).map((app) => {
                                 const rowId = build(baseId, app.id);
                                 const selected = isSelected(app.id);
                                 return (
@@ -192,8 +211,8 @@ function AdminAppGridListing(props) {
                     <EnhancedTableHead
                         selectable={false}
                         rowsInPage={apps ? apps.length : 0}
-                        order="asc"
-                        orderBy="name"
+                        order={sortConfig.order}
+                        orderBy={sortConfig.orderBy}
                         baseId={baseId}
                         ids={ids.FIELD}
                         columnData={tableColumns}

@@ -752,7 +752,6 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
             @Override
             public void onSuccess(App result) {
-             //   editorGridPresenter.getView().removeApp(result);
                 view.unmaskGrid(OntologiesView.ViewType.EDITOR);
                 List<String> hierarchyNames = Lists.newArrayList();
                 for(OntologyHierarchy hierarchy : result.getHierarchies()){
