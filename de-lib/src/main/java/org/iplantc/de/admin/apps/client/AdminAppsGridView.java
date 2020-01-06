@@ -9,20 +9,14 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
-import com.sencha.gxt.widget.core.client.grid.Grid;
 
 import java.util.List;
 
@@ -34,11 +28,7 @@ import jsinterop.annotations.JsType;
  * @author jstroot
  */
 public interface AdminAppsGridView extends IsWidget,
-                                           IsMaskable,
-                                           AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
-                                           AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers,
                                            AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
-                                           AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                            BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                            HierarchySelectedEvent.HierarchySelectedEventHandler,
                                            PreviewHierarchySelectedEvent.PreviewHierarchySelectedEventHandler,
@@ -52,9 +42,9 @@ public interface AdminAppsGridView extends IsWidget,
     @JsType
     interface Presenter extends AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 DeleteAppsSelected.DeleteAppsSelectedHandler,
-                                StoreRemoveEvent.HasStoreRemoveHandler<App>,
                                 RestoreAppSelected.RestoreAppSelectedHandler,
-                                AppSearchResultLoadEvent.AppSearchResultLoadEventHandler {
+                                AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
+                                AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers {
 
         interface Appearance extends AppsListView.AppsListAppearance {
 
@@ -71,7 +61,6 @@ public interface AdminAppsGridView extends IsWidget,
             String restoreAppFailureMsgTitle();
 
             String restoreAppLoadingMask();
-
 
             String restoreAppSuccessMsg(String name, String s);
 
@@ -91,11 +80,13 @@ public interface AdminAppsGridView extends IsWidget,
         @JsIgnore
         AdminAppsGridView getView();
 
-        @JsIgnore
-        App getAppFromElement(Element eventTarget);
+        @SuppressWarnings("unusable-by-js")
+        void onAppSelectionChanged(Splittable selectedApps);
 
-        @JsIgnore
-        List<App> getSelectedApps();
+       @JsIgnore
+       List<App> getSelectedApps();
+
+        void go(String baseId);
 
         @SuppressWarnings("unusable-by-js")
         void onSaveAppSelected(Splittable appSpl,
@@ -119,18 +110,24 @@ public interface AdminAppsGridView extends IsWidget,
                               ReactSuccessCallback callback,
                               ReactErrorCallback errorCallback);
 
+        void onAppInfoSelected(Splittable selectedApp,
+                               String appId,
+                               String systemId,
+                               boolean isPublic);
+
         void closeAppDetailsDlg();
+
+        void setApps(Splittable apps);
+
+        void deleteApp(App selectedApp);
     }
 
-    Grid<App> getGrid();
+    void load(Presenter presenter, String baseID);
 
-    void clearAndAdd(List<App> apps);
+    void setLoading(boolean loading);
 
-    App getAppFromElement(Element as);
+    void setApps(Splittable apps,
+                 boolean loading);
 
-    List<App> getSelectedApps();
-
-    void deselectAll();
-
-    void removeApp(App selectedApp);
+    void setSearchResultsHeader(String heading);
 }

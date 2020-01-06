@@ -32,11 +32,6 @@
         <when-type-is class="org.iplantc.de.admin.apps.client.AdminAppsToolbarView.ToolbarAppearance" />
     </replace-with>
 
-    <!-- Cells -->
-    <replace-with class="org.iplantc.de.theme.base.client.admin.apps.AdminAppNameCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.admin.apps.client.views.grid.cells.AdminAppNameCell.AdminAppNameCellAppearance" />
-    </replace-with>
-
     <replace-with class="org.iplantc.de.theme.base.client.admin.apps.AppPublicationRequestDefaultAppearance">
         <when-type-is class="org.iplantc.de.admin.apps.client.AppPublicationRequestView.AppPublicationRequestAppearance" />
     </replace-with>

@@ -9,6 +9,7 @@ import ShareWithSupportDialogTest from "./analysis/view/dialogs/ShareWithSupport
 import ViceLogsViewerTest from "./analysis/view/dialogs/ViceLogsViewerDialog.stories";
 
 import AdminAppDetailsTest from "./apps/admin/AdminAppDetails.stories";
+import AdminAppGridListingTest from "./apps/admin/AdminAppGridListing.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";
 import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import AppPublicationRequestsTest from "./apps/admin/AppPublicationRequests.stories";
@@ -91,6 +92,11 @@ storiesOf("analysis/view/dialogs", module).add("with test VICE logs", () => (
 storiesOf("apps/admin/AppDetails", module).add("AdminAppDetails", () => (
     <AdminAppDetailsTest />
 ));
+
+storiesOf("apps/admin", module).add("AdminAppListing", () => (
+    <AdminAppGridListingTest />
+));
+
 storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
     <AppStatsTest />
 ));

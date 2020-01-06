@@ -258,7 +258,7 @@ const handleSubmit = (values, { props, setSubmitting }) => {
 
     if (
         (!documentation || !documentation.documentation) &&
-        values.documentation.documentation
+        (values.documentation && values.documentation.documentation)
     ) {
         let addAppDoc = new Promise((resolve, reject) => {
             presenter.addAppDocumentation(
@@ -271,6 +271,7 @@ const handleSubmit = (values, { props, setSubmitting }) => {
         });
         promises.push(addAppDoc);
     } else if (
+        values.documentation &&
         documentation.documentation !== values.documentation.documentation
     ) {
         let updateAppDoc = new Promise((resolve, reject) => {

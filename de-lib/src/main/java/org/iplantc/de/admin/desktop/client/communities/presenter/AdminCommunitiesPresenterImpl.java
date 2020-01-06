@@ -10,8 +10,6 @@ import org.iplantc.de.admin.desktop.client.communities.events.DeleteCommunityCli
 import org.iplantc.de.admin.desktop.client.communities.events.EditCommunityClicked;
 import org.iplantc.de.admin.desktop.client.communities.gin.AdminCommunitiesViewFactory;
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
-import org.iplantc.de.admin.desktop.client.communities.views.AppToCommunityDND;
-import org.iplantc.de.admin.desktop.client.communities.views.CommunityToAppDND;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.AppCommunityListEditorDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.DeleteCommunityConfirmationDialog;
 import org.iplantc.de.admin.desktop.client.communities.views.dialogs.EditCommunityDialog;
@@ -30,7 +28,6 @@ import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -53,6 +50,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -127,18 +125,11 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
                                    hierarchyTreeStore,
                                    loader,
                                    hierarchyGridPresenter.getView(),
-                                   communityGridPresenter.getView(),
-                                   new CommunityToAppDND(appearance,
-                                                         hierarchyGridPresenter,
-                                                         communityGridPresenter,
-                                                         this),
-                                   new AppToCommunityDND(appearance,
-                                                         hierarchyGridPresenter,
-                                                         communityGridPresenter,
-                                                         this));
+                                   communityGridPresenter.getView()
+                                 );
 
-        hierarchyGridPresenter.getView().addAppSelectionChangedEventHandler(view);
-        communityGridPresenter.getView().addAppSelectionChangedEventHandler(view);
+        hierarchyGridPresenter.addAppSelectionChangedEventHandler(view);
+        communityGridPresenter.addAppSelectionChangedEventHandler(view);
 
         proxy.setHasHandlers(view);
 
@@ -147,7 +138,6 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
         view.addHierarchySelectedEventHandler(hierarchyGridPresenter.getView());
         view.addCommunitySelectionChangedHandler(communityGridPresenter.getView());
         view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter);
-        view.addAppSearchResultLoadEventHandler(hierarchyGridPresenter.getView());
         view.addBeforeAppSearchEventHandler(hierarchyGridPresenter.getView());
         view.addAddCommunityClickedHandler(this);
         view.addEditCommunityClickedHandler(this);
@@ -170,6 +160,12 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
 
     @Override
     public void go(HasOneWidget container) {
+        hierarchyGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.Ids.COMMUNITIES + Belphegor.CatalogIds.PREVIEW_PANEL
+                + Belphegor.CatalogIds.PREVIEW_GRID);
+        communityGridPresenter.go(
+                Belphegor.Ids.BELPHEGOR + Belphegor.Ids.COMMUNITIES + Belphegor.CatalogIds.EDITOR_PANEL
+                + Belphegor.CatalogIds.EDITOR_GRID);
         getCommunities();
         getHierarchies();
         container.setWidget(view);
@@ -277,8 +273,8 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     }
 
     void getCommunities() {
-        communityGridPresenter.getView().clearAndAdd(null);
-        hierarchyGridPresenter.getView().clearAndAdd(null);
+        communityGridPresenter.setApps(null);
+        hierarchyGridPresenter.setApps(null);
 
         view.maskCommunities();
         serviceFacade.getCommunities(new AsyncCallback<List<Group>>() {
@@ -315,20 +311,19 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
         Group community = event.getCommunity();
         AdminAppsGridView communityApps = communityGridPresenter.getView();
-        communityApps.mask(appearance.loadingMask());
+        communityApps.setLoading(true);
 
-        serviceFacade.getCommunityApps(community, new AppsCallback<List<App>>() {
+        serviceFacade.getCommunityApps(community, new AppsCallback<Splittable>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                communityApps.unmask();
+                communityApps.setLoading(false);
                 ErrorHandler.post(exception);
             }
 
             @Override
-            public void onSuccess(List<App> result) {
-                communityApps.clearAndAdd(result);
-                communityApps.unmask();
+            public void onSuccess(Splittable result) {
+                communityGridPresenter.setApps(result);
             }
         });
     }
@@ -336,22 +331,21 @@ public class AdminCommunitiesPresenterImpl implements AdminCommunitiesView.Prese
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
         AdminAppsGridView hierarchyView = hierarchyGridPresenter.getView();
-        hierarchyView.mask(appearance.loadingMask());
+        hierarchyView.setLoading(true);
         OntologyHierarchy hierarchy = event.getHierarchy();
         ontologyServiceFacade.getAppsByHierarchy(activeOntologyVersion,
                                                  hierarchy.getIri(),
                                                  ontologyUtil.getAttr(hierarchy),
-                                                 new AsyncCallback<List<App>>() {
+                                                 new AsyncCallback<Splittable>() {
                                                      @Override
                                                      public void onFailure(Throwable caught) {
                                                          ErrorHandler.post(caught);
-                                                         hierarchyView.unmask();
+                                                         hierarchyView.setLoading(false);
                                                      }
 
                                                      @Override
-                                                     public void onSuccess(List<App> result) {
-                                                        hierarchyView.clearAndAdd(result);
-                                                        hierarchyView.unmask();
+                                                     public void onSuccess(Splittable result) {
+                                                         hierarchyGridPresenter.setApps(result);
                                                      }
                                                  });
     }

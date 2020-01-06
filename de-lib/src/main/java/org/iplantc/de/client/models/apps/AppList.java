@@ -15,4 +15,7 @@ public interface AppList {
     List<App> getApps();
 
     int getTotal();
+
+    @PropertyName("apps")
+    void setApps(List<App> newAppList);
 }

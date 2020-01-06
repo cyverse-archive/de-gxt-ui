@@ -1,181 +1,112 @@
 package org.iplantc.de.admin.apps.client.views.grid;
 
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
+import org.iplantc.de.admin.apps.client.ReactAppsAdmin;
 import org.iplantc.de.admin.desktop.client.communities.events.CommunitySelectionChanged;
 import org.iplantc.de.admin.desktop.client.ontologies.events.HierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.PreviewHierarchySelectedEvent;
 import org.iplantc.de.admin.desktop.client.ontologies.events.SelectOntologyVersionEvent;
-import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
-import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.util.StaticIdHelper;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.common.base.Joiner;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.widget.core.client.ContentPanel;
-import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.grid.GridView;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
-
-import java.util.List;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * Created by jstroot on 3/9/15.
- * @author jstroot
+ * @author jstroot sriram
  */
-public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView,
-                                                               SelectionChangedEvent.SelectionChangedHandler<App> {
+public class AdminAppsGridImpl implements AdminAppsGridView {
 
-    interface AdminAppsGridImplUiBinder extends UiBinder<Widget, AdminAppsGridImpl> { }
+    HTMLPanel panel;
 
-    private static AdminAppsGridImplUiBinder ourUiBinder = GWT.create(AdminAppsGridImplUiBinder.class);
-    @UiField(provided = true) ListStore<App> listStore;
-    @UiField ColumnModel<App> cm;
-    @UiField GridView<App> gridView;
-    @UiField Grid<App> grid;
-
-    private final AdminAppsColumnModel acm; // Convenience class
-
-    @Inject AdminAppsGridView.Appearance appearance;
+    private ReactAppsAdmin.AdminAppsListingProps props;
 
     @Inject
-    AdminAppsGridImpl(@Assisted final ListStore<App> listStore) {
-        this.listStore = listStore;
-
-        setWidget(ourUiBinder.createAndBindUi(this));
-        this.acm = (AdminAppsColumnModel) cm;
-        grid.getSelectionModel().addSelectionChangedHandler(this);
+    AdminAppsGridImpl() {
+        panel = new HTMLPanel("<div></div>");
     }
 
     @Override
-    public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {
-        return acm.addAppInfoSelectedEventHandler(handler);
+    public void load(Presenter presenter, String baseId) {
+        props = new ReactAppsAdmin.AdminAppsListingProps();
+        props.baseId = baseId;
+        props.apps = null;
+        props.loading = false;
+        props.parentId = "adminAppListing";
+        props.heading = "";
+        props.presenter = presenter;
+        render();
     }
 
     @Override
-    public HandlerRegistration addAppSelectionChangedEventHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler) {
-        return addHandler(handler, AppSelectionChangedEvent.TYPE);
+    public Widget asWidget() {
+        return panel;
     }
 
     @Override
-    public Grid<App> getGrid() {
-        return grid;
+    public void setLoading(boolean loading) {
+        props.loading = loading;
+        render();
     }
 
     @Override
-    public void clearAndAdd(List<App> apps) {
-        listStore.clear();
-        if (apps != null && !apps.isEmpty()) {
-            listStore.addAll(apps);
-        }
+    public void setApps(Splittable apps,
+                        boolean loading) {
+        props.apps = apps;
+        props.loading = loading;
+        render();
     }
+
+    private void render() {
+        CyVerseReactComponents.render(ReactAppsAdmin.AdminAppsGridListing, props, panel.getElement());
+    }
+
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
-        // FIXME Move to appearance
-        setHeading(Joiner.on(" >> ").join(event.getGroupHierarchy()));
+        props.heading = Joiner.on(" >> ").join(event.getGroupHierarchy());
+        render();
     }
 
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
-        setHeading(Joiner.on(" >> ").join(event.getPath()));
+        props.heading =   Joiner.on(" >> ").join(event.getPath()) ;
+        render();
     }
 
     @Override
     public void onPreviewHierarchySelected(PreviewHierarchySelectedEvent event) {
-        setHeading(Joiner.on(" >> ").join(event.getPath()));
+        props.heading = Joiner.on(" >> ").join(event.getPath());
+        render();
     }
 
 
     @Override
     public void onCommunitySelectionChanged(CommunitySelectionChanged event) {
-        setHeading(event.getPath());
+        props.heading = event.getPath();
+        render();
     }
 
-    @Override
-    public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        unmask();
-//        searchRegexPattern = event.getSearchPattern();
-//        acm.setSearchRegexPattern(searchRegexPattern);
 
-        int total = event.getResults() == null ? 0 : event.getResults().getTotal();
-        setHeading(appearance.searchAppResultsHeader(event.getSearchText(), total));
+    public void setSearchResultsHeader(String heading) {
+        props.heading = heading;
+        render();
     }
 
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
-        mask(appearance.beforeAppSearchLoadingMask());
-    }
-
-    @Override
-    public void onSelectionChanged(SelectionChangedEvent<App> event) {
-        fireEvent(new AppSelectionChangedEvent(event.getSelection()));
-    }
-
-    @UiFactory
-    ColumnModel<App> createColumnModel() {
-        return new AdminAppsColumnModel();
-    }
-
-    @Override
-    protected void onEnsureDebugId(final String baseID) {
-        super.onEnsureDebugId(baseID);
-
-        acm.ensureDebugId(baseID);
-        grid.asWidget().ensureDebugId(baseID + Belphegor.AppIds.GRID);
-        grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
-            @Override
-            public void onViewReady(ViewReadyEvent event) {
-                StaticIdHelper.getInstance()
-                              .gridColumnHeaders(baseID + Belphegor.AppIds.GRID
-                                                 + Belphegor.AppIds.COL_HEADER, grid);
-            }
-        });
-    }
-
-    @Override
-    public App getAppFromElement(Element as) {
-        Element row = gridView.findRow(as);
-        int dropIndex = gridView.findRowIndex(row);
-        return listStore.get(dropIndex);
-    }
-
-    @Override
-    public List<App> getSelectedApps() {
-        return grid.getSelectionModel().getSelectedItems();
-    }
-
-    @Override
-    public void deselectAll() {
-        grid.getSelectionModel().deselectAll();
-    }
-
-    @Override
-    public void removeApp(App selectedApp) {
-        App app = listStore.findModelWithKey(selectedApp.getId());
-        if (app != null) {
-            listStore.remove(app);
-        }
+        props.loading = true;
+        render();
     }
 
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
-        getHeader().setHTML("&nbsp;");
+        props.heading = "";
+        render();
     }
 }

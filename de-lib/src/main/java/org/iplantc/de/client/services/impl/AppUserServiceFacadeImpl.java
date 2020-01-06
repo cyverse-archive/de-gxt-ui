@@ -149,19 +149,13 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Override
     public void getApps(HasQualifiedId appCategory,
                         AppTypeFilter filter,
-                        DECallback<List<App>> callback) {
+                        DECallback<Splittable> callback) {
         String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
         if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
            address = address + "?app-type=" + filter.getFilterString();
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                return apps;
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, new SplittableDECallbackConverter(callback));
     }
 
     @Override

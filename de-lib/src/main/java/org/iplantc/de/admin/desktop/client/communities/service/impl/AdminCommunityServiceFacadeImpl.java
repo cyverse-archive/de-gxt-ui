@@ -7,8 +7,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.admin.desktop.client.communities.service.AdminCommunityServiceFacade;
 import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.models.apps.proxy.AppSearchAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -16,9 +14,9 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
-import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListCallbackConverter;
+import org.iplantc.de.client.services.converters.SplittableDECallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.client.services.converters.UpdateMemberResultsCallbackConverter;
 import org.iplantc.de.shared.DECallback;
@@ -60,17 +58,11 @@ public class AdminCommunityServiceFacadeImpl implements AdminCommunityServiceFac
     }
 
     @Override
-    public void getCommunityApps(Group community, DECallback<List<App>> appListCallback) {
+    public void getCommunityApps(Group community, DECallback<Splittable> appListCallback) {
         String address = ADMIN_APPS_COMMUNITIES + "/" + URL.encodePathSegment(community.getDisplayName()) + "/apps";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(appListCallback) {
-            @Override
-            protected List<App> convertFrom(String object) {
-                AppListLoadResult listResult = AutoBeanCodex.decode(appAutoBeanFactory, AppListLoadResult.class, object).as();
-                return listResult.getData();
-            }
-        });
+        deService.getServiceData(wrapper, new SplittableDECallbackConverter(appListCallback));
     }
 
     @Override

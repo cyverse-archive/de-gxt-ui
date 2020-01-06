@@ -6,7 +6,6 @@ import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.apps.client.AdminAppsToolbarView;
 import org.iplantc.de.admin.apps.client.AdminAppsView;
 import org.iplantc.de.admin.apps.client.AdminCategoriesView;
-import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsGridViewFactory;
 import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsToolbarFactory;
 import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsViewFactory;
 import org.iplantc.de.admin.apps.client.presenter.AdminAppsViewPresenterImpl;
@@ -65,10 +64,7 @@ public class AdminAppsGinModule extends AbstractGinModule {
                     .build(AdminAppsViewFactory.class));
         bind(AdminAppsView.AdminPresenter.class).to(AdminAppsViewPresenterImpl.class);
 
-        // Grid
-        install(new GinFactoryModuleBuilder()
-                    .implement(AdminAppsGridView.class, AdminAppsGridImpl.class)
-                    .build(AdminAppsGridViewFactory.class));
+        bind(AdminAppsGridView.class).to(AdminAppsGridImpl.class);
         bind(AdminAppsGridView.Presenter.class).to(AdminAppsGridPresenterImpl.class);
 
         // Categories

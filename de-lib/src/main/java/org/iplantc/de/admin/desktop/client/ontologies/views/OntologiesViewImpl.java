@@ -54,8 +54,6 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.dnd.core.client.DragSource;
-import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -109,8 +107,6 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     private Ontology activeOntology;
     private Ontology selectedOntology;
     private App targetApp;
-    private OntologyHierarchyToAppDND hierarchyToAppDND;
-    private AppToOntologyHierarchyDND appToHierarchyDND;
     private OntologyUtil ontologyUtil = OntologyUtil.getInstance();
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
 
@@ -120,25 +116,19 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
                               @Assisted("previewTreeStore") TreeStore<OntologyHierarchy> previewTreeStore,
                               @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader,
                               @Assisted("previewGridView") AdminAppsGridView previewGridView,
-                              @Assisted("editorGridView") AdminAppsGridView editorGridView,
-                              @Assisted OntologyHierarchyToAppDND hierarchyToAppDND,
-                              @Assisted AppToOntologyHierarchyDND appToHierarchyDND) {
+                              @Assisted("editorGridView") AdminAppsGridView editorGridView) {
         this.appearance = appearance;
         this.loader = loader;
         this.editorTreeStore = editorTreeStore;
         this.previewTreeStore = previewTreeStore;
         this.previewGridView = previewGridView;
         this.editorGridView = editorGridView;
-        this.hierarchyToAppDND = hierarchyToAppDND;
-        this.appToHierarchyDND = appToHierarchyDND;
 
         addTreeSelectionHandlers();
 
         initWidget(uiBinder.createAndBindUi(this));
 
         updateButtonStatus();
-
-        setUpDND();
     }
 
     void addTreeSelectionHandlers() {
@@ -238,11 +228,6 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         List<App> appSelection = event.getAppSelection();
         targetApp = null;
         if (appSelection != null && appSelection.size() != 0) {
-            if (event.getSource() == previewGridView) {
-                editorGridView.deselectAll();
-            } else {
-                previewGridView.deselectAll();
-            }
             targetApp = appSelection.get(0);
         }
         updateButtonStatus();
@@ -475,14 +460,14 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     public void maskGrid(ViewType type) {
         switch(type) {
             case EDITOR:
-                editorGridView.mask(appearance.loadingMask());
+                editorGridView.setLoading(true);
                 break;
             case PREVIEW:
-                previewGridView.mask(appearance.loadingMask());
+                previewGridView.setLoading(true);
                 break;
             case ALL:
-                editorGridView.mask(appearance.loadingMask());
-                previewGridView.mask(appearance.loadingMask());
+                editorGridView.setLoading(true);
+                previewGridView.setLoading(true);
                 break;
         }
     }
@@ -491,28 +476,16 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     public void unmaskGrid(ViewType type) {
         switch(type) {
             case EDITOR:
-                editorGridView.unmask();
+                editorGridView.setLoading(false);
                 break;
             case PREVIEW:
-                previewGridView.unmask();
+                previewGridView.setLoading(false);
                 break;
             case ALL:
-                editorGridView.unmask();
-                previewGridView.unmask();
+                editorGridView.setLoading(false);
+                previewGridView.setLoading(false);
                 break;
         }
-    }
-
-    @Override
-    public void removeApp(App selectedApp) {
-        previewGridView.removeApp(selectedApp);
-        editorGridView.removeApp(selectedApp);
-    }
-
-    @Override
-    public void deselectAll() {
-        previewGridView.deselectAll();
-        editorGridView.deselectAll();
     }
 
     @UiHandler("publishButton")
@@ -620,40 +593,6 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         store.addSortInfo(new Store.StoreSortInfo<>(ontologyUtil.getOntologyNameComparator(), SortDir.ASC));
 
         return ontologyTree;
-    }
-
-    void setUpDND() {
-        //App DND
-        DropTarget previewGridTarget = new DropTarget(previewGridView.asWidget());
-        previewGridTarget.setAllowSelfAsSource(false);
-        previewGridTarget.addDragEnterHandler(hierarchyToAppDND);
-        previewGridTarget.addDragMoveHandler(hierarchyToAppDND);
-        previewGridTarget.addDragEnterHandler(hierarchyToAppDND);
-        previewGridTarget.addDropHandler(hierarchyToAppDND);
-
-        DropTarget editorGridTarget = new DropTarget(editorGridView.asWidget());
-        editorGridTarget.setAllowSelfAsSource(false);
-        editorGridTarget.addDragEnterHandler(hierarchyToAppDND);
-        editorGridTarget.addDragMoveHandler(hierarchyToAppDND);
-        editorGridTarget.addDragEnterHandler(hierarchyToAppDND);
-        editorGridTarget.addDropHandler(hierarchyToAppDND);
-
-        DragSource previewGridSource = new DragSource(previewGridView.asWidget());
-        previewGridSource.addDragStartHandler(appToHierarchyDND);
-
-        DragSource editorGridSource = new DragSource(editorGridView.asWidget());
-        editorGridSource.addDragStartHandler(appToHierarchyDND);
-
-        //Tree DND
-        DragSource editorTreeSource = new DragSource(editorTree);
-        editorTreeSource.addDragStartHandler(hierarchyToAppDND);
-
-        DropTarget editorTreeTarget = new DropTarget(editorTree);
-        editorTreeTarget.setAllowSelfAsSource(false);
-        editorTreeTarget.addDragEnterHandler(appToHierarchyDND);
-        editorTreeTarget.addDragMoveHandler(appToHierarchyDND);
-        editorTreeTarget.addDragEnterHandler(appToHierarchyDND);
-        editorTreeTarget.addDropHandler(appToHierarchyDND);
     }
 
     @Override
