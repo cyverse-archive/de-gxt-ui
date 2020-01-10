@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import appsTableData from "./dataFiles/appsData";
+import ids from "./AllStatsIDs";
 
 const useStyles = makeStyles({
     root: {
@@ -29,16 +30,16 @@ const rows = appsTableData[0].apps.map((data) =>
 
 export default function AppsTab() {
     return (
-        <Paper className="appsTablePaper">
+        <Paper className="appsTablePaper" id={ids.APPS_TABLE_PAPER}>
             <Table className="appsTable" aria-label="simple table">
-                <TableHead>
+                <TableHead id={ids.APPS_TABLE_HEAD}>
                     <TableRow>
                         <TableCell> App Name </TableCell>
                         <TableCell> App ID </TableCell>
                         <TableCell align="center">App Count</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody id={ids.JOBS_TABLE}>
                     {rows.map((row) => (
                         <TableRow key={row.appName}>
                             <TableCell>{row.appName}</TableCell>

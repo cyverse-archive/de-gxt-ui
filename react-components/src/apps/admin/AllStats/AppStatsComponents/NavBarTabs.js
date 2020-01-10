@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -9,6 +8,9 @@ import Box from "@material-ui/core/Box";
 import JobsTab from "./JobsTab";
 import AppsTab from "./AppsTab";
 import UsersTab from "./UsersTab";
+import ids from "./AllStatsIDs";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import myMessagesFile from "./messages.js";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -52,15 +54,8 @@ function LinkTab(props) {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-    },
-}));
-
-export default function NavTabs() {
-    const classes = useStyles();
+function NavTabs(props) {
+    const classes = props;
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -68,7 +63,7 @@ export default function NavTabs() {
     };
 
     return (
-        <div className={classes.root}>
+        <div className={classes.root} id={props.id}>
             <AppBar position="static">
                 <Tabs
                     variant="fullWidth"
@@ -77,23 +72,33 @@ export default function NavTabs() {
                     aria-label="nav tabs example"
                 >
                     <LinkTab
-                        label="Jobs & Logins"
+                        label={getMessage("jobsAndLogins")}
                         href="/drafts"
                         {...a11yProps(0)}
                     />
-                    <LinkTab label="Apps" href="/trash" {...a11yProps(1)} />
-                    <LinkTab label="Users" href="/spam" {...a11yProps(2)} />
+                    <LinkTab
+                        label={getMessage("apps")}
+                        href="/trash"
+                        {...a11yProps(1)}
+                    />
+                    <LinkTab
+                        label={getMessage("users")}
+                        href="/spam"
+                        {...a11yProps(2)}
+                    />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <JobsTab />
+                <JobsTab id={ids.JOBS_TAB} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <AppsTab />
+                <AppsTab id={ids.APPS_TAB} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <UsersTab />
+                <UsersTab id={ids.USERS_TAB} />
             </TabPanel>
         </div>
     );
 }
+
+export default withI18N(NavTabs, myMessagesFile);

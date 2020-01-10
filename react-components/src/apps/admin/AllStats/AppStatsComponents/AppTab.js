@@ -1,16 +1,28 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import SimpleSelect from "./SimpleSelect";
+import { withStyles } from "@material-ui/core";
+import styles from "../AllStatsStyle.js";
+import ids from "./AllStatsIDs";
 
-export default function AppCount() {
+function AppCount(props) {
+    const { classes } = this.props;
     return (
-        <div className="app-select-bar">
+        <div className={classes.appSelectBar}>
             <div>
-                <Box className="app-select-text"> Top Apps in 24 hours: </Box>
+                <Box className={classes.appSelectText}>
+                    {" "}
+                    Top Apps in 24 hours:{" "}
+                </Box>
             </div>
-            <div className="app-count-select">
-                <SimpleSelect />
+            <div className={classes.appCountSelect}>
+                <SimpleSelect
+                    id={ids.APPS_TAB_SELECT_BOX}
+                    className={classes.appCountSelect}
+                />
             </div>
         </div>
     );
 }
+
+export default withStyles(styles)(AppCount);

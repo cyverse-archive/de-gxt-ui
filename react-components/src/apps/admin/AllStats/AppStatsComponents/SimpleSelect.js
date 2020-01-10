@@ -1,10 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import styles from "../AllStatsStyle";
+import ids from "./AllStatsIDs";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -16,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleSelect(props) {
-    const classes = useStyles();
+function SimpleSelect(props) {
+    const classes = props;
     const [age, setAge] = React.useState("");
 
     const inputLabel = React.useRef("");
@@ -33,14 +34,9 @@ export default function SimpleSelect(props) {
 
     return (
         <div>
-            <FormControl className="app-count-select">
-                <InputLabel id="simple-select-label">App Count</InputLabel>
-                <Select
-                    labelId="simple-select-label"
-                    id="simple-select"
-                    value={age}
-                    onChange={handleChange}
-                >
+            <FormControl className={props.id}>
+                <InputLabel>App Count</InputLabel>
+                <Select id={props.id} value={age} onChange={handleChange}>
                     <MenuItem value={10}>10</MenuItem>
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={30}>30</MenuItem>
@@ -53,3 +49,5 @@ export default function SimpleSelect(props) {
         </div>
     );
 }
+
+export default withStyles(styles)(SimpleSelect);

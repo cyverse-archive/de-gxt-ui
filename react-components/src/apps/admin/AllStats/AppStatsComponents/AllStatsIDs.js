@@ -1,0 +1,22 @@
+export default {
+    MAIN_PAGE: "belphegor-page",
+    START_DATE: "belphegor-page.date-picker-start",
+    END_DATE: "belphegor-page.date-picker-end",
+    APPLY_FILTER: "belphegor-page.apply-filter",
+    APPS_TAB_SELECT: "belphegor-page.nav-tab.apps-tab.apps-tab-select",
+    APPS_TAB_SELECT_BOX:
+        "belphegor-page.nav-tab.apps-tab.apps-tab-select.simple-select",
+    NAV_TAB: "belphegor-page.nav-tab",
+    APPS_TAB: "belphegor-page.nav-tab.apps-tab",
+    APPS_TABLE_PAPER: "belphegor-page.nav-tab.apps-tab.paper",
+    APPS_TABLE_HEAD: "belphegor-page.nav-tab.apps-tab.paper.head",
+    APPS_TABLE: "belphegor-page.nav-tab.apps-tab.paper.table",
+    JOBS_TAB: "belphegor-page.nav-tab.jobs-tab",
+    USERS_TAB: "belphegor-page.nav-tab.users-tab",
+    USERS_TABLE_PAPER: "belphegor-page.nav-tab.users-tab.paper",
+    USERS_TABLE: "belphegor-page.nav-tab.users-tab.paper.table",
+    USERS_TABLE_HEAD: "belphegor-page.nav-tab.users-tab.paper.head",
+    JOBS_TABLE_HEAD: "belphegor-page.nav-tab.jobs-tab.paper.head",
+    JOBS_TABLE: "belphegor-page.nav-tab.jobs-tab.paper.table",
+    JOBS_TABLE_PAPER: "belphegor-page.nav-tab.jobs-tab.table.paper",
+};

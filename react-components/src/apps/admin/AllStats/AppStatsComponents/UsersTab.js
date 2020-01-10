@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import usersTableData from "./dataFiles/usersData";
+import ids from "./AllStatsIDs";
 
 const useStyles = makeStyles({
     root: {
@@ -30,15 +31,15 @@ const rows = usersTableData[0].users.map((data) =>
 
 export default function UsersTab() {
     return (
-        <Paper className="usersTablePaper">
+        <Paper className="usersTablePaper" id={ids.USERS_TABLE_PAPER}>
             <Table className="usersTable" aria-label="simple table">
-                <TableHead>
+                <TableHead id={ids.USERS_TABLE_HEAD}>
                     <TableRow>
                         <TableCell> User Name </TableCell>
                         <TableCell align="center">Count</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody id={ids.USERS_TABLE}>
                     {rows.map((row) => (
                         <TableRow key={row.userName}>
                             <TableCell>{row.userName}</TableCell>
