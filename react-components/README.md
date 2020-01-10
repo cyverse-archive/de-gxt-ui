@@ -107,7 +107,7 @@ import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 function MyComponent(props) {
   return (
     <span>{getMessage("header")}</span>
-    <span>{getMessage("namedHeader", values: {name: props.name})}</span>
+    <span>{getMessage("namedHeader", { values: {name: props.name} })}</span>
     )
 }
 
