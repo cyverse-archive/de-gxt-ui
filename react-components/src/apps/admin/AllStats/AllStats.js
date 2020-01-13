@@ -4,7 +4,7 @@ import "./AppStatsComponents/button";
 import ColorButton from "./AppStatsComponents/button";
 import NavBarTabs from "./AppStatsComponents/NavBarTabs";
 import ids from "./AppStatsComponents/AllStatsIDs";
-import { makeStyles, withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import styles from "./AllStatsStyle.js";
 import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./AppStatsComponents/messages.js";
@@ -12,7 +12,7 @@ import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 class AllStats extends Component {
     render() {
-        const { classes, intl } = this.props;
+        const { classes } = this.props;
 
         return (
             <div id={ids.MAIN_PAGE}>

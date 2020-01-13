@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function NumberTextfield() {
+function NumberTextfield() {
     const classes = useStyles();
 
     return (
@@ -33,3 +33,5 @@ export default function NumberTextfield() {
         </div>
     );
 }
+
+export default NumberTextfield;

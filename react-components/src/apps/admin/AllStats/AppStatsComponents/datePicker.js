@@ -1,14 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { formatDateObject } from "@cyverse-de/ui-lib/src/util/DateFormatter";
-import { makeStyles, withStyles } from "@material-ui/core";
-import styles from "../AllStatsStyle";
-
-//const useStyles = makeStyles(styles());
 
 function DatePicker(props) {
     const [selectedDate, setSelectedDate] = React.useState(new Date());

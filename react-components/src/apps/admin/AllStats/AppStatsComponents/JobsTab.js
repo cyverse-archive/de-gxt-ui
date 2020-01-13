@@ -14,9 +14,7 @@ import { injectIntl } from "react-intl";
 import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function JobsTab(props) {
-    const duration = "24hrs";
     const rows = jobsTableData.jobs;
-
     return (
         <Paper
             className="jobsTablePaper"
@@ -59,7 +57,6 @@ function JobsTab(props) {
                                     values: {
                                         category: row.Category,
                                         jobStatus: row.Status,
-                                        duration: duration,
                                     },
                                 })}
                             </TableCell>
@@ -69,8 +66,7 @@ function JobsTab(props) {
                     <TableRow>
                         <TableCell>
                             {" "}
-                            {formatMessage(props.intl, "distinctLogins") +
-                                duration}{" "}
+                            {formatMessage(props.intl, "distinctLogins")}
                         </TableCell>
                         <TableCell align="center">
                             {distinctLoginData.count}
@@ -79,8 +75,7 @@ function JobsTab(props) {
                     <TableRow>
                         <TableCell>
                             {" "}
-                            {formatMessage(props.intl, "totalLogins") +
-                                duration}{" "}
+                            {formatMessage(props.intl, "totalLogins")}
                         </TableCell>
                         <TableCell align="center">
                             {distinctLoginData.distinct}

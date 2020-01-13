@@ -6,13 +6,11 @@ import styles from "../AllStatsStyle";
 import { withStyles } from "@material-ui/core";
 import ids from "./AllStatsIDs";
 import messages from "./messages";
-import { injectIntl } from "react-intl";
-import { withI18N, getMessage, formatMessage } from "@cyverse-de/ui-lib";
+import { withI18N, getMessage } from "@cyverse-de/ui-lib";
 import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function AppTab(props) {
-    const { classes, intl } = props;
-    const duration = "24 hours";
+    const { classes } = props;
     return (
         <div id={props.id}>
             <div
@@ -21,11 +19,7 @@ function AppTab(props) {
             >
                 <div>
                     <Box className={classes.appSelectText}>
-                        {getMessage("topApps", {
-                            values: {
-                                duration: duration,
-                            },
-                        })}
+                        {getMessage("topApps")}
                     </Box>
                 </div>
                 <NumberTextfield />
@@ -35,4 +29,4 @@ function AppTab(props) {
     );
 }
 
-export default withStyles(styles)(AppTab);
+export default withI18N(withStyles(styles)(AppTab), messages);
