@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,40 +8,60 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import appsTableData from "./dataFiles/appsData";
 import ids from "./AllStatsIDs";
-
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-        overflowX: "auto",
-    },
-    table: {
-        minWidth: 50,
-    },
-});
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import styles from "../AllStatsStyle";
+import myMessagesFile from "./messages";
+import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function createData(appName, appID, appCount) {
     return { appName, appID, appCount };
 }
 
 const duration = "24hrs";
-const rows = appsTableData[0].apps.map((data) =>
-    createData(data.appName, data.appID, data.appCount)
-);
+const rows = appsTableData.apps;
 
-export default function AppsTab() {
+function AppsTab() {
     return (
-        <Paper className="appsTablePaper" id={ids.APPS_TABLE_PAPER}>
+        <Paper
+            className="appsTablePaper"
+            id={build(
+                ids.MAIN_PAGE,
+                ids.NAV_TAB,
+                ids.APPS_TAB,
+                ids.TABLE,
+                ids.PAPER
+            )}
+        >
             <Table className="appsTable" aria-label="simple table">
-                <TableHead id={ids.APPS_TABLE_HEAD}>
+                <TableHead
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.APPS_TAB,
+                        ids.PAPER,
+                        ids.HEADER
+                    )}
+                >
                     <TableRow>
-                        <TableCell> App Name </TableCell>
-                        <TableCell> App ID </TableCell>
-                        <TableCell align="center">App Count</TableCell>
+                        <TableCell> {getMessage("appName")} </TableCell>
+                        <TableCell> {getMessage("appID")} </TableCell>
+                        <TableCell align="center">
+                            {" "}
+                            {getMessage("appCount")}{" "}
+                        </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody id={ids.JOBS_TABLE}>
+                <TableBody
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.JOBS_TAB,
+                        ids.PAPER,
+                        ids.TABLE
+                    )}
+                >
                     {rows.map((row) => (
-                        <TableRow key={row.appName}>
+                        <TableRow>
                             <TableCell>{row.appName}</TableCell>
                             <TableCell>{row.appID}</TableCell>
                             <TableCell align="center">{row.appCount}</TableCell>
@@ -52,3 +72,5 @@ export default function AppsTab() {
         </Paper>
     );
 }
+
+export default withI18N(AppsTab, myMessagesFile);

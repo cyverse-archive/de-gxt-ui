@@ -4,6 +4,7 @@ import SimpleSelect from "./SimpleSelect";
 import { withStyles } from "@material-ui/core";
 import styles from "../AllStatsStyle.js";
 import ids from "./AllStatsIDs";
+import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function AppCount(props) {
     const { classes } = this.props;
@@ -17,7 +18,13 @@ function AppCount(props) {
             </div>
             <div className={classes.appCountSelect}>
                 <SimpleSelect
-                    id={ids.APPS_TAB_SELECT_BOX}
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.APPS_TAB,
+                        ids.HEADER,
+                        ids.SIMPLE_SELECT
+                    )}
                     className={classes.appCountSelect}
                 />
             </div>

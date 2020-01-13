@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,68 +6,90 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import jobsTableData from "./dataFiles/jobsData";
-import loginData from "./dataFiles/loginCount";
 import distinctLoginData from "./dataFiles/distinctLoginData";
+import ids from "./AllStatsIDs";
+import { withI18N, getMessage, formatMessage } from "@cyverse-de/ui-lib";
+import messages from "./messages";
+import { injectIntl } from "react-intl";
+import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-        overflowX: "auto",
-    },
-    table: {
-        minWidth: 50,
-    },
-});
+function JobsTab(props) {
+    const duration = "24hrs";
+    const rows = jobsTableData.jobs;
 
-function createData(jobType, jobCount) {
-    return { jobType, jobCount };
-}
-
-const duration = "24hrs";
-const dataRows = [];
-
-const rows = jobsTableData[0].jobs.map((subData) =>
-    createData(
-        subData.Category +
-            " Jobs " +
-            subData.Status +
-            " in the past " +
-            duration,
-        subData.Count
-    )
-);
-rows.push(
-    createData(
-        "Number of Distinct Logins in the DE in the last " + duration,
-        distinctLoginData[0].count
-    )
-);
-rows.push(
-    createData(
-        "Total Number of Logins in the last " + duration,
-        loginData[0].count
-    )
-);
-
-export default function JobsTable() {
     return (
-        <Paper className="jobsTablePaper">
+        <Paper
+            className="jobsTablePaper"
+            id={build(
+                ids.MAIN_PAGE,
+                ids.NAV_TAB,
+                ids.JOBS_TAB,
+                ids.TABLE,
+                ids.PAPER
+            )}
+        >
             <Table className="jobsTable" aria-label="simple table">
                 <TableHead>
-                    <TableRow>
-                        <TableCell> Job Type</TableCell>
+                    <TableRow
+                        id={build(
+                            ids.MAIN_PAGE,
+                            ids.NAV_TAB,
+                            ids.JOBS_TAB,
+                            ids.PAPER,
+                            ids.HEADER
+                        )}
+                    >
+                        <TableCell> Job Type </TableCell>
                         <TableCell align="center">Job Count</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.JOBS_TAB,
+                        ids.PAPER,
+                        ids.TABLE
+                    )}
+                >
                     {rows.map((row) => (
-                        <TableRow key={row.jobType}>
-                            <TableCell>{row.jobType}</TableCell>
-                            <TableCell align="center">{row.jobCount}</TableCell>
+                        <TableRow>
+                            <TableCell>
+                                {getMessage("jobsData", {
+                                    values: {
+                                        category: row.Category,
+                                        jobStatus: row.Status,
+                                        duration: duration,
+                                    },
+                                })}
+                            </TableCell>
+                            <TableCell align="center">{row.Count}</TableCell>
                         </TableRow>
                     ))}
+                    <TableRow>
+                        <TableCell>
+                            {" "}
+                            {formatMessage(props.intl, "distinctLogins") +
+                                duration}{" "}
+                        </TableCell>
+                        <TableCell align="center">
+                            {distinctLoginData.count}
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>
+                            {" "}
+                            {formatMessage(props.intl, "totalLogins") +
+                                duration}{" "}
+                        </TableCell>
+                        <TableCell align="center">
+                            {distinctLoginData.distinct}
+                        </TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
         </Paper>
     );
 }
+
+export default withI18N(injectIntl(JobsTab), messages);

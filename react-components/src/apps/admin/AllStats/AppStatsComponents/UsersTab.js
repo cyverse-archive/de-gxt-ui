@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,44 +8,55 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import usersTableData from "./dataFiles/usersData";
 import ids from "./AllStatsIDs";
+import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import myMessagesFile from "./messages";
+import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-        overflowX: "auto",
-    },
-    table: {
-        minWidth: 50,
-    },
-});
+const rows = usersTableData.users;
 
-function createData(userName, userCount) {
-    return { userName, userCount };
-}
-
-const duration = "24hrs";
-
-const rows = usersTableData[0].users.map((data) =>
-    createData(data.username, data.count)
-);
-
-export default function UsersTab() {
+function UsersTab() {
     return (
-        <Paper className="usersTablePaper" id={ids.USERS_TABLE_PAPER}>
+        <Paper
+            className="usersTablePaper"
+            id={build(
+                ids.MAIN_PAGE,
+                ids.NAV_TAB,
+                ids.USERS_TAB,
+                ids.TABLE,
+                ids.PAPER
+            )}
+        >
             <Table className="usersTable" aria-label="simple table">
-                <TableHead id={ids.USERS_TABLE_HEAD}>
+                <TableHead
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.USERS_TAB,
+                        ids.PAPER,
+                        ids.HEADER
+                    )}
+                >
                     <TableRow>
-                        <TableCell> User Name </TableCell>
-                        <TableCell align="center">Count</TableCell>
+                        <TableCell> {getMessage("userName")} </TableCell>
+                        <TableCell align="center">
+                            {" "}
+                            {getMessage("count")}{" "}
+                        </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody id={ids.USERS_TABLE}>
+                <TableBody
+                    id={build(
+                        ids.MAIN_PAGE,
+                        ids.NAV_TAB,
+                        ids.APPS_TAB,
+                        ids.PAPER,
+                        ids.TABLE
+                    )}
+                >
                     {rows.map((row) => (
-                        <TableRow key={row.userName}>
-                            <TableCell>{row.userName}</TableCell>
-                            <TableCell align="center">
-                                {row.userCount}
-                            </TableCell>
+                        <TableRow>
+                            <TableCell>{row.username}</TableCell>
+                            <TableCell align="center">{row.count}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -53,3 +64,5 @@ export default function UsersTab() {
         </Paper>
     );
 }
+
+export default withI18N(UsersTab, myMessagesFile);

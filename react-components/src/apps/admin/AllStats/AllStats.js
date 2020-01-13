@@ -8,6 +8,7 @@ import { makeStyles, withStyles } from "@material-ui/core";
 import styles from "./AllStatsStyle.js";
 import { getMessage, withI18N } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./AppStatsComponents/messages.js";
+import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 class AllStats extends Component {
     render() {
@@ -19,24 +20,24 @@ class AllStats extends Component {
                     <div className={classes.datePickers}>
                         <DatePicker
                             label={getMessage("startDate")}
-                            id={ids.START_DATE}
+                            id={build(ids.MAIN_PAGE, ids.START_DATE)}
                             className={classes.datePicker}
                         />
                         <DatePicker
                             label={getMessage("endDate")}
-                            ids={ids.END_DATE}
+                            id={build(ids.MAIN_PAGE, ids.END_DATE)}
                             className={classes.datePicker}
                         />
                         <ColorButton
                             variant="contained"
                             color="primary"
                             className={classes.applyFilterBtn}
-                            id={ids.APPLY_FILTER}
+                            id={build(ids.MAIN_PAGE, ids.APPLY_FILTER)}
                         >
                             {getMessage("applyFilter")}
                         </ColorButton>
                     </div>
-                    <NavBarTabs id={ids.NAV_TAB} />
+                    <NavBarTabs id={build(ids.MAIN_PAGE, ids.NAV_TAB)} />
                 </header>
             </div>
         );

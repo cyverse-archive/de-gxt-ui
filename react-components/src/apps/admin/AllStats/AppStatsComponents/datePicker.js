@@ -25,7 +25,7 @@ function DatePicker(props) {
                     disableToolbar
                     variant="inline"
                     format="MM/dd/yyyy"
-                    id="date-picker-inline"
+                    id={props.id}
                     label={props.label}
                     value={selectedDate}
                     onChange={handleDateChange}
