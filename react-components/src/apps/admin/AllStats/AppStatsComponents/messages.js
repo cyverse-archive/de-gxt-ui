@@ -9,15 +9,16 @@ const intlData = {
         users: "Users",
         jobs: "Jobs",
         jobsData: "{category} Jobs {jobStatus}",
-        distinctLogins:
-            "Number of Distinct Logins in the DE in the given time ",
-        totalLogins: "Total Number of Logins in the given time ",
+        distinctLogins: "Number of Distinct Logins in the DE",
+        totalLogins: "Total Number of Logins in the DE",
         topApps: "Number of Apps to Display: ",
         appName: "App Name",
         appCount: "App Count",
         appID: "App ID",
         userName: "User Name",
         count: "Count",
+        jobType: "Job Type",
+        jobCount: "Job Count",
     },
 };
 

@@ -37,8 +37,10 @@ function JobsTab(props) {
                             ids.HEADER
                         )}
                     >
-                        <TableCell> Job Type </TableCell>
-                        <TableCell align="center">Job Count</TableCell>
+                        <TableCell> {getMessage("jobType")} </TableCell>
+                        <TableCell align="center">
+                            {getMessage("jobCount")}
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody
@@ -65,7 +67,6 @@ function JobsTab(props) {
                     ))}
                     <TableRow>
                         <TableCell>
-                            {" "}
                             {formatMessage(props.intl, "distinctLogins")}
                         </TableCell>
                         <TableCell align="center">
@@ -74,7 +75,6 @@ function JobsTab(props) {
                     </TableRow>
                     <TableRow>
                         <TableCell>
-                            {" "}
                             {formatMessage(props.intl, "totalLogins")}
                         </TableCell>
                         <TableCell align="center">

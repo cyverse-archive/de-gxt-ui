@@ -38,8 +38,7 @@ function UsersTab() {
                     <TableRow>
                         <TableCell> {getMessage("userName")} </TableCell>
                         <TableCell align="center">
-                            {" "}
-                            {getMessage("count")}{" "}
+                            {getMessage("count")}
                         </TableCell>
                     </TableRow>
                 </TableHead>

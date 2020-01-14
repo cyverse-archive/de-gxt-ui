@@ -39,8 +39,7 @@ function AppsTab() {
                         <TableCell> {getMessage("appName")} </TableCell>
                         <TableCell> {getMessage("appID")} </TableCell>
                         <TableCell align="center">
-                            {" "}
-                            {getMessage("appCount")}{" "}
+                            {getMessage("appCount")}
                         </TableCell>
                     </TableRow>
                 </TableHead>
