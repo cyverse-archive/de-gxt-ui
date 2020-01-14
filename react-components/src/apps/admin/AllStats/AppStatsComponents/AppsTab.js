@@ -1,3 +1,8 @@
+/**
+ * This function contains the AppsTableHeader and the NumberSelect box.
+ * AppsTable contains the actual table which is imported here.
+ */
+
 import React from "react";
 import Box from "@material-ui/core/Box";
 import AppsTable from "./AppsTable";

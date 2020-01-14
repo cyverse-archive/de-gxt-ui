@@ -1,3 +1,8 @@
+/**
+ * This function is imported in AppsTab.js
+ * It contains the components to create the AppsTable
+ */
+
 import React from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";

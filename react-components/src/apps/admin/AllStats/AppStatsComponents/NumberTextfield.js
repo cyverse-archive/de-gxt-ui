@@ -1,3 +1,7 @@
+/**
+ * Used under the Apps Tab to change the number of apps to display in case the number of apps is too high.
+ */
+
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";

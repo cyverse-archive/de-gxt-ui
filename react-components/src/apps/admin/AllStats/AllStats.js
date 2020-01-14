@@ -1,3 +1,13 @@
+/**
+ * @author Flynn
+ *
+ * Description: This file is importing all the necessary files & everything is being rendered here.
+ * Files: All the "Tab" files are imported in NavBarTabs under the TabPanels.
+ *        All the "Table" files are imported under their respective "Tab" files.
+ *        The data files for storybook are stored in the dataFiles folder
+ *        All the components used in AllStats.js are stored in the AppsStatsComponents folder
+ */
+
 import React, { Component } from "react";
 import DatePicker from "./AppStatsComponents/datePicker.js";
 import "./AppStatsComponents/button";

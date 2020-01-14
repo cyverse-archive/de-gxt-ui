@@ -1,3 +1,7 @@
+/**
+ * Imported in AllStats.js. This function imports the files for all the tabs that are present under TabPanels
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
