@@ -35,12 +35,13 @@ public class SubjectListCallbackConverter extends AsyncCallbackConverter<String,
 
     /**
      * Filter the results so that the user never sees the "default" collaborator list in their search results
+     * or any communities
      * @param result
      * @return
      */
     List<Subject> getFilteredResults(List<Subject> result) {
         return result.stream()
-                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()))
+                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()) && !subject.isCommunity())
                      .collect(Collectors.toList());
     }
 }
