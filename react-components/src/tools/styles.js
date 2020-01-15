@@ -41,6 +41,12 @@ const styles = (theme) => ({
     tablePagination: {
         height: "40",
     },
+
+    deleteBtn: {
+        "&:hover": {
+            backgroundColor: theme.palette.error.main,
+        },
+    },
 });
 
 export default styles;

@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 
 import ids from "./ids";
 import messages from "./messages";
-import TeamIcon from "./TeamIcon";
-import CollaboratorListIcon from "./CollaboratorListIcon";
 import DeleteBtn from "../data/search/queryBuilder/DeleteBtn";
 
 import {
@@ -18,6 +16,7 @@ import {
 } from "@cyverse-de/ui-lib";
 
 import { Table, TableBody, TableCell } from "@material-ui/core";
+import SubjectNameCell from "./SubjectNameCell";
 
 /**
  * @author aramsey
@@ -136,15 +135,12 @@ class CollaboratorListing extends Component {
                                             </TableCell>
                                         )}
                                         <TableCell>
-                                            {collaboratorsUtil.isTeam(
-                                                subject
-                                            ) && <TeamIcon />}
-                                            {collaboratorsUtil.isCollaboratorList(
-                                                subject
-                                            ) && <CollaboratorListIcon />}
-                                            {collaboratorsUtil.getSubjectDisplayName(
-                                                subject
-                                            )}
+                                            <SubjectNameCell
+                                                collaboratorsUtil={
+                                                    collaboratorsUtil
+                                                }
+                                                subject={subject}
+                                            />
                                         </TableCell>
                                         <TableCell>
                                             {subject.institution

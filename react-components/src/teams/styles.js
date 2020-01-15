@@ -11,6 +11,21 @@ const styles = (theme) => ({
         },
     },
 
+    dialogToolbar: {
+        marginBottom: theme.spacing(2),
+    },
+
+    deleteBtn: {
+        backgroundColor: theme.palette.error.main,
+        "&:hover": {
+            backgroundColor: theme.palette.error.dark,
+        },
+    },
+
+    grow: {
+        flexGrow: 1,
+    },
+
     teamFilter: {
         width: theme.spacing(20),
     },
@@ -21,6 +36,21 @@ const styles = (theme) => ({
             theme.mixins.toolbar["@media (min-width:600px)"].minHeight +
             "px)",
         overflow: "auto",
+    },
+
+    requestMessage: {
+        marginTop: theme.spacing(3),
+    },
+
+    subjectSearch: {
+        display: "inline-block",
+        width: "100%",
+        marginTop: theme.spacing(5),
+        marginBottom: theme.spacing(2),
+    },
+
+    paper: {
+        padding: theme.spacing(3, 2),
     },
 });
 

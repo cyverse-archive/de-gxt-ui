@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.List;
 
@@ -68,13 +69,10 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
     public void addMemberWithPrivilege(String privilegeType,
                                        ReactSuccessCallback callback,
                                        ReactErrorCallback errorCallback) {
-        Group team = factory.getGroup().as();
-        team.setName(payloadTeam.getTeamName());
 
-        Subject member = factory.getSubject().as();
-        member.setId(payloadTeam.getRequesterId());
+        String teamName = payloadTeam.getTeamName();
 
-        serviceFacade.addMembersToTeam(team, wrapSubjectInList(member), new AsyncCallback<List<UpdateMemberResult>>() {
+        serviceFacade.addMembersToTeam(teamName, Lists.newArrayList(payloadTeam.getRequesterId()), new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -86,7 +84,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
                 if (result != null && !result.isEmpty() && result.get(0).isSuccess()) {
-                    addPrivilege(team,
+                    addPrivilege(teamName,
                                  PrivilegeType.fromTypeString(privilegeType),
                                  callback,
                                  errorCallback);
@@ -97,13 +95,13 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         });
     }
 
-    void addPrivilege(Group team,
+    void addPrivilege(String teamName,
                       PrivilegeType privilegeType,
                       ReactSuccessCallback callback,
                       ReactErrorCallback errorCallback) {
-        UpdatePrivilegeRequestList requestList = getUpdatePrivilegeRequestList(privilegeType);
+        Splittable requestList = getUpdatePrivilegeRequestList(privilegeType);
 
-        serviceFacade.updateTeamPrivileges(team, requestList, new AsyncCallback<List<Privilege>>() {
+        serviceFacade.updateTeamPrivileges(teamName, requestList, new AsyncCallback<Splittable>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -113,7 +111,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
             }
 
             @Override
-            public void onSuccess(List<Privilege> result) {
+            public void onSuccess(Splittable result) {
                 if (callback != null) {
                     callback.onSuccess(null);
                 }
@@ -122,24 +120,30 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         });
     }
 
-    UpdatePrivilegeRequestList getUpdatePrivilegeRequestList(PrivilegeType privilegeType) {
-        UpdatePrivilegeRequestList requestList = factory.getUpdatePrivilegeRequestList().as();
+    /**
+     * See {@link UpdatePrivilegeRequestList} for JSON structure
+     * @param privilegeType
+     * @return
+     */
+    Splittable getUpdatePrivilegeRequestList(PrivilegeType privilegeType) {
+        Splittable updates = StringQuoter.createSplittable();
+        Splittable request = StringQuoter.createSplittable();
+        Splittable requestList = StringQuoter.createIndexed();
+        Splittable subjectId = StringQuoter.create(payloadTeam.getRequesterId());
+        subjectId.assign(request, "subject_id");
 
-        UpdatePrivilegeRequest request = factory.getUpdatePrivilegeRequest().as();
-        request.setSubjectId(payloadTeam.getRequesterId());
-
-        List<PrivilegeType> privileges = Lists.newArrayList();
+        Splittable privileges = StringQuoter.createIndexed();
         if (privilegeType.equals(PrivilegeType.readOptin)) {
-            privileges.add(PrivilegeType.read);
-            privileges.add(PrivilegeType.optin);
+            StringQuoter.create(PrivilegeType.read.toString()).assign(privileges, 0);
+            StringQuoter.create(PrivilegeType.optin.toString()).assign(privileges, 1);
         } else {
-            privileges.add(privilegeType);
+            StringQuoter.create(privilegeType.toString()).assign(privileges, 0);
         }
 
-        request.setPrivileges(privileges);
-
-        requestList.setRequests(Lists.newArrayList(request));
-        return requestList;
+        privileges.assign(request, "privileges");
+        request.assign(requestList, 0);
+        requestList.assign(updates, "updates");
+        return updates;
     }
 
     @Override

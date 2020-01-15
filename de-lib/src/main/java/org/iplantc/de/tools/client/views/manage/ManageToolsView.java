@@ -108,8 +108,10 @@ public interface ManageToolsView extends IsWidget {
                             ReactErrorCallback errorCallback);
     }
 
+    @JsIgnore
     Splittable getCurrentToolList();
 
+    @JsIgnore
     void loadTools(Splittable tools);
 
     void mask();

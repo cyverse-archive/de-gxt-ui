@@ -44,6 +44,8 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
 import TeamsTest from "./teams/Teams.stories";
+import EditTeamTest from "./teams/EditTeam.stories";
+import SendJoinTeamRequestTest from "./teams/SendJoinTeamRequest.stories";
 
 import EditToolTest from "./tools/EditTool.stories";
 import ManageToolsTest from "./tools/ManageTools.stories";
@@ -245,6 +247,12 @@ storiesOf("notifications/view/dialogs", module).add(
 
 storiesOf("teams", module).add("Teams", () => (
     <TeamsTest logger={action("Teams View")} />
+));
+storiesOf("teams", module).add("EditTeam", () => (
+    <EditTeamTest logger={action("Edit Teams Dialog")} />
+));
+storiesOf("teams", module).add("Send Join Team Request", () => (
+    <SendJoinTeamRequestTest logger={action("Send Join Team Request Dialog")} />
 ));
 
 storiesOf("tools", module)

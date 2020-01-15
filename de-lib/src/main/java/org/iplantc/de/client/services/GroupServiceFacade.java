@@ -3,10 +3,7 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.Privilege;
-import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
-import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -52,11 +49,10 @@ public interface GroupServiceFacade {
 
     /**
      * Create a Team
-     * @param team
-     * @param publicPrivileges
+     * @param createTeamRequest
      * @param teamCallback
      */
-    void addTeam(Group team, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> teamCallback);
+    void addTeam(Splittable createTeamRequest, AsyncCallback<Group> teamCallback);
 
     /**
      * Create a Community
@@ -75,10 +71,10 @@ public interface GroupServiceFacade {
 
     /**
      * Delete a Team
-     * @param team
+     * @param teamName
      * @param teamCallback
      */
-    void deleteTeam(Group team, AsyncCallback<Group> teamCallback);
+    void deleteTeam(String teamName, AsyncCallback<Group> teamCallback);
 
     /**
      * Delete a community
@@ -99,7 +95,7 @@ public interface GroupServiceFacade {
      * @param team
      * @param subjectListCallback
      */
-    void getTeamMembers(Group team, AsyncCallback<List<Subject>> subjectListCallback);
+    void getTeamMembers(Group team, AsyncCallback<Splittable> subjectListCallback);
 
     /**
      * Get the list of members who belong to a Community i.e. those who have "favorited" the community
@@ -141,12 +137,12 @@ public interface GroupServiceFacade {
 
     /**
      * Delete members from a Team
-     * @param team
-     * @param member
+     * @param teamName
+     * @param memberIds
      * @param retainPermissions
      * @param updatesCallback
      */
-    void deleteTeamMembers(Group team, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void deleteTeamMembers(String teamName, List<String> memberIds, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Adds  members to the Collaborator List
@@ -157,10 +153,10 @@ public interface GroupServiceFacade {
 
     /**
      * Adds  members to the Team
-     * @param team
-     * @param subjects
+     * @param teamName
+     * @param subjectId
      */
-    void addMembersToTeam(Group team, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void addMembersToTeam(String teamName, List<String> subjectId, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Update the details of a Collaborator List
@@ -173,10 +169,11 @@ public interface GroupServiceFacade {
     /**
      * Update the details of a Team
      * @param originalTeam
-     * @param updatedTeam
+     * @param name
+     * @param description
      * @param teamCallback
      */
-    void updateTeam(String originalTeam, Group updatedTeam, AsyncCallback<Group> teamCallback);
+    void updateTeam(String originalTeam, String name, String description, AsyncCallback<Group> teamCallback);
 
     /**
      * Update the details of a Community
@@ -188,31 +185,25 @@ public interface GroupServiceFacade {
     void updateCommunity(String originalCommunity, Group updatedCommunity, boolean retagApps, AsyncCallback<Group> callback);
     /**
      * Update the privileges on a Team
-     * @param team
+     * @param teamName
      * @param updatePrivilegeRequests
      * @param privilegeListCallback
      */
-    void updateTeamPrivileges(Group team, UpdatePrivilegeRequestList updatePrivilegeRequests, AsyncCallback<List<Privilege>> privilegeListCallback);
+    void updateTeamPrivileges(String teamName, Splittable updatePrivilegeRequests, AsyncCallback<Splittable> privilegeListCallback);
 
     /**
      * Get the list of privileges on a Team
      * @param team
      * @param privilegeListCallback
      */
-    void getTeamPrivileges(Group team, AsyncCallback<List<Privilege>> privilegeListCallback);
+    void getTeamPrivileges(Group team, AsyncCallback<Splittable> privilegeListCallback);
 
     /**
-     * Get the list of privileges on a Community
-     * @param community
-     * @param privilegeListCallback
-     */
-    void getCommunityPrivileges(Group community, AsyncCallback<List<Privilege>> privilegeListCallback);
-    /**
      * With optin privileges, join the team
-     * @param team
+     * @param teamName
      * @param updatesCallback
      */
-    void joinTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void joinTeam(String teamName, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Join or "favorite" a community
@@ -222,11 +213,11 @@ public interface GroupServiceFacade {
     void joinCommunity(String communityName, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
     /**
      * Without optin privileges, request to join the team
-     * @param team
+     * @param teamName
      * @param requestMessage
      * @param voidCallback
      */
-    void requestToJoinTeam(Group team, HasMessage requestMessage, AsyncCallback<Void> voidCallback);
+    void requestToJoinTeam(String teamName, Splittable requestMessage, AsyncCallback<Void> voidCallback);
 
     /**
      * Deny a user's request to join a team
@@ -239,10 +230,10 @@ public interface GroupServiceFacade {
 
     /**
      * Leave the selected Team
-     * @param team
+     * @param teamName
      * @param updatesCallback
      */
-    void leaveTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+    void leaveTeam(String teamName, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Leave the selected Community

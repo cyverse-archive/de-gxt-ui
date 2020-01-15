@@ -22,111 +22,15 @@ public interface TeamsView extends IsWidget {
      */
     interface TeamsViewAppearance {
 
-        String leaveTeam();
-
-        int nameColumnWidth();
-
-        String nameColumnLabel();
-
-        String loadingMask();
-
-        String teamNameLabel();
-
-        String teamDescLabel();
-
-        String membersLabel();
-
-        String detailsGridEmptyText();
-
-        int editTeamWidth();
-
-        int editTeamHeight();
-
-        String editTeamHeading(Group group, boolean isAdmin);
-
-        String nonMembersSectionHeader();
-
-        String membersSectionHeader();
-
-        String nonMembersPrivilegeExplanation();
-
-        ImageResource deleteIcon();
-
-        String removeButtonText();
-
-        String memberOptOutExplanation();
-
-        String privilegeColumnLabel();
-
-        String completeRequiredFieldsError();
-
-        String completeRequiredFieldsHeading();
-
-        int privilegeComboWidth();
-
-        int privilegeColumnWidth();
-
-        String addPublicUser();
-
-        String saveTeamHeader();
-
-        String updatingTeamMsg();
-
-        String updatingPrivilegesMsg();
-
-        String updatingMembershipMsg();
-
-        String teamSuccessfullySaved();
-
-        String miscTeamUpdates();
-
-        String teamSearchFailed();
-
-        String leaveTeamSuccess(Group team);
-
-        String leaveTeamHeader(Group team);
-
-        SafeHtml leaveTeamWarning();
-
-        int leaveTeamWidth();
+        String leaveTeamSuccess(String teamName);
 
         String leaveTeamFail();
 
-        String gridHeight();
+        String deleteTeamSuccess(String teamName);
 
-        String deleteTeam();
+        String joinTeamSuccess(String teamName);
 
-        String requestToJoinTeam();
-
-        int editTeamAdjustedHeight(boolean isAdmin, boolean isMember);
-
-        SafeHtml deleteTeamWarning();
-
-        int deleteTeamWidth();
-
-        String deleteTeamHeader(Group team);
-
-        String deleteTeamSuccess(Group team);
-
-        String joinTeamSuccess(Group team);
-
-        String requestMessageLabel();
-
-        int joinTeamWidth();
-
-        String sendRequestButton();
-
-        String joinTeamHeader(Group team);
-
-        String joinTeamText(Group team);
-
-        String requestToJoinSubmitted(Group team);
-
-        int institutionColumnWidth();
-
-        String institutionColumnLabel();
-
-        String getCreatorNamesFailed();
+        String requestToJoinSubmitted(String teamName);
 
         SafeHtml editTeamHelpText();
 
