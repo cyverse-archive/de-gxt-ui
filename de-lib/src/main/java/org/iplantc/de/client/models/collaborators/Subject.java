@@ -22,7 +22,7 @@ public interface Subject extends HasSettableId, HasName {
     String GROUP_NAME_DELIMITER = ":";
     String LIST_LONG_NAME_REGEX = ".*collaborator-lists:(.+)";
     String TEAM_LONG_NAME_REGEX = ".*teams:.+:(.+)";
-    String COMMUNITY_LONG_NAME_REGEX = ".*communities:.+:(.+)";
+    String COMMUNITY_LONG_NAME_REGEX = ".*communities:(.+)";
 
     @AutoBean.PropertyName("first_name")
     String getFirstName();
