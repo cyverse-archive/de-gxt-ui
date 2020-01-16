@@ -45,6 +45,7 @@ public class AppListViewImpl implements AppsListView {
         props.selectedAppId = null;
         props.viewType = activeView;
         props.loading = true;
+        props.singleSelection = false;
         render();
     }
 
@@ -114,6 +115,12 @@ public class AppListViewImpl implements AppsListView {
     public void setSortInfo(String sortField, String sortDir) {
         props.sortField = sortField;
         props.sortDir = sortDir;
+        render();
+    }
+
+    @Override
+    public void setSingleAppSelection(boolean singleSelection) {
+        props.singleSelection = singleSelection;
         render();
     }
 }

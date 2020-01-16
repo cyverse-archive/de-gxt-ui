@@ -79,6 +79,8 @@ public interface AppsView extends IsWidget,
         boolean isDetailsCollapsed();
 
         void addAppSelectionChangedHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler);
+
+        void setSingleAppSelection(boolean singleAppSelection);
     }
 
     DETabPanel getCategoryTabPanel();

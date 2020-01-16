@@ -193,6 +193,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
+    public void setSingleAppSelection(boolean singleAppSelection) {
+        listView.setSingleAppSelection(singleAppSelection);
+    }
+
+    @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
         filter = AppTypeFilter.ALL.getFilterString();
         listView.setTypeFilter(filter);

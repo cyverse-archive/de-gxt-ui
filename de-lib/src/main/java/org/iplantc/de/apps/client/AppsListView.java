@@ -131,6 +131,8 @@ public interface AppsListView extends IsWidget {
         @SuppressWarnings("unusable-by-js")
         void onAppRatingSelected(final Splittable appSplittable,
                                  int score);
+
+        void setSingleAppSelection(boolean singleAppSelection);
     }
 
     void load(AppsListView.Presenter presenter,
@@ -163,4 +165,5 @@ public interface AppsListView extends IsWidget {
 
     void setSortInfo(String sortField, String sortDir);
 
+    void setSingleAppSelection(boolean singleSelection);
 }

@@ -202,4 +202,9 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     public void addAppSelectionChangedHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler) {
         appsListPresenter.addAppSelectionChangedEventHandler(handler);
     }
+
+    @Override
+    public void setSingleAppSelection(boolean singleAppSelection) {
+        appsListPresenter.setSingleAppSelection(singleAppSelection);
+    }
 }
