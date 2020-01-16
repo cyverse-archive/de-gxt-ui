@@ -377,7 +377,9 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
     @Override
     public void onAddAppClick() {
         App selectedApp = appsPresenter.getSelectedApp();
-        selectAppsCallback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(selectedApp)));
+        if (selectedApp != null) {
+            selectAppsCallback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(selectedApp)));
+        }
         appSelectView.hide();
     }
 
