@@ -346,6 +346,7 @@ public class ManageCommunitiesPresenterImpl implements ManageCommunitiesView.Pre
         appSelectView.addDialogHideHandler(event -> selectAppsCallback.onSuccess(null));
         appSelectView.setPresenter(this);
         appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null, null, false);
+        appsPresenter.setSingleAppSelection(true);
         appsPresenter.addAppSelectionChangedHandler(event -> {
             App selectedApp = appsPresenter.getSelectedApp();
             if (selectedApp != null && App.EXTERNAL_APP.equalsIgnoreCase(selectedApp.getAppType())) {
