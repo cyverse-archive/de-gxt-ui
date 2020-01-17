@@ -13,7 +13,13 @@ import ids from "./ids";
  */
 
 export default function AppListingView(props) {
-    const { viewType, presenter, apps, baseId } = props;
+    const {
+        viewType,
+        presenter,
+        apps,
+        baseId,
+        singleSelection,
+    } = props;
     const [selectedApps, setSelectedApps] = useState([]);
 
     //reset selection when categories /  Hierarchy / search results change
@@ -22,6 +28,12 @@ export default function AppListingView(props) {
     }, [apps]);
 
     const handleAppSelection = (app) => {
+        if (singleSelection) {
+            setSelectedApps([app]);
+            presenter.onAppSelectionChanged([app]);
+            return;
+        }
+
         const selectedIndex = selectedApps.indexOf(app);
         let newSelected = [];
 

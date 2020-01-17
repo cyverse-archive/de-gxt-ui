@@ -159,6 +159,7 @@ public class PipelineViewPresenter implements Presenter,
 
         // TODO Possibly inject with annotation to replace with a different toolbar impl
         appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null, null, false);
+        appsPresenter.setSingleAppSelection(true);
     }
 
 /*    private void initAppsDragHandlers(List<DragSource> sources) {

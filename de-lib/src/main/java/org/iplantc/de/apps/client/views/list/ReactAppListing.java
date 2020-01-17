@@ -33,5 +33,6 @@ public class ReactAppListing {
         public String viewType;
         public boolean loading;
         public String baseId;
+        public boolean singleSelection;
     }
 }
