@@ -11,34 +11,17 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import usersTableData from "./dataFiles/usersData";
 import ids from "./AllStatsIDs";
-import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 const rows = usersTableData.users;
 
-function UsersTab() {
+function UsersTab(props) {
+    const { baseId } = props.id;
     return (
-        <Paper
-            className="usersTablePaper"
-            id={build(
-                ids.MAIN_PAGE,
-                ids.NAV_TAB,
-                ids.USERS_TAB,
-                ids.TABLE,
-                ids.PAPER
-            )}
-        >
-            <Table className="usersTable" aria-label="simple table">
-                <TableHead
-                    id={build(
-                        ids.MAIN_PAGE,
-                        ids.NAV_TAB,
-                        ids.USERS_TAB,
-                        ids.PAPER,
-                        ids.HEADER
-                    )}
-                >
+        <Paper id={build(baseId, ids.PAPER)}>
+            <Table aria-label="simple table">
+                <TableHead id={build(baseId, ids.PAPER, ids.HEADER)}>
                     <TableRow>
                         <TableCell> {getMessage("userName")} </TableCell>
                         <TableCell align="center">
@@ -46,15 +29,7 @@ function UsersTab() {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody
-                    id={build(
-                        ids.MAIN_PAGE,
-                        ids.NAV_TAB,
-                        ids.APPS_TAB,
-                        ids.PAPER,
-                        ids.TABLE
-                    )}
-                >
+                <TableBody id={build(baseId, ids.PAPER, ids.TABLE)}>
                     {rows.map((row) => (
                         <TableRow>
                             <TableCell>{row.username}</TableCell>

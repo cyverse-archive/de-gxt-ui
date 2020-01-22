@@ -10,5 +10,6 @@ export default {
     JOBS_TAB: "jobs-tab",
     USERS_TAB: "users-tab",
     TABLE: "table",
+    TABLE_BODY: "table-body",
     PAPER: "paper",
 };

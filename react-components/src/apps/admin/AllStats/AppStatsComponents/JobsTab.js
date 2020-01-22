@@ -12,50 +12,25 @@ import Paper from "@material-ui/core/Paper";
 import jobsTableData from "./dataFiles/jobsData";
 import distinctLoginData from "./dataFiles/distinctLoginData";
 import ids from "./AllStatsIDs";
-import { withI18N, getMessage, formatMessage } from "@cyverse-de/ui-lib";
+import { withI18N, getMessage, formatMessage, build } from "@cyverse-de/ui-lib";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function JobsTab(props) {
     const rows = jobsTableData.jobs;
+    const { baseId } = props.id;
     return (
-        <Paper
-            className="jobsTablePaper"
-            id={build(
-                ids.MAIN_PAGE,
-                ids.NAV_TAB,
-                ids.JOBS_TAB,
-                ids.TABLE,
-                ids.PAPER
-            )}
-        >
-            <Table className="jobsTable" aria-label="simple table">
-                <TableHead>
-                    <TableRow
-                        id={build(
-                            ids.MAIN_PAGE,
-                            ids.NAV_TAB,
-                            ids.JOBS_TAB,
-                            ids.PAPER,
-                            ids.HEADER
-                        )}
-                    >
+        <Paper id={build(baseId, ids.PAPER)}>
+            <Table aria-label="simple table">
+                <TableHead id={build(baseId, ids.PAPER, ids.HEADER)}>
+                    <TableRow>
                         <TableCell> {getMessage("jobType")} </TableCell>
                         <TableCell align="center">
                             {getMessage("jobCount")}
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody
-                    id={build(
-                        ids.MAIN_PAGE,
-                        ids.NAV_TAB,
-                        ids.JOBS_TAB,
-                        ids.PAPER,
-                        ids.TABLE
-                    )}
-                >
+                <TableBody id={build(baseId, ids.PAPER, ids.TABLE)}>
                     {rows.map((row) => (
                         <TableRow>
                             <TableCell>

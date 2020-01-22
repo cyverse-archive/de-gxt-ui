@@ -11,16 +11,17 @@ import styles from "../AllStatsStyle";
 import { withStyles } from "@material-ui/core";
 import ids from "./AllStatsIDs";
 import messages from "./messages";
-import { withI18N, getMessage } from "@cyverse-de/ui-lib";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
+import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";
 
 function AppTab(props) {
     const { classes } = props;
+    const { baseId } = props.id;
+
     return (
-        <div id={props.id}>
+        <div id={baseId}>
             <div
                 className={classes.appSelectBar}
-                id={build(ids.MAIN_PAGE, ids.NAV_TAB, ids.APPS_TAB, ids.HEADER)}
+                id={build(props.id, ids.HEADER)}
             >
                 <div>
                     <Box className={classes.appSelectText}>
@@ -29,7 +30,7 @@ function AppTab(props) {
                 </div>
                 <NumberTextfield />
             </div>
-            <AppsTable />
+            <AppsTable id={build(props.id, ids.TABLE)} />
         </div>
     );
 }

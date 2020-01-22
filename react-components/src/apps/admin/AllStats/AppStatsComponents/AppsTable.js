@@ -4,42 +4,27 @@
  */
 
 import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from "@material-ui/core";
 import appsTableData from "./dataFiles/appsData";
 import ids from "./AllStatsIDs";
-import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 const rows = appsTableData.apps;
 
-function AppsTab() {
+function AppsTable(props) {
+    const { baseId } = props.id;
     return (
-        <Paper
-            className="appsTablePaper"
-            id={build(
-                ids.MAIN_PAGE,
-                ids.NAV_TAB,
-                ids.APPS_TAB,
-                ids.TABLE,
-                ids.PAPER
-            )}
-        >
+        <Paper className="appsTablePaper" id={build(baseId, ids.PAPER)}>
             <Table className="appsTable" aria-label="simple table">
-                <TableHead
-                    id={build(
-                        ids.MAIN_PAGE,
-                        ids.NAV_TAB,
-                        ids.APPS_TAB,
-                        ids.PAPER,
-                        ids.HEADER
-                    )}
-                >
+                <TableHead id={build(baseId, ids.PAPER, ids.HEADER)}>
                     <TableRow>
                         <TableCell> {getMessage("appName")} </TableCell>
                         <TableCell> {getMessage("appID")} </TableCell>
@@ -48,15 +33,7 @@ function AppsTab() {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody
-                    id={build(
-                        ids.MAIN_PAGE,
-                        ids.NAV_TAB,
-                        ids.JOBS_TAB,
-                        ids.PAPER,
-                        ids.TABLE
-                    )}
-                >
+                <TableBody id={build(baseId, ids.PAPER, ids.TABLE_BODY)}>
                     {rows.map((row) => (
                         <TableRow>
                             <TableCell>{row.appName}</TableCell>
@@ -70,4 +47,4 @@ function AppsTab() {
     );
 }
 
-export default withI18N(AppsTab, myMessagesFile);
+export default withI18N(AppsTable, myMessagesFile);

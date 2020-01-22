@@ -16,9 +16,8 @@ import NavBarTabs from "./AppStatsComponents/NavBarTabs";
 import ids from "./AppStatsComponents/AllStatsIDs";
 import { withStyles } from "@material-ui/core";
 import styles from "./AllStatsStyle.js";
-import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./AppStatsComponents/messages.js";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 class AllStats extends Component {
     render() {

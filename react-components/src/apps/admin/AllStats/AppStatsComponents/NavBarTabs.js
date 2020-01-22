@@ -13,9 +13,8 @@ import JobsTab from "./JobsTab";
 import AppsTab from "./AppsTab";
 import UsersTab from "./UsersTab";
 import ids from "./AllStatsIDs";
-import { getMessage, withI18N } from "@cyverse-de/ui-lib";
+import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages.js";
-import build from "@cyverse-de/ui-lib/src/util/DebugIDUtil";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -94,15 +93,13 @@ function NavTabs(props) {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <JobsTab id={build(ids.MAIN_PAGE, ids.NAV_TAB, ids.JOBS_TAB)} />
+                <JobsTab id={build(props.id, ids.JOBS_TAB)} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <AppsTab id={build(ids.MAIN_PAGE, ids.NAV_TAB, ids.APPS_TAB)} />
+                <AppsTab id={build(props.id, ids.APPS_TAB)} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <UsersTab
-                    id={build(ids.MAIN_PAGE, ids.NAV_TAB, ids.USERS_TAB)}
-                />
+                <UsersTab id={build(props.id, ids.USERS_TAB)} />
             </TabPanel>
         </div>
     );
