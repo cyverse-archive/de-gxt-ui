@@ -4,11 +4,10 @@
  */
 
 import React from "react";
-import Box from "@material-ui/core/Box";
 import AppsTable from "./AppsTable";
 import NumberTextfield from "./NumberTextfield";
 import styles from "../AllStatsStyle";
-import { withStyles } from "@material-ui/core";
+import { withStyles, Box } from "@material-ui/core";
 import ids from "./AllStatsIDs";
 import messages from "./messages";
 import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";

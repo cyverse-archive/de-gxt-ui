@@ -4,11 +4,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import { AppBar, Tabs, Tab, Typography, Box } from "@material-ui/core";
 import JobsTab from "./JobsTab";
 import AppsTab from "./AppsTab";
 import UsersTab from "./UsersTab";

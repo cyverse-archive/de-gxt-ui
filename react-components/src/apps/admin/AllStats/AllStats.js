@@ -10,7 +10,6 @@
 
 import React, { Component } from "react";
 import DatePicker from "./AppStatsComponents/datePicker.js";
-import "./AppStatsComponents/button";
 import ColorButton from "./AppStatsComponents/button";
 import NavBarTabs from "./AppStatsComponents/NavBarTabs";
 import ids from "./AppStatsComponents/AllStatsIDs";

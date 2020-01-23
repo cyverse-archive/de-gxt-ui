@@ -3,12 +3,14 @@
  */
 
 import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Paper,
+} from "@material-ui/core";
 import usersTableData from "./dataFiles/usersData";
 import ids from "./AllStatsIDs";
 import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
