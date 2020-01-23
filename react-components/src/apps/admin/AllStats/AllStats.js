@@ -19,7 +19,7 @@ import myMessagesFile from "./AppStatsComponents/messages.js";
 
 class AllStats extends Component {
     render() {
-        const { classes } = props;
+        const { classes } = this.props;
         let baseId = ids.MAIN_PAGE;
         return (
             <header id={baseId}>

@@ -36,9 +36,9 @@ function AppsTable(props) {
                 <TableBody id={build(baseId, ids.PAPER, ids.TABLE_BODY)}>
                     {rows.map((row) => (
                         <TableRow>
-                            <TableCell>{row.appName}</TableCell>
-                            <TableCell>{row.appID}</TableCell>
-                            <TableCell align="center">{row.appCount}</TableCell>
+                            <TableCell>{row.Name}</TableCell>
+                            <TableCell>{row.ID}</TableCell>
+                            <TableCell align="center">{row.Count}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
