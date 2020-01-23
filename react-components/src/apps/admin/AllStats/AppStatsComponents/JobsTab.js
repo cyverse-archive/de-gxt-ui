@@ -20,7 +20,7 @@ import { injectIntl } from "react-intl";
 
 function JobsTab(props) {
     const rows = jobsTableData.jobs;
-    const { baseId } = props.id;
+    const { baseId } = props;
     return (
         <Paper id={build(baseId, ids.PAPER)}>
             <Table aria-label="simple table">

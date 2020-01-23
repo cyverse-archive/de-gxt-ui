@@ -19,10 +19,10 @@ import myMessagesFile from "./messages";
 const rows = usersTableData.users;
 
 function UsersTab(props) {
-    const { baseId } = props.id;
+    const { baseId } = props;
     return (
         <Paper id={build(baseId, ids.PAPER)}>
-            <Table aria-label="simple table">
+            <Table>
                 <TableHead id={build(baseId, ids.PAPER, ids.HEADER)}>
                     <TableRow>
                         <TableCell> {getMessage("userName")} </TableCell>

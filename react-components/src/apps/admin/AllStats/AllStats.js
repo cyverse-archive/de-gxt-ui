@@ -10,44 +10,41 @@
 
 import React, { Component } from "react";
 import DatePicker from "./AppStatsComponents/datePicker.js";
-import ColorButton from "./AppStatsComponents/button";
 import NavBarTabs from "./AppStatsComponents/NavBarTabs";
 import ids from "./AppStatsComponents/AllStatsIDs";
-import { withStyles } from "@material-ui/core";
+import { withStyles, Button } from "@material-ui/core";
 import styles from "./AllStatsStyle.js";
 import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./AppStatsComponents/messages.js";
 
 class AllStats extends Component {
     render() {
-        const { classes } = this.props;
-
+        const { classes } = props;
+        let baseId = ids.MAIN_PAGE;
         return (
-            <div id={ids.MAIN_PAGE}>
-                <header>
-                    <div className={classes.datePickers}>
-                        <DatePicker
-                            label={getMessage("startDate")}
-                            id={build(ids.MAIN_PAGE, ids.START_DATE)}
-                            className={classes.datePicker}
-                        />
-                        <DatePicker
-                            label={getMessage("endDate")}
-                            id={build(ids.MAIN_PAGE, ids.END_DATE)}
-                            className={classes.datePicker}
-                        />
-                        <ColorButton
-                            variant="contained"
-                            color="primary"
-                            className={classes.applyFilterBtn}
-                            id={build(ids.MAIN_PAGE, ids.APPLY_FILTER)}
-                        >
-                            {getMessage("applyFilter")}
-                        </ColorButton>
-                    </div>
-                    <NavBarTabs id={build(ids.MAIN_PAGE, ids.NAV_TAB)} />
-                </header>
-            </div>
+            <header id={baseId}>
+                <div className={classes.datePickers}>
+                    <DatePicker
+                        label={getMessage("startDate")}
+                        id={build(ids.MAIN_PAGE, ids.START_DATE)}
+                        className={classes.datePicker}
+                    />
+                    <DatePicker
+                        label={getMessage("endDate")}
+                        id={build(ids.MAIN_PAGE, ids.END_DATE)}
+                        className={classes.datePicker}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.applyFilterBtn}
+                        id={build(ids.MAIN_PAGE, ids.APPLY_FILTER)}
+                    >
+                        {getMessage("applyFilter")}
+                    </Button>
+                </div>
+                <NavBarTabs baseId={build(ids.MAIN_PAGE, ids.NAV_TAB)} />
+            </header>
         );
     }
 }

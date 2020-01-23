@@ -39,18 +39,6 @@ const styles = (theme) =>
             backgroundColor: palette.lightGray,
             float: "left",
         },
-
-        appCountSelect: {
-            width: "150px",
-            height: "75px",
-            borderBottom: "solid 8px",
-            borderBottomColor: palette.lightGray,
-            borderLeft: "solid 10px",
-            borderLeftColor: palette.lightGray,
-            backgroundColor: palette.lightGray,
-            borderRight: "solid 100px",
-            float: "left",
-        },
     });
 
 export default styles;

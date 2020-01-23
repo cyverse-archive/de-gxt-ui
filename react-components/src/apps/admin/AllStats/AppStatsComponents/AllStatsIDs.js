@@ -12,4 +12,5 @@ export default {
     TABLE: "table",
     TABLE_BODY: "table-body",
     PAPER: "paper",
+    NUMBER_TEXT: "number-text-field",
 };

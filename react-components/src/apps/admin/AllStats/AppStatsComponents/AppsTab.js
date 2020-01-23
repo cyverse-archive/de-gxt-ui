@@ -13,23 +13,23 @@ import messages from "./messages";
 import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";
 
 function AppTab(props) {
-    const { classes } = props;
-    const { baseId } = props.id;
+    const { classes, id: baseId } = props;
 
     return (
-        <div id={baseId}>
+        <div>
             <div
+                id={baseId}
                 className={classes.appSelectBar}
-                id={build(props.id, ids.HEADER)}
+                id={build(baseId, ids.HEADER)}
             >
                 <div>
                     <Box className={classes.appSelectText}>
                         {getMessage("topApps")}
                     </Box>
                 </div>
-                <NumberTextfield />
+                <NumberTextfield baseId={build(baseId, ids.NUMBER_TEXT)} />
             </div>
-            <AppsTable id={build(props.id, ids.TABLE)} />
+            <AppsTable baseId={build(baseId, ids.TABLE)} />
         </div>
     );
 }

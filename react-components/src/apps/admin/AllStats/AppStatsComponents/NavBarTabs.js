@@ -13,7 +13,7 @@ import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages.js";
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const { children, value, baseId, index, ...other } = props;
 
     return (
         <Typography
@@ -34,25 +34,13 @@ TabPanel.propTypes = {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
-
-function a11yProps(index) {
-    return {
-        id: `nav-tab-${index}`,
-        "aria-controls": `nav-tabpanel-${index}`,
-    };
-}
-
-function LinkTab(props) {
-    return (
-        <Tab
-            component="a"
-            onClick={(event) => {
-                event.preventDefault();
-            }}
-            {...props}
-        />
-    );
-}
+//
+// function a11yProps(index) {
+//     return {
+//         id: `nav-tab-${index}`,
+//         "aria-controls": `nav-tabpanel-${index}`,
+//     };
+// }
 
 function NavTabs(props) {
     const classes = props;
@@ -62,40 +50,39 @@ function NavTabs(props) {
         setValue(newValue);
     };
 
+    function a11yProps(index) {
+        return {
+            id: build(baseId, index),
+        };
+    }
+
+    const { baseId } = props;
     return (
-        <div className={classes.root} id={props.id}>
+        <div className={classes.root} id={baseId}>
             <AppBar position="static">
-                <Tabs
-                    variant="fullWidth"
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="nav tabs example"
-                >
-                    <LinkTab
+                <Tabs variant="fullWidth" value={value} onChange={handleChange}>
+                    <Tab
                         label={getMessage("jobsAndLogins")}
-                        href="/drafts"
-                        {...a11yProps(0)}
+                        {...a11yProps(ids.JOBS_TAB)}
                     />
-                    <LinkTab
+                    <Tab
                         label={getMessage("apps")}
-                        href="/trash"
-                        {...a11yProps(1)}
+                        {...a11yProps(ids.APPS_TAB)}
                     />
-                    <LinkTab
+                    <Tab
                         label={getMessage("users")}
-                        href="/spam"
-                        {...a11yProps(2)}
+                        {...a11yProps(ids.USERS_TAB)}
                     />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <JobsTab id={build(props.id, ids.JOBS_TAB)} />
+                <JobsTab baseId={build(baseId, ids.JOBS_TAB)} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <AppsTab id={build(props.id, ids.APPS_TAB)} />
+                <AppsTab baseId={build(baseId, ids.APPS_TAB)} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <UsersTab id={build(props.id, ids.USERS_TAB)} />
+                <UsersTab baseId={build(baseId, ids.USERS_TAB)} />
             </TabPanel>
         </div>
     );

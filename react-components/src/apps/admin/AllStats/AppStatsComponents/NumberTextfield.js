@@ -5,6 +5,8 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
+import { build } from "@cyverse-de/ui-lib";
+import ids from "./AllStatsIDs";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -18,14 +20,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function NumberTextfield() {
+function NumberTextfield(props) {
     const classes = useStyles();
+    const { baseId } = props;
 
     return (
         <div>
             <form className={classes.container} noValidate autoComplete="off">
                 <TextField
-                    id="filled-number"
+                    id={baseId}
                     label="Number"
                     type="number"
                     className={classes.textField}

@@ -20,10 +20,10 @@ import myMessagesFile from "./messages";
 const rows = appsTableData.apps;
 
 function AppsTable(props) {
-    const { baseId } = props.id;
+    const { baseId } = props;
     return (
-        <Paper className="appsTablePaper" id={build(baseId, ids.PAPER)}>
-            <Table className="appsTable" aria-label="simple table">
+        <Paper id={build(baseId, ids.PAPER)}>
+            <Table>
                 <TableHead id={build(baseId, ids.PAPER, ids.HEADER)}>
                     <TableRow>
                         <TableCell> {getMessage("appName")} </TableCell>
