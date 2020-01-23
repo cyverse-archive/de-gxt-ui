@@ -25,19 +25,17 @@ function NumberTextfield(props) {
     const { baseId } = props;
 
     return (
-        <div>
-            <form className={classes.container} noValidate autoComplete="off">
-                <TextField
-                    id={baseId}
-                    label="Number"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{ shrink: true }}
-                    margin="normal"
-                    variant="filled"
-                />
-            </form>
-        </div>
+        <form className={classes.container} noValidate autoComplete="off">
+            <TextField
+                id={baseId}
+                label="Number"
+                type="number"
+                className={classes.textField}
+                InputLabelProps={{ shrink: true }}
+                margin="normal"
+                variant="filled"
+            />
+        </form>
     );
 }
 

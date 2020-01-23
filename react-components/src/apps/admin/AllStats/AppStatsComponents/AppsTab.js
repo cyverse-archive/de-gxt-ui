@@ -16,19 +16,17 @@ function AppTab(props) {
     const { classes, id: baseId } = props;
 
     return (
-        <div>
-            <div
-                id={baseId}
-                className={classes.appSelectBar}
-                id={build(baseId, ids.HEADER)}
-            >
-                <div>
-                    <Box className={classes.appSelectText}>
-                        {getMessage("topApps")}
-                    </Box>
-                </div>
-                <NumberTextfield baseId={build(baseId, ids.NUMBER_TEXT)} />
+        <div
+            id={baseId}
+            className={classes.appSelectBar}
+            id={build(baseId, ids.HEADER)}
+        >
+            <div>
+                <Box className={classes.appSelectText}>
+                    {getMessage("topApps")}
+                </Box>
             </div>
+            <NumberTextfield baseId={build(baseId, ids.NUMBER_TEXT)} />
             <AppsTable baseId={build(baseId, ids.TABLE)} />
         </div>
     );
