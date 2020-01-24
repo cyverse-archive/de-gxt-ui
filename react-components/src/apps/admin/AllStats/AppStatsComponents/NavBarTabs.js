@@ -43,7 +43,6 @@ function a11yProps(baseId, index) {
 }
 
 function NavTabs(props) {
-    const classes = props;
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -56,7 +55,7 @@ function NavTabs(props) {
         users = props.users;
 
     return (
-        <div className={classes.root} id={baseId}>
+        <div id={baseId}>
             <AppBar position="static">
                 <Tabs variant="fullWidth" value={value} onChange={handleChange}>
                     <Tab
