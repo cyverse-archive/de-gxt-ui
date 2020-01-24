@@ -34,13 +34,13 @@ TabPanel.propTypes = {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
-//
-// function a11yProps(index) {
-//     return {
-//         id: `nav-tab-${index}`,
-//         "aria-controls": `nav-tabpanel-${index}`,
-//     };
-// }
+
+function a11yProps(baseId, index) {
+    return {
+        id: build(baseId, index),
+        "aria-controls": `nav-tabpanel-${index}`,
+    };
+}
 
 function NavTabs(props) {
     const classes = props;
@@ -50,12 +50,6 @@ function NavTabs(props) {
         setValue(newValue);
     };
 
-    function a11yProps(index) {
-        return {
-            id: build(baseId, index),
-        };
-    }
-
     const { baseId } = props;
     return (
         <div className={classes.root} id={baseId}>
@@ -63,15 +57,15 @@ function NavTabs(props) {
                 <Tabs variant="fullWidth" value={value} onChange={handleChange}>
                     <Tab
                         label={getMessage("jobsAndLogins")}
-                        {...a11yProps(ids.JOBS_TAB)}
+                        {...a11yProps(baseId, ids.JOBS_TAB)}
                     />
                     <Tab
                         label={getMessage("apps")}
-                        {...a11yProps(ids.APPS_TAB)}
+                        {...a11yProps(baseId, ids.APPS_TAB)}
                     />
                     <Tab
                         label={getMessage("users")}
-                        {...a11yProps(ids.USERS_TAB)}
+                        {...a11yProps(baseId, ids.USERS_TAB)}
                     />
                 </Tabs>
             </AppBar>
