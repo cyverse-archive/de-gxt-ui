@@ -20,7 +20,12 @@ import myMessagesFile from "./AppStatsComponents/messages.js";
 class AllStats extends Component {
     render() {
         const { classes } = this.props;
-        let baseId = ids.MAIN_PAGE;
+        let baseId = ids.MAIN_PAGE,
+            apps = this.props.appsData,
+            distinctLoginData = this.props.distinctLoginData,
+            jobs = this.props.jobsData,
+            users = this.props.usersData;
+
         return (
             <header id={baseId}>
                 <div className={classes.datePickers}>
@@ -43,7 +48,13 @@ class AllStats extends Component {
                         {getMessage("applyFilter")}
                     </Button>
                 </div>
-                <NavBarTabs baseId={build(ids.MAIN_PAGE, ids.NAV_TAB)} />
+                <NavBarTabs
+                    apps={apps}
+                    distinctLoginData={distinctLoginData}
+                    jobs={jobs}
+                    users={users}
+                    baseId={build(ids.MAIN_PAGE, ids.NAV_TAB)}
+                />
             </header>
         );
     }

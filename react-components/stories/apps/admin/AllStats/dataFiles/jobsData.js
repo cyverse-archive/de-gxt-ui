@@ -1,4 +1,4 @@
-const jobsTableData = {
+const jobsData = {
     count: 2,
     jobs: [
         {
@@ -64,4 +64,4 @@ const jobsTableData = {
     ],
 };
 
-export default jobsTableData;
+export default jobsData;

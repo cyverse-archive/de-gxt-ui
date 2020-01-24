@@ -49,8 +49,12 @@ function NavTabs(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
     const { baseId } = props;
+    let apps = props.apps,
+        distinctLoginData = props.distinctLoginData,
+        jobs = props.jobs,
+        users = props.users;
+
     return (
         <div className={classes.root} id={baseId}>
             <AppBar position="static">
@@ -70,13 +74,17 @@ function NavTabs(props) {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <JobsTab baseId={build(baseId, ids.JOBS_TAB)} />
+                <JobsTab
+                    distinctLoginData={distinctLoginData}
+                    jobs={jobs}
+                    baseId={build(baseId, ids.JOBS_TAB)}
+                />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <AppsTab baseId={build(baseId, ids.APPS_TAB)} />
+                <AppsTab apps={apps} baseId={build(baseId, ids.APPS_TAB)} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <UsersTab baseId={build(baseId, ids.USERS_TAB)} />
+                <UsersTab users={users} baseId={build(baseId, ids.USERS_TAB)} />
             </TabPanel>
         </div>
     );

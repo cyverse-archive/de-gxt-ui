@@ -11,15 +11,14 @@ import {
     TableRow,
     Paper,
 } from "@material-ui/core";
-import usersTableData from "./dataFiles/usersData";
 import ids from "./AllStatsIDs";
 import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages";
 
-const rows = usersTableData.users;
-
 function UsersTab(props) {
     const { baseId } = props;
+    let rows = props.users;
+
     return (
         <Paper id={build(baseId, ids.PAPER)}>
             <Table>

@@ -14,6 +14,7 @@ import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";
 
 function AppTab(props) {
     const { classes, id: baseId } = props;
+    let apps = props.apps;
 
     return (
         <div
@@ -27,7 +28,7 @@ function AppTab(props) {
                 </Box>
             </div>
             <NumberTextfield baseId={build(baseId, ids.NUMBER_TEXT)} />
-            <AppsTable baseId={build(baseId, ids.TABLE)} />
+            <AppsTable appsData={apps} baseId={build(baseId, ids.TABLE)} />
         </div>
     );
 }

@@ -1,4 +1,4 @@
-const usersTableData = {
+const usersData = {
     count: 5,
     users: [
         {
@@ -36,4 +36,4 @@ const usersTableData = {
     ],
 };
 
-export default usersTableData;
+export default usersData;

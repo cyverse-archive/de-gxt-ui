@@ -11,16 +11,16 @@ import {
     Paper,
     TableHead,
 } from "@material-ui/core";
-import jobsTableData from "./dataFiles/jobsData";
-import distinctLoginData from "./dataFiles/distinctLoginData";
 import ids from "./AllStatsIDs";
 import { withI18N, getMessage, formatMessage, build } from "@cyverse-de/ui-lib";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
 
 function JobsTab(props) {
-    const rows = jobsTableData.jobs;
+    let rows = props.jobs,
+        distinctLoginData = props.distinctLoginData;
     const { baseId } = props;
+
     return (
         <Paper id={build(baseId, ids.PAPER)}>
             <Table aria-label="simple table">

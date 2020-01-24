@@ -12,15 +12,14 @@ import {
     TableHead,
     TableRow,
 } from "@material-ui/core";
-import appsTableData from "./dataFiles/appsData";
 import ids from "./AllStatsIDs";
 import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages";
 
-const rows = appsTableData.apps;
-
 function AppsTable(props) {
     const { baseId } = props;
+    let rows = props.appsData;
+
     return (
         <Paper id={build(baseId, ids.PAPER)}>
             <Table>
