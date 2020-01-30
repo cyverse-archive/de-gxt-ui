@@ -8,15 +8,13 @@ import {
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { formatDateObject } from "@cyverse-de/ui-lib/src/util/DateFormatter";
+import PropTypes from "prop-types";
 
 function DatePicker(props) {
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    const handleDateChange = (date) => {
-        let formattedDate = formatDateObject(date, "YYYY-MM-DD");
-        console.log(formattedDate);
-        setSelectedDate(date);
-    };
+    const id = props.id,
+        label = props.label,
+        value = props.selectedDate,
+        dateChange = props.dateChange;
 
     return (
         <div className={props.className}>
@@ -25,10 +23,10 @@ function DatePicker(props) {
                     disableToolbar
                     variant="inline"
                     format="MM/dd/yyyy"
-                    id={props.id}
-                    label={props.label}
-                    value={selectedDate}
-                    onChange={handleDateChange}
+                    id={id}
+                    label={label}
+                    value={value}
+                    onChange={dateChange}
                     KeyboardButtonProps={{
                         "aria-label": "change date",
                     }}
@@ -37,5 +35,14 @@ function DatePicker(props) {
         </div>
     );
 }
+
+DatePicker.propTypes = {
+    presenter: PropTypes.shape({
+        handleStartDateChange: PropTypes.func.isRequired,
+        handleEndDateChange: PropTypes.func.isRequired,
+    }),
+    selectedStartDate: PropTypes.string.isRequired,
+    selectedEndDate: PropTypes.string.isRequired,
+};
 
 export default DatePicker;

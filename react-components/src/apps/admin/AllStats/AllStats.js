@@ -20,7 +20,11 @@ import myMessagesFile from "./AppStatsComponents/messages.js";
 class AllStats extends Component {
     render() {
         const { classes } = this.props;
-        let baseId = ids.MAIN_PAGE,
+        const baseId = ids.MAIN_PAGE,
+            startDateChange = this.props.presenter.handleStartDateChange,
+            endDateChange = this.props.presenter.handleEndDateChange,
+            selectedStartDate = this.props.selectedStartDate,
+            selectedEndDate = this.props.selectedEndDate,
             apps = this.props.appsData,
             distinctLoginData = this.props.distinctLoginData,
             jobs = this.props.jobsData,
@@ -30,11 +34,15 @@ class AllStats extends Component {
             <header id={baseId}>
                 <div className={classes.datePickers}>
                     <DatePicker
+                        dateChange={startDateChange}
+                        selectedDate={selectedStartDate}
                         label={getMessage("startDate")}
                         id={build(ids.MAIN_PAGE, ids.START_DATE)}
                         className={classes.datePicker}
                     />
                     <DatePicker
+                        dateChange={endDateChange}
+                        selectedDate={selectedEndDate}
                         label={getMessage("endDate")}
                         id={build(ids.MAIN_PAGE, ids.END_DATE)}
                         className={classes.datePicker}
