@@ -22,9 +22,13 @@ public class EditToolViewImpl extends Composite implements EditToolView {
     public EditToolViewImpl(@Assisted ReactToolViews.BaseEditToolProps baseProps,
                             DEProperties deProperties) {
         this.currentProps = baseProps;
-        currentProps.maxCPUCore = deProperties.getToolsMaxCPULimit();
-        currentProps.maxMemory = deProperties.getToolsMaxMemLimit();
-        currentProps.maxDiskSpace = deProperties.getToolsMaxDiskLimit();
+
+        currentProps.maxCPUCore =
+                currentProps.isAdmin ? deProperties.getToolsAdminMaxCPULimit() : deProperties.getToolsMaxCPULimit();
+        currentProps.maxMemory =
+                currentProps.isAdmin ? deProperties.getToolsAdminMaxMemLimit() : deProperties.getToolsMaxMemLimit();
+        currentProps.maxDiskSpace =
+                currentProps.isAdmin ? deProperties.getToolsAdminMaxDiskLimit() : deProperties.getToolsMaxDiskLimit();
 
         panel = new HTMLPanel("<div></div>");
     }
