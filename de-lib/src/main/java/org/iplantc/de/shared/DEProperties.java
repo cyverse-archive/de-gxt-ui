@@ -105,6 +105,13 @@ public class DEProperties {
     private static final String TOOLS_MAX_DISK_LIMIT = "org.iplantc.discoveryenvironment.tools.private.maxDiskLimitValue";
     private static final String TOOLS_MAX_CPU_LIMIT = "org.iplantc.discoveryenvironment.tools.private.maxCPULimitValue";
 
+    /**
+     * Properties keys for the max values for admin {@link org.iplantc.de.client.models.tool.ToolContainer} settings
+     */
+    private static final String TOOLS_ADMIN_MAX_MEM_LIMIT = "org.iplantc.discoveryenvironment.tools.admin.maxMemoryLimitValue";
+    private static final String TOOLS_ADMIN_MAX_DISK_LIMIT = "org.iplantc.discoveryenvironment.tools.admin.maxDiskLimitValue";
+    private static final String TOOLS_ADMIN_MAX_CPU_LIMIT = "org.iplantc.discoveryenvironment.tools.admin.maxCPULimitValue";
+
     private static final Long ONE_GB = (long)(1024 * 1024 * 1024);
     private static final Long DEFAULT_TOOLS_MAX_MEM_LIMIT = 16 * ONE_GB;    //  16GB
     private static final Long DEFAULT_TOOLS_MAX_DISK_LIMIT = 512 * ONE_GB;  // 512GB
@@ -321,6 +328,12 @@ public class DEProperties {
 
     private Double toolsMaxCPULimit;
 
+    private Long toolsAdminMaxMemLimit;
+
+    private Long toolsAdminMaxDiskLimit;
+
+    private Double toolsAdminMaxCPULimit;
+
     /**
      * Force the constructor to be private.
      */
@@ -389,6 +402,9 @@ public class DEProperties {
         keys.add(TOOLS_MAX_MEM_LIMIT);
         keys.add(TOOLS_MAX_DISK_LIMIT);
         keys.add(TOOLS_MAX_CPU_LIMIT);
+        keys.add(TOOLS_ADMIN_MAX_MEM_LIMIT);
+        keys.add(TOOLS_ADMIN_MAX_DISK_LIMIT);
+        keys.add(TOOLS_ADMIN_MAX_CPU_LIMIT);
         return keys;
     }
 
@@ -441,6 +457,9 @@ public class DEProperties {
         toolsMaxMemLimit = getLong(properties, TOOLS_MAX_MEM_LIMIT, DEFAULT_TOOLS_MAX_MEM_LIMIT);
         toolsMaxDiskLimit = getLong(properties, TOOLS_MAX_DISK_LIMIT, DEFAULT_TOOLS_MAX_DISK_LIMIT);
         toolsMaxCPULimit = getDouble(properties, TOOLS_MAX_CPU_LIMIT, DEFAULT_TOOLS_MAX_CPU_LIMIT);
+        toolsAdminMaxMemLimit = getLong(properties, TOOLS_ADMIN_MAX_MEM_LIMIT, DEFAULT_TOOLS_MAX_MEM_LIMIT);
+        toolsAdminMaxDiskLimit = getLong(properties, TOOLS_ADMIN_MAX_DISK_LIMIT, DEFAULT_TOOLS_MAX_DISK_LIMIT);
+        toolsAdminMaxCPULimit = getDouble(properties, TOOLS_ADMIN_MAX_CPU_LIMIT, DEFAULT_TOOLS_MAX_CPU_LIMIT);
     }
 
     /**
@@ -703,5 +722,17 @@ public class DEProperties {
 
     public Double getToolsMaxCPULimit() {
         return toolsMaxCPULimit;
+    }
+
+    public Long getToolsAdminMaxMemLimit() {
+        return toolsAdminMaxMemLimit;
+    }
+
+    public Long getToolsAdminMaxDiskLimit() {
+        return toolsAdminMaxDiskLimit;
+    }
+
+    public Double getToolsAdminMaxCPULimit() {
+        return toolsAdminMaxCPULimit;
     }
 }
