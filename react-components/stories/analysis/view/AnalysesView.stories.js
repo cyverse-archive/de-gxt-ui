@@ -256,8 +256,16 @@ class AnalysesViewTest extends Component {
             onAnalysisNameSelected: () => {
                 console.log("Analysis name selected!");
             },
-            onAnalysisAppSelected: () => {
-                console.log("Analysis app name selected!");
+            onAnalysisRelaunch: (analysisIDs) => {
+                console.log("Analyses Relaunch selected!", analysisIDs);
+            },
+            onAnalysisAppSelected: (id, system_id, app_id) => {
+                console.log(
+                    "Analysis app name selected!",
+                    id,
+                    system_id,
+                    app_id
+                );
             },
             onCancelAnalysisSelected: () => {
                 console.log("Analysis cancel selected!");

@@ -160,10 +160,7 @@ function AppName(props) {
 
     if (!isDisabled) {
         return (
-            <span
-                className={className}
-                onClick={() => handleRelaunch(analysis)}
-            >
+            <span className={className} onClick={handleRelaunch}>
                 {name}
             </span>
         );
@@ -318,7 +315,7 @@ class AnalysesView extends Component {
         this.handleGoToOutputFolder = this.handleGoToOutputFolder.bind(this);
         this.handleViewLogs = this.handleViewLogs.bind(this);
         this.handleViewParams = this.handleViewParams.bind(this);
-        this.handleRelaunch = this.handleRelaunch.bind(this);
+        this.handleRelaunchSingle = this.handleRelaunchSingle.bind(this);
         this.handleRelaunchFromMenu = this.handleRelaunchFromMenu.bind(this);
         this.handleViewInfo = this.handleViewInfo.bind(this);
         this.handleShare = this.handleShare.bind(this);
@@ -742,19 +739,23 @@ class AnalysesView extends Component {
         }
     }
 
-    handleRelaunch(analysis) {
-        let selected = analysis
-            ? analysis
-            : this.findAnalysis(this.state.selected[0]);
-        this.props.presenter.onAnalysisAppSelected(
-            selected.id,
-            selected.system_id,
-            selected.app_id
-        );
+    handleRelaunchSingle(selected) {
+        selected &&
+            this.props.presenter.onAnalysisAppSelected(
+                selected.id,
+                selected.system_id,
+                selected.app_id
+            );
     }
 
     handleRelaunchFromMenu() {
-        this.handleRelaunch(this.findAnalysis(this.state.selected[0]));
+        const { selected } = this.state;
+
+        if (selected && selected.length > 1) {
+            this.props.presenter.onAnalysisRelaunch(selected);
+        } else {
+            this.handleRelaunchSingle(this.findAnalysis(selected[0]));
+        }
     }
 
     handleViewInfo() {
@@ -1196,8 +1197,10 @@ class AnalysesView extends Component {
                                                 >
                                                     <AppName
                                                         analysis={analysis}
-                                                        handleRelaunch={
-                                                            this.handleRelaunch
+                                                        handleRelaunch={() =>
+                                                            this.handleRelaunchSingle(
+                                                                analysis
+                                                            )
                                                         }
                                                         classes={classes}
                                                     />
@@ -1259,8 +1262,10 @@ class AnalysesView extends Component {
                                                             this
                                                                 .handleViewParams
                                                         }
-                                                        handleRelaunch={
-                                                            this.handleRelaunch
+                                                        handleRelaunch={() =>
+                                                            this.handleRelaunchSingle(
+                                                                analysis
+                                                            )
                                                         }
                                                         handleViewInfo={
                                                             this.handleViewInfo

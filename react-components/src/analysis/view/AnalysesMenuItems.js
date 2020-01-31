@@ -94,13 +94,13 @@ class AnalysesMenuItems extends Component {
                 </MenuItem>
                 <MenuItem
                     id={build(baseDebugId, ids.MENUITEM_RELAUNCH)}
-                    disabled={disableSingleSelectionMenuItem}
+                    disabled={noSelection}
                     onClick={() => {
                         handleClose();
                         handleRelaunch();
                     }}
                     className={classes.menuItem}
-                    data-disabled={disableSingleSelectionMenuItem}
+                    data-disabled={noSelection}
                 >
                     <RepeatIcon className={classes.toolbarItemColor} />
                     {getMessage("relaunch")}
