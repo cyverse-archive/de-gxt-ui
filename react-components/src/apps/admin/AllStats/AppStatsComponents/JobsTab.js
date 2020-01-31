@@ -17,9 +17,9 @@ import messages from "./messages";
 import { injectIntl } from "react-intl";
 
 function JobsTab(props) {
-    let rows = props.jobs,
-        distinctLoginData = props.distinctLoginData;
-    const { baseId } = props;
+    const rows = props.jobs,
+        distinctLoginData = props.distinctLoginData,
+        baseId = props.baseId;
 
     return (
         <Paper id={build(baseId, ids.PAPER)}>
@@ -47,17 +47,13 @@ function JobsTab(props) {
                         </TableRow>
                     ))}
                     <TableRow>
-                        <TableCell>
-                            {formatMessage(props.intl, "distinctLogins")}
-                        </TableCell>
+                        <TableCell>{getMessage("distinctLogins")}</TableCell>
                         <TableCell align="center">
                             {distinctLoginData.count}
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>
-                            {formatMessage(props.intl, "totalLogins")}
-                        </TableCell>
+                        <TableCell>{getMessage("totalLogins")}</TableCell>
                         <TableCell align="center">
                             {distinctLoginData.distinct}
                         </TableCell>

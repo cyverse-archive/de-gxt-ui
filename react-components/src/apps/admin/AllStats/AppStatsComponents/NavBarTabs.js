@@ -38,7 +38,7 @@ TabPanel.propTypes = {
 function a11yProps(baseId, index) {
     return {
         id: build(baseId, index),
-        "aria-controls": `nav-tabpanel-${index}`,
+        "aria-controls": build(baseId, index),
     };
 }
 
@@ -48,8 +48,8 @@ function NavTabs(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    const { baseId } = props;
-    let apps = props.apps,
+    const baseId = props.baseId,
+        apps = props.apps,
         distinctLoginData = props.distinctLoginData,
         jobs = props.jobs,
         users = props.users;

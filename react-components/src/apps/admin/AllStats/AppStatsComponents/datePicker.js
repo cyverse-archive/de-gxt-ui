@@ -8,7 +8,6 @@ import {
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import PropTypes from "prop-types";
 
 function DatePicker(props) {
     const id = props.id,
@@ -35,14 +34,5 @@ function DatePicker(props) {
         </div>
     );
 }
-
-DatePicker.propTypes = {
-    presenter: PropTypes.shape({
-        handleStartDateChange: PropTypes.func.isRequired,
-        handleEndDateChange: PropTypes.func.isRequired,
-    }),
-    selectedStartDate: PropTypes.string.isRequired,
-    selectedEndDate: PropTypes.string.isRequired,
-};
 
 export default DatePicker;

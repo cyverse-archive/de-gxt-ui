@@ -13,15 +13,12 @@ import messages from "./messages";
 import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";
 
 function AppTab(props) {
-    const { classes, id: baseId } = props;
-    let apps = props.apps;
+    const classes = props.classes,
+        baseId = props.baseId,
+        apps = props.apps;
 
     return (
-        <div
-            id={baseId}
-            className={classes.appSelectBar}
-            id={build(baseId, ids.HEADER)}
-        >
+        <div className={classes.appSelectBar} id={build(baseId, ids.HEADER)}>
             <div>
                 <Box className={classes.appSelectText}>
                     {getMessage("topApps")}

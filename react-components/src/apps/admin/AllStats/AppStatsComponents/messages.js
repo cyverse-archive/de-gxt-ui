@@ -19,6 +19,7 @@ const intlData = {
         count: "Count",
         jobType: "Job Type",
         jobCount: "Job Count",
+        number: "Number",
     },
 };
 

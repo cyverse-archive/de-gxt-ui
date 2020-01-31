@@ -16,8 +16,8 @@ import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./messages";
 
 function UsersTab(props) {
-    const { baseId } = props;
-    let rows = props.users;
+    const baseId = props.baseId,
+        rows = props.users;
 
     return (
         <Paper id={build(baseId, ids.PAPER)}>

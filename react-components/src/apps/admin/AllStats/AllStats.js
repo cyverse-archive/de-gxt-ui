@@ -4,8 +4,8 @@
  * Description: This file is importing all the necessary files & everything is being rendered here.
  * Files: All the "Tab" files are imported in NavBarTabs under the TabPanels.
  *        All the "Table" files are imported under their respective "Tab" files.
- *        The data files for storybook are stored in the dataFiles folder
  *        All the components used in AllStats.js are stored in the AppsStatsComponents folder
+ *        The example data is rendered using storybook. Refer to AllStats.stories.js for details.
  */
 
 import React, { Component } from "react";
@@ -16,11 +16,12 @@ import { withStyles, Button } from "@material-ui/core";
 import styles from "./AllStatsStyle.js";
 import { getMessage, withI18N, build } from "@cyverse-de/ui-lib";
 import myMessagesFile from "./AppStatsComponents/messages.js";
+import PropTypes from "prop-types";
 
 class AllStats extends Component {
     render() {
-        const { classes } = this.props;
         const baseId = ids.MAIN_PAGE,
+            classes = this.props.classes,
             startDateChange = this.props.presenter.handleStartDateChange,
             endDateChange = this.props.presenter.handleEndDateChange,
             selectedStartDate = this.props.selectedStartDate,
@@ -67,5 +68,14 @@ class AllStats extends Component {
         );
     }
 }
+
+AllStats.propTypes = {
+    presenter: PropTypes.shape({
+        handleStartDateChange: PropTypes.func.isRequired,
+        handleEndDateChange: PropTypes.func.isRequired,
+    }),
+    selectedStartDate: PropTypes.object.isRequired,
+    selectedEndDate: PropTypes.object.isRequired,
+};
 
 export default withI18N(withStyles(styles)(AllStats), myMessagesFile);
