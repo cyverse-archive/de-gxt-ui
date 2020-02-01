@@ -304,6 +304,7 @@ class AnalysesView extends Component {
             viewParamsDialogOpen: false,
             shareWithSupportDialogOpen: false,
             confirmDeleteDialogOpen: false,
+            confirmRelaunchDialogOpen: false,
             logsMessageDialogOpen: false,
             confirmExtendTimeLimitDialogOpen: false,
             currentTimeLimit: "",
@@ -317,6 +318,7 @@ class AnalysesView extends Component {
         this.handleViewParams = this.handleViewParams.bind(this);
         this.handleRelaunchSingle = this.handleRelaunchSingle.bind(this);
         this.handleRelaunchFromMenu = this.handleRelaunchFromMenu.bind(this);
+        this.handleMultiRelaunch = this.handleMultiRelaunch.bind(this);
         this.handleViewInfo = this.handleViewInfo.bind(this);
         this.handleShare = this.handleShare.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -751,11 +753,31 @@ class AnalysesView extends Component {
     handleRelaunchFromMenu() {
         const { selected } = this.state;
 
-        if (selected && selected.length > 1) {
-            this.props.presenter.onAnalysisRelaunch(selected);
-        } else {
-            this.handleRelaunchSingle(this.findAnalysis(selected[0]));
+        if (selected) {
+            if (selected.length > 1) {
+                this.setState({ confirmRelaunchDialogOpen: true });
+            } else {
+                this.handleRelaunchSingle(this.findAnalysis(selected[0]));
+            }
         }
+    }
+
+    handleMultiRelaunch() {
+        this.setState({ loading: true, confirmRelaunchDialogOpen: false });
+
+        this.props.presenter.onAnalysesRelaunch(
+            this.state.selected,
+            () => {
+                this.setState({
+                    loading: false,
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleViewInfo() {
@@ -1043,6 +1065,7 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
             confirmDeleteDialogOpen,
+            confirmRelaunchDialogOpen,
             parameters,
             info,
             infoDialogOpen,
@@ -1431,6 +1454,23 @@ class AnalysesView extends Component {
                     onCancelBtnClick={() => {
                         this.setState({
                             confirmDeleteDialogOpen: false,
+                        });
+                    }}
+                    okLabel={formatMessage(intl, "okBtnText")}
+                    cancelLabel={formatMessage(intl, "cancelBtnText")}
+                />
+                <DEConfirmationDialog
+                    debugId={build(baseId, ids.MENUITEM_RELAUNCH)}
+                    dialogOpen={confirmRelaunchDialogOpen}
+                    message={formatMessage(
+                        intl,
+                        "analysesMultiRelaunchWarning"
+                    )}
+                    heading={formatMessage(intl, "relaunch")}
+                    onOkBtnClick={this.handleMultiRelaunch}
+                    onCancelBtnClick={() => {
+                        this.setState({
+                            confirmRelaunchDialogOpen: false,
                         });
                     }}
                     okLabel={formatMessage(intl, "okBtnText")}

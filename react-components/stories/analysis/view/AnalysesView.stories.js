@@ -256,8 +256,13 @@ class AnalysesViewTest extends Component {
             onAnalysisNameSelected: () => {
                 console.log("Analysis name selected!");
             },
-            onAnalysisRelaunch: (analysisIDs) => {
+            onAnalysesRelaunch: (
+                analysisIDs,
+                successCallback,
+                errorCallback
+            ) => {
                 console.log("Analyses Relaunch selected!", analysisIDs);
+                setTimeout(successCallback, 1000);
             },
             onAnalysisAppSelected: (id, system_id, app_id) => {
                 console.log(
@@ -273,8 +278,9 @@ class AnalysesViewTest extends Component {
             onShareAnalysisSelected: () => {
                 console.log("Analysis sharing selected!");
             },
-            deleteAnalyses: () => {
+            deleteAnalyses: (selected, successCallback, errorCallback) => {
                 console.log("Deleted Analysis selected!");
+                setTimeout(successCallback, 1000);
             },
             onAnalysisJobInfoSelected: () => {
                 console.log("Job info selected!");
