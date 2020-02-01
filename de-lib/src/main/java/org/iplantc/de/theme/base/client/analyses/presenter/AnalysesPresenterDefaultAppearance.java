@@ -66,6 +66,11 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
     }
 
     @Override
+    public String relaunchAnalysesError() {
+        return analysesMessages.relaunchAnalysesError();
+    }
+
+    @Override
     public String stopAnalysisError(String name) {
         return analysesMessages.stopAnalysisError(name);
     }

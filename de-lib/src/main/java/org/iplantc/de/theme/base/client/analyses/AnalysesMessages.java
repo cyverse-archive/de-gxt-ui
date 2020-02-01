@@ -24,6 +24,8 @@ public interface AnalysesMessages extends Messages {
 
     String deleteAnalysisError();
 
+    String relaunchAnalysesError();
+
     String stopAnalysisError(String name);
 
     String analysisStepInfoError();

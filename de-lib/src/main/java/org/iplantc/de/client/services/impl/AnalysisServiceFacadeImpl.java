@@ -216,6 +216,18 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
+    public void analysesRelaunch(String[] analysesToRelaunch, DECallback<String> callback) {
+        String address = ANALYSES + "/relauncher";
+        final String jArr = JsonUtil.getInstance().buildJsonArrayString(Arrays.asList(analysesToRelaunch));
+        final Splittable stringIdListSplittable = StringQuoter.split(jArr);
+        final Splittable payload = StringQuoter.createSplittable();
+        stringIdListSplittable.assign(payload, "analyses");
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
+
+        deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    @Override
     public void renameAnalysis(String id, String newName, DECallback<Void> callback) {
         String address = ANALYSES + "/" + id;
         Splittable body = StringQuoter.createSplittable();
