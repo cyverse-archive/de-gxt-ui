@@ -12,9 +12,8 @@ import {
     TableHead,
 } from "@material-ui/core";
 import ids from "./AllStatsIDs";
-import { withI18N, getMessage, formatMessage, build } from "@cyverse-de/ui-lib";
+import { withI18N, getMessage, build } from "@cyverse-de/ui-lib";
 import messages from "./messages";
-import { injectIntl } from "react-intl";
 
 function JobsTab(props) {
     const rows = props.jobs,
@@ -64,4 +63,4 @@ function JobsTab(props) {
     );
 }
 
-export default withI18N(injectIntl(JobsTab), messages);
+export default withI18N(JobsTab, messages);
