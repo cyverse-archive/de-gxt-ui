@@ -63,6 +63,12 @@ var intlData = {
             " to extend the time limit?",
         analysesExecDeleteWarning:
             "This will remove the selected analyses and the parameters information associated with those analyses. Outputs can still be viewed in the Data window within the folder created by these analyses.",
+        analysesMultiRelaunchWarning:
+            "Relaunching more than one analysis at once will relaunch all selected analyses, reusing their original parameters and analysis names." +
+            " If the selected analyses are sub-jobs of an HT analysis, then those selected analyses will still be nested under that parent HT analysis," +
+            " and their output folders will also be grouped under that parent HT analysis' output folder," +
+            " but the relaunched sub-jobs will be renamed with a `-redo-#` suffix to differentiate them from their original sub-jobs." +
+            " Otherwise, relaunched analyses will be treated as new analyses, even though they reuse the same name and parameters as their original analyses.",
 
         shareDisclaimer:
             '<span style="overflow:auto;">I agree to <a href="https://wiki.cyverse.org/wiki/x/KBfHAQ" target="_blank">share my analysis</a> details, output file(s) and logs with CyVerse Support. If you want any of the <a href="https://wiki.cyverse.org/wiki/x/XRfHAQ" target="_blank">Science Informaticians</a> to recuse themselves from assisting with this problem, please list their name(s) in comments.</span>',

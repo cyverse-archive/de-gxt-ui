@@ -305,6 +305,29 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter {
     }
 
     @Override
+    public void onAnalysesRelaunch(String[] analysesToRelaunch,
+                                   ReactSuccessCallback callback,
+                                   ReactErrorCallback errorCallback) {
+        analysisService.analysesRelaunch(analysesToRelaunch, new AnalysisCallback<String>() {
+
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                ErrorHandler.post(appearance.relaunchAnalysesError(), caught);
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, caught.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(String arg0) {
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
+            }
+        });
+    }
+
+    @Override
     public void deleteAnalyses(String[] analysesToDelete,
                                ReactSuccessCallback callback,
                                ReactErrorCallback errorCallback) {

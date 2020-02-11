@@ -54,6 +54,8 @@ public interface AnalysesView extends IsWidget {
 
             String deleteAnalysisError();
 
+            String relaunchAnalysesError();
+
             String stopAnalysisError(String name);
 
             String analysisStepInfoError();
@@ -126,6 +128,10 @@ public interface AnalysesView extends IsWidget {
 
         @SuppressWarnings("unusable-by-js")
         void onShareAnalysisSelected(Splittable[] analysisList);
+
+        void onAnalysesRelaunch(String[] analysesToDelete,
+                                ReactSuccessCallback callback,
+                                ReactErrorCallback errorCallback);
 
         void deleteAnalyses(String[] analysesToDelete,
                             ReactSuccessCallback callback,

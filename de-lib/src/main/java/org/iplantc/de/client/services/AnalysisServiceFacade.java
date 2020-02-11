@@ -29,6 +29,14 @@ public interface AnalysisServiceFacade {
     void deleteAnalyses(String[] analysesToDelete, DECallback<String> callback);
 
     /**
+     * Auto Relaunch analyses
+     *
+     * @param analysesToRelaunch the analysis IDs to be relaunch.
+     * @param callback executed when RPC call completes.
+     */
+    void analysesRelaunch(String[] analysesToRelaunch, DECallback<String> callback);
+
+    /**
      * Renames an analysis.
      *
      * @param id the analysis id which will be renamed

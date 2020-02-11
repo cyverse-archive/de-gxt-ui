@@ -256,8 +256,21 @@ class AnalysesViewTest extends Component {
             onAnalysisNameSelected: () => {
                 console.log("Analysis name selected!");
             },
-            onAnalysisAppSelected: () => {
-                console.log("Analysis app name selected!");
+            onAnalysesRelaunch: (
+                analysisIDs,
+                successCallback,
+                errorCallback
+            ) => {
+                console.log("Analyses Relaunch selected!", analysisIDs);
+                setTimeout(successCallback, 1000);
+            },
+            onAnalysisAppSelected: (id, system_id, app_id) => {
+                console.log(
+                    "Analysis app name selected!",
+                    id,
+                    system_id,
+                    app_id
+                );
             },
             onCancelAnalysisSelected: () => {
                 console.log("Analysis cancel selected!");
@@ -265,8 +278,9 @@ class AnalysesViewTest extends Component {
             onShareAnalysisSelected: () => {
                 console.log("Analysis sharing selected!");
             },
-            deleteAnalyses: () => {
+            deleteAnalyses: (selected, successCallback, errorCallback) => {
                 console.log("Deleted Analysis selected!");
+                setTimeout(successCallback, 1000);
             },
             onAnalysisJobInfoSelected: () => {
                 console.log("Job info selected!");

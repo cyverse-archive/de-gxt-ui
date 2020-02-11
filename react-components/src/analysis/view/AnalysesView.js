@@ -58,6 +58,20 @@ import analysesCollapseIcon from "../../resources/images/analyses-collapseList.s
 import altAnalysesExpandIcon from "../../resources/images/analyses-expandList.png";
 import altAnalysesCollapseIcon from "../../resources/images/analyses-collapseList.png";
 
+const rangeSelect = (data, selected, deSelect, rangeStart, rangeEnd) => {
+    const newSelectionRange = data.slice(rangeStart, rangeEnd + 1);
+
+    if (deSelect) {
+        // deselect range
+        return selected.filter(
+            (selectedID) => !newSelectionRange.includes(selectedID)
+        );
+    }
+
+    // append range, removing duplicates
+    return [...new Set([...selected, ...newSelectionRange])];
+};
+
 function AnalysisName(props) {
     const name = props.analysis.name;
     const isBatch = props.analysis.batch;
@@ -160,10 +174,7 @@ function AppName(props) {
 
     if (!isDisabled) {
         return (
-            <span
-                className={className}
-                onClick={() => handleRelaunch(analysis)}
-            >
+            <span className={className} onClick={handleRelaunch}>
                 {name}
             </span>
         );
@@ -297,6 +308,7 @@ class AnalysesView extends Component {
             page: 0,
             rowsPerPage: 100,
             selected: [],
+            lastSelectedIndex: 0,
             order: "desc",
             orderBy: "startdate",
             parameters: [],
@@ -307,6 +319,7 @@ class AnalysesView extends Component {
             viewParamsDialogOpen: false,
             shareWithSupportDialogOpen: false,
             confirmDeleteDialogOpen: false,
+            confirmRelaunchDialogOpen: false,
             logsMessageDialogOpen: false,
             confirmExtendTimeLimitDialogOpen: false,
             currentTimeLimit: "",
@@ -318,8 +331,9 @@ class AnalysesView extends Component {
         this.handleGoToOutputFolder = this.handleGoToOutputFolder.bind(this);
         this.handleViewLogs = this.handleViewLogs.bind(this);
         this.handleViewParams = this.handleViewParams.bind(this);
-        this.handleRelaunch = this.handleRelaunch.bind(this);
+        this.handleRelaunchSingle = this.handleRelaunchSingle.bind(this);
         this.handleRelaunchFromMenu = this.handleRelaunchFromMenu.bind(this);
+        this.handleMultiRelaunch = this.handleMultiRelaunch.bind(this);
         this.handleViewInfo = this.handleViewInfo.bind(this);
         this.handleShare = this.handleShare.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -538,7 +552,8 @@ class AnalysesView extends Component {
     }
 
     handleSelectAllClick(event, checked) {
-        if (checked) {
+        const { selected } = this.state;
+        if (checked && !selected.length) {
             this.setState((state) => ({
                 selected: state.data.map((n) => n.id),
             }));
@@ -584,35 +599,59 @@ class AnalysesView extends Component {
         }
     }
 
-    handleRowClick(id) {
+    handleRowClick(index) {
         this.setState((prevState, props) => {
-            const { selected } = prevState;
+            const { data, selected } = prevState;
+            const id = data[index].id;
+
+            const newState = { lastSelectedIndex: index };
+
             if (selected.indexOf(id) < 0) {
-                return { selected: [id] };
+                newState.selected = [id];
             }
+
+            return newState;
         });
     }
 
-    handleCheckBoxClick(event, id) {
+    handleCheckBoxClick(event, index) {
+        const selectRange = event.shiftKey;
+
         this.setState((prevState, props) => {
-            const { selected } = prevState;
-            const selectedIndex = selected.indexOf(id);
+            const { data, selected, lastSelectedIndex } = prevState;
+            const id = data[index].id;
+            const isSelected = this.isSelected(id);
+
             let newSelected = [];
 
-            if (selectedIndex === -1) {
-                newSelected = newSelected.concat(selected, id);
-            } else if (selectedIndex === 0) {
-                newSelected = newSelected.concat(selected.slice(1));
-            } else if (selectedIndex === selected.length - 1) {
-                newSelected = newSelected.concat(selected.slice(0, -1));
-            } else if (selectedIndex > 0) {
-                newSelected = newSelected.concat(
-                    selected.slice(0, selectedIndex),
-                    selected.slice(selectedIndex + 1)
-                );
+            if (selectRange && lastSelectedIndex !== index) {
+                const allIDs = data.map((analysis) => analysis.id);
+
+                newSelected =
+                    lastSelectedIndex < index
+                        ? rangeSelect(
+                              allIDs,
+                              selected,
+                              isSelected,
+                              lastSelectedIndex,
+                              index
+                          )
+                        : rangeSelect(
+                              allIDs,
+                              selected,
+                              isSelected,
+                              index,
+                              lastSelectedIndex
+                          );
+            } else {
+                newSelected = isSelected
+                    ? selected.filter((selectedID) => selectedID !== id)
+                    : [...selected, id];
             }
-            return { selected: newSelected };
+
+            return { selected: newSelected, lastSelectedIndex: index };
         });
+
         event.stopPropagation();
     }
 
@@ -742,19 +781,43 @@ class AnalysesView extends Component {
         }
     }
 
-    handleRelaunch(analysis) {
-        let selected = analysis
-            ? analysis
-            : this.findAnalysis(this.state.selected[0]);
-        this.props.presenter.onAnalysisAppSelected(
-            selected.id,
-            selected.system_id,
-            selected.app_id
-        );
+    handleRelaunchSingle(selected) {
+        selected &&
+            this.props.presenter.onAnalysisAppSelected(
+                selected.id,
+                selected.system_id,
+                selected.app_id
+            );
     }
 
     handleRelaunchFromMenu() {
-        this.handleRelaunch(this.findAnalysis(this.state.selected[0]));
+        const { selected } = this.state;
+
+        if (selected) {
+            if (selected.length > 1) {
+                this.setState({ confirmRelaunchDialogOpen: true });
+            } else {
+                this.handleRelaunchSingle(this.findAnalysis(selected[0]));
+            }
+        }
+    }
+
+    handleMultiRelaunch() {
+        this.setState({ loading: true, confirmRelaunchDialogOpen: false });
+
+        this.props.presenter.onAnalysesRelaunch(
+            this.state.selected,
+            () => {
+                this.setState({
+                    loading: false,
+                });
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            }
+        );
     }
 
     handleViewInfo() {
@@ -1042,6 +1105,7 @@ class AnalysesView extends Component {
             shareWithSupportDialogOpen,
             viewParamsDialogOpen,
             confirmDeleteDialogOpen,
+            confirmRelaunchDialogOpen,
             parameters,
             info,
             infoDialogOpen,
@@ -1098,7 +1162,7 @@ class AnalysesView extends Component {
                         <div className={classes.table}>
                             <Table>
                                 <TableBody>
-                                    {data.map((analysis) => {
+                                    {data.map((analysis, index) => {
                                         const id = analysis.id;
                                         const isSelected = this.isSelected(id);
                                         const user =
@@ -1111,7 +1175,7 @@ class AnalysesView extends Component {
                                         return (
                                             <DETableRow
                                                 onClick={() =>
-                                                    this.handleRowClick(id)
+                                                    this.handleRowClick(index)
                                                 }
                                                 role="checkbox"
                                                 aria-checked={isSelected}
@@ -1127,10 +1191,10 @@ class AnalysesView extends Component {
                                                             gridId,
                                                             id + ids.CHECKBOX
                                                         )}
-                                                        onClick={(event, n) =>
+                                                        onClick={(event) =>
                                                             this.handleCheckBoxClick(
                                                                 event,
-                                                                id
+                                                                index
                                                             )
                                                         }
                                                         checked={isSelected}
@@ -1196,8 +1260,10 @@ class AnalysesView extends Component {
                                                 >
                                                     <AppName
                                                         analysis={analysis}
-                                                        handleRelaunch={
-                                                            this.handleRelaunch
+                                                        handleRelaunch={() =>
+                                                            this.handleRelaunchSingle(
+                                                                analysis
+                                                            )
                                                         }
                                                         classes={classes}
                                                     />
@@ -1259,8 +1325,10 @@ class AnalysesView extends Component {
                                                             this
                                                                 .handleViewParams
                                                         }
-                                                        handleRelaunch={
-                                                            this.handleRelaunch
+                                                        handleRelaunch={() =>
+                                                            this.handleRelaunchSingle(
+                                                                analysis
+                                                            )
                                                         }
                                                         handleViewInfo={
                                                             this.handleViewInfo
@@ -1426,6 +1494,23 @@ class AnalysesView extends Component {
                     onCancelBtnClick={() => {
                         this.setState({
                             confirmDeleteDialogOpen: false,
+                        });
+                    }}
+                    okLabel={formatMessage(intl, "okBtnText")}
+                    cancelLabel={formatMessage(intl, "cancelBtnText")}
+                />
+                <DEConfirmationDialog
+                    debugId={build(baseId, ids.MENUITEM_RELAUNCH)}
+                    dialogOpen={confirmRelaunchDialogOpen}
+                    message={formatMessage(
+                        intl,
+                        "analysesMultiRelaunchWarning"
+                    )}
+                    heading={formatMessage(intl, "relaunch")}
+                    onOkBtnClick={this.handleMultiRelaunch}
+                    onCancelBtnClick={() => {
+                        this.setState({
+                            confirmRelaunchDialogOpen: false,
                         });
                     }}
                     okLabel={formatMessage(intl, "okBtnText")}
