@@ -13,6 +13,7 @@ import AdminAppGridListingTest from "./apps/admin/AdminAppGridListing.stories";
 import AppDetailsTest from "./apps/details/AppDetails.stories";
 import AppInfoDialogTest from "./apps/details/AppInfoDialog.stories";
 import AppPublicationRequestsTest from "./apps/admin/AppPublicationRequests.stories";
+import AllStatsTest from "./apps/admin/AllStats/AllStats.stories";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import AppDocTest from "./apps/details/AppDoc.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
@@ -102,6 +103,10 @@ storiesOf("apps/admin", module).add("AdminAppListing", () => (
 storiesOf("apps/admin/AppStats", module).add("with test stats", () => (
     <AppStatsTest />
 ));
+storiesOf("./apps/admin/AllStats.stories", module).add(
+    "with test stats",
+    () => <AllStatsTest />
+);
 storiesOf("apps/admin/PublicationRequests", module).add(
     "with test requests",
     () => <AppPublicationRequestsTest />
