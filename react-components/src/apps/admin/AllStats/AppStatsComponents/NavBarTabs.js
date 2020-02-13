@@ -20,8 +20,8 @@ function TabPanel(props) {
             component="div"
             role="tabpanel"
             hidden={value !== index}
-            id={`nav-tabpanel-${index}`}
-            aria-labelledby={`${baseId}.${index}`}
+            id={`${baseId}.tabpanel-${index}`}
+            aria-labelledby={build(baseId, index)}
             {...other}
         >
             {value === index && <Box p={3}>{children}</Box>}
@@ -38,7 +38,7 @@ TabPanel.propTypes = {
 function a11yProps(baseId, index) {
     return {
         id: build(baseId, index),
-        "aria-controls": `${baseId}-nav-tabpanel-${index}`,
+        "aria-controls": `${baseId}.tabpanel-${index}`,
     };
 }
 
