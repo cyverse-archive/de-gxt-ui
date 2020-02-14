@@ -16,15 +16,15 @@ import styles from "./style";
 import {
     build,
     DEConfirmationDialog,
+    formatCurrentDate,
+    formatMessage,
     FormCheckboxStringValue,
     FormIntegerField,
-    formatMessage,
     FormMultilineTextField,
     FormNumberField,
     FormSelectField,
     FormTextField,
     FormTimestampField,
-    formatCurrentDate,
     getFormError,
     getMessage,
     withI18N,
@@ -740,11 +740,21 @@ const postProcessAVUs = (avus, attributeMap) => {
     return avus.map((avu) => {
         const attrTemplate = attributeMap[avu.attr];
 
+        const isNumberAttr =
+            attrTemplate &&
+            (attrTemplate.type === constants.ATTRIBUTE_TYPE.NUMBER ||
+                attrTemplate.type === constants.ATTRIBUTE_TYPE.INTEGER);
+
         const isGroupingAttr =
             attrTemplate &&
             attrTemplate.type === constants.ATTRIBUTE_TYPE.GROUPING;
 
         const hasChildAVUs = avu.avus && avu.avus.length > 0;
+
+        if (isNumberAttr && (avu.value || avu.value === 0)) {
+            // The API will only accept AVU values as strings.
+            avu.value = avu.value.toString();
+        }
 
         if (attrTemplate && hasChildAVUs) {
             avu = {
