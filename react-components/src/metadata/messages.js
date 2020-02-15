@@ -44,6 +44,9 @@ export default {
         edit: "Edit",
         enumDefaultLabel: "Default Selection?",
         enumValues: "Enum Values",
+        errMetadataTemplateAlertHeading: "Please fix all errors.",
+        errMetadataTemplateAlertMsg:
+            "1 or more Attributes (or a child attribute) have 1 or more errors.",
         errAVUEditFormTooltip: "Please fix all errors.",
         errAttrHasErrors:
             "Attribute (or a child attribute) has 1 or more errors.",
