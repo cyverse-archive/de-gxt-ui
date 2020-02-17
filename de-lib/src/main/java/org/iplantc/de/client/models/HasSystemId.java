@@ -7,7 +7,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  *
  * This class is often used with autobeans.
  *
- * @author dennis
+ * @author sarahr
  */
 public interface HasSystemId {
 

@@ -7,7 +7,7 @@ import org.iplantc.de.client.models.groups.Member;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class SaveMembersClickedEvent extends GwtEvent<SaveMembersClickedEvent.SaveMembersClickedEventHandler> {
     public static Type<SaveMembersClickedEventHandler> TYPE = new Type<>();

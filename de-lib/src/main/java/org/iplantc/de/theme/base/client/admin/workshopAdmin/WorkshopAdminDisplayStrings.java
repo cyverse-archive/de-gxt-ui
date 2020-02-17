@@ -4,7 +4,7 @@ import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface WorkshopAdminDisplayStrings extends Messages {
 

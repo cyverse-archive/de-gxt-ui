@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class WorkshopAdminServiceFacadeImpl implements WorkshopAdminServiceFacade {
 

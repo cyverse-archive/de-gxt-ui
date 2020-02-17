@@ -8,7 +8,7 @@ import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class WorkshopAdminViewDefaultAppearance implements WorkshopAdminView.WorkshopAdminViewAppearance {
 

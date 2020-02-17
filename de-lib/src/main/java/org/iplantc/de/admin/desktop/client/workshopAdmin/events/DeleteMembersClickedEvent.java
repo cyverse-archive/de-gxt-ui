@@ -7,7 +7,7 @@ import org.iplantc.de.client.models.groups.Member;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class DeleteMembersClickedEvent extends GwtEvent<DeleteMembersClickedEvent.DeleteMembersClickedEventHandler> {
     public static GwtEvent.Type<DeleteMembersClickedEventHandler> TYPE = new GwtEvent.Type<>();

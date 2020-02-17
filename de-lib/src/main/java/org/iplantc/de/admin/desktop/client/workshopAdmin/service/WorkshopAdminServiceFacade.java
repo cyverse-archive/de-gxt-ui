@@ -8,7 +8,7 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface WorkshopAdminServiceFacade {
 

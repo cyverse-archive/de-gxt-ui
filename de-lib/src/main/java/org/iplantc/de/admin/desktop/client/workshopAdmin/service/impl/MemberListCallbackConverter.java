@@ -11,7 +11,7 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class MemberListCallbackConverter extends AsyncCallbackConverter<String, List<Member>> {
 

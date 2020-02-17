@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface WorkshopAdminView extends IsWidget,
                                            IsMaskable,

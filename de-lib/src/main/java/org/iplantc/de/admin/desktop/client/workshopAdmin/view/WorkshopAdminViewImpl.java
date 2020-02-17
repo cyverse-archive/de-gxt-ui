@@ -37,7 +37,7 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class WorkshopAdminViewImpl extends Composite implements WorkshopAdminView {
 

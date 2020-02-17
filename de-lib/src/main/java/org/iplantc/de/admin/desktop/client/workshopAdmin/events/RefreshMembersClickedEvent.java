@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class RefreshMembersClickedEvent
         extends GwtEvent<RefreshMembersClickedEvent.RefreshMembersClickedEventHandler> {

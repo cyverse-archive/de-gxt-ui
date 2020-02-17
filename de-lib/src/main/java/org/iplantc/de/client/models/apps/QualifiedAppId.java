@@ -4,7 +4,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.iplantc.de.client.models.HasSystemId;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface QualifiedAppId extends HasSystemId {
 

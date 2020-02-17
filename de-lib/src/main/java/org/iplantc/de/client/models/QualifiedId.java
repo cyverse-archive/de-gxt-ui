@@ -1,7 +1,7 @@
 package org.iplantc.de.client.models;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class QualifiedId  implements HasQualifiedId {
 

@@ -18,7 +18,7 @@ import java.security.Security;
 /**
  * Utility methods for dealing with PEM encoded key files. This class may not be instantiated.
  *
- * @author dennis
+ * @author sarahr
  */
 public class PemKeyUtils {
 

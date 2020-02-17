@@ -3,7 +3,7 @@ package org.iplantc.de.client.models;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface HasSettableId extends HasId {
 

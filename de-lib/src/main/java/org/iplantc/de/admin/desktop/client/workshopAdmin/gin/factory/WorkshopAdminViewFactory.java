@@ -5,7 +5,7 @@ import org.iplantc.de.admin.desktop.client.workshopAdmin.WorkshopAdminView;
 import org.iplantc.de.client.models.groups.Member;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface WorkshopAdminViewFactory {
     WorkshopAdminView create(ListStore<Member> listStore);

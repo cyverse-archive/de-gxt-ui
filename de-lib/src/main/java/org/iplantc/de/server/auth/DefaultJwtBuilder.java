@@ -19,7 +19,7 @@ import static org.iplantc.de.server.util.CasUtils.attributePrincipalFromServletR
 /**
  * Builds signed JWTs for the current user.
  *
- * @author dennis
+ * @author sarahr
  */
 @Component
 public class DefaultJwtBuilder implements JwtBuilder {

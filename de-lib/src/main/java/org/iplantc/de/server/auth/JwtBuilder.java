@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Builds signed JWTs for the current user.
  *
- * @author dennis
+ * @author sarahr
  */
 public interface JwtBuilder {
 

@@ -10,7 +10,7 @@ import org.iplantc.de.admin.desktop.client.workshopAdmin.service.impl.WorkshopAd
 import org.iplantc.de.admin.desktop.client.workshopAdmin.view.WorkshopAdminViewImpl;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class WorkshopAdminGinModule extends AbstractGinModule {
     @Override

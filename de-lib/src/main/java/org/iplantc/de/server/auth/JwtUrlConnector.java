@@ -23,7 +23,7 @@ import java.io.IOException;
  * Used to establish connections to a services that are secured using JSON Web Tokens. The service must
  * be configured to accept JWTs in the {@code X-Iplant-De-Jwt} custom header.
  *
- * @author dennis
+ * @author sarahr
  */
 @Component
 public class JwtUrlConnector extends BaseUrlConnector implements UrlConnector {

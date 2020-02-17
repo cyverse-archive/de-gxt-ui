@@ -6,7 +6,7 @@ import com.sencha.gxt.data.shared.PropertyAccess;
 import org.iplantc.de.client.models.groups.Member;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface MemberProperties extends PropertyAccess<Member> {
 

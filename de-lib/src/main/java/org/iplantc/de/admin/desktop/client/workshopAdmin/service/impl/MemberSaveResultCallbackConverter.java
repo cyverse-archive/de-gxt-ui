@@ -8,7 +8,7 @@ import org.iplantc.de.client.models.groups.MemberSaveResult;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class MemberSaveResultCallbackConverter extends AsyncCallbackConverter<String, MemberSaveResult> {
 

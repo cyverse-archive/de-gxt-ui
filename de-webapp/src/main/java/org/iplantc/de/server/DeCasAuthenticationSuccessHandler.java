@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public class DeCasAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 

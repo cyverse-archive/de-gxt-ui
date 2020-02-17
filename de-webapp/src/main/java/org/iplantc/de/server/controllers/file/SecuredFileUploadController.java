@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  * Performs secured file uploads.
  *
  * @author jstroot
- * @author dennis
+ * @author sarahr
  */
 @Controller
 public class SecuredFileUploadController {

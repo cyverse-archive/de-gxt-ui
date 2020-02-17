@@ -1,6 +1,6 @@
 package org.iplantc.de.client.models;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface HasQualifiedId extends HasSettableId, HasSystemId {}

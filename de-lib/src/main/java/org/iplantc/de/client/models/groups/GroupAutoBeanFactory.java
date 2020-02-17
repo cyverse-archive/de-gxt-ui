@@ -10,7 +10,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface GroupAutoBeanFactory extends AutoBeanFactory {
 

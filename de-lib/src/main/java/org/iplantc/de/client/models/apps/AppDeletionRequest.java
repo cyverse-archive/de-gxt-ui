@@ -5,7 +5,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import java.util.List;
 
 /**
- * @author dennis
+ * @author sarahr
  */
 public interface AppDeletionRequest {
 
