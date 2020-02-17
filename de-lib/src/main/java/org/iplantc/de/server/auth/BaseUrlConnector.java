@@ -5,6 +5,7 @@ import static org.iplantc.de.server.AppLoggerConstants.USER_IP_HEADER_NAME;
 import org.iplantc.de.server.AppLoggerUtil;
 
 import com.google.common.base.Strings;
+import com.google.common.net.HttpHeaders;
 
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -14,11 +15,14 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -114,6 +118,34 @@ abstract class BaseUrlConnector implements UrlConnector {
     }
 
     /**
+     * Attempts to get the IP address of the originating computer from the
+     *
+     * @param request
+     * @return
+     */
+    protected String getOriginalIpAddress(HttpServletRequest request) {
+
+        // Attempt to get the original IP address from the `Forwarded` header.
+        final String forwardedHeader = request.getHeader(HttpHeaders.FORWARDED);
+        if (!Strings.isNullOrEmpty(forwardedHeader)) {
+            final String origin = forwardedHeader.split(",\\s*")[0];
+            final Matcher matcher = Pattern.compile("for=([^;]+)").matcher(origin);
+            if (matcher.find()) {
+                return matcher.group(1);
+            }
+        }
+
+        // Attempt to get the original IP address from the `X-Forwarded-For` header.
+        final String xForwardedForHeader = request.getHeader(HttpHeaders.X_FORWARDED_FOR);
+        if (!Strings.isNullOrEmpty(xForwardedForHeader)) {
+            return xForwardedForHeader.split(",\\s*")[0];
+        }
+
+        // Default to the remote address in the request if all else fails.
+        return request.getRemoteAddr();
+    }
+
+    /**
      * Adds the remote IP address to the query string of a URI.
      *
      * @param uriString the string representation of the URI to update.
@@ -124,7 +156,7 @@ abstract class BaseUrlConnector implements UrlConnector {
      */
     protected String addIpAddress(String uriString, HttpServletRequest request) throws IOException {
         if (uriString.startsWith(terrainBaseUrl)) {
-            return addQueryParam(uriString, "ip-address", request.getRemoteAddr());
+            return addQueryParam(uriString, "ip-address", getOriginalIpAddress(request));
         }
 
         return uriString;
