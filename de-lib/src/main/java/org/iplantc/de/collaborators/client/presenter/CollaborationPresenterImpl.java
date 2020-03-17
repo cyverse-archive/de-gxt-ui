@@ -65,8 +65,10 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
     }
 
     List<Subject> convertTeamsToSubjects(List<Group> teams) {
-        return teams.stream()
-                    .map(team -> factory.convertGroupToSubject(team))
-                    .collect(Collectors.toList());
+        if (teams != null) {
+            return teams.stream().map(team -> factory.convertGroupToSubject(team)).collect(Collectors.toList());
+        } else {
+            return Lists.newArrayList();
+        }
     }
 }
