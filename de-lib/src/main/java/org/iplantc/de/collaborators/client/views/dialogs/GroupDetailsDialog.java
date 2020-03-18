@@ -40,7 +40,6 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
             public void onSelect(SelectEvent event) {
                 if (presenter.isViewValid()) {
                     presenter.saveGroupSelected();
-                    hide();
                 } else {
                     AlertMessageBox alertMsgBox =
                             new AlertMessageBox("Warning", appearance.completeRequiredFieldsError());
