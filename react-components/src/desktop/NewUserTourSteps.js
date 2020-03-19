@@ -33,6 +33,6 @@ export default {
         step: "6",
         position: "left",
         message:
-            "<span style='font-size:75% !important;'> <p>Click (Help) at the top right of the screen.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To view the list of commonly asked questions within the DE, click FAQs.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To view and ask questions in the Ask CyVerse forum, click Forum.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To contact Support or provide feedback about the Discovery Environment, click Feedback and complete the form.</p>",
+            "<span style='font-size:75% !important;'> <p>Click (Help) at the top right of the screen.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To view the list of commonly asked questions within the DE, click FAQs.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To view documentation, tutorials, and help on a range of topics, click on Learning Center.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To contact Support for the Discovery Environment, click Chat With Support or Email Support.</p><p style='padding-left:10px;margin:10px;'> <b>*</b> To provide feedback about the Discovery Environment, click Feedback and complete the form.",
     },
 };
