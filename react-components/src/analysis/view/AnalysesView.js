@@ -566,8 +566,8 @@ class AnalysesView extends Component {
         return this.state.selected.indexOf(id) !== -1;
     }
 
-    statusClick(analysis) {
-        this.handleRowClick(analysis.id);
+    statusClick(index) {
+        this.handleRowClick(index);
         this.setState((prevState, props) => {
             return { shareWithSupportDialogOpen: true };
         });
@@ -601,16 +601,10 @@ class AnalysesView extends Component {
 
     handleRowClick(index) {
         this.setState((prevState, props) => {
-            const { data, selected } = prevState;
+            const { data } = prevState;
             const id = data[index].id;
 
-            const newState = { lastSelectedIndex: index };
-
-            if (selected.indexOf(id) < 0) {
-                newState.selected = [id];
-            }
-
-            return newState;
+            return { lastSelectedIndex: index, selected: [id] };
         });
     }
 
@@ -1296,7 +1290,7 @@ class AnalysesView extends Component {
                                                         baseId={baseId}
                                                         onClick={() =>
                                                             this.statusClick(
-                                                                analysis
+                                                                index
                                                             )
                                                         }
                                                         username={username}
@@ -1314,6 +1308,11 @@ class AnalysesView extends Component {
                                                             id +
                                                                 ids.ANALYSIS_DOT_MENU
                                                         )}
+                                                        handleAnalysisSelected={() =>
+                                                            this.handleRowClick(
+                                                                index
+                                                            )
+                                                        }
                                                         handleGoToOutputFolder={
                                                             this
                                                                 .handleGoToOutputFolder
