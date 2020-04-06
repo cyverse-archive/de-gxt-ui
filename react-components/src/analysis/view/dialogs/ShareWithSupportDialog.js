@@ -38,7 +38,7 @@ function AnalysisInfo(props) {
     const { analysis, name, email } = props;
     if (analysis) {
         return (
-            <Grid container spacing={24} style={{ marginTop: 2, fontSize: 12 }}>
+            <Grid container spacing={3} style={{ marginTop: 2, fontSize: 12 }}>
                 <Grid item xs={6}>
                     {getMessage("analysis")}: {analysis.name}
                 </Grid>

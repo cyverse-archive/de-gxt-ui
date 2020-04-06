@@ -121,7 +121,7 @@ class AnalysesViewTest extends Component {
                 },
                 {
                     description: "",
-                    name: "Word_Count_analysis1",
+                    name: "Word_Count_analysis2",
                     can_share: true,
                     username: "sriram@iplantcollaborative.org",
                     app_id: "c7f05682-23c8-4182-b9a2-e09650a5f49b",
@@ -138,12 +138,12 @@ class AnalysesViewTest extends Component {
                         "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                     notify: true,
                     resultfolderid:
-                        "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
+                        "/iplant/home/sriram/analyses/Word_Count_analysis2-2018-08-03-16-40-48.7",
                     app_name: "Word Count",
                 },
                 {
                     description: "",
-                    name: "Word_Count_analysis1",
+                    name: "Word_Count_analysis3",
                     can_share: true,
                     username: "sriram@iplantcollaborative.org",
                     app_id: "c7f05682-23c8-4182-b9a2-e09650a5f49b",
@@ -160,12 +160,12 @@ class AnalysesViewTest extends Component {
                         "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                     notify: true,
                     resultfolderid:
-                        "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
+                        "/iplant/home/sriram/analyses/Word_Count_analysis3-2018-08-03-16-40-48.7",
                     app_name: "Word Count",
                 },
                 {
                     description: "",
-                    name: "Word_Count_analysis1",
+                    name: "Word_Count_analysis4",
                     can_share: true,
                     username: "sriram@iplantcollaborative.org",
                     app_id: "c7f05682-23c8-4182-b9a2-e09650a5f49b",
@@ -182,7 +182,7 @@ class AnalysesViewTest extends Component {
                         "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                     notify: true,
                     resultfolderid:
-                        "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
+                        "/iplant/home/sriram/analyses/Word_Count_analysis4-2018-08-03-16-40-48.7",
                     app_name: "Word Count",
                 },
                 {
@@ -204,7 +204,7 @@ class AnalysesViewTest extends Component {
                         "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                     notify: true,
                     resultfolderid:
-                        "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
+                        "/iplant/home/sriram/analyses/Interactive_analysis1-2018-08-03-16-40-48.7",
                     app_name: "Word Count",
                     interactive_urls: ["https://a60068256.cyverse.run"],
                 },
@@ -227,7 +227,7 @@ class AnalysesViewTest extends Component {
                         "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
                     notify: true,
                     resultfolderid:
-                        "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-03-16-40-48.7",
+                        "/iplant/home/sriram/analyses/Interactive_analysis2-2018-08-03-16-40-48.7",
                     app_name: "Word Count",
                     interactive_urls: ["https://a60068256.cyverse.run"],
                 },
@@ -247,14 +247,16 @@ class AnalysesViewTest extends Component {
             ) => {
                 resultCallback(analysesList);
             },
-            renameAnalysis: () => {
-                console.log("Rename called!");
+            renameAnalysis: (id, newName, successCallback) => {
+                console.log("Rename called!", id, newName);
+                setTimeout(successCallback, 1000);
             },
-            updateAnalysisComments: () => {
-                console.log("Update Comments called!");
+            updateAnalysisComments: (id, comments, successCallback) => {
+                console.log("Update Comments called!", id, comments);
+                setTimeout(successCallback, 1000);
             },
-            onAnalysisNameSelected: () => {
-                console.log("Analysis name selected!");
+            onAnalysisNameSelected: (resultfolderid) => {
+                console.log("Analysis name selected!", resultfolderid);
             },
             onAnalysesRelaunch: (
                 analysisIDs,
@@ -272,21 +274,24 @@ class AnalysesViewTest extends Component {
                     app_id
                 );
             },
-            onCancelAnalysisSelected: () => {
-                console.log("Analysis cancel selected!");
-            },
-            onShareAnalysisSelected: () => {
-                console.log("Analysis sharing selected!");
-            },
-            deleteAnalyses: (selected, successCallback, errorCallback) => {
-                console.log("Deleted Analysis selected!");
+            onCancelAnalysisSelected: (id, name, successCallback) => {
+                console.log("Analysis cancel selected!", id, name);
                 setTimeout(successCallback, 1000);
             },
-            onAnalysisJobInfoSelected: () => {
-                console.log("Job info selected!");
+            onShareAnalysisSelected: (selectedAnalyses) => {
+                console.log("Analysis sharing selected!", selectedAnalyses);
             },
-            onUserSupportRequested: () => {
-                console.log("User support requested!");
+            deleteAnalyses: (selected, successCallback, errorCallback) => {
+                console.log("Deleted Analysis selected!", selected);
+                setTimeout(successCallback, 1000);
+            },
+            onAnalysisJobInfoSelected: (id, successCallback) => {
+                console.log("Job info selected!", id);
+                setTimeout(successCallback, 1000);
+            },
+            onUserSupportRequested: (analysis, comment, successCallback) => {
+                console.log("User support requested!", analysis, comment);
+                setTimeout(successCallback, 1000);
             },
             handleViewAndTypeFilterChange: (viewFilter, appTypeFilter) => {
                 console.log(
@@ -305,11 +310,14 @@ class AnalysesViewTest extends Component {
             handleViewAllIconClick: () => {
                 console.log("View All");
             },
+            getVICELogs: (analysisId, name) => {
+                console.log("Get VICE Logs", analysisId, name);
+            },
         };
 
         const paramPresenter = {
             fetchAnalysisParameters: (selected, resolve, reject) => {
-                console.log("fetch parameters");
+                console.log("fetch parameters", selected);
                 setTimeout(
                     () =>
                         resolve({

@@ -21,6 +21,7 @@ class DotMenu extends Component {
     }
 
     handleDotMenuClick = (event) => {
+        this.props.handleAnalysisSelected();
         this.setState({ anchorEl: event.currentTarget });
     };
 
@@ -29,6 +30,7 @@ class DotMenu extends Component {
     };
 
     render() {
+        const { handleAnalysisSelected, ...props } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
@@ -51,7 +53,7 @@ class DotMenu extends Component {
                 >
                     <AnalysesMenuItems
                         handleClose={this.handleDotMenuClose}
-                        {...this.props}
+                        {...props}
                     />
                 </Menu>
             </div>
