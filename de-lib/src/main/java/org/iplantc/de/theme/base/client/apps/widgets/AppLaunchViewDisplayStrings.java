@@ -19,4 +19,8 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String createQuickLaunchSuccess(String name);
 
     String quickLaunchDeleted();
+
+    String viceLimitTitle();
+
+    String viceLimitBody(String errorMsg);
 }

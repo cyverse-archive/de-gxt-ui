@@ -84,6 +84,12 @@ public interface AppLaunchView extends IsWidget,
         String launchButtonPositionClassName();
 
         SafeHtml quickLaunchDeleted();
+
+        String viceLimitTitle();
+
+        SafeHtml viceLimitBody(String errorMsg);
+
+        String closeButton();
     }
 
     @JsType

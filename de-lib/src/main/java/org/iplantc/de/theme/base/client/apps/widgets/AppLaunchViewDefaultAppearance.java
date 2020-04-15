@@ -72,6 +72,21 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     }
 
     @Override
+    public String viceLimitTitle() {
+        return displayStrings.viceLimitTitle();
+    }
+
+    @Override
+    public SafeHtml viceLimitBody(String errorMsg) {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.viceLimitBody(errorMsg));
+    }
+
+    @Override
+    public String closeButton() {
+        return iplantDisplayStrings.close();
+    }
+
+    @Override
     public String deprecatedAppMask() {
         return displayStrings.deprecatedAppMask();
     }
