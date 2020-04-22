@@ -9,6 +9,7 @@ import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.Requ
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.apps.widgets.client.view.ReactQuickLaunch;
 import org.iplantc.de.apps.widgets.client.view.dialogs.HPCWaitTimeDialog;
+import org.iplantc.de.apps.widgets.client.view.dialogs.ViceLimitDialog;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.UserInfo;
@@ -40,6 +41,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -113,6 +115,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
     @Inject private IplantValidationConstants valConstants;
     @Inject AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProvider;
+    @Inject AsyncProviderWrapper<ViceLimitDialog> viceLimitDlgProvider;
     @Inject
     UserInfo userInfo;
     private final AppLaunchView view;
@@ -300,13 +303,30 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         return new HandlerManager(this);
     }
 
+    private boolean hasConcurrencyError(Throwable caught) {
+        String errMessage = caught.getMessage();
+        return errMessage.matches("\\S+ is already running \\d+ or more concurrent jobs\\n");
+    }
+
     void launchAnalysis(final AppTemplate at, final JobExecution je) {
         atServices.launchAnalysis(at, je, new AppLaunchCallback<AnalysisSubmissionResponse>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.launchAnalysisFailure(je.getName())));
-                ErrorHandler.post(appearance.analysisFailedToLaunch(at.getName()), caught);
+                if (Response.SC_BAD_REQUEST == statusCode && hasConcurrencyError(caught)) {
+                    viceLimitDlgProvider.get(new AsyncCallback<ViceLimitDialog>() {
+                        @Override
+                        public void onFailure(Throwable caught) {}
+
+                        @Override
+                        public void onSuccess(ViceLimitDialog result) {
+                            result.show(caught.getMessage());
+                        }
+                    });
+                } else {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.launchAnalysisFailure(je.getName())));
+                    ErrorHandler.post(appearance.analysisFailedToLaunch(at.getName()), caught);
+                }
                 view.analysisLaunchFailed();
             }
 

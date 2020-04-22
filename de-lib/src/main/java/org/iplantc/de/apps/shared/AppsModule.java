@@ -106,6 +106,8 @@ public interface AppsModule {
         String APP_REF_LINK_GRID = ".appRefLinkGrid";
         String APP_REF_LINK_ADD_BTN = ".appRefLinkAddBtn";
         String APP_REF_LINK_DEL_BTN = ".appRefLinkDelBtn";
+        String VICE_LIMIT_DLG = "viceLimitDlg";
+        String CLOSE_BTN = ".closeBtn";
     }
 
 }
