@@ -303,9 +303,9 @@ class DesktopView extends Component {
             <div className={classes.body}>
                 <div className={classes.header}>
                     <div className={classes.logo}>
-                        <span className={classes.logoContainer}>
-                            {constants.CYVERSE_DE}
-                        </span>
+                        <div className={classes.logoContainer}>
+                            {constants.CYVERSE_AUSTRIA} | {constants.CYVERSE_DE}
+                        </div>
                         <span className={classes.userMenuContainer}>
                             <nav>
                                 <Notifications

@@ -14,7 +14,6 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 
-import java.time.Year;
 import java.util.Date;
 
 /**
@@ -32,7 +31,7 @@ public class AboutApplicationDefaultAppearance implements AboutApplicationWindow
         @Source("org/iplantc/de/theme/base/client/desktop/window/AboutApplicationWindowStyles.gss")
         AboutApplicationWindowStyles css();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/window/cyverse_about.png")
+        @Source("org/iplantc/de/theme/base/client/desktop/window/CyVerseAT_logo.png")
         ImageResource cyverseAbout();
     }
 
