@@ -79,7 +79,7 @@ var intlData = {
         agaveSubmitted:
             "<h4> My analysis has been in the Submitted state for a long time. </h4>\n" +
             '<p style="margin:10px;">This application runs on XSEDE, the U.S. national supercomputing network. Wait time for your analysis to submit and run may be up to several days.\n' +
-            'Please do not resubmit your analysis. See accessing <a href="https://wiki.cyverse.org/wiki/x/MYOdAQ" target="_blank">XSEDE</a> and queues for more information.</p>\n' +
+            'Please do not resubmit your analysis. See accessing <a href="https://cyverse.atlassian.net/wiki/x/6QltDg" target="_blank">XSEDE</a> and queues for more information.</p>\n' +
             "\n",
         completedNoOutput:
             "<h4> My analysis completed but no output</h4>\n" +
