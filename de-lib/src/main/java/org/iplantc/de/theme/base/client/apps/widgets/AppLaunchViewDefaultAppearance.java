@@ -82,6 +82,26 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     }
 
     @Override
+    public String viceApprovalTitle() {
+        return displayStrings.viceApprovalTitle();
+    }
+
+    @Override
+    public SafeHtml viceApprovalBody() {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.viceApprovalBody());
+    }
+
+    @Override
+    public String viceDeniedTitle() {
+        return displayStrings.viceDeniedTitle();
+    }
+
+    @Override
+    public SafeHtml viceDeniedBody() {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.viceDeniedBody());
+    }
+
+    @Override
     public String closeButton() {
         return iplantDisplayStrings.close();
     }
