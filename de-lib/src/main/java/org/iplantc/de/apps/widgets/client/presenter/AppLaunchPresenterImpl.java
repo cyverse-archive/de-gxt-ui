@@ -19,6 +19,7 @@ import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.QuickLaunchServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
@@ -26,6 +27,7 @@ import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.CommonModelUtils;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -118,6 +120,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     @Inject AsyncProviderWrapper<ViceLimitDialog> viceLimitDlgProvider;
     @Inject
     UserInfo userInfo;
+    @Inject JsonUtil jsonUtil;
     private final AppLaunchView view;
     private String baseID;
 
@@ -303,9 +306,10 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         return new HandlerManager(this);
     }
 
-    private boolean hasConcurrencyError(Throwable caught) {
-        String errMessage = caught.getMessage();
-        return errMessage.matches("\\S+ is already running \\d+ or more concurrent jobs\\n");
+    private boolean hasViceLimitError(String serviceError) {
+        return ServiceErrorCode.ERR_PERMISSION_NEEDED.toString().equals(serviceError)
+               || ServiceErrorCode.ERR_FORBIDDEN.toString().equals(serviceError)
+               || ServiceErrorCode.ERR_LIMIT_REACHED.toString().equals(serviceError);
     }
 
     void launchAnalysis(final AppTemplate at, final JobExecution je) {
@@ -313,14 +317,16 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                if (Response.SC_BAD_REQUEST == statusCode && hasConcurrencyError(caught)) {
+                String serviceError = ErrorHandler.getServiceError(caught);
+                if (Response.SC_BAD_REQUEST == statusCode && hasViceLimitError(serviceError)) {
                     viceLimitDlgProvider.get(new AsyncCallback<ViceLimitDialog>() {
                         @Override
                         public void onFailure(Throwable caught) {}
 
                         @Override
                         public void onSuccess(ViceLimitDialog result) {
-                            result.show(caught.getMessage());
+                            String errMessage = jsonUtil.getString(jsonUtil.getObject(caught.getMessage()), "message");
+                            result.show(serviceError, errMessage);
                         }
                     });
                 } else {

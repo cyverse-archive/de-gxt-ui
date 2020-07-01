@@ -89,6 +89,14 @@ public interface AppLaunchView extends IsWidget,
 
         SafeHtml viceLimitBody(String errorMsg);
 
+        String viceApprovalTitle();
+
+        SafeHtml viceApprovalBody();
+
+        String viceDeniedTitle();
+
+        SafeHtml viceDeniedBody();
+
         String closeButton();
     }
 

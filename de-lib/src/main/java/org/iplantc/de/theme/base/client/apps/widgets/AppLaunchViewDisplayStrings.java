@@ -23,4 +23,12 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String viceLimitTitle();
 
     String viceLimitBody(String errorMsg);
+
+    String viceApprovalTitle();
+
+    String viceApprovalBody();
+
+    String viceDeniedTitle();
+
+    String viceDeniedBody();
 }
