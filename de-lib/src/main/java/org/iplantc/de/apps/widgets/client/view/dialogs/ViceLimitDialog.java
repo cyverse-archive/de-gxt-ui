@@ -16,7 +16,7 @@ public class ViceLimitDialog extends IPlantDialog {
     public ViceLimitDialog(AppLaunchView.AppLaunchViewAppearance appearance) {
         this.appearance = appearance;
         setModal(true);
-        setPixelSize(350, 200);
+        setPixelSize(350, 210);
         setHideOnButtonClick(true);
         setPredefinedButtons(PredefinedButton.OK);
         getOkButton().setText(appearance.closeButton());
