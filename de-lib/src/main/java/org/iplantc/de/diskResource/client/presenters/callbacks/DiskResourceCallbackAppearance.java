@@ -32,4 +32,6 @@ public interface DiskResourceCallbackAppearance {
     String restoreMsg();
 
     String ncbiCreateFolderStructureSuccess();
+
+    String diskResourceRenamePending();
 }

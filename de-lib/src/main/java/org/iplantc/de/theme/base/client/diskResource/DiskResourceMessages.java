@@ -237,4 +237,6 @@ public interface DiskResourceMessages extends Messages {
     String searchGenomeLabel();
 
     String dialogMultiInputHeading();
+
+    String diskResourceRenamePending();
 }

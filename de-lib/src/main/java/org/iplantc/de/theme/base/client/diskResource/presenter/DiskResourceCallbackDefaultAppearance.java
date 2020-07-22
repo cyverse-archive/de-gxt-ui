@@ -88,4 +88,9 @@ public class DiskResourceCallbackDefaultAppearance implements DiskResourceCallba
     public String ncbiCreateFolderStructureSuccess() {
         return displayMessages.ncbiCreateFolderStructureSuccess();
     }
+
+    @Override
+    public String diskResourceRenamePending() {
+        return displayMessages.diskResourceRenamePending();
+    }
 }
