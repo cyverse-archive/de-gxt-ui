@@ -128,6 +128,8 @@ public interface DiskResourceView extends IsWidget,
             String warning();
 
             String details();
+
+            String diskResourceEmptyTrashPending();
         }
 
         String FAVORITES_FOLDER_NAME = "Favorites";

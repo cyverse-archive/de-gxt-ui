@@ -239,4 +239,6 @@ public interface DiskResourceMessages extends Messages {
     String dialogMultiInputHeading();
 
     String diskResourceRenamePending();
+
+    String diskResourceEmptyTrashPending();
 }

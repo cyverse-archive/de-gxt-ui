@@ -22,6 +22,7 @@ import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
@@ -763,6 +764,10 @@ public class DiskResourcePresenterImpl implements
             @Override
             public void onSuccess(String result) {
                 refreshFolder(navigationPresenter.getFolderByPath(userInfo.getTrashPath()));
+
+                String successMsg = appearance.diskResourceEmptyTrashPending();
+                IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(successMsg));
+
             }
         });
     }

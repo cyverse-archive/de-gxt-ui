@@ -146,4 +146,9 @@ public class DiskResourceViewPresenterDefaultAppearance implements DiskResourceV
     public String details() {
         return iplantDisplayStrings.details();
     }
+
+    @Override
+    public String diskResourceEmptyTrashPending() {
+        return diskResourceMessages.diskResourceEmptyTrashPending();
+    }
 }
