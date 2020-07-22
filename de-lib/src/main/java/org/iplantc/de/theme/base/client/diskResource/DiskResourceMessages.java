@@ -34,10 +34,7 @@ public interface DiskResourceMessages extends Messages {
 
     String diskResourceIncompleteMove();
 
-    @DefaultMessage("Selected items moved to {0}.")
-    @AlternateMessage({"=1", "Selected item moved to {0}."})
-    @Key("diskResourceMoveSuccess")
-    String diskResourceMoveSuccess(String destPath, @Optional @PluralCount List<String> srcPaths);
+    String diskResourceMoveSuccess();
 
     String duplicateCheckFailed();
 

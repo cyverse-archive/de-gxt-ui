@@ -27,7 +27,7 @@ public class DiskResourceMoveCallback extends DiskResourceServiceCallback<DiskRe
     public void onSuccess(DiskResourceMove result) {
         unmaskCaller();
 
-        String successMsg = appearance.diskResourceMoveSuccess(result.getDest(), result.getSources());
+        String successMsg = appearance.diskResourceMoveSuccess();
         IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(successMsg));
     }
 
