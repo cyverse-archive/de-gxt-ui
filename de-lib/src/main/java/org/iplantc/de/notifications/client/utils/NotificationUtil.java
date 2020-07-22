@@ -129,10 +129,10 @@ public class NotificationUtil {
                         AutoBeanCodex.decode(notFactory, PayloadData.class, payload).as();
                 String dataAction = dataPayload.getAction();
 
-                if ("file_uploaded".equals(dataAction)) {
+                if ("file_uploaded".equals(dataAction) || "UPLOAD_COMPLETE".equals(dataAction)) {
                     AutoBean<File> fileAb = AutoBeanUtils.getAutoBean(dataPayload.getData());
                     msg.setContext(AutoBeanCodex.encode(fileAb).getPayload());
-                } else if ("share".equals(dataAction) || "unshare".equals(dataAction)) {
+                } else {
                     List<String> paths = dataPayload.getPaths();
                     if (paths != null && !paths.isEmpty()) {
                         String path = paths.get(0);
