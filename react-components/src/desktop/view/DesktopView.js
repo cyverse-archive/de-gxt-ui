@@ -22,6 +22,7 @@ import UserMenu from "./UserMenu";
 import styles from "../style";
 import Taskbar from "./Taskbar";
 import tour from "../NewUserTourSteps";
+import { getDisplayMessage } from "../util";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -218,7 +219,7 @@ class DesktopView extends Component {
     }
 
     displayNotification(notification, category) {
-        let displayText = notification.message.text;
+        let displayText = getDisplayMessage(notification);
         let analysisStatus =
             notification.type === "analysis" ? notification.payload.status : "";
         this.props.presenter.displayNotificationPopup(
