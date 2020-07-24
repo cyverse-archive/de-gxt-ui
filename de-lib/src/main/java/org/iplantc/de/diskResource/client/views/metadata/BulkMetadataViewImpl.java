@@ -49,7 +49,6 @@ public class BulkMetadataViewImpl extends Composite implements BulkMetadataView 
         this.mode = mode;
         this.fileSelector = drSelectorFieldFactory.defaultFileSelector();
         fileSelector.setValidatePermissions(true);
-        fileSelector.addValidator(new DiskResourceNameValidator());
 
         initWidget(BINDER.createAndBindUi(this));
         selLbl.setHTML(appearance.selectMetadataFile());
