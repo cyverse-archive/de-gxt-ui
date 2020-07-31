@@ -5,8 +5,6 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 
 import com.google.gwt.core.client.GWT;
 
-import java.util.List;
-
 /**
  * @author jstroot
  */
@@ -42,8 +40,8 @@ public class DiskResourceCallbackDefaultAppearance implements DiskResourceCallba
     }
 
     @Override
-    public String diskResourceMoveSuccess(String dest, List<String> sources) {
-        return displayMessages.diskResourceMoveSuccess(dest, sources);
+    public String diskResourceMoveSuccess() {
+        return displayMessages.diskResourceMoveSuccess();
     }
 
     @Override
@@ -89,5 +87,10 @@ public class DiskResourceCallbackDefaultAppearance implements DiskResourceCallba
     @Override
     public String ncbiCreateFolderStructureSuccess() {
         return displayMessages.ncbiCreateFolderStructureSuccess();
+    }
+
+    @Override
+    public String diskResourceRenamePending() {
+        return displayMessages.diskResourceRenamePending();
     }
 }

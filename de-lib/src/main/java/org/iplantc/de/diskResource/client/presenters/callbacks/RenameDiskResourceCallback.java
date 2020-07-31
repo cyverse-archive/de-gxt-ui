@@ -1,12 +1,12 @@
 package org.iplantc.de.diskResource.client.presenters.callbacks;
 
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.ErrorDiskResourceRename;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.diskResource.client.events.DiskResourceRenamedEvent;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.shared.GWT;
@@ -29,7 +29,9 @@ public class RenameDiskResourceCallback extends DiskResourceServiceCallback<Disk
     @Override
     public void onSuccess(DiskResource result) {
         unmaskCaller();
-        EventBus.getInstance().fireEvent(new DiskResourceRenamedEvent(dr, result));
+
+        String successMsg = appearance.diskResourceRenamePending();
+        IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(successMsg));
     }
 
     @Override

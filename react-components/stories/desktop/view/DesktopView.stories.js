@@ -33,48 +33,26 @@ class DesktopViewTest extends Component {
             unseen_total: "12",
             messages: [
                 {
-                    type: "analysis",
-                    user: "sriram",
-                    subject: "Word_Count_analysis1 status changed.",
-                    email: false,
-                    email_template: "analysis_status_change",
-                    payload: {
-                        description: "",
-                        access_url: "https://google.com",
-                        analysisresultsfolder:
-                            "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-03-07-18-55-17.9",
-                        name: "Word_Count_analysis1",
-                        username: "sriram@iplantcollaborative.org",
-                        app_id: "c7f05682-23c8-4182-b9a2-e09650a5f49b",
-                        analysisstartdate: "2018-03-07T18:55:18.171Z",
-                        system_id: "de",
-                        app_disabled: false,
-                        analysisstatus: "Submitted",
-                        batch: false,
-                        status: "Submitted",
-                        id: "142b48c4-2239-11e8-8c2f-008cfa5ae621",
-                        analysisname: "Word_Count_analysis1",
-                        startdate: "1520448918171",
-                        app_description:
-                            "Counts and summarizes the number of lines, words, and bytes in a target file",
-                        action: "job_status_change",
-                        analysisdescription: "",
-                        wiki_url:
-                            "https://pods.iplantcollaborative.org/wiki/display/DEapps/Word%20Count",
-                        notify: true,
-                        resultfolderid:
-                            "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-03-07-18-55-17.9",
-                        email_address: "sriram@iplantcollaborative.org",
-                        user: "sriram",
-                        app_name: "Word Count",
-                    },
-                    message: {
-                        id: "CB9C08F4-EC38-44F7-9342-1B85916A9029",
-                        timestamp: "1520448918196",
-                        text: "Word_Count_analysis1 submitted.",
-                    },
-                    seen: false,
                     deleted: false,
+                    email: false,
+                    payload: {
+                        action: "trash",
+                        paths: [
+                            "/iplant/trash/home/de-irods/aramsey/999_For-CACE-Deletion-2020-07-10-18-50-01.1.PdoWqXN",
+                            "/iplant/trash/home/de-irods/aramsey/JupJup_analysis1-2020-07-13-23-16-30.7.qRRrmAC",
+                        ],
+                    },
+                    email_template: null,
+                    type: "data",
+                    seen: true,
+                    user: "aramsey",
+                    subject: "Finished moving 2 files(s)/folder(s) to trash",
+                    message: {
+                        id: "C14A225D-E849-4AB9-AD37-7781465DD060",
+                        timestamp: "1595456475194",
+                        text:
+                            "Finished moving /iplant/home/aramsey/analyses_qa/999_For-CACE-Deletion-2020-07-10-18-50-01.1, /iplant/home/aramsey/analyses_qa/JupJup_analysis1-2020-07-13-23-16-30.7 to trash at /iplant/trash/home/de-irods/aramsey/999_For-CACE-Deletion-2020-07-10-18-50-01.1.PdoWqXN, /iplant/trash/home/de-irods/aramsey/JupJup_analysis1-2020-07-13-23-16-30.7.qRRrmAC",
+                    },
                 },
                 {
                     type: "analysis",

@@ -129,13 +129,18 @@ public class NotificationUtil {
                         AutoBeanCodex.decode(notFactory, PayloadData.class, payload).as();
                 String dataAction = dataPayload.getAction();
 
-                if ("file_uploaded".equals(dataAction)) {
+                if ("file_uploaded".equals(dataAction) || "UPLOAD_COMPLETE".equals(dataAction)) {
                     AutoBean<File> fileAb = AutoBeanUtils.getAutoBean(dataPayload.getData());
                     msg.setContext(AutoBeanCodex.encode(fileAb).getPayload());
-                } else if ("share".equals(dataAction) || "unshare".equals(dataAction)) {
+                } else {
                     List<String> paths = dataPayload.getPaths();
                     if (paths != null && !paths.isEmpty()) {
                         String path = paths.get(0);
+                        if ("delete".equals(dataAction) || "empty_trash".equals(dataAction)) {
+                            // Append dummy file to path so parent folder (trash folder) will
+                            // open correctly
+                            path = path.concat("/dummyFile.txt");
+                        }
                         Splittable file =
                                 CommonModelUtils.getInstance().createHasPathSplittableFromString(path);
                         msg.setContext(file.getPayload());

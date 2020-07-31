@@ -9,6 +9,7 @@ import ids from "../ids";
 import intlData from "../messages";
 import styles from "../style";
 import tour from "../NewUserTourSteps";
+import { getDisplayMessage } from "../util";
 
 import {
     build,
@@ -102,7 +103,7 @@ function Notification(props) {
                 onClick={onClick}
             >
                 <span>
-                    {notification.message.text}
+                    {getDisplayMessage(notification)}
                     {notification.payload.access_url && (
                         <InteractiveAnalysisUrl notification={notification} />
                     )}
