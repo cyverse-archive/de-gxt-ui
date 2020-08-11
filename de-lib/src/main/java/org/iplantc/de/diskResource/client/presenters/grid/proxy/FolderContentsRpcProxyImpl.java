@@ -120,9 +120,6 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
             }
             // Create list of all items within the result folder
             List<DiskResource> list = Lists.newArrayList(Iterables.concat(result.getFolders(), result.getFiles()));
-            // Update the loadConfig folder with the totalFiltered count.
-
-            loadConfig.getFolder().setTotalFiltered(result.getTotalFiltered());
 
             callback.onSuccess(new PagingLoadResultBean<>(list, result.getTotal(), loadConfig.getOffset()));
 

@@ -22,12 +22,6 @@ public interface Folder extends DiskResource {
     
     int getTotal();
     
-    @PropertyName("totalBad")
-    void setTotalFiltered(int total_filtered);
-
-    @PropertyName("totalBad")
-    int getTotalFiltered();
-
     @PropertyName("dir-count")
     int getDirCount();
 
