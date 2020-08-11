@@ -172,7 +172,6 @@ public class FolderContentsRpcProxyTest {
         Folder f = mock(Folder.class);
         f.setName("test");
         callBackCaptor.getValue().onSuccess(f);
-        verify(mockFolder).setTotalFiltered(anyInt());
         verify(pagingAsyncMock).onSuccess(any(PagingLoadResultBean.class));
 
         verifyNoMoreInteractions(mockHasSafeHtml, diskResourceService, pagingAsyncMock);
