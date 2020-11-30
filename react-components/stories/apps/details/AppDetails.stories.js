@@ -55,7 +55,7 @@ class AppDetailsTest extends Component {
             wiki_url:
                 "http://pods.iplantcollaborative.org/wiki/display/DEapps/Annotate+transcripts",
             edited_date: "1369428963000",
-            integration_date: "1369431889000",
+            integration_date: "2013-05-24T21:44:49.000Z",
             references: [
                 "",
                 "http://trinityrnaseq.sourceforge.net/analysis/diff_expression_analysis.html",
