@@ -20,7 +20,7 @@ import {
     CopyTextArea,
     DEDialogHeader,
     DEHyperlink,
-    formatDate,
+    formatDateObject,
     formatMessage,
     getMessage,
     Highlighter,
@@ -224,7 +224,12 @@ class AppDetails extends Component {
                                         {getMessage("publishedOn")}
                                     </span>
                                     <span className={valueClass}>
-                                        {formatDate(details.integration_date)}
+                                        {formatDateObject(
+                                            details.integration_date &&
+                                                new Date(
+                                                    details.integration_date
+                                                )
+                                        )}
                                     </span>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -263,8 +268,13 @@ class AppDetails extends Component {
                                         {getMessage("detailsLastCompleted")}
                                     </span>
                                     <span className={valueClass}>
-                                        {formatDate(
-                                            details.job_stats.job_last_completed
+                                        {formatDateObject(
+                                            details.job_stats &&
+                                                details.job_stats
+                                                    .job_last_completed &&
+                                                new Date(
+                                                    details.job_stats.job_last_completed
+                                                )
                                         )}
                                     </span>
                                 </Grid>
