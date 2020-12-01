@@ -224,13 +224,12 @@ class AppDetails extends Component {
                                         {getMessage("publishedOn")}
                                     </span>
                                     <span className={valueClass}>
-                                        {details.integration_date
-                                            ? formatDateObject(
-                                                  new Date(
-                                                      details.integration_date
-                                                  )
-                                              )
-                                            : "-"}
+                                        {formatDateObject(
+                                            details.integration_date &&
+                                                new Date(
+                                                    details.integration_date
+                                                )
+                                        )}
                                     </span>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -269,14 +268,14 @@ class AppDetails extends Component {
                                         {getMessage("detailsLastCompleted")}
                                     </span>
                                     <span className={valueClass}>
-                                        {details.job_stats &&
-                                        details.job_stats.job_last_completed
-                                            ? formatDateObject(
-                                                  new Date(
-                                                      details.job_stats.job_last_completed
-                                                  )
-                                              )
-                                            : "-"}
+                                        {formatDateObject(
+                                            details.job_stats &&
+                                                details.job_stats
+                                                    .job_last_completed &&
+                                                new Date(
+                                                    details.job_stats.job_last_completed
+                                                )
+                                        )}
                                     </span>
                                 </Grid>
                                 {showAppURL && (
