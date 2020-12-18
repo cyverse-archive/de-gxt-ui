@@ -30,7 +30,7 @@ public abstract class NotificationCallbackWrapper extends NotificationCallback<S
         }
 
         setNotifications(notifications);
-        total = Integer.parseInt(notifications.getTotal());
+        total = notifications.getTotal();
     }
 
     private void setNotifications(NotificationList notifications) {

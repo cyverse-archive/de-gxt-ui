@@ -16,10 +16,10 @@ public interface NotificationList {
     List<Notification> getNotifications();
 
     @PropertyName("unseen_total")
-    String getUnseenTotal();
+    int getUnseenTotal();
 
     void setNotifications(List<Notification> notifications);
 
     @PropertyName("total")
-    String getTotal();
+    int getTotal();
 }

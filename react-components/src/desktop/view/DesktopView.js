@@ -109,7 +109,7 @@ class DesktopView extends Component {
         this.props.presenter.getNotifications(
             (notifications) => {
                 this.setState({
-                    unSeenCount: parseInt(notifications.unseen_total, 10),
+                    unSeenCount: notifications.unseen_total,
                     notifications: notifications,
                     notificationsError: false,
                     notificationLoading: false,
