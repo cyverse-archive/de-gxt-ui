@@ -16,7 +16,7 @@ public enum NotificationCategory {
     /** Analysis notifications */
     ANALYSIS("Analysis"),
     /** tool rquest status update notification */
-    TOOLREQUEST("Tool Request"),
+    TOOL_REQUEST("Tool Request"),
     /** Tool sharing/unsharing notifications **/
     TOOLS("Tools"),
     /** apps notification */
@@ -26,7 +26,7 @@ public enum NotificationCategory {
     COMMUNITY("Community"),
 
     /** EZID request */
-    PERMANENTIDREQUEST("Permanent ID Request"),
+    PERMANENT_ID_REQUEST("Permanent ID Request"),
 
     /** unseen notifications */
     NEW("New");
@@ -47,7 +47,7 @@ public enum NotificationCategory {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
-        String temp = typeString.replaceAll("\\s", "");
+        String temp = typeString.replaceAll("\\s", "_");
         return valueOf(temp.toUpperCase());
     }
 

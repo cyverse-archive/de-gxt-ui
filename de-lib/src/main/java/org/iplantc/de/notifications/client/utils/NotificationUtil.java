@@ -156,11 +156,11 @@ public class NotificationUtil {
                 GWT.log("SYSTEM  category");
                 break;
 
-            case PERMANENTIDREQUEST:
+            case PERMANENT_ID_REQUEST:
                 GWT.log("Permanent Id request category");
                 msg.setContext(payload.getPayload());
                 break;
-            case TOOLREQUEST:
+            case TOOL_REQUEST:
                 GWT.log("TOOLREQUEST  category");
                 msg.setContext(payload.getPayload());
                 break;
@@ -247,13 +247,13 @@ public class NotificationUtil {
                     eventBus.fireEvent(new WindowShowRequestEvent(analysisWindowConfig, true));
 
                     break;
-                case PERMANENTIDREQUEST:
+                case PERMANENT_ID_REQUEST:
                     PayloadRequest request = AutoBeanCodex.decode(notificationFactory,
                                                                   PayloadRequest.class,
                                                                   context1).as();
-                    getRequestStatusHistory(request.getId(), NotificationCategory.PERMANENTIDREQUEST);
+                    getRequestStatusHistory(request.getId(), NotificationCategory.PERMANENT_ID_REQUEST);
                     break;
-                case TOOLREQUEST:
+                case TOOL_REQUEST:
                     PayloadRequest toolRequest =
                             AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, context1)
 
@@ -314,7 +314,7 @@ public class NotificationUtil {
 
     //TODO Refactor this service call out of the util class
     void getRequestStatusHistory(String id, NotificationCategory cat) {
-        if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
+        if (cat.equals(NotificationCategory.PERMANENT_ID_REQUEST)) {
             messageServiceFacade.getPermanentIdRequestStatusHistory(id, new NotificationCallback<String>() {
 
                 @Override

@@ -56,7 +56,7 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
         currentStatusLabel.setText(curr_status);
         currentStatusLabel.addClickHandler(event -> NotificationUtil.displayRequestHistory(
                 details.getRequestor().getUsername() + "-" + details.getType(),
-                details.getHistory(), NotificationCategory.PERMANENTIDREQUEST.toString()));
+                details.getHistory(), NotificationCategory.PERMANENT_ID_REQUEST.toString()));
         if(details.getRequestor()!= null ){
             userEmail.setText(details.getRequestor().getEmail());
         }
